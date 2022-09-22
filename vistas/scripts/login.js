@@ -82,4 +82,13 @@ function typeOfVar (obj) {
 }
 
 // carrucell
-$('.login-page').css({'background-image':`url('../dist/img/fondo-login1.jpg')`});
+
+var cont =1;
+let conteo = setInterval(()=> {    
+    $('.login-page').css({'background-image':`url('../dist/img/${cont}fondo-login.jpg')`});
+    cont++;
+    if (cont == 5){
+        cont =0;
+    }
+
+}, 8000)
