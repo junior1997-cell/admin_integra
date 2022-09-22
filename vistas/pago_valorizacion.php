@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Sevens | Pago Valorización</title>
+        <title>Admin Integra | Pago Valorización</title>
 
         <?php $title = "Pago Valorización"; require 'head.php'; ?>
         

@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Sevens | Calendario Global</title>
+        <title>Admin Integra | Calendario Global</title>
         
         <?php $title = "Calendario Global"; ?>
 

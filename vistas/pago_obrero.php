@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Pagos de Obrero | Admin Sevens</title>
+        <title>Pagos de Obrero | Admin Integra</title>
 
         <?php $title = "Pagos de Obrero"; require 'head.php'; ?>
 

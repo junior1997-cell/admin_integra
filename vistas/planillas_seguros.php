@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Planillas y Seguros | Admin Sevens</title>
+        <title>Planillas y Seguros | Admin Integra</title>
         
         <?php $title = "Planillas y Seguros";  require 'head.php'; ?>
           

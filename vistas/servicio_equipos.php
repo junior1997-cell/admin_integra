@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Sevens | Servicio - Equipos</title>
+        <title>Admin Integra | Servicio - Equipos</title>
 
         <?php $title = "Servicios - Equipos"; require 'head.php'; ?>
 

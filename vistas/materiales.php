@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Insumos | Admin Sevens</title>
+        <title>Insumos | Admin Integra</title>
         <?php $title = "Insumos"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

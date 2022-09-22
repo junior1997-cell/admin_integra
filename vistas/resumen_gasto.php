@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Resumen de Gasto | Admin Sevens</title>
+        <title>Resumen de Gasto | Admin Integra</title>
         <?php $title = "Resumen de Gasto"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

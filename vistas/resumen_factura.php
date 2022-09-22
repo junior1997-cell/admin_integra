@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Resumen de Factura | Admin Sevens</title>
+        <title> Resumen de Factura | Admin Integra</title>
 
         <?php $title = "Resumen de Activos Fijos"; require 'head.php'; ?>
         

@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Sub Contrato | Admin Sevens</title>
+        <title>Sub Contrato | Admin Integra</title>
 
         <?php $title = "Sub Contrato"; require 'head.php'; ?>
 

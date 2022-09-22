@@ -11,7 +11,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Sevens | Escritorio</title>
+        <title>Admin Integra | Escritorio</title>
 
         <?php $title = "Escritorio"; require 'head.php'; ?>
      
@@ -22,7 +22,7 @@
         <div class="wrapper">
           <!-- Preloader -->
           <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="../dist/svg/logo-principal.svg" alt="AdminLTELogo" width="360" />
+            <img class="animation__shake" src="../dist/svg/logo-integra-peru.svg" alt="AdminLTELogo" width="360" />
           </div>
         
           <?php

@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Movimiento de Tierra | Admin Sevens</title>
+        <title>Movimiento de Tierra | Admin Integra</title>
         <?php $title = "Movimiento de Tierra"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

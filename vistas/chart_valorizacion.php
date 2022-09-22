@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Graficos Valorización | Admin Sevens</title>
+        <title>Graficos Valorización | Admin Integra</title>
 
         <?php $title = "Compras  de Insumos"; require 'head.php'; ?>
 

@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Pensión | Admin Sevens</title>
+        <title>Pensión | Admin Integra</title>
 
         <?php $title = "Pensión"; require 'head.php'; ?>
         

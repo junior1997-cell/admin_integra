@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Hospedaje | Admin Sevens</title>
+        <title>Hospedaje | Admin Integra</title>
 
         <?php $title = "Hospedaje"; require 'head.php';  ?>
 

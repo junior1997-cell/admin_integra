@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Fierro | Admin Sevens</title>
+        <title>Fierro | Admin Integra</title>
         <?php $title = "Fierro"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

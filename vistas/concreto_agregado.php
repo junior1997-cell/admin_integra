@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Concreto y Agregado | Admin Sevens</title>
+        <title>Concreto y Agregado | Admin Integra</title>
         <?php $title = "Concreto y Agregado"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">

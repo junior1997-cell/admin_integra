@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Valorización | Admin Sevens</title>
+        <title>Valorización | Admin Integra</title>
 
         <?php $title = "Valorización"; require 'head.php'; ?>
 

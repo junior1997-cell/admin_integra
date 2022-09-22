@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Break | Admin Sevens</title>
+        <title>Break | Admin Integra</title>
 
         <?php $title = "Break"; require 'head.php'; ?>
 
