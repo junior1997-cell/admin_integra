@@ -80,3 +80,6 @@ function varaibles_get() {
 function typeOfVar (obj) {
     return {}.toString.call(obj).split(' ')[1].slice(0, -1).toLowerCase();
 }
+
+// carrucell
+$('.login-page').css({'background-image':`url('../dist/img/fondo-login1.jpg')`});
