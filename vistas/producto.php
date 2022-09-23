@@ -13,8 +13,8 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Insumos | Admin Integra</title>
-        <?php $title = "Insumos"; require 'head.php';  ?>       
+        <title>Producto | Admin Integra</title>
+        <?php $title = "Producto"; require 'head.php';  ?>       
 
         <link rel="stylesheet" href="../dist/css/switch_materiales.css">
 
@@ -36,7 +36,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1><img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Insumos</h1>
+                      <h1><img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Producto</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
@@ -360,7 +360,7 @@
                   <div class="modal-dialog modal-dialog-scrollable modal-md">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Datos del Insumo</h4>
+                        <h4 class="modal-title">Datos del Producto</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -409,7 +409,7 @@
 
         <?php  require 'script.php'; ?>        
 
-        <script type="text/javascript" src="scripts/materiales.js"></script>
+        <script type="text/javascript" src="scripts/producto.js"></script>
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
 

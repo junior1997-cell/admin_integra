@@ -11,9 +11,9 @@
 
     if ($_SESSION['recurso'] == 1) {
       
-      require_once "../modelos/Materiales.php";
+      require_once "../modelos/Producto.php";
 
-      $materiales = new Materiales();
+      $materiales = new Producto();
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 

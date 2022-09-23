@@ -13,7 +13,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Integra | Otros Gastos</title>
+        <title>Otros Gastos | Admin Integra</title>
         
         <?php $title = "Otros Gastos"; require 'head.php'; ?>
           

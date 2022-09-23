@@ -7,7 +7,7 @@ function init() {
 
   $("#mRecurso").addClass("active");
 
-  $("#lAllMateriales").addClass("active");
+  $("#lAllProducto").addClass("active");
 
   tbla_principal();
 

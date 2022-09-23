@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Admin Integra | Permisos</title>
+        <title>Permisos | Admin Integra</title>
         <?php $title = "Permisos";  require 'head.php'; ?>
         
       </head>
