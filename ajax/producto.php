@@ -20,85 +20,32 @@
       $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
       $idproducto = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "";
-      $idcategoria = isset($_POST["idcategoria_insumos_af"]) ? limpiarCadena($_POST["idcategoria_insumos_af"]) : "";
-      $idgrupo = isset($_POST["idtipo_tierra_concreto"]) ? limpiarCadena($_POST["idtipo_tierra_concreto"]) : "";
-
-      $nombre = isset($_POST["nombre_material"]) ? encodeCadenaHtml($_POST["nombre_material"] ) : "";
-      $modelo = isset($_POST["modelo"]) ? encodeCadenaHtml($_POST["modelo"] ) : "";
-      $serie = isset($_POST["serie"]) ? encodeCadenaHtml($_POST["serie"] ) : "";
-      $marca = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "";         
+      $nombre = isset($_POST["nombre_producto"]) ? limpiarCadena($_POST["nombre_producto"]) : "";
       $unidad_medida = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "";
-      $color = isset($_POST["color"]) ? limpiarCadena($_POST["color"]) : "";
       $descripcion = isset($_POST["descripcion_material"]) ? encodeCadenaHtml($_POST["descripcion_material"]) : "";   
-
       $precio_unitario = isset($_POST["precio_unitario"]) ? limpiarCadena($_POST["precio_unitario"]) : "";
-      $estado_igv = isset($_POST["estado_igv"]) ? limpiarCadena($_POST["estado_igv"]) : "";
-      $precio_real = isset($_POST["precio_sin_igv"]) ? limpiarCadena($_POST["precio_sin_igv"]) : "";
-      $monto_igv = isset($_POST["precio_igv"]) ? limpiarCadena($_POST["precio_igv"]) : "";      
-      $total_precio = isset($_POST["precio_con_igv"]) ? limpiarCadena($_POST["precio_con_igv"]) : "";     
-
-      $imagen1 = isset($_POST["imagen1"]) ? limpiarCadena($_POST["imagen1"]) : "";
-      $imagen_ficha = isset($_POST["doc2"]) ? limpiarCadena($_POST["doc2"]) : ""; 
+      
+    
 
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
           // imgen
-          if (!file_exists($_FILES['imagen1']['tmp_name']) || !is_uploaded_file($_FILES['imagen1']['tmp_name'])) {
+        
 
-            $imagen1 = $_POST["imagen1_actual"];
-
-            $flat_img1 = false;
-
-          } else {
-
-            $ext1 = explode(".", $_FILES["imagen1"]["name"]);
-
-            $flat_img1 = true;
-
-            $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
-
-            move_uploaded_file($_FILES["imagen1"]["tmp_name"], "../dist/docs/material/img_perfil/" . $imagen1);
-          }
-
-          // ficha técnica
-          if (!file_exists($_FILES['doc2']['tmp_name']) || !is_uploaded_file($_FILES['doc2']['tmp_name'])) {
-
-            $ficha_tecnica = $_POST["doc_old_2"];
-
-            $flat_ficha1 = false;
-
-          } else {
-
-            $ext1 = explode(".", $_FILES["doc2"]["name"]);
-
-            $flat_ficha1 = true;
-
-            $ficha_tecnica = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
-
-            move_uploaded_file($_FILES["doc2"]["tmp_name"], "../dist/docs/material/ficha_tecnica/" . $ficha_tecnica);
-          }
+        
 
           if (empty($idproducto)) {
             
-            $rspta = $materiales->insertar($idcategoria, $idgrupo, $nombre, $modelo, $serie, $marca, $precio_unitario, $descripcion, $imagen1, $ficha_tecnica, $estado_igv, $monto_igv, $precio_real, $unidad_medida, $color, $total_precio);
+            $rspta = $materiales->insertar($nombre, $precio_unitario, $descripcion, $unidad_medida);
             
             echo json_encode( $rspta, true);
 
           } else {
 
             // validamos si existe LA IMG para eliminarlo
-            if ($flat_img1 == true) {
-
-              $datos_f1 = $materiales->obtenerImg($idproducto);
-              $img1_ant = $datos_f1['data']['imagen'];
-
-              if ( validar_url_completo($scheme_host. "dist/docs/material/img_perfil/" . $img1_ant)  == 200) {
-                unlink("../dist/docs/material/img_perfil/" . $img1_ant);
-              }
-            }
-             
-            $rspta = $materiales->editar($idproducto, $idcategoria, $idgrupo, $nombre, $modelo, $serie, $marca, $precio_unitario, $descripcion, $imagen1, $ficha_tecnica, $estado_igv, $monto_igv, $precio_real, $unidad_medida, $color, $total_precio);
+            
+            $rspta = $materiales->editar($idproducto, $nombre, $precio_unitario, $descripcion, $unidad_medida);
             
             echo json_encode( $rspta, true) ;
           }
@@ -139,11 +86,7 @@
           if ($rspta['status'] == true) {
             while ($reg = $rspta['data']->fetch_object()) {
 
-              $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen) ;
               
-              $ficha_tecnica = empty($reg->ficha_tecnica) ? ( '<center><i class="far fa-file-pdf fa-2x text-gray-50"></i></center>') : ( '<center><a target="_blank" href="../dist/docs/material/ficha_tecnica/' . $reg->ficha_tecnica . '"><i class="far fa-file-pdf fa-2x text-danger" ></i></a></center>');
-              
-              $monto_igv = (empty($reg->precio_igv) ?  '-' :  $reg->precio_igv);
               
               $data[] = [
                 "0"=>$cont++,
@@ -152,23 +95,10 @@
                 ' <button class="btn btn-info btn-sm" onclick="verdatos('.$reg->idproducto.')" data-toggle="tooltip" data-original-title="Ver datos"><i class="far fa-eye"></i></button>' : 
                 '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')"><i class="fa fa-pencil-alt"></i></button>',
                 "2" => $reg->idproducto,
-                "3" =>
-                  '<div class="user-block">
-                    <img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/material/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/material/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
-                    <span class="username"><p class="mb-0" >' . decodeCadenaHtml($reg->nombre) . '</p></span>
-                    <span class="description">' . substr($reg->descripcion, 0, 30) . '...</span>
-                  </div>',
-                "4" => $reg->tipo_tierra_concreto,
-                "5" => $reg->nombre_medida,
-                "6" => $reg->marca,
-                "7" => number_format($reg->precio_unitario, 2, '.', ''),
-                "8" => number_format($reg->precio_sin_igv, 2, '.', ''),
-                "9" => number_format($monto_igv, 2, '.', ','),
-                "10" => number_format($reg->precio_total, 2, '.', ''),
-                "11" => $ficha_tecnica . $toltip,                
-                "12" => decodeCadenaHtml($reg->nombre),
-                "13" => $reg->nombre_color,
-                "14" => $reg->descripcion,
+                "3" => decodeCadenaHtml($reg->nombre) ,
+                "4" => number_format($reg->precio_unitario, 2, '.', ''),
+                "5" => decodeCadenaHtml($reg->nombre),
+                "6" => $reg->descripcion,
               ];
             }
   
