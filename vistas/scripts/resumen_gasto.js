@@ -9,7 +9,7 @@ function init() {
 
   $("#mContableFinanciero").addClass("active");
 
-  $("#lResumenGastos").addClass("active bg-primary");
+  $("#lResumenGastos").addClass("active bg-green");
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════ 
   $.get(`../ajax/resumen_gasto.php?op=select2Proveedor&idproyecto=${localStorage.getItem("nube_idproyecto")}`, function (r) { $("#proveedor_filtro").html(r); $(".cargando_proveedor").html('Proveedor'); });

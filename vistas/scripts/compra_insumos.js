@@ -27,7 +27,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#mCompra").addClass("active  bg-primary");
+  $("#mCompra").addClass("active bg-green");
 
   $("#lCompras").addClass("active");
 

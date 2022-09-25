@@ -10,7 +10,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#lFierro").addClass("active bg-primary");
+  $("#lFierro").addClass("active bg-green");
 
   tbla_principal();
 

@@ -76,6 +76,11 @@
       return ejecutarConsulta($sql);
     }
 
+    public function select2_cargo_trabajador() {
+      $sql = "SELECT * FROM cargo_trabajador WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC";
+      return ejecutarConsulta($sql);
+    }
+
     public function select2_ocupacion_trabajador()  {
       $sql="SELECT idocupacion AS id, nombre_ocupacion AS nombre FROM ocupacion where estado = '1' AND estado_delete = '1' ORDER BY nombre_ocupacion ASC;";
 		return ejecutarConsulta($sql);

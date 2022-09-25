@@ -14,7 +14,7 @@ function init() {
 
   $("#mContableFinanciero").addClass("active");
 
-  $("#mPagosTrabajador").addClass("active bg-primary");
+  $("#mPagosTrabajador").addClass("active bg-green");
 
   $("#lPagosObrero").addClass("active");
 

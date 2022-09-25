@@ -12,7 +12,7 @@ function init() {
 
   $("#mTecnico").addClass("active");
 
-  $("#lConcretoAgregado").addClass("active bg-primary");
+  $("#lConcretoAgregado").addClass("active bg-green");
 
   $("#idproyecto").val(localStorage.getItem('nube_idproyecto'));
 

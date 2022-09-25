@@ -3,7 +3,7 @@ var tabla;
 //Función que se ejecuta al inicio
 function init() {
   //Activamos el "aside"
-  $("#lOtraFactura").addClass("active bg-primary");
+  $("#lOtraFactura").addClass("active bg-green");
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════  
   lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', null);

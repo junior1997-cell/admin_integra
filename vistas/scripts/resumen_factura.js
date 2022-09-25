@@ -8,7 +8,7 @@ var zip = new JSZip();
 //Función que se ejecuta al inicio
 function init() {
 
-  $("#lResumenFacura").addClass("active bg-primary");
+  $("#lResumenFacura").addClass("active bg-green");
   
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════ 
   $.get("../ajax/resumen_facturas.php?op=select2Proveedor", function (r) { $("#proveedor_filtro").html(r); $(".cargando_proveedor").html('Proveedor'); });

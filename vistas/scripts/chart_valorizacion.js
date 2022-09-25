@@ -26,7 +26,7 @@ function init() {
 
   $("#mTecnico").addClass("active");
 
-  $("#lChartValorizacion").addClass("active bg-primary");
+  $("#lChartValorizacion").addClass("active bg-green");
 
   //chart_linea_barra(localStorage.getItem("nube_idproyecto"));
 

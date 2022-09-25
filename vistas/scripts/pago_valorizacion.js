@@ -7,7 +7,7 @@ function init() {
 
   $("#mContableFinanciero").addClass("active");
 
-  $("#lPagoValorizacion").addClass("active bg-primary");
+  $("#lPagoValorizacion").addClass("active bg-green");
   
   listar_tbla_principal(localStorage.getItem('nube_idproyecto'));
 

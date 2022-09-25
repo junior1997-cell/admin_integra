@@ -9,7 +9,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#lTrabajador").addClass("active bg-primary");
+  $("#lTrabajador").addClass("active bg-green");
 
   $("#idproyecto").val(localStorage.getItem('nube_idproyecto'));
 

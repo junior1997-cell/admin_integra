@@ -196,10 +196,12 @@
     //Implementar un método para listar los registros
     public function tbla_principal($estado) {
       $data = Array();
-      $sql="SELECT t.idtrabajador,  t.nombres, t.tipo_documento, t.numero_documento, t.fecha_nacimiento, t.edad, t.telefono, t.imagen_perfil,  
-      t.estado,  tt.nombre AS nombre_tipo, o.nombre_ocupacion, t.descripcion_expulsion
-      FROM trabajador AS t, tipo_trabajador as tt, ocupacion as o
-      WHERE t.idocupacion =o.idocupacion  AND tt.idtipo_trabajador= t.idtipo_trabajador AND  t.estado = '$estado' AND t.estado_delete = '1' ORDER BY  t.nombres ASC ;";
+      $sql="SELECT t.idtrabajador, t.idcargo_trabajador, t.nombres, t.tipo_documento, t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, 
+      t.titular_cuenta, t.direccion, t.telefono, t.email, t.imagen_perfil, t.imagen_dni_anverso, t.imagen_dni_reverso, t.cv_documentado, 
+      t.cv_no_documentado, t.descripcion_expulsion, t.estado_usuario, t.estado, t.estado_delete,
+      ct.nombre as cargo_nombre
+      FROM trabajador as t, cargo_trabajador as ct
+      WHERE t.idcargo_trabajador = ct.idcargo_trabajador AND  t.estado = '$estado' AND t.estado_delete = '1' ORDER BY  t.nombres ASC ;";
       $trabajdor = ejecutarConsultaArray($sql);
       if ($trabajdor['status'] == false) { return  $trabajdor;}
 
@@ -221,8 +223,7 @@
           'telefono'        => $value['telefono'], 
           'imagen_perfil'   => $value['imagen_perfil'],  
           'estado'          => $value['estado'],          
-          'nombre_tipo'     => $value['nombre_tipo'], 
-          'nombre_ocupacion'=> $value['nombre_ocupacion'],
+          'cargo_nombre'     => $value['cargo_nombre'], 
           'descripcion_expulsion' =>$value['descripcion_expulsion'],
 
           'banco'           => (empty($bancos['data']) ? "": $bancos['data']['banco']), 

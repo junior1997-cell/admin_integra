@@ -41,16 +41,10 @@
       $cci	          	= isset($_POST["cci"])?$_POST["cci"]:"";
       $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
       $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
-      $tipo	          	= isset($_POST["tipo"])? limpiarCadena($_POST["tipo"]):"";
-      $ocupacion	      = isset($_POST["ocupacion"])? limpiarCadena($_POST["ocupacion"]):"";
+      $cargo_trabajador	= isset($_POST["cargo_trabajador"])? limpiarCadena($_POST["cargo_trabajador"]):"";
       $ruc	          	= isset($_POST["ruc"])? limpiarCadena($_POST["ruc"]):"";
 
       $imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
-      $imagen2			    = isset($_POST["foto2"])? limpiarCadena($_POST["foto2"]):"";
-      $imagen3			    = isset($_POST["foto3"])? limpiarCadena($_POST["foto3"]):"";
-
-      $cv_documentado		= isset($_POST["doc4"])? limpiarCadena($_POST["doc4"]):"";
-      $cv_nodocumentado = isset($_POST["doc5"])? limpiarCadena($_POST["doc5"]):"";
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
@@ -70,66 +64,6 @@
 						
 					}
 
-          // imgen DNI ANVERSO
-          if (!file_exists($_FILES['foto2']['tmp_name']) || !is_uploaded_file($_FILES['foto2']['tmp_name'])) {
-
-						$imagen2=$_POST["foto2_actual"]; $flat_img2 = false;
-
-					} else {
-
-						$ext2 = explode(".", $_FILES["foto2"]["name"]); $flat_img2 = true;
-
-            $imagen2 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext2);
-
-            move_uploaded_file($_FILES["foto2"]["tmp_name"], "../dist/docs/all_trabajador/dni_anverso/" . $imagen2);
-						
-					}
-
-          // imgen DNI REVERSO
-          if (!file_exists($_FILES['foto3']['tmp_name']) || !is_uploaded_file($_FILES['foto3']['tmp_name'])) {
-
-						$imagen3=$_POST["foto3_actual"]; $flat_img3 = false;
-
-					} else {
-
-						$ext3 = explode(".", $_FILES["foto3"]["name"]); $flat_img3 = true;
-            
-            $imagen3 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-            move_uploaded_file($_FILES["foto3"]["tmp_name"], "../dist/docs/all_trabajador/dni_reverso/" . $imagen3);
-						
-					}
-
-          // cv documentado
-          if (!file_exists($_FILES['doc4']['tmp_name']) || !is_uploaded_file($_FILES['doc4']['tmp_name'])) {
-
-            $cv_documentado=$_POST["doc_old_4"]; $flat_cv1 = false;
-
-          } else {
-
-            $ext3 = explode(".", $_FILES["doc4"]["name"]); $flat_cv1 = true;
-            
-            $cv_documentado = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-            move_uploaded_file($_FILES["doc4"]["tmp_name"], "../dist/docs/all_trabajador/cv_documentado/" .  $cv_documentado);
-            
-          }
-
-          // cv  no documentado
-          if (!file_exists($_FILES['doc5']['tmp_name']) || !is_uploaded_file($_FILES['doc5']['tmp_name'])) {
-
-            $cv_nodocumentado=$_POST["doc_old_5"]; $flat_cv2 = false;
-
-          } else {
-
-            $ext3 = explode(".", $_FILES["doc5"]["name"]); $flat_cv2 = true;
-            
-            $cv_nodocumentado = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-            move_uploaded_file($_FILES["doc5"]["tmp_name"], "../dist/docs/all_trabajador/cv_no_documentado/" . $cv_nodocumentado);
-            
-          }
-
           if (empty($idtrabajador)){
             
             $rspta=$trabajador->insertar($nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco_seleccionado, $banco, $cta_bancaria, $cci, $titular_cuenta, $tipo, $ocupacion, $ruc, $imagen1, $imagen2, $imagen3, $cv_documentado, $cv_nodocumentado);
@@ -143,34 +77,7 @@
               $datos_f1 = $trabajador->obtenerImg($idtrabajador);
               $img1_ant = $datos_f1['data']['imagen_perfil'];
               if ($img1_ant != "") { unlink("../dist/docs/all_trabajador/perfil/" . $img1_ant);  }
-            }
-
-            //imagen_dni_anverso
-            if ($flat_img2 == true) {
-              $datos_f2 = $trabajador->obtenerImg($idtrabajador);
-              $img2_ant = $datos_f2['data']['imagen_dni_anverso'];
-              if ($img2_ant != "") { unlink("../dist/docs/all_trabajador/dni_anverso/" . $img2_ant); }
-            }
-
-            //imagen_dni_reverso
-            if ($flat_img3 == true) {
-              $datos_f3 = $trabajador->obtenerImg($idtrabajador);
-              $img3_ant = $datos_f3['data']['imagen_dni_reverso'];
-              if ($img3_ant != "") { unlink("../dist/docs/all_trabajador/dni_reverso/" . $img3_ant); }
-            }
-
-            //cvs
-            if ($flat_cv1 == true) {
-              $datos_cv1 = $trabajador->obtenercv($idtrabajador);
-              $cv1_ant = $datos_cv1['data']['cv_documentado'];
-              if ($cv1_ant != "") { unlink("../dist/docs/all_trabajador/cv_documentado/" . $cv1_ant); }
-            }
-
-            if ($flat_cv2 == true) {
-              $datos_cv2 = $trabajador->obtenercv($idtrabajador);
-              $cv2_ant = $datos_cv2['data']['cv_no_documentado'];
-              if ($cv2_ant != "") { unlink("../dist/docs/all_trabajador/cv_no_documentado/" . $cv2_ant); }
-            }
+            }            
 
             // editamos un trabajador existente
             $rspta=$trabajador->editar($idtrabajador, $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad, $email, $banco_seleccionado, $banco, $cta_bancaria, $cci,  $titular_cuenta, $tipo, $ocupacion, $ruc, $imagen1, $imagen2, $imagen3, $cv_documentado, $cv_nodocumentado);
@@ -234,8 +141,8 @@
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['trabajador'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                   </div>',
-                "3"=> $value['nombre_tipo'],
-                "4"=> $value['nombre_ocupacion'],
+                "3"=> $value['cargo_nombre'],
+                "4"=> $value['cargo_nombre'],
                 "5"=>'<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['telefono'] . '</a>',
                 "6"=>format_d_m_a($value['fecha_nacimiento']).'<b>: </b>'. '<b>'.calculaedad($value['fecha_nacimiento']).'</b>' ,
                 "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
@@ -283,8 +190,8 @@
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['trabajador'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .'<br>'.format_d_m_a($value['fecha_nacimiento']).' : '.$value['edad'].' años</span>
                   </div>',
-                "3"=> '<div class="center-vertical">'. $value['nombre_tipo'] .'</div>',
-                "4"=> $value['nombre_ocupacion'],
+                "3"=> '<div class="center-vertical">'. $value['cargo_nombre'] .'</div>',
+                "4"=> $value['cargo_nombre'],
                 "5"=> '<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['telefono'] . '</a>',
                 "6"=> $value['descripcion_expulsion'] ,
                 "7"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>':

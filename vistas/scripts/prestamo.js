@@ -11,7 +11,7 @@ function init() {
 
   $("#mContableFinanciero").addClass("active");
 
-  $("#lPrestamo").addClass("active bg-primary");
+  $("#lPrestamo").addClass("active bg-green");
   
   listar_tbla_principal_prestamo(localStorage.getItem('nube_idproyecto'));
   $("#id_proyecto_prestamo").val(localStorage.getItem('nube_idproyecto'));

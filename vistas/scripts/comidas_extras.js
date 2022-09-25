@@ -9,11 +9,11 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#mViatico").addClass("active bg-primary");
+  $("#mViatico").addClass("active bg-green");
 
   $("#sub_bloc_comidas").addClass("menu-open bg-color-191f24");
 
-  $("#sub_mComidas").addClass("active bg-primary");
+  $("#sub_mComidas").addClass("active bg-green");
 
   $("#lComidasExtras").addClass("active");
 

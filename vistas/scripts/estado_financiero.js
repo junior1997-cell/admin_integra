@@ -9,7 +9,7 @@ function init() {
 
   $("#mContableFinanciero").addClass("active");
 
-  $("#lEstadoFinanciero").addClass("active bg-primary");
+  $("#lEstadoFinanciero").addClass("active bg-green");
   
   tbla_estado_financiero(localStorage.getItem('nube_idproyecto'));
   listar_fechas_proyeccion(localStorage.getItem('nube_idproyecto'));

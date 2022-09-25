@@ -5,7 +5,7 @@ var zip = new JSZip();
 //Función que se ejecuta al inicio
 function init() {
   //Activamos el "aside"
-  $("#lResumenRH").addClass("active bg-primary");
+  $("#lResumenRH").addClass("active bg-green");
 
   listar();
 

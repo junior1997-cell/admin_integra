@@ -12,7 +12,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#mViatico").addClass("active bg-primary");
+  $("#mViatico").addClass("active bg-green");
 
   $("#lHospedaje").addClass("active");
 

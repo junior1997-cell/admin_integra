@@ -13,7 +13,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#lMaquina").addClass("active bg-primary");
+  $("#lMaquina").addClass("active bg-green");
 
   $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 

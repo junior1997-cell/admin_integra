@@ -41,7 +41,7 @@ function init() {
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#lresumen_general").addClass("active bg-primary");
+  $("#lresumen_general").addClass("active bg-green");
 
   //Mostramos los trabajadores
   $.post("../ajax/resumen_general.php?op=select2_trabajadores&idproyecto=" + localStorage.getItem("nube_idproyecto"), function (r) {

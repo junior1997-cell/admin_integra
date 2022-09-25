@@ -12,17 +12,13 @@ function init() {
   tbla_principal();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_0', null);
-  lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#tipo', null);
-  lista_select2("../ajax/ajax_general.php?op=select2OcupacionTrabajador", '#ocupacion', null);  
+  lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) {  $("#submit-form-trabajador").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
-  $("#banco_0").select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
-  $("#tipo").select2({ theme: "bootstrap4", placeholder: "Selecione tipo", allowClear: true, });
-  $("#ocupacion").select2({ theme: "bootstrap4",  placeholder: "Selecione Ocupación", allowClear: true, });
+  $("#cargo_trabajador").select2({ theme: "bootstrap4",  placeholder: "Selecione Cargo", allowClear: true, });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -43,18 +39,6 @@ function formatState (state) {
 $("#foto1_i").click(function() { $('#foto1').trigger('click'); });
 $("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id")) });
 
-$("#foto2_i").click(function() { $('#foto2').trigger('click'); });
-$("#foto2").change(function(e) { addImage(e,$("#foto2").attr("id")) });
-
-$("#foto3_i").click(function() { $('#foto3').trigger('click'); });
-$("#foto3").change(function(e) { addImage(e,$("#foto3").attr("id")) });
-
-$("#doc4_i").click(function() {  $('#doc4').trigger('click'); });
-$("#doc4").change(function(e) {  addImageApplication(e,$("#doc4").attr("id")) });
-
-$("#doc5_i").click(function() {  $('#doc5').trigger('click'); });
-$("#doc5").change(function(e) {  addImageApplication(e,$("#doc5").attr("id")) });
-
 function foto1_eliminar() {
 
 	$("#foto1").val("");
@@ -62,44 +46,6 @@ function foto1_eliminar() {
 	$("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 
 	$("#foto1_nombre").html("");
-}
-
-function foto2_eliminar() {
-
-	$("#foto2").val("");
-
-	$("#foto2_i").attr("src", "../dist/img/default/dni_anverso.webp");
-
-	$("#foto2_nombre").html("");
-}
-
-function foto3_eliminar() {
-
-	$("#foto3").val("");
-
-	$("#foto3_i").attr("src", "../dist/img/default/dni_reverso.webp");
-
-	$("#foto3_nombre").html("");
-}
-
-// Eliminamos el doc 4
-function doc4_eliminar() {
-
-	$("#doc4").val("");
-
-	$("#doc4_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-
-	$("#doc4_nombre").html("");
-}
-
-// Eliminamos el doc 5
-function doc5_eliminar() {
-
-	$("#doc5").val("");
-
-	$("#doc5_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-
-	$("#doc5_nombre").html("");
 }
 
 //Función limpiar
@@ -128,26 +74,6 @@ function limpiar_form_trabajador() {
 	$("#foto1").val("");
 	$("#foto1_actual").val("");  
   $("#foto1_nombre").html(""); 
-
-  $("#foto2_i").attr("src", "../dist/img/default/dni_anverso.webp");
-	$("#foto2").val("");
-	$("#foto2_actual").val("");  
-  $("#foto2_nombre").html("");  
-
-  $("#foto3_i").attr("src", "../dist/img/default/dni_reverso.webp");
-	$("#foto3").val("");
-	$("#foto3_actual").val("");  
-  $("#foto3_nombre").html(""); 
-
-  $("#doc4").val("");
-  $("#doc_old_4").val("");
-  $("#doc4_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-  $("#doc4_nombre").html('');
-  
-  $("#doc5").val("");
-  $("#doc_old_5").val("");
-  $("#doc5_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-  $("#doc5_nombre").html('');
   
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -194,40 +120,6 @@ function tbla_principal() {
     ],
   }).DataTable();
 
-  // listamos al trabajadores expulsados
-  tabla2=$('#tabla-trabajador-expulsado').dataTable({
-    responsive: true,
-    lengthMenu: [ 5, 10, 25, 75, 100],//mostramos el menú de registros a revisar
-    aProcessing: true,//Activamos el procesamiento del datatables
-    aServerSide: true,//Paginación y filtrado realizados por el servidor
-    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
-    buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [8,9,10,11,3,4,12,13,14,15,5,6], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [8,9,10,11,3,4,12,13,14,15,5,6], } }, { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [8,9,10,11,3,4,12,13,14,15,5,6], } }, {extend: "colvis"} ,
-    ],
-    ajax:{
-      url: '../ajax/all_trabajador.php?op=listar_expulsado',
-      type : "get",
-      dataType : "json",						
-      error: function(e){
-        console.log(e.responseText);	
-      }
-    },
-    createdRow: function (row, data, ixdex) {
-      // columna: #
-      if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); }         
-    },
-    language: {
-      lengthMenu: "Mostrar: _MENU_ registros",
-      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
-      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
-    },
-    bDestroy: true,
-    iDisplayLength: 10,//Paginación
-    order: [[ 0, "asc" ]],//Ordenar (columna,orden)
-    columnDefs: [
-      { targets: [8, 9, 10, 11, 12, 13, 14, 15], visible: false, searchable: false, },
-    ],
-  }).DataTable();
 }
 
 //Función para guardar o editar
@@ -520,68 +412,12 @@ function mostrar(idtrabajador) {
       $("#titular_cuenta").val(e.data.trabajador.titular_cuenta);
       $("#idtrabajador").val(e.data.trabajador.idtrabajador);
       $("#ruc").val(e.data.trabajador.ruc);         
-      
-      e.data.bancos.forEach(function(valor, index){ 
-        
-        if ( index > 0 ) { 
-          add_bancos(valor.idbancos); 
-          $(`.cta_bancaria_${index}`).val(valor.cuenta_bancaria);
-          $(`.cci_${index}`).val(valor.cci);
-          if (valor.banco_seleccionado == '1') { $(`#banco_seleccionado_${index}`).prop('checked', true); } 
-          console.log('crear - banco: ' + valor.idbancos + ' index: '+ index + ' select: '+ valor.banco_seleccionado);
-        } else {
-          $(`.cta_bancaria_${index}`).val(valor.cuenta_bancaria);
-          $(`.cci_${index}`).val(valor.cci);
-          $(`#banco_${index}`).val(valor.idbancos).trigger("change");
-          if (valor.banco_seleccionado == '1') { $(`#banco_seleccionado_${index}`).prop('checked', true); } 
-          console.log('editar - banco: ' + valor.idbancos + ' index: '+ index + ' select: '+ valor.banco_seleccionado);
-        }
-        
-         
-      }); 
-      
+            
       if (e.data.trabajador.imagen_perfil!="") {
         $("#foto1_i").attr("src", "../dist/docs/all_trabajador/perfil/" + e.data.trabajador.imagen_perfil);
         $("#foto1_actual").val(e.data.trabajador.imagen_perfil);
       }
-
-      if (e.data.trabajador.imagen_dni_anverso != "") {
-        $("#foto2_i").attr("src", "../dist/docs/all_trabajador/dni_anverso/" + e.data.trabajador.imagen_dni_anverso);
-        $("#foto2_actual").val(e.data.trabajador.imagen_dni_anverso);
-      }
-
-      if (e.data.trabajador.imagen_dni_reverso != "") {
-        $("#foto3_i").attr("src", "../dist/docs/all_trabajador/dni_reverso/" + e.data.trabajador.imagen_dni_reverso);
-        $("#foto3_actual").val(e.data.trabajador.imagen_dni_reverso);
-      }
-
-      //validamoos DOC-4
-      if (e.data.trabajador.cv_documentado != "" ) {
-        $("#doc_old_4").val(e.data.trabajador.cv_documentado);
-        $("#doc4_nombre").html('CV documentado.' + extrae_extencion(e.data.trabajador.cv_documentado));
-        var doc_html = doc_view_extencion(e.data.trabajador.cv_documentado, 'all_trabajador', 'cv_documentado', '100%', '210' );
-        $("#doc4_ver").html(doc_html);         
-      } else {
-        $("#doc4_ver").html('<img src="../dist/svg/pdf_trasnparent_no.svg" alt="" width="50%" >');
-        $("#doc4_nombre").html('');
-        $("#doc_old_4").val("");
-      }
-
-      //validamoos DOC-5
-      if (e.data.trabajador.cv_no_documentado != "" ) {
-        $("#doc_old_5").val(e.data.trabajador.cv_no_documentado);
-        $("#doc5_nombre").html('CV no documentado.' + extrae_extencion(e.data.trabajador.cv_no_documentado));
-        var doc_html = doc_view_extencion(e.data.trabajador.cv_no_documentado, 'all_trabajador', 'cv_no_documentado', '100%', '210' );
-        $("#doc5_ver").html(doc_html);        
-      } else {
-        $("#doc5_ver").html('<img src="../dist/svg/pdf_trasnparent_no.svg" alt="" width="50%" >');
-        $("#doc5_nombre").html('');
-        $("#doc_old_5").val("");
-      }
-
-      calcular_edad('#nacimiento','#p_edad','#edad');
-
-       
+      calcular_edad('#nacimiento','#p_edad','#edad'); 
 
       $("#cargando-1-fomulario").show();
       $("#cargando-2-fomulario").hide();
@@ -757,58 +593,8 @@ function eliminar(idtrabajador, nombre) {
   });
 }
 
-// .....::::::::::::::::::::::::::::::::::::: B A N C O   M U L T I P L E  :::::::::::::::::::::::::::::::::::::::..
-function add_bancos(id_select_banco = null) {
-  $('#lista_bancos').append(`   
-    <!-- banco -->
-    <div class="col-12 col-sm-12 col-md-6 col-lg-3 delete_multiple_${cant_banco_multimple}">
-      <div class="form-group">
-        <label for="banco">Banco</label>
-        <select name="banco_${cant_banco_multimple}" id="banco_${cant_banco_multimple}" class="form-control select2 banco_${cant_banco_multimple}" style="width: 100%;" onchange="formato_banco(${cant_banco_multimple});">
-          <!-- Aqui listamos los bancos -->
-        </select>
-        <input type="hidden" name="banco_array[]" id="banco_array_${cant_banco_multimple}">
-      </div>
-    </div>
+// .....::::::::::::::::::::::::::::::::::::: B A N C O  :::::::::::::::::::::::::::::::::::::::..
 
-    <!-- Cuenta bancaria -->
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 delete_multiple_${cant_banco_multimple}">
-      <div class="form-group">
-        <label for="cta_bancaria" class="${cant_banco_multimple}_chargue-format-1">Cuenta Bancaria</label>
-        <input type="text" name="cta_bancaria[]" class="form-control cta_bancaria_${cant_banco_multimple}" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-      </div>
-    </div>
-
-    <!-- CCI -->
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 delete_multiple_${cant_banco_multimple}">
-      <div class="form-group">
-        <label for="cta_bancaria" class="${cant_banco_multimple}_chargue-format-2">CCI</label>
-        <input type="text" name="cci[]" class="form-control cci_${cant_banco_multimple}" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-12 col-md-6 col-lg-1 delete_multiple_${cant_banco_multimple}">
-      <div class="form-group mb-2">
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input custom-control-input-danger" type="radio" id="banco_seleccionado_${cant_banco_multimple}" name="banco_seleccionado" value="${cant_banco_multimple}">
-          <label for="banco_seleccionado_${cant_banco_multimple}" class="custom-control-label">Usar</label>
-        </div>
-      </div>
-      <button type="button" class="btn bg-gradient-danger btn-sm"  onclick="remove_bancos(${cant_banco_multimple});"><i class="far fa-trash-alt"></i></button>        
-      
-  </div>`);
-
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", `#banco_${cant_banco_multimple}`, id_select_banco);
-
-  $(`#banco_${cant_banco_multimple}`).select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
-  
-  $(`#banco_${cant_banco_multimple}`).on('change', function() { $(this).trigger('blur'); });
-  $(`#banco_${cant_banco_multimple}`).rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  cant_banco_multimple++;
-    
-}
-
-function remove_bancos(id) { $(`.delete_multiple_${id}`).remove(); }
 
 /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
 
@@ -830,7 +616,7 @@ function recuperar_banco() {
 
 $(function () {   
 
-  $("#banco_0").on('change', function() { $(this).trigger('blur'); });
+  $("#banco").on('change', function() { $(this).trigger('blur'); });
   $("#tipo").on('change', function() { $(this).trigger('blur'); });
   $("#ocupacion").on('change', function() { $(this).trigger('blur'); });
 
@@ -845,10 +631,8 @@ $(function () {
       tipo_trabajador:{ required: true},
       cargo:          { required: true},
       cta_bancaria:   { minlength: 10,},
-      banco_0:      { required: true},
-      banco_seleccionado:{ required: true},
+      banco:          { required: true},
       tipo:           { required: true},
-      ocupacion:      { required: true},
       ruc:            { minlength: 11, maxlength: 11},
     },
     messages: {
@@ -862,9 +646,7 @@ $(function () {
       cargo:          { required: "Campo requerido.", },
       cta_bancaria:   { minlength: "MÍNIMO 10 caracteres.", },
       tipo:           { required: "Campo requerido.", },
-      ocupacion:      { required: "Campo requerido.", },
-      banco_0:      { required: "Campo requerido.", },
-      banco_seleccionado:{ required: "Requerido.", },
+      banco:      { required: "Campo requerido.", },
       ruc:            { minlength: "MÍNIMO 11 caracteres.", maxlength: "MÁXIMO 11 caracteres.", },
     },
         
@@ -883,55 +665,14 @@ $(function () {
     submitHandler: function (e) {
       $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
       guardar_y_editar_trabajador(e);
-
     },
   });
 
-  $("#banco_0").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#tipo").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#ocupacion").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
 
-// damos formato a: Cta, CCI
-function formato_banco(id) {
 
-  if ($(`#banco_${id}`).select2("val") == null || $(`#banco_${id}`).select2("val") == "" || $(`#banco_${id}`).select2("val") == '1') {
-
-    $(`.cta_bancaria_${id}`).prop("readonly",true);   $(`.cci_${id}`).prop("readonly",true);
-  } else {
-    
-    $(`.${id}_chargue-format-1`).html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>'); $(`.${id}_chargue-format-2`).html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-
-    $(`#banco_array_${id}`).val($(`#banco_${id}`).select2("val"));
-
-    $(`.cta_bancaria_${id}`).prop("readonly",false);   $(`.cci_${id}`).prop("readonly",false);
-
-    $.post("../ajax/all_trabajador.php?op=formato_banco", { idbanco: $(`#banco_${id}`).select2("val") }, function (data, status) {
-
-      data = JSON.parse(data);  //console.log(data); 
-
-      $(`.${id}_chargue-format-1`).html('Cuenta Bancaria'); $(`.${id}_chargue-format-2`).html('CCI');
-
-      var format_cta = decifrar_format_banco(data.data.formato_cta); var format_cci = decifrar_format_banco(data.data.formato_cci);
-
-      $(`.cta_bancaria_${id}`).inputmask(`${format_cta}`);
-
-      $(`.cci_${id}`).inputmask(`${format_cci}`);
-    }).fail( function(e) { ver_errores(e); } );  
-  }  
-}
-
-function sueld_mensual(){
-
-  var sueldo_mensual = $('#sueldo_mensual').val()
-
-  var sueldo_diario=(sueldo_mensual/30).toFixed(1);
-
-  var sueldo_horas=(sueldo_diario/8).toFixed(1);
-
-  $("#sueldo_diario").val(sueldo_diario);
-
-  $("#sueldo_hora").val(sueldo_horas);
-}
