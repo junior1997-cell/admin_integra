@@ -10,19 +10,17 @@
     }
 
     //Implementamos un método para insertar registros
-    public function insertar( $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco_seleccionado, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $tipo, $ocupacion, $ruc, $imagen1, $imagen2, $imagen3, $cv_documentado, $cv_nodocumentado) {
+    public function insertar( $idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
       $sw = Array();
-      $sql_0 = "SELECT t.nombres, t.tipo_documento, t.numero_documento, tip.nombre as tipo, o.nombre_ocupacion as ocupacion, t.estado, t.estado_delete
-      FROM trabajador as t, tipo_trabajador as tip, ocupacion o
-      WHERE t.idtipo_trabajador = tip.idtipo_trabajador and t.idocupacion = o.idocupacion and numero_documento = '$num_documento';";
-      $existe = ejecutarConsultaArray($sql_0);
+      // var_dump($idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc, $imagen1); die();
+      $sql_0 = "SELECT nombres,tipo_documento, numero_documento,estado, estado_delete FROM trabajador as t WHERE numero_documento = '$num_documento';";
 
-      if ($existe['status'] == false) { return $existe;}
+      $existe = ejecutarConsultaArray($sql_0); if ($existe['status'] == false) { return $existe;}
       
       if ( empty($existe['data']) ) {
 
-        $sql="INSERT INTO trabajador ( nombres, tipo_documento, numero_documento, fecha_nacimiento, edad, titular_cuenta, direccion, telefono, email, imagen_perfil, imagen_dni_anverso, imagen_dni_reverso, idtipo_trabajador , idocupacion, ruc, cv_documentado, cv_no_documentado,user_created)
-        VALUES ( '$nombre', '$tipo_documento', '$num_documento', '$nacimiento', '$edad', '$titular_cuenta', '$direccion', '$telefono', '$email', '$imagen1', '$imagen2', '$imagen3', '$tipo', '$ocupacion', '$ruc', '$cv_documentado', '$cv_nodocumentado','" . $_SESSION['idusuario'] . "')";
+        $sql="INSERT INTO trabajador (idcargo_trabajador, idbancos, nombres, tipo_documento, numero_documento, fecha_nacimiento, edad, titular_cuenta,cuenta_bancaria,cci, direccion, telefono, email, imagen_perfil, ruc,sueldo_mensual,sueldo_diario,user_created)
+        VALUES ( '$idcargo_trabajador','$banco','$nombre', '$tipo_documento', '$num_documento', '$nacimiento', '$edad', '$titular_cuenta','$cta_bancaria', '$cci', '$direccion', '$telefono', '$email', '$imagen1', '$ruc','$sueldo_mensual','$sueldo_diario', '" . $_SESSION['idusuario'] . "')";
         $new_trabajador = ejecutarConsulta_retornarID($sql);
 
         if ($new_trabajador['status'] == false) { return $new_trabajador;}
@@ -31,26 +29,6 @@
         $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','".$new_trabajador['data']."','Registro Nuevo Trabajador','" . $_SESSION['idusuario'] . "')";
         $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
         
-        $num_elementos = 0;
-        while ($num_elementos < count($banco)) {
-          $id = $new_trabajador['data'];
-          $sql_detalle = "";
-          if ($num_elementos == $banco_seleccionado) {
-            $sql_detalle = "INSERT INTO cuenta_banco_trabajador( idtrabajador, idbancos, cuenta_bancaria, cci, banco_seleccionado,user_created) VALUES ('$id','$banco[$num_elementos]', '$cta_bancaria[$num_elementos]',  '$cci[$num_elementos]', '1','" . $_SESSION['idusuario'] . "')";
-          } else {
-            $sql_detalle = "INSERT INTO cuenta_banco_trabajador( idtrabajador, idbancos, cuenta_bancaria, cci, banco_seleccionado,user_created) VALUES ('$id','$banco[$num_elementos]', '$cta_bancaria[$num_elementos]',  '$cci[$num_elementos]', '0','" . $_SESSION['idusuario'] . "')";
-          }          
-          
-          $banco_new =  ejecutarConsulta_retornarID($sql_detalle);
-          if ($banco_new['status'] == false) { return  $banco_new;}
-
-          //add registro en nuestra bitacora
-          $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('cuenta_banco_trabajador','".$banco_new['data']."','Registrando cuenta bancaria trabajador','" . $_SESSION['idusuario'] . "')";
-          $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-
-          $num_elementos = $num_elementos + 1;
-        }
-
         $sw = array( 'status' => true, 'message' => 'noduplicado', 'data' => $new_trabajador['data'], 'id_tabla' =>$new_trabajador['id_tabla'] );
 
       } else {
@@ -60,8 +38,6 @@
           $info_repetida .= '<li class="text-left font-size-13px">
             <span class="font-size-15px text-danger"><b>Nombre: </b>'.$value['nombres'].'</span><br>
             <b>'.$value['tipo_documento'].': </b>'.$value['numero_documento'].'<br>
-            <b>Tipo: </b>'.$value['tipo'].'<br>
-            <b>Ocupación: </b>'.$value['ocupacion'].'<br>
             <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .' <b>|</b>
             <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
             <hr class="m-t-2px m-b-2px">
@@ -74,11 +50,11 @@
     }
 
     //Implementamos un método para editar registros $cci, $tipo, $ocupacion, $ruc, $cv_documentado, $cv_nodocumentado
-    public function editar($idtrabajador, $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco_seleccionado, $banco, $cta_bancaria,  $cci, $titular_cuenta, $tipo, $ocupacion, $ruc, $imagen1, $imagen2, $imagen3, $cv_documentado, $cv_nodocumentado) {
-      $sql="UPDATE trabajador SET nombres='$nombre', tipo_documento='$tipo_documento', numero_documento='$num_documento', fecha_nacimiento='$nacimiento', edad='$edad',  titular_cuenta='$titular_cuenta',direccion='$direccion', 
-      telefono='$telefono', email='$email', imagen_perfil ='$imagen1', imagen_dni_anverso ='$imagen2', imagen_dni_reverso ='$imagen3',
-      idtipo_trabajador ='$tipo', idocupacion='$ocupacion', ruc='$ruc', cv_documentado='$cv_documentado', 
-      cv_no_documentado='$cv_nodocumentado', user_updated= '" . $_SESSION['idusuario'] . "'
+    public function editar($idtrabajador,$idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
+      $sql="UPDATE trabajador SET idcargo_trabajador='$idcargo_trabajador',idbancos='$banco',nombres='$nombre',tipo_documento='$tipo_documento',
+      numero_documento='$num_documento',ruc='$ruc',fecha_nacimiento='$nacimiento',edad='$edad',cuenta_bancaria='$cta_bancaria_format',
+      cci='$cci_format',titular_cuenta='$titular_cuenta',sueldo_mensual='$sueldo_mensual',sueldo_diario='$sueldo_diario',direccion='$direccion',
+      telefono='$telefono',email='$email',imagen_perfil='$imagen1' 
       WHERE idtrabajador='$idtrabajador'";	      
       $trabajdor = ejecutarConsulta($sql);
       if ($trabajdor['status'] == false) { return  $trabajdor;}
@@ -87,35 +63,12 @@
       $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','".$idtrabajador."','Editamos el registro Trabajador','" . $_SESSION['idusuario'] . "')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
       
-      $sql2 = "DELETE FROM cuenta_banco_trabajador WHERE idtrabajador='$idtrabajador';";
-      $delete = ejecutarConsulta($sql2);
-      if ($delete['status'] == false) { return  $delete;}
-
-      $num_elementos = 0; $compra_new = [];
-      while ($num_elementos < count($banco)) {         
-        $sql_detalle = "";
-        if ($num_elementos == $banco_seleccionado) {
-          $sql_detalle = "INSERT INTO cuenta_banco_trabajador( idtrabajador, idbancos, cuenta_bancaria, cci, banco_seleccionado,user_created) VALUES ('$idtrabajador','$banco[$num_elementos]', '$cta_bancaria[$num_elementos]',  '$cci[$num_elementos]', '1','" . $_SESSION['idusuario'] . "')";
-        } else {
-          $sql_detalle = "INSERT INTO cuenta_banco_trabajador( idtrabajador, idbancos, cuenta_bancaria, cci, banco_seleccionado,user_created) VALUES ('$idtrabajador','$banco[$num_elementos]', '$cta_bancaria[$num_elementos]',  '$cci[$num_elementos]', '0','" . $_SESSION['idusuario'] . "')";
-        }          
-        
-        $banco_new =  ejecutarConsulta_retornarID($sql_detalle);
-        if ($banco_new['status'] == false) { return  $banco_new;}
-
-        //add registro en nuestra bitacora
-        $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('cuenta_banco_trabajador','".$banco_new['data']."','Registrando cuenta bancaria trabajador en la sección editar','" . $_SESSION['idusuario'] . "')";
-        $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-
-        $num_elementos = $num_elementos + 1;
-      }
-
-      return $banco_new;      
+      return $trabajdor;      
     }
 
     //Implementamos un método para desactivar 
-    public function desactivar($idtrabajador, $descripcion) {
-      $sql="UPDATE trabajador SET estado='0', descripcion_expulsion = '$descripcion',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
+    public function desactivar($idtrabajador) {
+      $sql="UPDATE trabajador SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
       $desactivar =  ejecutarConsulta($sql);
 
       if ( $desactivar['status'] == false) {return $desactivar; }  
@@ -125,26 +78,6 @@
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 
       return $desactivar;
-    }
-
-    //Implementamos un método para desactivar 
-    public function desactivar_1($idtrabajador) {
-      $sql="UPDATE trabajador SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
-      return ejecutarConsulta($sql);
-    }
-
-    //Implementamos un método para activar 
-    public function activar($idtrabajador) {
-      $sql="UPDATE trabajador SET estado='1',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
-      $activar =  ejecutarConsulta($sql);
-      
-      if ( $activar['status'] == false) {return $activar; }  
-
-      //add registro en nuestra bitacora
-      $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('trabajador','.$idtrabajador.','Habilitar el registro Trabajador','" . $_SESSION['idusuario'] . "')";
-      $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-
-      return $activar;
     }
 
     //Implementamos un método para activar 
@@ -164,80 +97,41 @@
     //Implementar un método para mostrar los datos de un registro a modificar
     public function mostrar($idtrabajador) {
       $sql="SELECT * FROM trabajador WHERE idtrabajador='$idtrabajador'";
-      $trabajador = ejecutarConsultaSimpleFila($sql);
-      if ($trabajador['status'] == false) { return  $trabajador;}
+      return ejecutarConsultaSimpleFila($sql);
 
-      $sql2 = "SELECT cbt.idcuenta_banco_trabajador, cbt.idtrabajador, cbt.idbancos, cbt.cuenta_bancaria, cbt.cci, cbt.banco_seleccionado, b.nombre as banco
-      FROM cuenta_banco_trabajador as cbt, bancos as b
-      WHERE cbt.idbancos = b.idbancos AND cbt.idtrabajador='$idtrabajador' ORDER BY cbt.idcuenta_banco_trabajador ASC ;";
-      $bancos = ejecutarConsultaArray($sql2);
-      if ($bancos['status'] == false) { return  $bancos;}
-
-      return $retorno=['status'=>true, 'message'=>'todo oka ps', 'data'=>['trabajador'=>$trabajador['data'], 'bancos'=>$bancos['data'],]];
     }
 
     //Implementar un método para mostrar los datos de un registro a modificar
     public function verdatos($idtrabajador) {
-      $sql="SELECT t.nombres, t.tipo_documento, t.numero_documento, t.fecha_nacimiento, 
-      t.titular_cuenta, t.direccion, t.telefono, t.email, t.imagen_perfil as imagen_perfil, t.imagen_dni_anverso, t.cv_documentado, 
-      t.cv_no_documentado, t.imagen_dni_reverso as imagen_dni_reverso
-      FROM trabajador as t WHERE t.idtrabajador='$idtrabajador' ";
-      $trabajador = ejecutarConsultaSimpleFila($sql);
-      if ($trabajador['status'] == false) { return  $trabajador;}
+      $sql=" SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
+      t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
+      t.direccion, t.telefono, t.email, t.imagen_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
+      FROM trabajador as t, cargo_trabajador as ct, bancos as b 
+      WHERE t.idcargo_trabajador= ct.idcargo_trabajador AND t.idbancos=b.idbancos  AND t.idtrabajador='$idtrabajador' ";
+      return ejecutarConsultaSimpleFila($sql);
 
-      $sql2 = "SELECT cbt.idcuenta_banco_trabajador, cbt.idtrabajador, cbt.idbancos, cbt.cuenta_bancaria, cbt.cci, cbt.banco_seleccionado, b.nombre as banco
-      FROM cuenta_banco_trabajador as cbt, bancos as b
-      WHERE cbt.idbancos = b.idbancos AND cbt.idtrabajador='$idtrabajador' ORDER BY cbt.idcuenta_banco_trabajador ASC ;";
-      $bancos = ejecutarConsultaArray($sql2);
-      if ($bancos['status'] == false) { return  $bancos;}
-      return $retorno=['status'=>true, 'message'=>'todo oka ps', 'data'=>['trabajador'=>$trabajador['data'], 'bancos'=>$bancos['data'],]];
     }
 
     //Implementar un método para listar los registros
-    public function tbla_principal($estado) {
-      $data = Array();
-      $sql="SELECT t.idtrabajador, t.idcargo_trabajador, t.nombres, t.tipo_documento, t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, 
-      t.titular_cuenta, t.direccion, t.telefono, t.email, t.imagen_perfil, t.imagen_dni_anverso, t.imagen_dni_reverso, t.cv_documentado, 
-      t.cv_no_documentado, t.descripcion_expulsion, t.estado_usuario, t.estado, t.estado_delete,
-      ct.nombre as cargo_nombre
-      FROM trabajador as t, cargo_trabajador as ct
-      WHERE t.idcargo_trabajador = ct.idcargo_trabajador AND  t.estado = '$estado' AND t.estado_delete = '1' ORDER BY  t.nombres ASC ;";
-      $trabajdor = ejecutarConsultaArray($sql);
-      if ($trabajdor['status'] == false) { return  $trabajdor;}
+    public function tbla_principal() {
+      
+      $sql="SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
+      t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
+      t.direccion, t.telefono, t.email, t.imagen_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
+      FROM trabajador as t, cargo_trabajador as ct, bancos as b 
+      WHERE t.idcargo_trabajador= ct.idcargo_trabajador AND t.idbancos=b.idbancos AND t.estado =1 AND t.estado_delete=1 ORDER BY  t.nombres ASC ;";
 
-      foreach ($trabajdor['data'] as $key => $value) {
-        $id = $value['idtrabajador'];
-        $sql2 = "SELECT cbt.idcuenta_banco_trabajador, cbt.idtrabajador, cbt.idbancos, cbt.cuenta_bancaria, cbt.cci, cbt.banco_seleccionado, b.nombre as banco
-        FROM cuenta_banco_trabajador as cbt, bancos as b
-        WHERE cbt.idbancos = b.idbancos AND cbt.banco_seleccionado ='1' AND cbt.idtrabajador='$id' ;";
-        $bancos = ejecutarConsultaSimpleFila($sql2);
-        if ($bancos['status'] == false) { return  $bancos;}
+      $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
 
-        $data[] = array(
-          'idtrabajador'    => $value['idtrabajador'],  
-          'trabajador'      => $value['nombres'], 
-          'tipo_documento'  => $value['tipo_documento'], 
-          'numero_documento'=> $value['numero_documento'], 
-          'fecha_nacimiento'=> $value['fecha_nacimiento'], 
-          'edad'            => $value['edad'],          
-          'telefono'        => $value['telefono'], 
-          'imagen_perfil'   => $value['imagen_perfil'],  
-          'estado'          => $value['estado'],          
-          'cargo_nombre'     => $value['cargo_nombre'], 
-          'descripcion_expulsion' =>$value['descripcion_expulsion'],
+      return $trabajdor;
+      // var_dump($trabajdor);die();
 
-          'banco'           => (empty($bancos['data']) ? "": $bancos['data']['banco']), 
-          'cuenta_bancaria' => (empty($bancos['data']) ? "" : $bancos['data']['cuenta_bancaria']), 
-          'cci'             => (empty($bancos['data']) ? "" : $bancos['data']['cci']), 
-        );
-      }
-      return $retorno=['status'=>true, 'message'=>'todo oka ps', 'data'=>$data];
     }
 
     // obtebnemos los DOCS para eliminar
     public function obtenerImg($idtrabajador) {
 
-      $sql = "SELECT imagen_perfil, imagen_dni_anverso, imagen_dni_reverso FROM trabajador WHERE idtrabajador='$idtrabajador'";
+      $sql = "SELECT imagen_perfil FROM trabajador WHERE idtrabajador='$idtrabajador'";
 
       return ejecutarConsultaSimpleFila($sql);
     }
