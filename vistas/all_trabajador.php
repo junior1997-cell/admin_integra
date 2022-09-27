@@ -70,8 +70,8 @@
                                 <th class="text-center">#</th>
                                 <th class="">Aciones</th>
                                 <th>Nombres</th>
-                                <th>Tipo</th>
-                                <th>Ocupación</th>
+                                <th>Cargo</th>
+                                <th>Sueldo</th>
                                 <th>Telefono</th>
                                 <th>Fecha Nac. / Edad</th>
                                 <th>Cuenta bancaria</th>
@@ -84,6 +84,8 @@
                                 <th>Banco</th>
                                 <th>Cta. Cte.</th>
                                 <th>CCI</th>
+                                <th>Sueldo mensual</th>
+                                <th>Sueldo Diario</th>
                               </tr>
                             </thead>
                             <tbody></tbody>
@@ -92,8 +94,8 @@
                                 <th class="text-center">#</th>
                                 <th>Aciones</th>
                                 <th>Nombres</th>
-                                <th>Tipo</th>
-                                <th>Ocupación</th>
+                                <th>Cargo</th>
+                                <th>Sueldo</th>
                                 <th>Telefono</th>
                                 <th>Fecha Nac. / Edad</th>
                                 <th>Cuenta bancaria</th>
@@ -106,6 +108,8 @@
                                 <th>Banco</th>
                                 <th>Cta. Cte.</th>
                                 <th>CCI</th>
+                                <th>Sueldo mensual</th>
+                                <th>Sueldo Diario</th>
                               </tr>
                             </tfoot>
                           </table>

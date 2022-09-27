@@ -150,6 +150,9 @@
                 "14"=> $value['banco'],
                 "15"=> $value['cuenta_bancaria'],
                 "16"=> $value['cci'],
+                "17"=> number_format($value['sueldo_mensual']),
+                "18"=> $value['sueldo_diario'],
+
               );
             }
             $results = array(
