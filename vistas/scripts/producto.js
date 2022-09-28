@@ -8,16 +8,23 @@ function init() {
   $("#mRecurso").addClass("active");
 
   $("#lAllProducto").addClass("active");
+  $('.lAllProducto-img').attr('src', '../dist/svg/negro-abono-ico.svg');
 
   tbla_principal();
+  // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
 
+  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) { $("#submit-form-materiales").submit(); });
 
- 
-  // ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
+   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
+  $("#unidad_medida").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
+  $("#categoria_producto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
+// ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
   //$('#precio_unitario').number( true, 2 );
+  $('#precio_unitario').number( true, 2 );
   formato_miles_input('#precio_unitario');
   $('.jq_image_zoom').zoom({ on:'grab' });
   // Formato para telefono
@@ -30,25 +37,78 @@ function templateColor (state) {
   var $state = $(`<span ><b style="background-color: ${color_bg}; color: ${color_bg};" class="mr-2"><i class="fas fa-square"></i><i class="fas fa-square"></i></b>${state.text}</span>`);
   return $state;
 }
+// abrimos el navegador de archivos
+$("#foto1_i").click(function () { $("#foto1").trigger("click"); });
+$("#foto1").change(function (e) { addImage(e, $("#foto1").attr("id"), "../dist/img/default/img_defecto_activo_fijo.png"); });
 
+function foto1_eliminar() {
+  $("#foto1").val("");
+
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_activo_fijo.png");
+
+  $("#foto1_nombre").html("");
+}
 //Función limpiar
 function limpiar_form_material() {
 
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
+  $('.name-modal-title-agregar').html('Agregar Producto');
+
 
   //Mostramos los Materiales
-  $("#idproducto").val("");
-  $("#descripcion_material").val("");
+  $("#idproducto").val("");  
+  $("#nombre").val("");
+  // $("#marca").val("");
+  $("#descripcion").val("");
 
   $("#precio_unitario").val("");
-  
+
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_activo_fijo.png");
+  $("#foto1").val("");
+  $("#foto1_actual").val("");
+  $("#foto1_nombre").html("");   
 
   $("#unidad_medida").val("null").trigger("change");
+  $("#contenido_neto").val(1).trigger("change");
+  $("#stock").val(1).trigger("change");
+  $("#marca").val("").trigger("change");
+  $("#categoria_producto").val("").trigger("change");
+ 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
   $(".form-control").removeClass('is-invalid');
   $(".error.invalid-feedback").remove();
+}
+
+function lista_de_items() { 
+
+  $(".lista-items").html(`<li class="nav-item"><a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a></li>`); 
+
+  $.post("../ajax/activos_fijos.php?op=lista_de_categorias", function (e, status) {
+    
+    e = JSON.parse(e); console.log(e);
+    // e.data.idtipo_tierra
+    if (e.status) {
+      var data_html = '';
+
+      e.data.forEach((val, index) => {
+        data_html = data_html.concat(`
+        <li class="nav-item">
+          <a class="nav-link" onclick="delay(function(){tabla_principal('${val.idcategoria}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
+        </li>`);
+      });
+
+      $(".lista-items").html(`
+        <li class="nav-item">
+          <a class="nav-link active" onclick="delay(function(){tabla_principal('todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
+        </li>
+        ${data_html}
+      `); 
+    } else {
+      ver_errores(e);
+    }
+  }).fail( function(e) { ver_errores(e); } );
 }
 
 //Función Listar
@@ -60,9 +120,9 @@ function tbla_principal() {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,12,13,4,5,6,7,8,9,14], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,12,13,4,5,6,7,8,9,14], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,12,13,4,5,6,7,8,9,14], } },
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } },
     ],
     ajax: {
       url: "../ajax/producto.php?op=tbla_principal",
@@ -80,9 +140,9 @@ function tbla_principal() {
       // columna: code
       if (data[2] != '') { $("td", row).eq(2).addClass("text-center"); }
       // columna: precio unitario
-      if (data[7] != '') { $("td", row).eq(7).addClass("text-nowrap"); }
+      if (data[7] != '') { $("td", row).eq(7).addClass("text-nowrap text-center"); }
       // columna: precio sin igv
-      if (data[8] != '') { $("td", row).eq(8).addClass("text-nowrap"); }
+      if (data[8] != '') { $("td", row).eq(8).addClass("text-nowrap text-center"); }
       // columna: monto igv
       if (data[9] != '') { $("td", row).eq(9).addClass("text-nowrap"); }
       // columna: precio total
@@ -97,30 +157,14 @@ function tbla_principal() {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [5,6], visible: false, searchable: true, },   
-      { targets: [4], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [10,11], visible: false, searchable: true, },   
+      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ],
   }).DataTable();
 }
 
 //ver ficha tecnica
-function modal_ficha_tec(ficha_tecnica) {
 
-  // ------------------------
-  //$('.tile-modal-comprobante').html(nombre); 
-  $("#modal-ver-ficha_tec").modal("show");
-  $('#ver_fact_pdf').html(doc_view_extencion(ficha_tecnica, 'material', 'ficha_tecnica', '100%', '550'));
-
-  if (DocExist(`dist/docs/material/ficha_tecnica/${ficha_tecnica}`) == 200) {
-    $("#iddescargar").attr("href","../dist/docs/material/ficha_tecnica/"+ficha_tecnica).attr("download", 'ficha tecncia').removeClass("disabled");
-    $("#ver_completo").attr("href","../dist/docs/material/ficha_tecnica/"+ficha_tecnica).removeClass("disabled");
-  } else {
-    $("#iddescargar").addClass("disabled");
-    $("#ver_completo").addClass("disabled");
-  }
-  $('.jq_image_zoom').zoom({ on:'grab' });
-  $(".tooltip").removeClass("show").addClass("hidde");
-}
 
 //Función para guardar o editar
 function guardaryeditar(e) {
@@ -184,37 +228,31 @@ function mostrar(idproducto) {
   $("#cargando-1-fomulario").hide();
   $("#cargando-2-fomulario").show();
 
+  $('.name-modal-title-agregar').html('Editar Producto');
+
   $("#modal-agregar-material").modal("show");
 
-  $.post("../ajax/materiales.php?op=mostrar", { 'idproducto': idproducto }, function (e, status) {
+  $.post("../ajax/producto.php?op=mostrar", { 'idproducto': idproducto }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);
 
-    if (e.status) {
-      $("#idproducto").val(e.data.idproducto);        
-      $("#descripcion_material").val(e.data.descripcion);
+    if (e.status == true) {
+      $("#idproducto").val(e.data.idproducto);
+      $("#nombre").val(e.data.nombre);
+      $("#marca").val(e.data.marca).trigger("change");  
+      $("#descripcion").val(e.data.descripcion);
 
-      $("#precio_unitario").val(e.data.precio_unitario);        
+      $('#precio_unitario').val(parseFloat(e.data.precio_unitario).toFixed(2));
       
-      $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
+      $("#unid_medida").val(e.data.idunidad_medida).trigger("change");
+      $("#stock").val(e.data.stock).trigger("change");  
+      $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
 
-       
-      
-  
-      // FICHA TECNICA
-      if (e.data.ficha_tecnica == "" || e.data.ficha_tecnica == null  ) {
-  
-        $("#doc2_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');  
-        $("#doc2_nombre").html('');  
-        $("#doc_old_2").val(""); $("#doc2").val("");
-  
-      } else {
-  
-        $("#doc_old_2").val(e.data.ficha_tecnica);   
-        $("#doc2_nombre").html(`<div class="row"> <div class="col-md-12"><i>Ficha-tecnica.${extrae_extencion(e.data.ficha_tecnica)}</i></div></div>`);
-        $("#doc2_ver").html(doc_view_extencion(e.data.ficha_tecnica, 'material', 'ficha_tecnica', '100%'));
-              
+      if (e.data.imagen != "") {        
+        $("#foto1_i").attr("src", "../dist/docs/material/img_perfil/" + e.data.imagen);  
+        $("#foto1_actual").val(e.data.imagen);
       }
+
       $('.jq_image_zoom').zoom({ on:'grab' });
       $("#cargando-1-fomulario").show();
       $("#cargando-2-fomulario").hide();
@@ -231,17 +269,17 @@ function verdatos(idproducto){
 
   $('#datosinsumo').html(`<div class="row"><div class="col-lg-12 text-center"><i class="fas fa-spinner fa-pulse fa-6x"></i><br/><br/><h4>Cargando...</h4></div></div>`);
 
+  var verdatos=''; 
+
   var imagen_perfil =''; var btn_imagen_perfil = '';
-  
-  var ficha_tecnica=''; var btn_ficha_tecnica = '';
 
   $("#modal-ver-insumo").modal("show");
 
-  $.post("../ajax/materiales.php?op=mostrar", { 'idproducto': idproducto }, function (e, status) {
+  $.post("../ajax/producto.php?op=mostrar", { 'idproducto': idproducto }, function (e, status) {
 
     e = JSON.parse(e);  //console.log(e); 
     
-    if (e.status) {     
+    if (e.status == true) {     
     
       if (e.data.imagen != '') {
 
@@ -263,9 +301,10 @@ function verdatos(idproducto){
         btn_imagen_perfil='';
 
       }     
+ 
 
 
-      var retorno_html=`                                                                            
+      var retorno_html=`  
       <div class="col-12">
         <div class="card">
           <div class="card-body">
@@ -274,23 +313,37 @@ function verdatos(idproducto){
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th rowspan="2">${imagen_perfil}<br>${btn_imagen_perfil}</th>
                   <td> <b>Nombre: </b> ${e.data.nombre}</td>
-                </tr>                
-                     
+                </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <td> <b>Color: </b> ${e.data.marca}</td>
+                </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <td> <b>Color: </b> ${e.data.contenido_neto}</td>
+                </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Clasificación</th>
+                  <td>${e.data.categoria}</td>
+                </tr> 
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>U.M.</th>
                   <td>${e.data.nombre_medida}</td>
                 </tr>                
-                
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Marca</th>
+                    <td>${e.data.stock}</td>
+                </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Precio  </th>
                   <td>${e.data.precio_unitario}</td>
                 </tr>
-                               
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Precio  </th>
+                  <td>${e.data.contenido_neto}</td>
+                </tr>               
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Descripción</th>
-                  <td><textarea cols="30" rows="2" class="textarea_datatable" readonly="">${e.data.descripcion}</textarea></td>
+                  <td>${e.data.descripcion}</td>
                 </tr>
-                
               </tbody>
             </table>
           </div>
@@ -318,8 +371,8 @@ function ver_perfil(file, nombre) {
 function eliminar(idproducto, nombre) {
 
   crud_eliminar_papelera(
-    "../ajax/materiales.php?op=desactivar",
-    "../ajax/materiales.php?op=eliminar", 
+    "../ajax/producto.php?op=desactivar",
+    "../ajax/producto.php?op=eliminar", 
     idproducto, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -340,16 +393,29 @@ init();
 
 $(function () {   
 
+  $('#unidad_medida').on('change', function() { $(this).trigger('blur'); });
+  $('#marca').on('change', function() { $(this).trigger('blur'); });
+  $('#categoria_producto').on('change', function() { $(this).trigger('blur'); });
+
   $("#form-materiales").validate({
     rules: {
-     
-      nombre_producto: { minlength: 4 },
-      nombre_producto:  { required: true },
+      nombre_producto:  { required: true, minlength:3, maxlength:200},
+      categoria_producto: { required: true },
+      marca:          { required: true },
+      unidad_medida:    { required: true },
+      contenido_neto:         {  minlength: 3 },
+      precio_unitario:{ required: true },
+      descripcion:    { minlength: 4 },
       
     },
     messages: {
-      nombre_producto: { minlength: "MINIMO 4 caracteres." },
-      nombre_producto:        { required: "Campo requerido.", },
+      nombre_producto:  { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
+      categoria_producto: { required: "Campo requerido", },
+      marca:          { required: "Campo requerido" },
+      unidad_medida:    { required: "Campo requerido" },
+      contenido_neto:         { minlength: "Minimo 3 caracteres", },
+      precio_unitario:{ required: "Ingresar precio compra", },      
+      descripcion:    { minlength: "Minimo 4 caracteres" },
     },
 
     errorElement: "span",
@@ -373,6 +439,9 @@ $(function () {
     },
   });
 
+  $('#unidad_medida').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#marca').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#categoria_producto').rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
 });
 
