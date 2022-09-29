@@ -135,175 +135,106 @@
                         <div class="card card-primary card-outline">
                           <div class="card-header">
                             <h2 class="card-title " >
-                              <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-proyecto" onclick="limpiar();">
-                              <i class="fas fa-plus-circle"></i> Agregar
-                              </button>
-                              Proyectos no empezados o en proceso                      
+                              <button type="button" class="btn bg-gradient-success disabled"  data-toggle="modal" data-target="#modal-agregar-proyecto" onclick="limpiar();">
+                              <i class="fas fa-plus-circle"></i> ---
+                              </button>                     
                             </h2>                      
                           </div>
                           <!-- /.card-header -->
                           <div class="card-body">
 
                             <div class="row mb-3">
-                              <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box cursor-pointer box-proceso" onclick="delay(function(){tbla_principal(1, 'shadow-0px-05rem-1rem-rgb-255-193-7', '.box-proceso')}, 100 );" data-toggle="tooltip" data-original-title="Click para ver">
-                                  <span class="info-box-icon bg-warning "><i class="fas fa-hourglass-half"></i></span>
+                              <div class="col-md-6">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <!-- <div class="d-flex">
+                                      <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">$18,230.00</span> <span>Sales Over Time</span>
+                                      </p>
+                                      <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="text-success"><i class="fas fa-arrow-up"></i> 33.1% </span>
+                                        <span class="text-muted">Since last month</span>
+                                      </p>
+                                    </div> -->
+                                    <!-- /.d-flex -->
 
-                                  <div class="info-box-content">
-                                    <span class="info-box-text">Proyectos</span>
-                                    <span class="info-box-number">(<span class="cant_proceso"></span>) EN PROCESO</span>
+                                    <div class="position-relative mb-4">
+                                      <canvas id="visitors-chart" height="350"></canvas>
+                                    </div>
+
+                                    <div class="d-flex flex-row justify-content-end">
+                                      <span class="mr-2"><i class="fas fa-square text-black-50"></i> Utilidad</span>
+                                      <span class="mr-2"><i class="fas fa-square text-blue"></i> Subcontrato</span>
+                                    </div>
                                   </div>
-                                  <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                              </div>
+                                  <!-- linea divisoria -->
+                                  <div class="col-lg-12 borde-arriba-naranja mt-3 mb-3"> </div>
+
+                                  <div class="col-md-6">
+                                    <p class="text-center"> <strong>Utilidad Total</strong> </p>
+                                    <div class="progress-group text-center mb-4">
+                                      <h2 class="progress_total_utilidad_subcontrato" >S/. 700.00</h2>
+                                    </div>
+                                    <!-- /.progress-group -->                                    
+                                  </div>                                  
+                                  <div class="col-md-6">
+                                    <p class="text-center"> <strong>Subcontrato</strong> </p>
+                                    <div class="progress-group text-center">
+                                      <h2 class="progress_total_subcontrato" >S/. 100.00</h2>
+                                    </div>
+                                    <!-- /.progress-group -->
+                                  </div>
+                                </div>    
+                                <!-- /.row -->                      
+                              </div>     
                               <!-- /.col -->
 
-                              <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box cursor-pointer box-no-empezado" onclick="delay(function(){tbla_principal(2, 'shadow-0px-05rem-1rem-rgb-220-53-69', '.box-no-empezado')}, 100 );" data-toggle="tooltip" data-original-title="Click para ver">
-                                  <span class="info-box-icon bg-danger"><i class="fas fa-hourglass-start"></i></span>
+                              <div class="col-md-6">
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <!-- <div class="d-flex">
+                                      <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">$18,230.00</span> <span>Sales Over Time</span>
+                                      </p>
+                                      <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="text-success"><i class="fas fa-arrow-up"></i> 33.1% </span>
+                                        <span class="text-muted">Since last month</span>
+                                      </p>
+                                    </div> -->
+                                    <!-- /.d-flex -->
 
-                                  <div class="info-box-content">
-                                    <span class="info-box-text">Proyectos</span>
-                                    <span class="info-box-number">(<span class="cant_no_emmpezado"></span>) NO EMPEZADOS</span>
+                                    <div class="position-relative mb-4">
+                                      <canvas id="sales-chart" height="350"></canvas>
+                                    </div>
+
+                                    <div class="d-flex flex-row justify-content-end">
+                                      <span class="mr-2"><i class="fas fa-square text-black-50"></i> Gastos</span>
+                                      <span class="mr-2"><i class="fas fa-square text-blue" ></i> Ingresos</span>
+                                    </div>
                                   </div>
-                                  <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                              </div>
-                              <!-- /.col -->
+                                  <!-- linea divisoria -->
+                                  <div class="col-lg-12 borde-arriba-naranja mt-3 mb-3"> </div>
 
-                              <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box cursor-pointer box-terminado" onclick="delay(function(){tbla_principal(0, 'shadow-0px-05rem-1rem-rgb-40-167-69', '.box-terminado')}, 100 );" data-toggle="tooltip" data-original-title="Click para ver">
-                                  <span class="info-box-icon bg-success"><i class="fas fa-hourglass-end"></i></span>
-
-                                  <div class="info-box-content">
-                                    <span class="info-box-text">Proyectos</span>
-                                    <span class="info-box-number">(<span class="cant_teminado"></span>) TERMINADOS</span>
+                                  <div class="col-md-6">
+                                    <p class="text-center"> <strong>Gastos Total</strong> </p>
+                                    <div class="progress-group text-center mb-4">
+                                      <h2 class="progress_total_utilidad_subcontrato" >S/. 500.00</h2>
+                                    </div>
+                                    <!-- /.progress-group -->                                    
+                                  </div>                                  
+                                  <div class="col-md-6">
+                                    <p class="text-center"> <strong>Ingresos</strong> </p>
+                                    <div class="progress-group text-center">
+                                      <h2 class="progress_total_subcontrato" >S/. 1,500.00</h2>
+                                    </div>
+                                    <!-- /.progress-group -->
                                   </div>
-                                  <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                              </div>
+                                </div>    
+                                <!-- /.row -->                      
+                              </div>     
                               <!-- /.col -->
-
-                              <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box cursor-pointer box-todos" onclick="delay(function(){tbla_principal(3, 'shadow-0px-05rem-1rem-rgb-23-162-184', '.box-todos')}, 100 );" data-toggle="tooltip" data-original-title="Click para ver">
-                                  <span class="info-box-icon bg-info"><i class="fas fa-tasks"></i></span>
-
-                                  <div class="info-box-content">
-                                    <span class="info-box-text">Proyectos</span>
-                                    <span class="info-box-number">(<span class="cant_todos"></span>) TODOS</span>
-                                  </div>
-                                  <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                              </div>
-                              <!-- /.col -->
-                            </div>                            
-                            
-                            <table id="tabla-proyectos" class="table table-bordered table-striped display" style="width: 100% !important;">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th class="">Aciones</th>
-                                  <th>Empresa</th>
-                                  <th>Código proyecto</th>
-                                  <th>Ubicación</th>                              
-                                  <th>Costo</th>
-                                  <th>Empresa</th>
-                                  <th>Documento</th>
-                                  <th>Ubicación</th>
-                                  <th>Fecha Inicio</th>
-                                  <th>Fecha Fin</th>
-                                  <th>Plazo</th>
-                                  <th>Dias Hábiles</th>
-                                  <th>Valorizacion</th>
-                                  <th>Pago Obrero</th>
-                                  <th>Permanente</th>
-                                  <th>contractual</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </thead>
-                              <tbody>                         
-                                
-                              </tbody>
-                              <tfoot>
-                                <tr>
-                                  <th>#</th>
-                                  <th class="">Aciones</th>
-                                  <th>Empresa</th>
-                                  <th>Código proyecto</th>
-                                  <th>Ubicación</th>                              
-                                  <th>Costo</th>
-                                  <th>Empresa</th>
-                                  <th>Documento</th>
-                                  <th>Ubicación</th>
-                                  <th>Fecha Inicio</th>
-                                  <th>Fecha Fin</th>
-                                  <th>Plazo</th>
-                                  <th>Dias Hábiles</th>
-                                  <th>Valorizacion</th>
-                                  <th>Pago Obrero</th>
-                                  <th>Permanente</th>
-                                  <th>contractual</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </tfoot>
-                            </table>
-
-                            <div class="mt-4 card-danger card-outline hidden">
-                              <h1 style="text-align: center;background-color: aliceblue;">Proyectos Terminados</h1>
-                              <table id="tabla-proyectos-terminados" class="table table-bordered table-striped display" style="width: 100% !important;">
-                                <thead>
-                                  <tr>
-                                    <th>#</th>
-                                    <th class="">Aciones</th>
-                                    <th>Empresa</th>
-                                    <th>Código proyecto</th>
-                                    <th>Ubicación</th>                              
-                                    <th>Costo</th>
-                                    <th>Empresa</th>
-                                    <th>Documento</th>
-                                    <th>Ubicación</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Plazo</th>
-                                    <th>Dias Hábiles</th>
-                                    <th>Valorizacion</th>
-                                    <th>Pago Obrero</th>
-                                    <th>Permanente</th>
-                                    <th>contractual</th>
-                                    <th>Estado</th>
-                                  </tr>
-                                </thead>
-                                <tbody>                         
-                                  
-                                </tbody>
-                                <tfoot>
-                                  <tr>
-                                    <th>#</th>
-                                    <th class="">Aciones</th>
-                                    <th>Empresa</th>
-                                    <th>Código proyecto</th>
-                                    <th>Ubicación</th>                              
-                                    <th>Costo</th>
-                                    <th>Empresa</th>
-                                    <th>Documento</th>
-                                    <th>Ubicación</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Plazo</th>
-                                    <th>Dias Hábiles</th>
-                                    <th>Valorizacion</th>
-                                    <th>Pago Obrero</th>
-                                    <th>Permanente</th>
-                                    <th>contractual</th>
-                                    <th>Estado</th>
-                                  </tr>
-                                </tfoot>
-                              </table>
                             </div>
+                            <!-- /.row --> 
                           </div>
                           <!-- /.card-body -->
                         </div>
@@ -756,322 +687,7 @@
                         </div>                  
                       </div>
                     </div>
-                  </div>
-
-                  <!-- Modal ver los documentos subidos -->
-                  <div class="modal fade" id="modal-ver-docs">
-                    <div class="modal-dialog modal-dialog-scrollable modal-xl">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title">Documentos subidos</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-danger" aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        
-                        <div class="modal-body">
-                          <div class="row" >
-
-                            <!-- Pdf 1 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >      
-                              <div id="verdoc1" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center" id="verdoc1_nombre">
-                                <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div> 
-
-                            <!-- Pdf 2 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >                            
-                              <div id="verdoc2" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center" id="verdoc2_nombre">
-                                <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div>
-                            
-                            <!-- Pdf 3 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >                             
-                              <div id="verdoc3" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center" id="verdoc3_nombre">
-                                  <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div>
-
-                            <!-- Pdf 4 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >                             
-                              <div id="verdoc4" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center" id="verdoc4_nombre">
-                                  <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div>
-
-                            <!-- Pdf 5 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >                             
-                              <div id="verdoc5" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center" id="verdoc5_nombre">
-                                  <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div>
-
-                            <!-- Pdf 6 -->
-                            <div class="col-md-12 col-lg-6 mb-4" >                             
-                              <div id="verdoc6" class="text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                              <div class="text-center " id="verdoc6_nombre">
-                                  <!-- aqui va el nombre del pdf -->
-                              </div>
-
-                              <!-- linea divisoria -->
-                              <div class="borde-arriba-naranja mt-4"> </div>
-                            </div>
-
-                          </div>                      
-                        </div>
-
-                        <div class="modal-footer justify-content-end">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>                  
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Modal ver detalle del proyecto -->
-                  <div class="modal fade" id="modal-ver-detalle">
-                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="detalle_titl">Detalle del proyecto</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-danger" aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        
-                        <div class="modal-body">
-
-                          <div id="cargando-3-fomulario">
-
-                            <div class="row" id="cargando-detalle-proyecto"> </div>
-                            
-                            <div class="mailbox-attachments  clearfix text-center row">
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >     
-                                <li >                    
-                                  <span class="mailbox-attachment-icon name_icon_1"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_1"><i class="fas fa-paperclip"></i> Acta-de-contrato-de-obra</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_1" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_1" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_1" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-  
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >  
-                                <li>                       
-                                  <span class="mailbox-attachment-icon name_icon_2"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_2"><i class="fas fa-paperclip"></i> Acta-de-entrega-de-terreno</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_2" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_2" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_2" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-  
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >  
-                                <li>                       
-                                  <span class="mailbox-attachment-icon name_icon_3"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_3"><i class="fas fa-paperclip"></i> Acta-de-inicio-de-obra</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_3" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_3" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_3" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-  
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >     
-                                <li>                    
-                                  <span class="mailbox-attachment-icon name_icon_4"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_4"><i class="fas fa-paperclip"></i> Presupuesto</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_4" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_4" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_4" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-  
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >  
-                                <li>                       
-                                  <span class="mailbox-attachment-icon name_icon_5"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_5"><i class="fas fa-paperclip"></i> Analisis-de-costos-unitarios</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_5" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_5" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_5" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-  
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4" >  
-                                <li>                       
-                                  <span class="mailbox-attachment-icon name_icon_6"><i class="far fa-file-pdf"></i></span>
-                                  <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name name_doc_6"><i class="fas fa-paperclip"></i> Insumos</a>
-                                      <span class="mailbox-attachment-size clearfix mt-1">
-                                        <a href="#" class="btn btn-default btn-sm download_doc_6" download="" data-toggle="tooltip" data-original-title="Descargar"><i class="fas fa-cloud-download-alt"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm ver_doc_6" target="_blank" data-toggle="tooltip" data-original-title="Ver"><i class="far fa-eye"></i></a>
-                                        <a href="#" class="btn btn-default btn-sm imprimir_doc_6" data-toggle="tooltip" data-original-title="Imprimir" onclick=""><i class="fas fa-print"></i></a>
-                                      </span>
-                                  </div>
-                                </li>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div id="cargando-4-fomulario">
-                            <div class="col-lg-12 text-center">
-                              <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                              <h4>Cargando...</h4>
-                            </div>
-                          </div>
-
-                        </div>
-                                          
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Modal agregar valorizaciones -->
-                  <div class="modal fade" id="modal-agregar-valorizaciones">
-                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title">Valorizaciones <small class="text-danger">(El documento nuevo reemplazara al antiguo)</small></h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-danger" aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        
-                        <div class="modal-body">
-                          <!-- form start -->
-                          <form id="form-valorizaciones" name="form-valorizaciones"  method="POST" >                      
-                            
-                            <div class="row" id="cargando-3-fomulario">
-                              <!-- id proyecto -->
-                              <input type="hidden" name="idproyect" id="idproyect" />
-                              
-                              <!-- Doc Valorizaciones -->
-                              <div class="col-md-12 col-lg-6" >                               
-                                <div class="row text-center">
-                                  <div class="col-md-12" style="padding-top: 15px; padding-bottom: 5px;">
-                                    <label for="cip" class="control-label" >Valorizaciones </label>
-                                  </div>
-                                  <div class="col-md-6 text-center">
-                                    <button type="button" class="btn btn-success btn-block" id="doc7_i">
-                                      <i class="fas fa-file-upload"></i> Subir.
-                                    </button>
-                                    <input type="hidden" id="doc_old_7" name="doc_old_7" />
-                                    <input style="display: none;" id="doc7" type="file" name="doc7" accept=".xlsx, .xlsm, .xls, .csv" class="docpdf" /> 
-                                  </div>
-                                  <div class="col-md-6 text-center">
-                                    <button type="button" class="btn btn-info btn-block" disabled onclick="PreviewImage();">
-                                      <i class="fa fa-eye"></i> Excel.
-                                    </button>
-                                  </div>
-                                </div>                              
-                                <div id="doc7_ver" class="text-center mt-4">
-                                  <img src="../dist/svg/doc_uploads.svg" alt="" width="50%" >
-                                </div>
-                                <div class="text-center" id="doc7_nombre"><!-- aqui va el nombre del pdf --></div>
-                              </div>
-
-                              <!-- Documento existe -->
-                              <!-- Pdf 1 -->
-                              <div class="col-md-12 col-lg-6 " > 
-                                <!-- linea divisoria -->
-                                <div class="borde-arriba-naranja mt-4"> </div>
-
-                                <div class="text-center" id="verdoc7_nombre">
-                                  <!-- aqui va el nombre del pdf -->
-                                </div>    
-                                <div id="verdoc7" class="text-center mt-4">
-                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                  <h4>Cargando...</h4>
-                                </div>                            
-                              </div> 
-
-                              <!-- barprogress -->
-                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                                <div class="progress" id="div_barra_progress">
-                                  <div id="barra_progress2" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
-                                    0%
-                                  </div>
-                                </div>
-                              </div>                                          
-
-                            </div>  
-
-                            
-                            
-                            <div class="row" id="cargando-4-fomulario" style="display: none;">
-                              <div class="col-lg-12 text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
-                                <h4>Cargando...</h4>
-                              </div>
-                            </div>
-                            <!-- /.card-body -->                      
-                            <button type="submit" style="display: none;" id="submit-form-valorizaciones">Submit</button>                      
-                          </form>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-success" id="guardar_registro_valorizaciones">Guardar Cambios</button>
-                        </div>                  
-                      </div>
-                    </div>
-                  </div>
+                  </div>                 
 
                 </section>
                 <!-- /.content -->
@@ -1088,10 +704,12 @@
 
         <?php require 'script.php'; ?>
 
-        <!-- <script src="../plugins/moment/moment.min.js"></script> -->
-        <!-- <script src="../plugins/moment/locales.js"></script> -->
-        <!-- <script src="../plugins/moment/locale/es.js"></script> -->
-        <script type="text/javascript" src="scripts/proyecto.js"></script>
+        <!-- OPTIONAL SCRIPTS -->
+        <script src="../plugins/chart.js/Chart.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="../dist/js/demo.js"></script>
+
+        <script type="text/javascript" src="scripts/escritorio.js"></script>
 
         <script>  $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

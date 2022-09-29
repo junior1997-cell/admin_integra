@@ -113,7 +113,7 @@
               <!-- Producto para la empresa -->
               <li class="nav-item ">
                 <a href="producto.php" class="nav-link" id="lAllProducto">                  
-                <img src="../dist/svg/palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" >
+                  <img src="../dist/svg/plomo-abono-ico.svg" class="nav-icon lAllProducto-img" alt="" style="width: 21px !important;" >
                   <p>Producto</p>
                 </a>
               </li>              
@@ -173,7 +173,7 @@
               <li class="nav-item  b-radio-3px" id="bloc_Compras">
                 <a href="#" class="nav-link pl-2" id="mCompra">
                   <i class="fas fa-shopping-cart nav-icon"></i>
-                  <p>Compras <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
+                  <p>Compras Abono <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->
@@ -185,7 +185,7 @@
                   <!-- Resumend de Insumos -->
                   <li class="nav-item ">
                     <a href="resumen_insumos.php" class="nav-link" id="lResumenInsumos">
-                      <i class="nav-icon fas fa-tasks"></i> <p>Resumen de insumos</p>
+                      <i class="nav-icon fas fa-tasks"></i> <p>Resumen de Productos</p>
                     </a>
                   </li> 
                   
@@ -197,7 +197,33 @@
                   </li> 
                 </ul>
               </li>
-            <?php  }  ?>            
+            <?php  }  ?>      
+            
+            <?php if ($_SESSION['compra_insumos']==1) {  ?>   
+              <!-- COMPRAS -->      
+              <li class="nav-item  b-radio-3px" id="bloc_ComprasGrano">
+                <a href="#" class="nav-link pl-2" id="mCompraGrano">
+                  <img src="../dist/svg/plomo-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" >
+                  <p>Compras Grano <i class="fas fa-angle-left right"></i> <span class="badge badge-danger right">2</span></p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <!-- Compras del proyecto -->
+                  <li class="nav-item ">
+                    <a href="compra_grano.php" class="nav-link" id="lComprasGrano">
+                      <i class="nav-icon fas fa-cart-plus"></i> 
+                      <p>Compras</p>
+                    </a>
+                  </li>                  
+                  
+                  <!-- graficos insumos -->
+                  <li class="nav-item ">
+                    <a href="chart_compra_grano.php" class="nav-link" id="lChartCompraGrano">
+                      <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
+                    </a>
+                  </li> 
+                </ul>
+              </li>
+            <?php  }  ?> 
 
             <?php if ($_SESSION['subcontrato']==1) {  ?>  
             <li class="nav-item ">

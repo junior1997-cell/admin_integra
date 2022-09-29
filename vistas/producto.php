@@ -36,7 +36,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1><img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Producto</h1>
+                      <h1><img src="../dist/svg/negro-abono-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Producto</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
@@ -70,23 +70,34 @@
                                 <th class="">Acciones</th>
                                 <th class="">Code</th>
                                 <th>Nombre</th>
-                                <th data-toggle="tooltip" data-original-title="Precio Unitario">Precio ingresado</th>
-                                                         
+                                <th>Categoria</th>
+                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                <th >Precio </th>
+                                <th>Stock</th>
+                                <th>Contenido Neto</th>
+                                <th>Descripción</th> 
+
                                 <th>Nombre</th>
-                                <th>Descripción</th>
+                                <th>Marca</th>
                               </tr>
                             </thead>
                             <tbody></tbody>
                             <tfoot>
                               <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th class="">Code</th>
-                                <th>Nombre</th>
-                                <th data-toggle="tooltip" data-original-title="Precio Ingresado">Precio ingresado</th>
-                                                           
-                                <th>Nombre</th>
-                                <th>Descripción</th>
+                              <th class="text-center">#</th>
+                              <th class="">Acciones</th>
+                              <th class="">Code</th>
+                              <th>Nombre</th>
+                              <th>Categoria</th>
+                              <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                              <th >Precio </th>
+                              <th>Stock</th>
+                              <th>Contenido Neto</th>
+                              <th>Descripción</th>
+
+                              <th>Nombre</th>
+                              <th>Marca</th>
+                              
                               </tr>
                             </tfoot>
                           </table>
@@ -106,7 +117,7 @@
                   <div class="modal-dialog modal-dialog-scrollable modal-md">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Agregar Insumos</h4>
+                        <h4 class="modal-title name-modal-title-agregar">Agregar Producto</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -114,26 +125,59 @@
 
                       <div class="modal-body">
                         <!-- form start -->
-                        <form id="form-materiales" name="form-materiales" method="POST">
+                        <form id="form-materiales" name="form-materiales" method="POST" autocomplete="off">
                           <div class="card-body">
                             <div class="row" id="cargando-1-fomulario">
     
                               <!-- id proveedores -->
                               <input type="hidden" name="idproducto" id="idproducto" />
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="nombre_producto">Nombre <sup class="text-danger">(unico*)</sup></label>
                                   <input type="text" name="nombre_producto" class="form-control" id="nombre_producto" placeholder="Nombre del Insumo." />
                                 </div>
                               </div>
 
+                              <!-- Categoria -->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                  <label for="categoria_producto">Categoria <sup class="text-danger">(unico*)</sup></label>
+                                  <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
+                                  </select>
+                                </div>
+                              </div>                             
+
+                              <!-- Unnidad de medida-->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
+                                <div class="form-group">
+                                  <label for="Unidad_medida">Unidad medida <sup class="text-danger">(unico*)</sup></label>
+                                  <select name="unidad_medida" id="unidad_medida" class="form-control select2" style="width: 100%;"> </select>
+                                </div>
+                              </div>
+
+                               <!-- Marca -->
+                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                  <label for="marca">Marca <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
+                                </div>
+                              </div>
+
 
                               <!--Precio U-->
-                              <div class="col-7 col-sm-7 col-md-8 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
                                   <input type="text" name="precio_unitario" class="form-control" id="precio_unitario" placeholder="Precio Unitario." />
+                                </div>
+                              </div>
+
+                                <!-- Nombre -->
+                               <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                  <label for="contenido_neto">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="contenido_neto" class="form-control" id="contenido_neto" placeholder="Contenido Neto." />
                                 </div>
                               </div>
 
@@ -141,8 +185,26 @@
                               <!--nombre_producto-->
                               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
-                                  <label for="descripcion_material">Descripción </label> <br />
-                                  <textarea name="descripcion_material" id="descripcion_material" class="form-control" rows="2"></textarea>
+                                  <label for="descripcion">Descripción </label> <br />
+                                  <textarea name="descripcion" id="descripcion" class="form-control" rows="2"></textarea>
+                                </div>
+                              </div>
+
+                              <!--imagen-material-->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <label for="foto1">Imagen</label>
+                                <div style="text-align: center;">
+                                  <img
+                                    onerror="this.src='../dist/img/default/img_defecto_activo_fijo.png';"
+                                    src="../dist/img/default/img_defecto_activo_fijo.png"
+                                    class="img-thumbnail"
+                                    id="foto1_i"
+                                    style="cursor: pointer !important; height: 100% !important;"
+                                    width="auto"
+                                  />
+                                  <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
+                                  <input type="hidden" name="foto1_actual" id="foto1_actual" />
+                                  <div class="text-center" id="foto1_nombre"><!-- aqui va el nombre de la FOTO --></div>
                                 </div>
                               </div>
                               

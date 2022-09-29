@@ -292,7 +292,7 @@
 
           foreach ($rspta['data'] as $key => $value) {    
 
-            $data .= '<option value=' . $value['id'] . '>' . $value['nombre'] . ' - ' . $value['abreviacion'] .'</option>';
+            $data .= '<option value=' . $value['id'] . '>' . $value['nombre'] . ' - ' . $value['abreviatura'] .'</option>';
           }
 
           $retorno = array(
@@ -324,7 +324,7 @@
           $retorno = array(
             'status' => true, 
             'message' => 'Salió todo ok', 
-            'data' => $data, 
+            'data' => '<option value="1">NINGUNO</option>'.$data, 
           );
   
           echo json_encode($retorno, true);
