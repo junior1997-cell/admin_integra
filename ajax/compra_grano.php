@@ -260,16 +260,16 @@ if (!isset($_SESSION["nombre"])) {
         if ($rspta['status'] == true) {
           foreach ($rspta['data'] as $key => $reg) {
       
-            $saldo = $reg['total'] - $reg['total_pago_compras'];       
+            $saldo = $reg['total_compra'] - $reg['total_pago'];       
       
-            if ($saldo == $reg['total']) {
+            if ($saldo == $reg['total_compra']) {
               $estado = '<span class="text-center badge badge-danger">Sin pagar</span>';
               $c = "danger";
               $nombre = "Pagar";
               $icon = "dollar-sign";
               $cc = "danger";
             } else {
-              if ($saldo < $reg['total'] && $saldo > "0") {
+              if ($saldo < $reg['total_compra'] && $saldo > "0") {
                 $estado = '<span class="text-center badge badge-warning">En proceso</span>';
                 $c = "warning";
                 $nombre = "Pagar";
@@ -324,35 +324,23 @@ if (!isset($_SESSION["nombre"])) {
               '</div>';
             }
       
-            $vercomprobantes = '\''.$reg['idcompra_proyecto'].'\',\''.$reg['comprobante'].'\''; 
-      
-            $btn_tipo = (empty($reg['cant_comprobantes']) ? 'btn-outline-info' : 'btn-info');       
-            $clss_disabled = (empty($reg['cant_comprobantes']) ? 'disabled' : '');       
-            $descrip_toltip = (empty($reg['cant_comprobantes']) ? 'Vacío' : ($reg['cant_comprobantes']==1 ?  $reg['cant_comprobantes'].' comprobante' : $reg['cant_comprobantes'].' comprobantes'));       
-      
             $data[] = [
               "0" => $cont,
-              "1" => $reg['estado'] == '1' ? '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_proyecto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_proyecto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_proyecto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['razon_social'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>'
-                  : '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' .  $reg['idcompra_proyecto'] . ')"data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-success btn-sm" onclick="des_anular(' . $reg['idcompra_proyecto'] . ')" data-toggle="tooltip" data-original-title="Recuperar Compra"><i class="fas fa-check"></i></button>',
+              "1" => $reg['estado'] == '1' ? '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
+                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
+                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_grano'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</del> <del>'.$reg['nombre_cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>'
+                  : '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' .  $reg['idcompra_grano'] . ')"data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>' .
+                    ' <button class="btn btn-success btn-sm" onclick="des_anular(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Recuperar Compra"><i class="fas fa-check"></i></button>',
               "2" => $reg['fecha_compra'],
-              "3" => '<span class="text-primary font-weight-bold" >' . $reg['razon_social'] . '</span>',
-              "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>',
-              "5" => empty($reg['estado_detraccion']) ? ($stdo_detraccion = "No") : ($stdo_detraccion = 'Si'),
-              "6" => $reg['total'],
-              "7" => $list_segun_estado_detracc,
-              "8" => number_format($reg['total_pago_compras'], 2, '.', ','),
-              "9" => number_format($saldo, 2, '.', ','),
-              "10" => '<center> <button class="btn '.$btn_tipo.' btn-sm" onclick="comprobante_compras(' . $vercomprobantes . ', \''.$cont.'\', \''.encodeCadenaHtml($reg['tipo_comprobante'].' '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante'])).'\', \''.$reg['razon_social'].'\', \''.format_d_m_a($reg['fecha_compra']).'\')" data-toggle="tooltip" data-original-title="'.$descrip_toltip.'"><i class="fas fa-file-invoice fa-lg"></i></button> </center>',
-              "11" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
-              "12" => '<div class="custom-control custom-checkbox">
-                        <input class="custom-control-input custom-control-input-danger custom-control-input-outline check_add_doc " '.$clss_disabled.' type="checkbox" id="check_descarga_'.$reg['idcompra_proyecto'].'" onchange="add_remove_comprobante( '.$reg['idcompra_proyecto'].', \''.$reg['comprobante'].'\', \'' .encodeCadenaHtml('<b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante'])).'\')">
-                        <label for="check_descarga_'.$reg['idcompra_proyecto'].'" class="custom-control-label check_add_doc cursor-pointer"></label> '.
-                        '<i class="cargando_check m-r-10px hidden fas fa-spinner fa-pulse"></i>'.
-                        (empty($reg['cant_comprobantes']) ? '<button class="btn '.$btn_tipo.' btn-xs '.$clss_disabled.'"  data-toggle="tooltip" data-original-title="'.$descrip_toltip.'" ><i class="fas fa-cloud-download-alt"></i></button>' : '<button class="btn '.$btn_tipo.' btn-xs '.$clss_disabled.' descarga_compra_'.$reg['idcompra_proyecto'].'" onclick="download_no_multimple(\''.$reg['idcompra_proyecto'].'\',\''.$cont .'\', \''.removeSpecialChar($reg['tipo_comprobante'].' '.(empty($reg['serie_comprobante']) ?  "" :  ' ─ '.$reg['serie_comprobante']).' ─ '.$reg['razon_social']).' ─ '. format_d_m_a($reg['fecha_compra']).'\')" data-toggle="tooltip" data-original-title="'.$descrip_toltip.'" ><i class="fas fa-cloud-download-alt"></i></button>'). 
-                      '</div>'.$toltip,
+              "3" => '<span class="text-primary font-weight-bold" >' . $reg['nombre_cliente'] . '</span>',
+              "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</span>',              
+              "5" => $reg['total_compra'],
+              "6" => $list_segun_estado_detracc,
+              "7" => number_format($reg['total_pago'], 2, '.', ','),
+              "8" => number_format($saldo, 2, '.', ','),
+              "9" => '<center> <button class="btn '.$btn_tipo.' btn-sm" onclick="comprobante_compras(' . $vercomprobantes . ', \''.$cont.'\', \''.encodeCadenaHtml($reg['tipo_comprobante'].' '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante'])).'\', \''.$reg['razon_social'].'\', \''.format_d_m_a($reg['fecha_compra']).'\')" data-toggle="tooltip" data-original-title="'.$descrip_toltip.'"><i class="fas fa-file-invoice fa-lg"></i></button> </center>',
+              "10" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
+              "11" => $toltip,
             ];
             $cont++;
           }

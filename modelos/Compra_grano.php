@@ -206,56 +206,48 @@ class Compra_insumos
     $filtro_proveedor = ""; $filtro_fecha = ""; $filtro_comprobante = ""; 
 
     if ( !empty($fecha_1) && !empty($fecha_2) ) {
-      $filtro_fecha = "AND cpp.fecha_compra BETWEEN '$fecha_1' AND '$fecha_2'";
+      $filtro_fecha = "AND cg.fecha_compra BETWEEN '$fecha_1' AND '$fecha_2'";
     } else if (!empty($fecha_1)) {      
-      $filtro_fecha = "AND cpp.fecha_compra = '$fecha_1'";
+      $filtro_fecha = "AND cg.fecha_compra = '$fecha_1'";
     }else if (!empty($fecha_2)) {        
-      $filtro_fecha = "AND cpp.fecha_compra = '$fecha_2'";
+      $filtro_fecha = "AND cg.fecha_compra = '$fecha_2'";
     }    
 
-    if (empty($id_proveedor) ) {  $filtro_proveedor = ""; } else { $filtro_proveedor = "AND cpp.idproveedor = '$id_proveedor'"; }
+    if (empty($id_proveedor) ) {  $filtro_proveedor = ""; } else { $filtro_proveedor = "AND cg.idproveedor = '$id_proveedor'"; }
 
     if ( empty($comprobante) ) { } else {
-      $filtro_comprobante = "AND cpp.tipo_comprobante = '$comprobante'"; 
+      $filtro_comprobante = "AND cg.tipo_comprobante = '$comprobante'"; 
     } 
 
-    $data = Array();
-    $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
+    $data = Array();    
 
-    $sql = "SELECT cpp.idproyecto, cpp.idcompra_proyecto, cpp.idproveedor, cpp.fecha_compra, cpp.tipo_comprobante, cpp.serie_comprobante,	
-    cpp.descripcion, cpp.total, cpp.comprobante, cpp.estado_detraccion, p.razon_social, p.telefono,	cpp.estado 
-		FROM compra_por_proyecto as cpp, proveedor as p 
-		WHERE cpp.idproyecto='$nube_idproyecto' AND cpp.idproveedor=p.idproveedor AND cpp.estado = '1' AND cpp.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
-		ORDER BY cpp.fecha_compra DESC ";
+    $sql = "SELECT cg.idcompra_grano, cg.idpersona, cg.fecha_compra, cg.metodo_pago, cg.tipo_comprobante, cg.numero_comprobante, cg.total_compra, cg.descripcion,
+    p.nombres as nombre_cliente, p.tipo_documento, p.numero_documento
+    FROM compra_grano as cg, persona as p
+    WHERE cg.idpersona = p.idpersona and  cg.estado = '1' AND cg.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
+		ORDER BY cg.fecha_compra DESC ";
     $compra = ejecutarConsultaArray($sql);
     if ($compra['status'] == false) { return $compra; }
 
     foreach ($compra['data'] as $key => $value) {
-      $idcompra_proyecto = $value['idcompra_proyecto'];
-      $sql2 = "SELECT SUM(monto) as total_pago_compras FROM pago_compras WHERE idcompra_proyecto='$idcompra_proyecto' AND estado='1' AND estado_delete='1'";
+      $idcompra_grano = $value['idcompra_grano'];
+      $sql2 = "SELECT SUM(monto) as total_pago FROM pago_compra_grano WHERE idcompra_grano='$idcompra_grano' AND estado='1' AND estado_delete='1'";
       $pagos = ejecutarConsultaSimpleFila($sql2);
       if ($pagos['status'] == false) { return $pagos; }
 
-      $sql3 = "SELECT COUNT(comprobante) as cant_comprobantes FROM factura_compra_insumo WHERE idcompra_proyecto='$idcompra_proyecto' AND estado='1' AND estado_delete='1'";
-      $cant_comprobantes = ejecutarConsultaSimpleFila($sql3);
-      if ($cant_comprobantes['status'] == false) { return $cant_comprobantes; }
-
       $data[] = [
-        'idproyecto' => $value['idproyecto'],
-        'idcompra_proyecto' => $value['idcompra_proyecto'],
-        'idproveedor' => $value['idproveedor'],
+        'idcompra_grano' => $value['idcompra_grano'],
+        'idcliente' => $value['idpersona'],
         'fecha_compra' => $value['fecha_compra'],
         'tipo_comprobante' => $value['tipo_comprobante'],
-        'serie_comprobante' => $value['serie_comprobante'],
+        'numero_comprobante' => $value['numero_comprobante'],
         'descripcion' => $value['descripcion'],
-        'total' => $value['total'],
-        'comprobante' => $value['comprobante'],
-        'estado_detraccion' => $value['estado_detraccion'],
-        'razon_social' => $value['razon_social'],
-        'telefono' => $value['telefono'],
-        'estado'  => $value['estado'],
-        'total_pago_compras' => (empty($pagos['data']['total_pago_compras']) ? 0 : floatval($pagos['data']['total_pago_compras']) ),
-        'cant_comprobantes' => (empty($cant_comprobantes['data']['cant_comprobantes']) ? 0 : floatval($cant_comprobantes['data']['cant_comprobantes']) ),
+        'total_compra' => $value['total_compra'],
+        'metodo_pago' => $value['metodo_pago'],
+        'nombre_cliente' => $value['nombre_cliente'],
+        'tipo_documento' => $value['tipo_documento'],
+        'numero_documento' => $value['numero_documento'],
+        'total_pago' => (empty($pagos['data']['total_pago']) ? 0 : floatval($pagos['data']['total_pago']) ),
       ];
     }
 

@@ -96,17 +96,17 @@
 
               <!-- Usuarios del sistema -->
               <li class="nav-item ">
-                <a href="all_trabajador.php" class="nav-link" id="lAllTrabajador">
+                <a href="trabajador.php" class="nav-link" id="lTrabajador">
                   <i class="nav-icon fas fa-users"></i>
-                  <p>All-Trabajador</p>
+                  <p>Trabajador</p>
                 </a>
               </li>
 
               <!-- Proveedores de la empresa -->
               <li class="nav-item ">
-                <a href="all_proveedor.php" class="nav-link" id="lAllProveedor">
+                <a href="proveedor.php" class="nav-link" id="lClienteProveedor">
                   <i class="nav-icon fas fa-truck"></i>
-                  <p>All-Proveedor</p>
+                  <p>Cliente y Proveedor </p>
                 </a>
               </li>  
               
@@ -128,24 +128,6 @@
             </ul>
           </li>
         <?php  }  ?> 
-
-        <?php if ($_SESSION['otra_factura']==1) {  ?>
-          <li class="nav-item">
-            <a href="otra_factura.php" class="nav-link pl-2" id="lOtraFactura">
-              <i class="nav-icon fas fa-receipt"></i>
-              <p>Otras Facturas</p>
-            </a>
-          </li>
-        <?php  }  ?>
-        
-        <?php if ($_SESSION['resumen_factura']==1) {  ?>
-          <li class="nav-item">
-            <a href="resumen_factura.php" class="nav-link pl-2" id="lResumenFacura">            
-              <i class="nav-icon fas fa-poll"></i>
-              <p>Resumen de Facturas</p>
-            </a>
-          </li>
-        <?php  }  ?>       
         
         <?php if ($_SESSION['papelera']==1) {  ?>
           <li class="nav-item">
@@ -156,9 +138,7 @@
           </li>
         <?php  }  ?>
         
-        <li class="nav-header">MÓDULOS</li>           
-
-        <!-- <li class="nav-header bg-color-2c2c2c">LOGÍSTICA Y ADQUISICIONES</li> -->
+        <li class="nav-header">MÓDULOS</li>
         
         <!-- LOGÍSTICA Y ADQUISICIONES -->      
         <li class="nav-item " id="bloc_LogisticaAdquisiciones">
@@ -223,27 +203,7 @@
                   </li> 
                 </ul>
               </li>
-            <?php  }  ?> 
-
-            <?php if ($_SESSION['subcontrato']==1) {  ?>  
-            <li class="nav-item ">
-              <a href="sub_contrato.php" class="nav-link pl-2" id="lSubContrato">
-                <i class="nav-icon fas fa-hands-helping"></i>
-                <p>Sub Contrato </p>
-              </a>
-            </li>
-            <?php  }  ?>            
-            
-            <?php if ($_SESSION['planilla_seguro']==1) {  ?>
-              <!-- PLANILLAS Y SEGUROS -->       
-              <li class="nav-item ">
-                <a href="planillas_seguros.php" class="nav-link pl-2" id="lPlanillaSeguro">
-                  <!--<i class="nav-icon fas fa-map-marked-alt"></i>lanilla-seguro-ico.svg-->
-                  <img src="../dist/svg/planilla-seguro-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" >
-                  <p>Planillas y seguros</p>
-                </a>
-              </li>
-            <?php  }  ?>
+            <?php  }  ?>             
 
             <?php if ($_SESSION['otro_gasto']==1) {  ?>
               <!-- OTROS GASTOS -->       
@@ -253,57 +213,50 @@
                   <p>Otros Gastos </p>
                 </a>
               </li>
-            <?php  }  ?>
+            <?php  }  ?>            
             
-            <?php if ($_SESSION['viatico']==1) {  ?>
-              <!-- BIÁTICOS -->
-              <li class="nav-item "  id="bloc_Viaticos">
-                <a href="#" class="nav-link pl-2" id="mViatico">
-                  <i class="nav-icon fas fa-plane"></i>
-                  <p>Viáticos <i class="right fas fa-angle-left"></i> <span class="badge badge-info right">3</span> </p>
+          </ul>
+        </li> 
+
+        <!-- CONTABLE Y FINANCIERO -->   
+        <li class="nav-item " id="bloc_ContableFinanciero">
+          <a href="#" class="nav-link bg-color-2c2c2c" id="mContableFinanciero" style="padding-left: 7px;">
+            <i class="nav-icon far fa-circle"></i>
+            <p class="font-size-14px">CONTABLE Y FINANCIERO<i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+
+            <?php if ($_SESSION['pago_trabajador']==1) {  ?>
+              <!-- RESUMEN DE GASTOS -->
+              <li class="nav-item ">
+                <a href="resumen_gasto.php" class="nav-link pl-2" id="lResumenGastos">
+                  <i class="fas fa-dollar-sign nav-icon"></i>
+                  <p>Pago Trabajador</p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <!-- TRANSPORTE -->
-                  <li class="nav-item">
-                    <a href="transporte.php" class="nav-link" id="lTransporte">
-                      <i class="fas fa-shuttle-van nav-icon"></i>
-                      <p>Transporte</p>
-                    </a>
-                  </li>
-                  <!-- HOSPEDAJE -->
-                  <li class="nav-item">
-                    <a href="hospedaje.php" class="nav-link" id="lHospedaje"> 
-                      <i class="fas fa-hotel nav-icon"></i>
-                      <p>Hospedaje</p>
-                    </a>
-                  </li>
-                  <!-- COMIDA -->
-                  <li class="nav-item  b-radio-3px" id="sub_bloc_comidas">
-                    <a href="#" class="nav-link"  id="sub_mComidas">
-                      <i class="fas fa-fish nav-icon"></i>
-                      <p>Comida <i class="right fas fa-angle-left"></i> <span class="badge badge-info right">3</span></p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                      <li class="nav-item">
-                        <a href="pension.php" class="nav-link" id="lPension">
-                          <i class="fas fa-utensils nav-icon"></i>
-                          <p>Pensión</p>
-                        </a>
-                      </li>
-                      
-                      <li class="nav-item">
-                        <a href="comidas_extras.php" class="nav-link" id="lComidasExtras" >
-                          <i class="fas fa-drumstick-bite nav-icon"></i>
-                          <p>Comidas - extras</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>              
-                </ul>
+              </li>
+            <?php  }  ?>            
+            
+            <?php if ($_SESSION['prestamo']==1) {  ?>
+              <!-- PRESTAMOS -->
+              <li class="nav-item ">
+                <a href="prestamo.php" class="nav-link pl-2" id="lPrestamo">
+                  <i class="nav-icon fas fa-university"></i>
+                  <p>Prestamos y Créditos</p>
+                </a>
+              </li>
+            <?php  }  ?>              
+
+            <?php if ($_SESSION['otro_ingreso']==1) {  ?>
+              <li class="nav-item ">
+                <a href="otro_ingreso.php" class="nav-link pl-2" id="lOtroIngreso">             
+                  <i class="nav-icon fas fa-hand-holding-usd"></i>
+                  <p>Otro ingreso </p>
+                </a>
               </li>
             <?php  }  ?>
+            
           </ul>
-        </li>        
+        </li>
 
       </ul>      
     </nav>

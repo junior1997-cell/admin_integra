@@ -11,9 +11,9 @@ Class Unidades_m
 	}
 
 	//Implementamos un método para insertar registros
-	public function insertar($nombre,$abreviacion)
+	public function insertar($nombre,$abreviatura,$descripcion)
 	{
-		$sql="INSERT INTO unidad_medida (nombre_medida,abreviacion, user_created)VALUES ('$nombre','$abreviacion','" . $_SESSION['idusuario'] . "')";
+		$sql="INSERT INTO unidad_medida (nombre,abreviatura, descripcion, user_created)VALUES ('$nombre','$abreviatura', '$descripcion','" . $_SESSION['idusuario'] . "')";
 		$intertar =  ejecutarConsulta_retornarID($sql); 
 		if ($intertar['status'] == false) {  return $intertar; } 
 		
@@ -25,9 +25,9 @@ Class Unidades_m
 	}
 
 	//Implementamos un método para editar registros
-	public function editar($idunidad_medida,$nombre,$abreviacion)
+	public function editar($idunidad_medida,$nombre,$abreviatura,$descripcion)
 	{
-		$sql="UPDATE unidad_medida SET nombre_medida='$nombre',abreviacion='$abreviacion',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idunidad_medida='$idunidad_medida'";
+		$sql="UPDATE unidad_medida SET nombre='$nombre',abreviatura='$abreviatura', descripcion = '$descripcion',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idunidad_medida='$idunidad_medida'";
 		$editar =  ejecutarConsulta($sql);
 		if ( $editar['status'] == false) {return $editar; } 
 	
@@ -84,8 +84,8 @@ Class Unidades_m
 	//Implementar un método para listar los registros
 	public function tbla_unidad_medida()
 	{
-		$sql="SELECT * FROM unidad_medida WHERE estado=1  AND estado_delete=1  ORDER BY nombre_medida ASC";
-		return ejecutarConsulta($sql);		
+		$sql="SELECT * FROM unidad_medida WHERE estado=1  AND estado_delete=1  ORDER BY nombre ASC";
+		return ejecutarConsulta($sql);			
 	}
 
 	

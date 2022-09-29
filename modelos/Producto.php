@@ -126,7 +126,7 @@ class Producto
 
     $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, p.descripcion, p.imagen, p.estado, p.created_at,
     um.nombre as nombre_medida, cp.nombre AS categoria
-		FROM producto p AS unidad_medida AS um, categoria_producto AS cp
+		FROM producto AS p, unidad_medida AS um, categoria_producto AS cp
     WHERE p.idunidad_medida = um.idunidad_medida AND p.idcategoria_producto = cp.idcategoria_producto AND p.idproducto = '$idproducto'";
 
     $producto = ejecutarConsultaSimpleFila($sql);
@@ -164,10 +164,11 @@ class Producto
     return ejecutarConsulta($sql);
   }
   
-  //Seleccionar Trabajador Select2
- 
-  
-  //Seleccionar una ficha tecnica
+  //OBTENEMOS LA IMAGEN PARA REEMPLAZARLO
+  public function obtenerImg($idproducto) {
+    $sql = "SELECT imagen FROM producto WHERE idproducto='$idproducto'";
+    return ejecutarConsulta($sql);
+  }
   
 }
 
