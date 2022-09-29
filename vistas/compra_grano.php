@@ -201,7 +201,6 @@
                                   <th>Fecha</th>
                                   <th>Proveedor</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
-                                  <th data-toggle="tooltip" data-original-title="Detraccion">Detrac.</th>
                                   <th>Total</th>
                                   <th>Añadir pago</th>
                                   <th>Deposito</th>
@@ -219,7 +218,6 @@
                                   <th>Fecha</th>
                                   <th>Proveedor</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
-                                  <th>Detrac.</th>
                                   <th>Total</th>
                                   <th>Añadir pago</th>
                                   <th>Deposito</th>
@@ -231,7 +229,7 @@
                               </tfoot>
                             </table>
                             <br />
-                            <h4><b>Lista de Compras Por Proveedor</b></h4>
+                            <h4><b>Lista de Compras Por Cliente</b></h4>
                             <table id="tabla-compra-proveedor" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
