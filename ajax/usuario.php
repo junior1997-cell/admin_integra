@@ -138,31 +138,27 @@
   $permiso = isset($_POST['permiso']) ? $_POST['permiso'] : "";
 
   // ::::::::::::::::::::::::::::::::: D A T O S   T R A B A J A D O R :::::::::::::::::::::::::::::
-  $idtrabajador_trab	  = isset($_POST["idtrabajador_trab"])? limpiarCadena($_POST["idtrabajador_trab"]):"";
-  $nombre_trab		      = isset($_POST["nombre_trab"])? limpiarCadena($_POST["nombre_trab"]):"";
-  $tipo_documento_trab 	= isset($_POST["tipo_documento_trab"])? limpiarCadena($_POST["tipo_documento_trab"]):"";
-  $num_documento_trab  	= isset($_POST["num_documento_trab"])? limpiarCadena($_POST["num_documento_trab"]):"";
-  $direccion_trab		    = isset($_POST["direccion_trab"])? limpiarCadena($_POST["direccion_trab"]):"";
-  $telefono_trab		    = isset($_POST["telefono_trab"])? limpiarCadena($_POST["telefono_trab"]):"";
-  $nacimiento_trab		  = isset($_POST["nacimiento_trab"])? limpiarCadena($_POST["nacimiento_trab"]):"";
-  $edad_trab		        = isset($_POST["edad_trab"])? limpiarCadena($_POST["edad_trab"]):"";      
-  $email_trab			      = isset($_POST["email_trab"])? limpiarCadena($_POST["email_trab"]):"";
-  $banco_trab			      = isset($_POST["banco_trab"])? limpiarCadena($_POST["banco_trab"]):"";
-  $c_bancaria_trab		  = isset($_POST["c_bancaria_trab"])? limpiarCadena($_POST["c_bancaria_trab"]):"";
-  $c_bancaria_format    = isset($_POST["c_bancaria_trab"])? limpiarCadena($_POST["c_bancaria_trab"]):"";     
-  $cci_trab	          	= isset($_POST["cci_trab"])? limpiarCadena($_POST["cci_trab"]):"";
-  $cci_format      	    = isset($_POST["cci_trab"])? limpiarCadena($_POST["cci_trab"]):"";
-  $titular_cuenta_trab  = isset($_POST["titular_cuenta_trab"])? limpiarCadena($_POST["titular_cuenta_trab"]):""; 
-  $tipo_trab	          = isset($_POST["tipo_trab"])? limpiarCadena($_POST["tipo_trab"]):"";
-  $ocupacion_trab	      = isset($_POST["ocupacion_trab"])? limpiarCadena($_POST["ocupacion_trab"]):"";
-  $ruc_trab	          	= isset($_POST["ruc_trab"])? limpiarCadena($_POST["ruc_trab"]):"";
+  $idtrabajador	  	= isset($_POST["idtrabajador_trab"])? limpiarCadena($_POST["idtrabajador_trab"]):"";
+  $nombre 		      = isset($_POST["nombre_trab"])? limpiarCadena($_POST["nombre_trab"]):"";
+  $tipo_documento 	= isset($_POST["tipo_documento_trab"])? limpiarCadena($_POST["tipo_documento_trab"]):"";
+  $num_documento  	= isset($_POST["num_documento_trab"])? limpiarCadena($_POST["num_documento_trab"]):"";
+  $direccion		    = isset($_POST["direccion_trab"])? limpiarCadena($_POST["direccion_trab"]):"";
+  $telefono		      = isset($_POST["telefono_trab"])? limpiarCadena($_POST["telefono_trab"]):"";
+  $nacimiento		    = isset($_POST["nacimiento_trab"])? limpiarCadena($_POST["nacimiento_trab"]):"";
+  $edad		          = isset($_POST["edad_trab"])? limpiarCadena($_POST["edad_trab"]):"";      
+  $email			      = isset($_POST["email_trab"])? limpiarCadena($_POST["email_trab"]):"";
+  $banco            = isset($_POST["banco_trab"])? $_POST["banco_trab"] :"";     
+  $cta_bancaria		  = isset($_POST["cta_bancaria_trab"])?$_POST["cta_bancaria_trab"]:"";
+  $cta_bancaria_format= isset($_POST["cta_bancaria_trab"])?$_POST["cta_bancaria_trab"]:"";
+  $cci	          	= isset($_POST["cci_trab"])?$_POST["cci_trab"]:"";
+  $cci_format      	= isset($_POST["cci_trab"])? $_POST["cci_trab"]:"";
+  $titular_cuenta		= isset($_POST["titular_cuenta_trab"])? limpiarCadena($_POST["titular_cuenta_trab"]):"";
+  $ruc	          	= isset($_POST["ruc_trab"])? limpiarCadena($_POST["ruc_trab"]):"";
+  $idcargo_trabajador = isset($_POST["cargo_trabajador_trab"])? limpiarCadena($_POST["cargo_trabajador_trab"]):"";
+  $sueldo_mensual   = isset($_POST["sueldo_mensual_trab"])? limpiarCadena($_POST["sueldo_mensual_trab"]):"";
+  $sueldo_diario    = isset($_POST["sueldo_diario_trab"])? limpiarCadena($_POST["sueldo_diario_trab"]):"";
 
   $imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
-  $imagen2			    = isset($_POST["foto2"])? limpiarCadena($_POST["foto2"]):"";
-  $imagen3			    = isset($_POST["foto3"])? limpiarCadena($_POST["foto3"]):"";
-
-  $cv_documentado			    = isset($_POST["doc4"])? limpiarCadena($_POST["doc4"]):"";
-  $cv_nodocumentado			  = isset($_POST["doc5"])? limpiarCadena($_POST["doc5"]):"";
 
   switch ($_GET["op"]) {
 
@@ -191,7 +187,7 @@
 
       } else {
 
-        $rspta = $usuario->editar($idusuario, $trabajador_old, $trabajador, $cargo, $login, $clavehash, $permiso);
+        $rspta = $usuario->editar($idusuario, $trabajador,$trabajador_old, $cargo, $login, $clavehash, $permiso);
 
         echo json_encode($rspta, true);
       }
@@ -351,7 +347,7 @@
       if ($rspta['status']) {
 
         foreach ($rspta['data'] as $key => $value) {
-          $data  .= '<option value=' . $value['id'] . ' title="'.$value['imagen_perfil'].'">' . $value['nombre'] . ' - ' . $value['numero_documento'] . '</option>';
+          $data  .= '<option value=' . $value['idtrabajador'] . ' title="'.$value['imagen_perfil'].'">' . $value['nombres'] . ' - ' . $value['numero_documento'] . '</option>';
         }
     
         $retorno = array(
@@ -365,6 +361,11 @@
         echo json_encode($rspta, true);
       }    
     break;    
+
+    case 'obtener_cargo_trabajador':
+      $rspta=$usuario->mostrar_cargo_trabajador($_POST['idtrabajador']);
+      echo json_encode($rspta, true);
+    break;
     
     // ::::::::::::::::::::::::::::::::: S E C C I O N   T R A B A J A D O R :::::::::::::::::::::::::::::
     case 'guardar_y_editar_trabajador':
@@ -384,69 +385,9 @@
         
       }
 
-      // imgen DNI ANVERSO
-      if (!file_exists($_FILES['foto2']['tmp_name']) || !is_uploaded_file($_FILES['foto2']['tmp_name'])) {
-
-        $imagen2=$_POST["foto2_actual"]; $flat_img2 = false;
-
-      } else {
-
-        $ext2 = explode(".", $_FILES["foto2"]["name"]); $flat_img2 = true;
-
-        $imagen2 = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext2);
-
-        move_uploaded_file($_FILES["foto2"]["tmp_name"], "../dist/docs/all_trabajador/dni_anverso/" . $imagen2);
-        
-      }
-
-      // imgen DNI REVERSO
-      if (!file_exists($_FILES['foto3']['tmp_name']) || !is_uploaded_file($_FILES['foto3']['tmp_name'])) {
-
-        $imagen3=$_POST["foto3_actual"]; $flat_img3 = false;
-
-      } else {
-
-        $ext3 = explode(".", $_FILES["foto3"]["name"]); $flat_img3 = true;
-        
-        $imagen3 = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-        move_uploaded_file($_FILES["foto3"]["tmp_name"], "../dist/docs/all_trabajador/dni_reverso/" . $imagen3);
-        
-      }
-
-      // cv documentado
-      if (!file_exists($_FILES['doc4']['tmp_name']) || !is_uploaded_file($_FILES['doc4']['tmp_name'])) {
-
-        $cv_documentado=$_POST["doc_old_4"]; $flat_cv1 = false;
-
-      } else {
-
-        $ext3 = explode(".", $_FILES["doc4"]["name"]); $flat_cv1 = true;
-        
-        $cv_documentado = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-        move_uploaded_file($_FILES["doc4"]["tmp_name"], "../dist/docs/all_trabajador/cv_documentado/" .  $cv_documentado);
-        
-      }
-
-      // cv  no documentado
-      if (!file_exists($_FILES['doc5']['tmp_name']) || !is_uploaded_file($_FILES['doc5']['tmp_name'])) {
-
-        $cv_nodocumentado=$_POST["doc_old_5"]; $flat_cv2 = false;
-
-      } else {
-
-        $ext3 = explode(".", $_FILES["doc5"]["name"]); $flat_cv2 = true;
-        
-        $cv_nodocumentado = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext3);
-
-        move_uploaded_file($_FILES["doc5"]["tmp_name"], "../dist/docs/all_trabajador/cv_no_documentado/" . $cv_nodocumentado);
-        
-      }
-
       if (empty($idtrabajador)){
 
-        $rspta=$alltrabajador->insertar($nombre_trab, $tipo_documento_trab, $num_documento_trab, $direccion_trab, $telefono_trab, $nacimiento_trab, $edad_trab, $email_trab, $banco_trab, str_replace("-", "",$c_bancaria_trab), $c_bancaria_format, str_replace("-", "",$cci_trab), $cci_format, $titular_cuenta_trab, $tipo_trab, $ocupacion_trab, $ruc_trab, $imagen1, $imagen2, $imagen3, $cv_documentado, $cv_nodocumentado);
+        $rspta=$alltrabajador->insertar($idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format, $cci_format, $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1);
         
         echo json_encode($rspta, true);
 

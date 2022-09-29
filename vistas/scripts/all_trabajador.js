@@ -13,7 +13,7 @@ function init() {
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
-  //lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
+  
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) {  $("#submit-form-trabajador").submit(); });  
 
@@ -59,7 +59,6 @@ function limpiar_form_trabajador() {
   $("#cargo_trabajador").val("null").trigger("change");
 
   $("#idtrabajador").val("");
-  $("#tipo_documento option[value='DNI']").attr("selected", true);
   $("#nombre").val(""); 
   $("#num_documento").val(""); 
   $("#direccion").val(""); 
@@ -69,7 +68,8 @@ function limpiar_form_trabajador() {
   $("#edad").val("0");  $(".edad").html("0");    
   $("#cta_bancaria").val("");  
   $("#cci").val("");  
-  $("#banco").val("").trigger("change"); $("#lista_bancos").html("");
+  $("#ruc").val("");  
+  $("#banco").val("").trigger("change");
 
   $("#titular_cuenta").val("");
   $("#sueldo_mensual").val("");
@@ -366,9 +366,6 @@ function eliminar_trabajador(idtrabajador, nombre) {
  
 }
 
-// .....::::::::::::::::::::::::::::::::::::: B A N C O  :::::::::::::::::::::::::::::::::::::::..
-
-
 /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
 
 function recuperar_banco() {
@@ -389,6 +386,7 @@ function recuperar_banco() {
 
 $(function () {   
 
+  $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
   $("#banco").on('change', function() { $(this).trigger('blur'); });
   $("#cargo_trabajador").on('change', function() { $(this).trigger('blur'); });
 
@@ -436,6 +434,7 @@ $(function () {
     },
   });
 
+  $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#cargo_trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });

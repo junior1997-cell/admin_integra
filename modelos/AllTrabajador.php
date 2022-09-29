@@ -9,7 +9,6 @@
     {
     }
 
-    //Implementamos un método para insertar registros
     public function insertar( $idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
       $sw = Array();
       // var_dump($idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc, $imagen1); die();
@@ -49,7 +48,6 @@
       return $sw;        
     }
 
-    //Implementamos un método para editar registros $cci, $tipo, $ocupacion, $ruc, $cv_documentado, $cv_nodocumentado
     public function editar($idtrabajador,$idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
       $sql="UPDATE trabajador SET idcargo_trabajador='$idcargo_trabajador',idbancos='$banco',nombres='$nombre',tipo_documento='$tipo_documento',
       numero_documento='$num_documento',ruc='$ruc',fecha_nacimiento='$nacimiento',edad='$edad',cuenta_bancaria='$cta_bancaria_format',
@@ -66,7 +64,6 @@
       return $trabajdor;      
     }
 
-    //Implementamos un método para desactivar 
     public function desactivar($idtrabajador) {
       $sql="UPDATE trabajador SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
       $desactivar =  ejecutarConsulta($sql);
@@ -80,7 +77,6 @@
       return $desactivar;
     }
 
-    //Implementamos un método para activar 
     public function eliminar($idtrabajador) {
       $sql="UPDATE trabajador SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idtrabajador='$idtrabajador'";
       $eliminar =  ejecutarConsulta($sql);
@@ -94,14 +90,12 @@
       return $eliminar;
     }
 
-    //Implementar un método para mostrar los datos de un registro a modificar
     public function mostrar($idtrabajador) {
       $sql="SELECT * FROM trabajador WHERE idtrabajador='$idtrabajador'";
       return ejecutarConsultaSimpleFila($sql);
 
     }
 
-    //Implementar un método para mostrar los datos de un registro a modificar
     public function verdatos($idtrabajador) {
       $sql=" SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
       t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
@@ -112,7 +106,6 @@
 
     }
 
-    //Implementar un método para listar los registros
     public function tbla_principal() {
       
       $sql="SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
@@ -128,25 +121,11 @@
 
     }
 
-    // obtebnemos los DOCS para eliminar
     public function obtenerImg($idtrabajador) {
 
       $sql = "SELECT imagen_perfil FROM trabajador WHERE idtrabajador='$idtrabajador'";
 
       return ejecutarConsultaSimpleFila($sql);
-    }
-    
-    // obtebnemos los DOCS para eliminar
-    public function obtenercv($idtrabajador) {
-
-      $sql = "SELECT cv_documentado, cv_no_documentado FROM trabajador WHERE idtrabajador='$idtrabajador'";
-
-      return ejecutarConsultaSimpleFila($sql);
-    }
-
-    public function select2_banco() {
-      $sql="SELECT idbancos as id, nombre, alias FROM bancos WHERE estado='1' AND idbancos > 1 ORDER BY nombre ASC;";
-      return ejecutarConsulta($sql);		
     }
 
     public function formato_banco($idbanco){

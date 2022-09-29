@@ -15,12 +15,10 @@ function init() {
 
   lista_select2("../ajax/usuario.php?op=select2Trabajador", '#trabajador', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_trab', null);
-  //lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#tipo_trab', null);
-  //lista_select2("../ajax/ajax_general.php?op=select2OcupacionTrabajador", '#ocupacion_trab', null);
+  lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador_trab', null);
+
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
-
-  //$("#guardar_registro_usuario").on("click", function (e) { $("#submit-form-usuario").submit(); });
 
   $("#guardar_registro_trabajador").on("click", function (e) {  $("#submit-form-trabajador").submit(); });
 
@@ -28,9 +26,11 @@ function init() {
   $("#trabajador").select2({ templateResult: formatState, theme: "bootstrap4",  placeholder: "Selecione trabajador", allowClear: true, });  
 
   $("#cargo").select2({ theme: "bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
-  $("#banco_trab").select2({ theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
+  $("#banco_trab").select2({  templateResult: formatStateBanco,  theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
   $("#tipo_trab").select2({ theme: "bootstrap4", placeholder: "Selecione tipo", allowClear: true, });
-  $("#ocupacion_trab").select2({ theme: "bootstrap4",  placeholder: "Selecione Ocupación", allowClear: true, });
+  $("#cargo_trabajador_trab").select2({ theme: "bootstrap4",  placeholder: "Selecione Ocupación", allowClear: true, });
+  $("#tipo_documento_trab").select2({theme:"bootstrap4", placeholder: "Selecione tipo Doc.", allowClear: true, });
+
 
   // restringimos la fecha para no elegir mañana
   no_select_tomorrow('#nacimiento_trab')
@@ -47,22 +47,20 @@ function formatState (state) {
   var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
   return $state;
 };
+function formatStateBanco (state) {
+  //console.log(state);
+  if (!state.id) { return state.text; }
+  var baseUrl = state.title != '' ? `../dist/docs/banco/logo/${state.title}`: '../dist/docs/banco/logo/logo-sin-banco.svg'; 
+  var onerror = `onerror="this.src='../dist/docs/banco/logo/logo-sin-banco.svg';"`;
+  var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
+  return $state;
+};
+
 
 // abrimos el navegador de archivos
 $("#foto1_i").click(function() { $('#foto1').trigger('click'); });
 $("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id"), ) });
 
-$("#foto2_i").click(function() { $('#foto2').trigger('click'); });
-$("#foto2").change(function(e) { addImage(e, $("#foto2").attr("id"), "../dist/img/default/dni_anverso.webp" ) });
-
-$("#foto3_i").click(function() { $('#foto3').trigger('click'); });
-$("#foto3").change(function(e) { addImage(e,$("#foto3").attr("id"), "../dist/img/default/dni_reverso.webp") });
-
-$("#doc4_i").click(function() {  $('#doc4').trigger('click'); });
-$("#doc4").change(function(e) {  addImageApplication(e,$("#doc4").attr("id")) });
-
-$("#doc5_i").click(function() {  $('#doc5').trigger('click'); });
-$("#doc5").change(function(e) {  addImageApplication(e,$("#doc5").attr("id")) });
 
 function foto1_eliminar() {
 
@@ -71,36 +69,6 @@ function foto1_eliminar() {
 	$("#foto1_nombre").html("");
 }
 
-function foto2_eliminar() {	
-
-  $("#foto2").val(""); 
-  $("#foto2_i").attr("src", "../dist/img/default/dni_anverso.webp");	
-  $("#foto2_nombre").html(""); 
-}
-
-function foto3_eliminar() {	
-
-  $("#foto3").val(""); 
-  $("#foto3_i").attr("src", "../dist/img/default/dni_reverso.webp");	
-  $("#foto3_nombre").html(""); 
-}
-
-// Eliminamos el doc 4
-function doc4_eliminar() { 
-
-  $("#doc4").val(""); 
-  $("#doc4_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');	
-  $("#doc4_nombre").html("");
-}
-
-// Eliminamos el doc 5
-function doc5_eliminar() {
-
-	$("#doc5").val("");
-	$("#doc5_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-	$("#doc5_nombre").html("");
-}
- 
 //Función limpiar
 function limpiar_form_usuario() {
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
@@ -112,9 +80,8 @@ function limpiar_form_usuario() {
   lista_select2("../ajax/usuario.php?op=select2Trabajador", '#trabajador', null);
 
   $("#idusuario").val("");
-  $("#trabajador_c").html("Trabajador");   
-  $("#trabajador_old").val(""); 
-  $("#cargo").val("").trigger("change"); 
+  $("#trabajador_c").html("Trabajador"); 
+  $("#cargo").val("").trigger("change");
   $("#login").val("");
   $("#password").val("");
   $("#password-old").val(""); 
@@ -275,12 +242,12 @@ function mostrar(idusuario) {
 
   $.post("../ajax/usuario.php?op=mostrar", { idusuario: idusuario }, function (data, status) {
 
-    data = JSON.parse(data);  //console.log(data); 
+    data = JSON.parse(data);  console.log(data); 
 
     $(".trabajador-name").html(` <i class="fas fa-users-cog text-primary"></i> <b class="texto-parpadeante font-size-20px">${data.data.nombres}</b> `);    
-    
-    $("#trabajador_old").val(data.data.idtrabajador); 
-    $("#cargo").val(data.data.cargo).trigger("change"); 
+
+    $("#trabajador_old").val(data.data.idtrabajador);
+    $("#cargo").val(data.data.cargo).trigger("change");
     $("#login").val(data.data.login);
     $("#password-old").val(data.data.password);
     $("#idusuario").val(data.data.idusuario);
@@ -328,44 +295,30 @@ function limpiar_form_trabajador() {
   $(".tooltip").removeClass("show").addClass("hidde");
 
   $("#idtrabajador_trab").val("");
-  $("#tipo_documento_trab option[value='DNI']").attr("selected", true);
+  $("#tipo_documento_trab").val("null").trigger("change");
+  $("#cargo_trabajador_trab").val("null").trigger("change");
+
   $("#nombre_trab").val(""); 
   $("#num_documento_trab").val(""); 
   $("#direccion_trab").val(""); 
   $("#telefono_trab").val(""); 
   $("#email_trab").val(""); 
-  $("#nacimiento_trab").val(""); $("#edad_trab").val("0");  $(".edad_trab").html("0");    
-  $("#c_bancaria_trab").val("");  
+  $("#nacimiento_trab").val("");
+  $("#edad_trab").val("0");  $(".edadr_trab").html("0");    
+  $("#cta_bancaria_trab").val("");  
   $("#cci_trab").val("");  
+  $("#ruc_trab").val("");  
   $("#banco_trab").val("").trigger("change");
-  $("#tipo_trab").val("").trigger("change");
-  $("#ocupacion_trab").val("").trigger("change");
-  $("#titular_cuenta_trab").val("");
+
+  $("#titula_cuenta").val("");
+  $("#sueldo_mensual").val("");
+  $("#sueldo_diario").val("");
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");
 	$("#foto1_actual").val("");  
   $("#foto1_nombre").html(""); 
 
-  $("#foto2_i").attr("src", "../dist/img/default/dni_anverso.webp");
-	$("#foto2").val("");
-	$("#foto2_actual").val("");  
-  $("#foto2_nombre").html("");  
-
-  $("#foto3_i").attr("src", "../dist/img/default/dni_reverso.webp");
-	$("#foto3").val("");
-	$("#foto3_actual").val("");  
-  $("#foto3_nombre").html(""); 
-
-  $("#doc4").val("");
-  $("#doc_old_4").val("");
-  $('#doc4_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
-  $('#doc4_nombre').html("");
-  
-  $("#doc5").val("");
-  $("#doc_old_5").val("");
-  $('#doc5_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
-  $('#doc5_nombre').html("");
   
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -443,12 +396,12 @@ function formato_banco() {
 
   if ($("#banco_trab").select2("val") == null || $("#banco_trab").select2("val") == "" || $("#banco_trab").select2("val") == '1') {
 
-    $("#c_bancaria_trab").prop("readonly",true);   $("#cci_trab").prop("readonly",true);
+    $("#cta_bancaria_trab").prop("readonly",true);   $("#cci_trab").prop("readonly",true);
   } else {
     
     $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>'); $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
 
-    $("#c_bancaria_trab").prop("readonly",false);   $("#cci_trab").prop("readonly",false);
+    $("#cta_bancaria_trab").prop("readonly",false);   $("#cci_trab").prop("readonly",false);
 
     $.post("../ajax/ajax_general.php?op=formato_banco", { idbanco: $("#banco_trab").select2("val") }, function (e, status) {
 
@@ -459,7 +412,7 @@ function formato_banco() {
 
         var format_cta = decifrar_format_banco(e.data.formato_cta); var format_cci = decifrar_format_banco(e.data.formato_cci);
 
-        $("#c_bancaria_trab").inputmask(`${format_cta}`);
+        $("#cta_bancaria_trab").inputmask(`${format_cta}`);
 
         $("#cci_trab").inputmask(`${format_cci}`);
       } else {
@@ -476,12 +429,12 @@ init();
 
 $(function () {
 
+  $("#tipo_documento_trab").on('change', function() { $(this).trigger('blur'); });
   $("#cargo").on('change', function() { $(this).trigger('blur'); });
   $("#trabajador").on('change', function() { $(this).trigger('blur'); });
 
   $("#banco_trab").on('change', function() { $(this).trigger('blur'); });
-  $("#tipo_trab").on('change', function() { $(this).trigger('blur'); });
-  $("#ocupacion_trab").on('change', function() { $(this).trigger('blur'); });
+  $("#cargo_trabajador_trab").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-usuario").validate({
     ignore: '.select2-input, .select2-focusser',
@@ -529,8 +482,7 @@ $(function () {
       cargo_trab:          { required: true},
       c_bancaria_trab:     { minlength: 10,},
       banco_trab:          { required: true},
-      tipo_trab:           { required: true},
-      ocupacion_trab:      { required: true},
+      cargo_trabajador_trab: { required: true},
       ruc_trab:            { minlength: 11, maxlength: 11},      
     },
     messages: {
@@ -543,9 +495,8 @@ $(function () {
       tipo_trabajador_trab:{ required: "Campo requerido.", },
       cargo_trab:          { required: "Campo requerido.", },
       c_bancaria_trab:     { minlength: "MÍNIMO 10 caracteres.", },
-      tipo_trab:           { required: "Campo requerido.", },
-      ocupacion_trab:      { required: "Campo requerido.", },
       banco_trab:          { required: "Campo requerido.", },
+      cargo_trabajador_trab:{ required: "Campo requerido.", },
       ruc_trab:            { minlength: "MÍNIMO 11 caracteres.", maxlength: "MÁXIMO 11 caracteres.", },
     },
         
@@ -569,11 +520,11 @@ $(function () {
     },
   });
 
+  $("#tipo_documento_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#cargo").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#tipo_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#ocupacion_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#cargo_trabajador_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   
 });
 
@@ -588,4 +539,14 @@ function marcar_todos_permiso() {
     $('.permiso').each(function(){ this.checked = false; });
     $('.marcar_todo').html('Marcar Todo');
   }  
+}
+
+function sueld_mensual(){
+
+  var sueldo_mensual = $('#sueldo_mensual_trab').val()
+
+  var sueldo_diario=(sueldo_mensual/30).toFixed(1);
+
+  $("#sueldo_diario_trab").val(sueldo_diario);
+
 }
