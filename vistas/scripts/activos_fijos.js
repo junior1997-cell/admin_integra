@@ -139,7 +139,7 @@ function lista_de_items() {
 
 //Función Listar
 function tabla_principal(id_categoria) {
-  tabla = $("#tabla-activos").dataTable({
+  tabla = $("#tabla-persona").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables

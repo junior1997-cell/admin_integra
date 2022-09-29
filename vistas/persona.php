@@ -12,9 +12,9 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Trabajadores | Admin Integra</title>
+        <title>Clientes Proveedores | Admin Integra</title>
 
-        <?php $title = "Trabajadores"; require 'head.php'; ?>
+        <?php $title = "Personas"; require 'head.php'; ?>
         <link rel="stylesheet" href="../dist/css/switch_domingo.css">
 
       </head>
@@ -35,12 +35,12 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1>Trabajadores</h1>
+                      <h1>Clientes - Proveedores</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="trabajador.php">Home</a></li>
-                        <li class="breadcrumb-item active">Trabajadores</li>
+                        <li class="breadcrumb-item"><a href="persona.php">Home</a></li>
+                        <li class="breadcrumb-item active">Clientes - Proveedores</li>
                       </ol>
                     </div>
                   </div>
@@ -56,64 +56,82 @@
                       <div class="card card-primary card-outline">
                         <div class="card-header">
                           <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-trabajador" onclick="limpiar_form_trabajador();"><i class="fas fa-user-plus"></i> Agregar</button>
-                            
-                            
-                            Admnistra de manera eficiente a los trabajdores
+                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
+                            Admnistra de manera eficiente a los Clientes - Proveedores
                           </h3>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body">
-                          <!-- Lista de trabajdores activos -->                      
-                          <table id="tabla-trabajador" class="table table-bordered table-striped display" style="width: 100% !important;">
-                            <thead>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Aciones</th>
-                                <th>Nombres</th>
-                                <th>Cargo</th>
-                                <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
-                                <th>Cuenta bancaria</th>
-                                <th>Estado</th>
-                                <th>Nombres</th>
-                                <th>Tipo</th>
-                                <th>Num Doc.</th>
-                                <th>Nacimiento</th>
-                                <th>Edad</th>
-                                <th>Banco</th>
-                                <th>Cta. Cte.</th>
-                                <th>CCI</th>
-                                <th>Sueldo mensual</th>
-                                <th>Sueldo Diario</th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th>Aciones</th>
-                                <th>Nombres</th>
-                                <th>Cargo</th>
-                                <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
-                                <th>Cuenta bancaria</th>
-                                <th>Estado</th>
-                                <th>Nombres</th>
-                                <th>Tipo</th>
-                                <th>Num Doc.</th>
-                                <th>Nacimiento</th>
-                                <th>Edad</th>
-                                <th>Banco</th>
-                                <th>Cta. Cte.</th>
-                                <th>CCI</th>
-                                <th>Sueldo mensual</th>
-                                <th>Sueldo Diario</th>
-                              </tr>
-                            </tfoot>
-                          </table>
+                        <div class="card-body px-1 py-1">
+                          <div class="row">                              
+                            <div class=" col-12 col-sm-12">
+                              <div class="card card-primary card-outline card-outline-tabs mb-0">
+                                <div class="card-header p-0 border-bottom-0">
+                                  <ul class="nav nav-tabs lista-items" id="tabs-for-tab" role="tablist">
+                                    <li class="nav-item">
+                                      <a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a>
+                                    </li>           
+                                  </ul>
+                                </div>
+                                <div class="card-body" >                                  
+                                  <div class="tab-content" id="tabs-for-tabContent">
+                                    <!-- TABLA - RESUMEN -->
+                                    <div class="tab-pane fade show active" id="tabs-for-activo-fijo" role="tabpanel" aria-labelledby="tabs-for-activo-fijo-tab">
+                                      <div class="row">                                        
+                                        <div class="col-12">
+                                          <table id="tabla-persona" class="table table-bordered table-striped display" style="width: 100% !important;">
+                                            <thead> 
+                                              <tr>
+                                                <th class="text-center">#</th>
+                                                <th class="">Acciones</th>
+                                                <th class="">Code</th>
+                                                <th>Nombre</th>
+                                                <th>Categoria</th>
+                                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio Unitario">Precio ingresado</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Sub total">Sub total</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="IGV">IGV</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio real">Precio real</th>
+                                                <th data-toggle="tooltip" data-original-title="Ficha técnica">FT</th>
+                                                <th>Nombre</th>
+                                                <th>Marca</th>
+                                                <th>Color</th>
+                                                <th>Descripción</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                              <tr>
+                                                <th class="text-center">#</th>
+                                                <th class="">Acciones</th>
+                                                <th class="">Code</th>
+                                                <th>Nombre</th>
+                                                <th>Categoria</th>
+                                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio Ingresado">Precio ingresado</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Sub total">Sub total</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="IGV">IGV</th>
+                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio real">Precio real</th>
+                                                <th data-toggle="tooltip" data-original-title="Ficha técnica">FT</th>
+                                                <th>Nombre</th>
+                                                <th>Marca</th>
+                                                <th>Color</th>
+                                                <th>Descripción</th>
+                                              </tr>
+                                            </tfoot>
+                                          </table>
+                                        </div>
+                                        <!-- /.col -->
+                                      </div>
+                                      <!-- /.row -->
+                                    </div>                                    
+                                  </div>
+                                  <!-- /.tab-content -->
+                                </div>
+                                <!-- /.card-body -->
+                              </div>
+                            </div>
+                            <!-- /.col -->
+                          </div>
                           
                         </div>
                         <!-- /.card-body -->
@@ -126,12 +144,12 @@
                 </div>
                 <!-- /.container-fluid -->
 
-                <!-- Modal agregar trabajador -->
-                <div class="modal fade" id="modal-agregar-trabajador">
+                <!-- Modal agregar persona -->
+                <div class="modal fade" id="modal-agregar-persona">
                   <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Agregar trabajador</h4>
+                        <h4 class="modal-title">Agregar persona</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -139,14 +157,14 @@
 
                       <div class="modal-body">
                         <!-- form start -->
-                        <form id="form-trabajador" name="form-trabajador" method="POST">
+                        <form id="form-persona" name="form-persona" method="POST">
                           <div class="card-body">
 
                             <div class="row" id="cargando-1-fomulario">
-                              <!-- id trabajador -->
-                              <input type="hidden" name="idtrabajador" id="idtrabajador" />
+                              <!-- id persona -->
+                              <input type="hidden" name="idpersona" id="idpersona" />
                               <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                                 <div class="form-group">
                                   <label for="tipo_documento">Tipo de documento</label>
                                   <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
@@ -182,14 +200,27 @@
                                 </div>
                               </div>
                               <!-- Swichs permanente -->
-                              <!-- <div class="col-4 col-sm-5 col-md-6 col-lg-2">
-                                  <label for="socio" class="d-none show-min-width-576px">Socio <smclass="text-danger sino">(NO)</small> </label>
+                              <div class="col-4 col-sm-5 col-md-6 col-lg-2">
+                                  <label for="socio" class="d-none show-min-width-576px">Socio <small class="text-danger sino">(NO)</small> </label>
                                   <div class="switch-toggle">
                                     <input type="checkbox" id="socio" >
                                     <label for="socio" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>
                                   </div>
                                   <input type="hidden" name="input_socio" id="input_socio" value="0"  >
-                              </div> -->
+                              </div>
+
+                              <!-- Tipo de documento -->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                                <div class="form-group">
+                                  <label for="tipo_documento">Tipo de documento</label>
+                                  <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
+                                    <option selected value="DNI">DNI</option>
+                                    <option value="RUC">RUC</option>
+                                    <option value="CEDULA">CEDULA</option>
+                                    <option value="OTRO">OTRO</option>
+                                  </select>
+                                </div>
+                              </div>
 
                               <!-- Correo electronico -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
@@ -204,31 +235,6 @@
                                 <div class="form-group">
                                   <label for="telefono">Teléfono</label>
                                   <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- fecha de nacimiento -->
-                              <div class="col-12 col-sm-10 col-md-6 col-lg-3">
-                                <div class="form-group">
-                                  <label for="nacimiento">Fecha Nacimiento</label>
-                                  <input
-                                    type="date"
-                                    class="form-control"
-                                    name="nacimiento"
-                                    id="nacimiento"
-                                    placeholder="Fecha de Nacimiento"
-                                    onclick="calcular_edad('#nacimiento', '#edad', '.edad');"
-                                    onchange="calcular_edad('#nacimiento', '#edad', '.edad');"
-                                  />
-                                  <input type="hidden" name="edad" id="edad" />
-                                </div>
-                              </div>
-
-                              <!-- edad -->
-                              <div class="col-12 col-sm-2 col-md-6 col-lg-1">
-                                <div class="form-group">
-                                  <label for="edad">Edad</label>
-                                  <p class="edad" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
                                 </div>
                               </div>
 
@@ -266,39 +272,6 @@
                                 </div>
                               </div>
 
-                              <!-- Ruc -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="ruc">Ruc</label>
-                                  <input type="number" name="ruc" class="form-control" id="ruc" placeholder="Ingrese número de ruc" />
-                                </div>
-                              </div>
-                              <!-- cargo_trabajador  -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cargo_trabajador">Cargo </label>
-                                  <select name="cargo_trabajador" id="cargo_trabajador" class="form-control select2 cargo_trabajador" style="width: 100%;">
-                                    <!-- Aqui listamos los cargo_trabajador -->
-                                  </select>
-                                </div>
-                              </div>
-
-                              <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-                                <div class="form-group">
-                                  <label for="sueldo_mensual">Sueldo(Mensual)</label>
-                                  <input type="number" step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
-                                </div>
-                              </div>
-
-                              <!-- Sueldo(Diario) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-                                <div class="form-group">
-                                  <label for="sueldo_diario">Sueldo(Diario)</label>
-                                  <input type="number" step="any" name="sueldo_diario" class="form-control" id="sueldo_diario" readonly />
-                                </div>
-                              </div>
-
                               <!-- Direccion -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-8">
                                 <div class="form-group">
@@ -320,8 +293,8 @@
                               <!-- Progress -->
                               <div class="col-md-12">
                                 <div class="form-group">
-                                  <div class="progress" id="div_barra_progress_trabajador" style="display: none !important;">
-                                    <div id="barra_progress_trabajador" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress" id="div_barra_progress_persona" style="display: none !important;">
+                                    <div id="barra_progress_persona" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>
                               </div>
@@ -336,31 +309,31 @@
                                   
                           </div>
                           <!-- /.card-body -->
-                          <button type="submit" style="display: none;" id="submit-form-trabajador">Submit</button>
+                          <button type="submit" style="display: none;" id="submit-form-persona">Submit</button>
                         </form>
                       </div>
                       <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" onclick="limpiar_form_trabajador();" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="limpiar_form_persona();" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success" id="guardar_registro">Guardar Cambios</button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <!--Modal ver trabajador-->
-                <div class="modal fade" id="modal-ver-trabajador">
+                <!--Modal ver persona-->
+                <div class="modal fade" id="modal-ver-persona">
                   <div class="modal-dialog modal-dialog-scrollable modal-xm">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Datos trabajador</h4>
+                        <h4 class="modal-title">Datos persona</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
                       </div>
 
                       <div class="modal-body">
-                        <div id="datostrabajador" class="class-style">
-                          <!-- vemos los datos del trabajador -->
+                        <div id="datospersona" class="class-style">
+                          <!-- vemos los datos del persona -->
                         </div>
                       </div>
                     </div>
@@ -383,7 +356,7 @@
         <?php require 'script.php'; ?>       
         
         <!-- Funciones del modulo -->
-        <script type="text/javascript" src="scripts/trabajador.js"></script>
+        <script type="text/javascript" src="scripts/persona.js"></script>
 
         <script> $(function () {  $('[data-toggle="tooltip"]').tooltip();  }); </script>
         

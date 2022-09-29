@@ -121,11 +121,11 @@
  
   require_once "../modelos/Usuario.php";
   require_once "../modelos/Permiso.php";
-  require_once "../modelos/AllTrabajador.php";      
+  require_once "../modelos/Trabajador.php";      
 
   $usuario = new Usuario();  
   $permisos = new Permiso();
-  $alltrabajador = new AllTrabajador();
+  $alltrabajador = new Trabajador();
 
   // ::::::::::::::::::::::::::::::::: D A T O S   U S U A R I O S :::::::::::::::::::::::::::::
   $idusuario = isset($_POST["idusuario"]) ? limpiarCadena($_POST["idusuario"]) : "";
@@ -243,7 +243,7 @@
                 '<button class="btn btn-warning  btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' . 
                 ' <button class="btn btn-primary  btn-sm" onclick="activar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>',
             "2" => '<div class="user-block">'. 
-              '<img class="img-circle" src="../dist/docs/all_trabajador/perfil/' . $value['imagen_perfil'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
+              '<img class="img-circle" src="../dist/docs/trabajador/perfil/' . $value['imagen_perfil'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
               '<span class="username"><p class="text-primary m-b-02rem" >' . $value['nombres'] . '</p></span>'. 
               '<span class="description"> - ' . $value['tipo_documento'] .  ': ' . $value['numero_documento'] . ' </span>'.
             '</div>',
@@ -381,7 +381,7 @@
 
         $imagen1 = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
-        move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/all_trabajador/perfil/" . $imagen1);
+        move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/trabajador/perfil/" . $imagen1);
         
       }
 

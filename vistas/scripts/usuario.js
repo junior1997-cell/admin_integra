@@ -42,7 +42,7 @@ function init() {
 function formatState (state) {
   //console.log(state);
   if (!state.id) { return state.text; }
-  var baseUrl = state.title != '' ? `../dist/docs/all_trabajador/perfil/${state.title}`: '../dist/svg/user_default.svg'; 
+  var baseUrl = state.title != '' ? `../dist/docs/trabajador/perfil/${state.title}`: '../dist/svg/user_default.svg'; 
   var onerror = `onerror="this.src='../dist/svg/user_default.svg';"`;
   var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
   return $state;

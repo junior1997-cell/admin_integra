@@ -102,9 +102,9 @@
                 </a>
               </li>
 
-              <!-- Proveedores de la empresa -->
+              <!-- Proveedores y clientes de la empresa -->
               <li class="nav-item ">
-                <a href="proveedor.php" class="nav-link" id="lClienteProveedor">
+                <a href="persona.php" class="nav-link" id="lClienteProveedor">
                   <i class="nav-icon fas fa-truck"></i>
                   <p>Cliente y Proveedor </p>
                 </a>
