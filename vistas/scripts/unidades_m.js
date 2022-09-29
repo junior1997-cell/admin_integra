@@ -20,13 +20,15 @@ function limpiar_unidades_m() {
   $("#guardar_registro_unidad_m").html('Guardar Cambios').removeClass('disabled');
   //Mostramos los Materiales
   $("#idunidad_medida").val("");
-  $("#nombre_medida").val(""); 
+  $("#nombre").val(""); 
   $("#abreviacion").val(""); 
+  $("#descripcion").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
   $(".form-control").removeClass('is-invalid');
   $(".error.invalid-feedback").remove();
+  $(".form-control").removeClass('is-invalid');
 }
 
 //Función Listar
@@ -39,7 +41,9 @@ function listar_unidades_m() {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3], } } ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4], } }, 
+      { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3,4], } } ,
     ],
     ajax:{
       url: '../ajax/unidades_m.php?op=tbla_unidad_medida',
@@ -54,6 +58,8 @@ function listar_unidades_m() {
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
       if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      // columna: #
+      if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -140,8 +146,9 @@ function mostrar_unidades_m(idunidad_medida) {
 
     if (e.status) {
       $("#idunidad_medida").val(e.data.idunidad_medida);
-      $("#nombre_medida").val(e.data.nombre_medida); 
-      $("#abreviacion").val(e.data.abreviacion); 
+      $("#nombre").val(e.data.nombre); 
+      $("#abreviacion").val(e.data.abreviacion);
+      $("#descripcion").val(e.data.descripcion); 
 
       $("#cargando-3-fomulario").show();
       $("#cargando-4-fomulario").hide();
@@ -176,10 +183,10 @@ $(function () {
 
   $("#form-unidad-m").validate({
     rules: {
-      nombre_medida: { required: true }      // terms: { required: true },
+      nombre: { required: true }      // terms: { required: true },
     },
     messages: {
-      nombre_medida: { required: "Campo requerido.", },
+      nombre: { required: "Campo requerido.", },
 
     },
         

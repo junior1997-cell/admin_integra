@@ -63,6 +63,17 @@
           } else {
 
             // validamos si existe LA IMG para eliminarlo
+          
+            if ($flat_img1 == true) {
+
+              $datos_f1 = $materiales->obtenerImg($idproducto);
+
+              $img1_ant = $datos_f1['data']->fetch_object()->imagen;
+
+              if ( validar_url_completo($scheme_host. "dist/docs/material/img_perfil/" . $img1_ant)  == 200) {
+                unlink("../dist/docs/material/img_perfil/" . $img1_ant);
+              }
+            }
             
             $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $imagen1 );
             

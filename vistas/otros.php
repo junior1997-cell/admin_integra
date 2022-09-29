@@ -107,71 +107,6 @@
                   <!-- /.content -->
                 </div>
 
-                <!-- TBLA - COLOR -->
-                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
-                  <!-- Content Header (Page header) -->
-                  <section class="content-header">
-                    <div class="container-fluid">
-                      <div class="row mb-2">
-                        <div class="col-sm-6">
-                          <h1>Colores</h1>
-                        </div>
-                        <div class="col-sm-6">
-                          <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Colores</li>
-                          </ol>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.container-fluid -->
-                  </section>
-
-                  <!-- Main content -->
-
-                  <!-- Main content -->
-                  <section class="content">
-                    <div class="container-fluid">
-                      <div class="card card-primary card-outline">
-                        <div class="card-header">
-                          <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-color" onclick="limpiar();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                            Admnistrar Colores.
-                          </h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                          <table id="tabla-colores" class="table table-bordered table-striped display" style="width: 100% !important;">
-                            <thead>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Nombre</th>
-                                <th>Hexadecimal</th>
-                                <th>Estado</th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Nombre</th>
-                                <th>Hexadecimal</th>
-                                <th>Estado</th>
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
-                        <!-- /.card-body -->
-                      </div>
-                      <!-- /.card -->
-                    </div>
-                    <!-- /.container-fluid -->
-                  </section>
-                  <!-- /.content -->
-                </div>
-
                 <!-- TBLA - UNIDAD DE MEDIDA-->
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
                   <!-- Content Header (Page header) -->
@@ -213,7 +148,9 @@
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
                                 <th>Abreviación</th>
+                                <th>Descripciòn</th>
                                 <th>Estado</th>
+                                
                               </tr>
                             </thead>
                             <tbody></tbody>
@@ -223,6 +160,7 @@
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
                                 <th>Abreviación</th>
+                                <th>Descripciòn</th>
                                 <th>Estado</th>
                               </tr>
                             </tfoot>
@@ -236,6 +174,9 @@
                   </section>
                   <!-- /.content -->
                 </div>
+
+                
+                
 
                 <!-- TBLA - OCUPACION -->
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">

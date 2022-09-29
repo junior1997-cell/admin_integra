@@ -14,18 +14,19 @@
     $unidades_m = new Unidades_m();
 
     $idunidad_medida = isset($_POST["idunidad_medida"]) ? limpiarCadena($_POST["idunidad_medida"]) : "";
-    $nombre_medida = isset($_POST["nombre_medida"]) ? limpiarCadena($_POST["nombre_medida"]) : "";
+    $nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : "";
     $abreviacion = isset($_POST["abreviacion"]) ? limpiarCadena($_POST["abreviacion"]) : "";
+    $descripcion = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : "";
 
     switch ($_GET["op"]) {
 
       case 'guardaryeditar_unidades_m':
 
         if (empty($idunidad_medida)) {
-          $rspta = $unidades_m->insertar($nombre_medida, $abreviacion);
+          $rspta = $unidades_m->insertar($nombre, $abreviacion,$descripcion);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $unidades_m->editar($idunidad_medida, $nombre_medida, $abreviacion);
+          $rspta = $unidades_m->editar($idunidad_medida, $nombre, $abreviacion,$descripcion);
           echo json_encode( $rspta, true) ;
         }
       break;
@@ -58,12 +59,13 @@
             $data[] = [
               "0" => $cont++,
               "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_unidades_m(' . $reg->idunidad_medida . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_unidades_m(' . $reg->idunidad_medida .', \''.encodeCadenaHtml($reg->nombre_medida).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
+                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_unidades_m(' . $reg->idunidad_medida .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
                 : '<button class="btn btn-warning btn-sm" onclick="mostrar_unidades_m(' . $reg->idunidad_medida . ')"><i class="fas fa-pencil-alt"></i></button>' .
                   ' <button class="btn btn-primary btn-sm" onclick="activar_unidades_m(' . $reg->idunidad_medida . ')"><i class="fa fa-check"></i></button>',
-              "2" => $reg->nombre_medida,
-              "3" => $reg->abreviacion,
-              "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "2" => $reg->nombre,
+              "3" => $reg->abreviatura,
+              "4" => $reg->descripcion,
+              "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [

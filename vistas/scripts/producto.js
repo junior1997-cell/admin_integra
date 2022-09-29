@@ -238,14 +238,14 @@ function mostrar(idproducto) {
 
     if (e.status == true) {
       $("#idproducto").val(e.data.idproducto);
-      $("#nombre").val(e.data.nombre);
+      $("#nombre_producto").val(e.data.nombre);
       $("#marca").val(e.data.marca).trigger("change");  
       $("#descripcion").val(e.data.descripcion);
-
-      $('#precio_unitario').val(parseFloat(e.data.precio_unitario).toFixed(2));
+      $("#stock").val(e.data.stock);  
+      $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
       
-      $("#unid_medida").val(e.data.idunidad_medida).trigger("change");
-      $("#stock").val(e.data.stock).trigger("change");  
+      $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
+      
       $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
 
       if (e.data.imagen != "") {        
@@ -399,23 +399,23 @@ $(function () {
 
   $("#form-materiales").validate({
     rules: {
-      nombre_producto:  { required: true, minlength:3, maxlength:200},
+      nombre_producto:    { required: true, minlength:3, maxlength:200},
       categoria_producto: { required: true },
-      marca:          { required: true },
-      unidad_medida:    { required: true },
-      contenido_neto:         {  minlength: 3 },
-      precio_unitario:{ required: true },
-      descripcion:    { minlength: 4 },
+      marca:              { required: true },
+      unidad_medida:      { required: true },
+      contenido_neto:     {  min: 1, number: true },
+      precio_unitario:    { required: true },
+      descripcion:        { minlength: 4 },
       
     },
     messages: {
-      nombre_producto:  { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
+      nombre_producto:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
       categoria_producto: { required: "Campo requerido", },
-      marca:          { required: "Campo requerido" },
-      unidad_medida:    { required: "Campo requerido" },
-      contenido_neto:         { minlength: "Minimo 3 caracteres", },
-      precio_unitario:{ required: "Ingresar precio compra", },      
-      descripcion:    { minlength: "Minimo 4 caracteres" },
+      marca:              { required: "Campo requerido" },
+      unidad_medida:      { required: "Campo requerido" },
+      contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
+      precio_unitario:    { required: "Ingresar precio compra", },      
+      descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 
     errorElement: "span",
