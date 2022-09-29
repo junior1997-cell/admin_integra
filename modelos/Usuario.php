@@ -60,6 +60,10 @@ class Usuario
     if (empty($trabajador)) {$trab = $trabajador_old;}else{$trab = $trabajador; }
     // var_dump($trab);die();
     $update_user = '[]';
+    
+    //Eliminamos todos los permisos asignados para volverlos a registrar
+    $sqldel = "DELETE FROM usuario_permiso WHERE idusuario='$idusuario'";
+    $delete =  ejecutarConsulta($sqldel); if ( $delete['status'] == false) {return $delete; }   
 
     $sql = "UPDATE usuario SET 
     idtrabajador='$trab', cargo='$cargo', login='$login', password='$clave', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
@@ -93,21 +97,6 @@ class Usuario
 
       return $sw;
     
-    }else{
-
-      //Eliminamos todos los permisos asignados para volverlos a registrar
-      $sqldel = "DELETE FROM usuario_permiso WHERE idusuario='$idusuario'";
-      $delete =  ejecutarConsulta($sqldel); 
-
-      if ( $delete['status'] == false) {return $delete; }    
-
-      //add registro en nuestra bitacora
-      $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','','Borando definitivamente registros de permisos para volver a registrar','" . $_SESSION['idusuario'] . "')";
-      $bitacorade = ejecutarConsulta($sqlde);
-
-      if ( $bitacorade['status'] == false) {return $bitacorade; }
-
-      return $delete;
     }
 
   }
