@@ -12,11 +12,11 @@ if (!isset($_SESSION["nombre"])) {
   if ($_SESSION['compra_insumos'] == 1) {
     
     require_once "../modelos/Compra_insumos.php";
-    require_once "../modelos/AllProveedor.php";
+    //require_once "../modelos/Proveedor.php";
     require_once "../modelos/Producto.php";
 
     $compra_insumos = new Compra_insumos();
-    $proveedor = new AllProveedor();
+    //$proveedor = new Proveedor();
     $insumos = new Producto();      
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");

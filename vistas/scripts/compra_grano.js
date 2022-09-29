@@ -31,17 +31,17 @@ function init() {
 
   $("#lComprasGrano").addClass("active");
 
-  $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
+  //$("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#filtro_proveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_pago', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idproveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_proveedor', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_pago', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Color", '#color_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Categoria_all", '#categoria_insumos_af_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2TierraConcreto", '#idtipo_tierra_concreto', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_p', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Categoria_all", '#categoria_insumos_af_p', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2TierraConcreto", '#idtipo_tierra_concreto', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
@@ -55,9 +55,7 @@ function init() {
 
   $("#guardar_registro_material").on("click", function (e) {  $("#submit-form-materiales").submit(); });  
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
-  $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
-  $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true, });
+  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
 
@@ -91,9 +89,10 @@ function init() {
 
   no_select_tomorrow("#fecha_compra");
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
-  //$('#filtro_fecha_inicio').inputmask('dd-mm-yyyy', { 'placeholder': 'dd-mm-yyyy' });
-  
+  // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
+  $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
+  $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione Cliente", allowClear: true, });
+
   // Inicializar - Date picker  
   $('#filtro_fecha_inicio').datepicker({ format: "dd-mm-yyyy", clearBtn: true, language: "es", autoclose: true, weekStart: 0, orientation: "bottom auto", todayBtn: true });
   $('#filtro_fecha_fin').datepicker({ format: "dd-mm-yyyy", clearBtn: true, language: "es", autoclose: true, weekStart: 0, orientation: "bottom auto", todayBtn: true });
@@ -279,7 +278,7 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, {extend: "colvis"} ,        
     ],
     ajax: {
-      url: `../ajax/compra_insumos.php?op=tbla_principal&nube_idproyecto=${nube_idproyecto}&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/compra_grano.php?op=tbla_principal&nube_idproyecto=${nube_idproyecto}&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -312,9 +311,9 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
-      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
-      { targets: [8,11],  visible: false,  searchable: false,  },
+      // { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      // { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      // { targets: [8,11],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
 
@@ -329,7 +328,7 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_insumos.php?op=listar_compraxporvee&nube_idproyecto=" + nube_idproyecto,
+      url: "../ajax/compra_grano.php?op=listar_compraxporvee&nube_idproyecto=" + nube_idproyecto,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -370,7 +369,7 @@ function listar_facuras_proveedor(idproveedor, idproyecto) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_insumos.php?op=listar_detalle_compraxporvee&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
+      url: "../ajax/compra_grano.php?op=listar_detalle_compraxporvee&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -402,7 +401,7 @@ function guardar_y_editar_compras(e) {
     cancelButtonColor: "#d33",
     confirmButtonText: "Si, Guardar!",
     preConfirm: (input) => {
-      return fetch("../ajax/compra_insumos.php?op=guardaryeditarcompra", {
+      return fetch("../ajax/compra_grano.php?op=guardaryeditarcompra", {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!        
       }).then(response => {
@@ -436,8 +435,8 @@ function eliminar_compra(idcompra_proyecto, nombre) {
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/compra_insumos.php?op=anular",
-    "../ajax/compra_insumos.php?op=eliminar_compra", 
+    "../ajax/compra_grano.php?op=anular",
+    "../ajax/compra_grano.php?op=eliminar_compra", 
     idcompra_proyecto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -832,7 +831,7 @@ function mostrar_compra(idcompra_proyecto) {
   detalles = 0;
   ver_form_add();
 
-  $.post("../ajax/compra_insumos.php?op=ver_compra_editar", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
     
     e = JSON.parse(e); // console.log(e);
 
@@ -950,7 +949,7 @@ function ver_detalle_compras(idcompra_proyecto) {
 
   $("#modal-ver-compras").modal("show");
 
-  $.post("../ajax/compra_insumos.php?op=ver_detalle_compras&id_compra=" + idcompra_proyecto, function (r) {
+  $.post("../ajax/compra_grano.php?op=ver_detalle_compras&id_compra=" + idcompra_proyecto, function (r) {
     r = JSON.parse(r);
     if (r.status == true) {
       $(".detalle_de_compra").html(r.data); 
@@ -996,7 +995,7 @@ function tbla_comprobantes_compras(id_compra, num_orden) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [ ],
     ajax: {
-      url: `../ajax/compra_insumos.php?op=tbla_comprobantes_compra&id_compra=${id_compra}&num_orden=${num_orden}`,
+      url: `../ajax/compra_grano.php?op=tbla_comprobantes_compra&id_compra=${id_compra}&num_orden=${num_orden}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1027,7 +1026,7 @@ function guardaryeditar_comprobante(e) {
   var formData = new FormData($("#form-comprobante")[0]);
 
   $.ajax({
-    url: "../ajax/compra_insumos.php?op=guardaryeditar_comprobante",
+    url: "../ajax/compra_grano.php?op=guardaryeditar_comprobante",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1107,8 +1106,8 @@ function mostrar_editar_comprobante(idcomprobante, id_compra, comprobante, nombr
 
 function eliminar_comprobante_insumo(id_compra, nombre) {
   crud_eliminar_papelera(
-    "../ajax/compra_insumos.php?op=desactivar_comprobante",
-    "../ajax/compra_insumos.php?op=eliminar_comprobante", 
+    "../ajax/compra_grano.php?op=desactivar_comprobante",
+    "../ajax/compra_grano.php?op=eliminar_comprobante", 
     id_compra, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -1128,7 +1127,7 @@ function download_no_multimple(id_compra, cont, nombre_doc) {
   $(`.descarga_compra_${id_compra}`).html('<i class="fas fa-spinner fa-pulse"></i>');
   //console.log(id_compra, nombre_doc);
   var cant_download_ok = 0; var cant_download_error = 0;
-  $.post("../ajax/compra_insumos.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+  $.post("../ajax/compra_grano.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
     e = JSON.parse(e); console.log(e);
     if (e.status == true) {
       e.data.forEach((val, index) => {
@@ -1159,7 +1158,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
   $('.cargando_check').removeClass('hidden');
 
   if ($(`#check_descarga_${id_compra}`).is(':checked')) {
-    $.post("../ajax/compra_insumos.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/compra_grano.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_docs_ok = 0; var cont_docs_error = 0;
@@ -1196,7 +1195,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
     }).fail( function(e) { ver_errores(e); } );
     
   } else {
-    $.post("../ajax/compra_insumos.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/compra_grano.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_doc = 0;
@@ -1347,7 +1346,7 @@ function guardar_proveedor(e) {
   var formData = new FormData($("#form-proveedor")[0]);
 
   $.ajax({
-    url: "../ajax/compra_insumos.php?op=guardar_proveedor",
+    url: "../ajax/compra_grano.php?op=guardar_proveedor",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1401,7 +1400,7 @@ function mostrar_para_editar_proveedor() {
   $('#modal-agregar-proveedor').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/compra_insumos.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
@@ -1474,7 +1473,7 @@ function listar_pagos(idcompra_proyecto, idproyecto, monto_total, total_deposito
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_insumos.php?op=listar_pagos_proveedor&idcompra_proyecto=" + idcompra_proyecto,
+      url: "../ajax/compra_grano.php?op=listar_pagos_proveedor&idcompra_proyecto=" + idcompra_proyecto,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1539,7 +1538,7 @@ function listar_pagos_detraccion(idcompra_proyecto, idproyecto, monto_total, dep
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_insumos.php?op=listar_pagos_compra_prov_con_dtracc&idcompra_proyecto=" + idcompra_proyecto,
+      url: "../ajax/compra_grano.php?op=listar_pagos_compra_prov_con_dtracc&idcompra_proyecto=" + idcompra_proyecto,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1564,7 +1563,7 @@ function listar_pagos_detraccion(idcompra_proyecto, idproyecto, monto_total, dep
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_insumos.php?op=listar_pgs_detrac_detracc_cmprs&idcompra_proyecto=" + idcompra_proyecto,
+      url: "../ajax/compra_grano.php?op=listar_pgs_detrac_detracc_cmprs&idcompra_proyecto=" + idcompra_proyecto,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1614,7 +1613,7 @@ function most_datos_prov_pago(idcompra_proyecto) {
 
   $("#banco_pago").val("").trigger("change");
 
-  $.post("../ajax/compra_insumos.php?op=most_datos_prov_pago", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=most_datos_prov_pago", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
 
     e = JSON.parse(e);   //console.log(e);
 
@@ -1662,7 +1661,7 @@ function guardaryeditar_pago(e) {
   var formData = new FormData($("#form-pago-compra")[0]);
 
   $.ajax({
-    url: "../ajax/compra_insumos.php?op=guardaryeditar_pago",
+    url: "../ajax/compra_grano.php?op=guardaryeditar_pago",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1706,7 +1705,7 @@ function total_pagos(idcompra_proyecto) {
 
   $("#monto_total").html("");
 
-  $.post("../ajax/compra_insumos.php?op=suma_total_pagos", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {    
+  $.post("../ajax/compra_grano.php?op=suma_total_pagos", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {    
 
     e = JSON.parse(e);  //console.log(e);
 
@@ -1724,7 +1723,7 @@ function total_pagos_detracc(idcompra_proyecto) {
   $("#monto_total_prov").html("");
 
   //tabla 2 proveedor
-  $.post("../ajax/compra_insumos.php?op=suma_total_pagos_prov", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {   
+  $.post("../ajax/compra_grano.php?op=suma_total_pagos_prov", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {   
 
     e = JSON.parse(e); //console.log(e);
     if (e.status == true) {
@@ -1758,7 +1757,7 @@ function total_pagos_detracc(idcompra_proyecto) {
 
   $("#monto_total_detracc").html("");
   //tabla 2 detracion
-  $.post("../ajax/compra_insumos.php?op=suma_total_pagos_detracc", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=suma_total_pagos_detracc", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
     
     e = JSON.parse(e); //  console.log(e);
 
@@ -1806,7 +1805,7 @@ function mostrar_pagos(idpago_compras) {
   $("#forma_pago").val("").trigger("change");
   $("#tipo_pago").val("").trigger("change");
 
-  $.post("../ajax/compra_insumos.php?op=mostrar_pagos", { idpago_compras: idpago_compras }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=mostrar_pagos", { idpago_compras: idpago_compras }, function (e, status) {
     
     e = JSON.parse(e);  console.log(e);
 
@@ -1865,7 +1864,7 @@ function eliminar_pago_compra(idpago_compras, nombre) {
     denyButtonText: `<i class="fas fa-skull-crossbones"></i> Eliminar`,
     showLoaderOnConfirm: true,
     preConfirm: (input) => {       
-      return fetch(`../ajax/compra_insumos.php?op=desactivar_pagos&idpago_compras=${idpago_compras}`).then(response => {
+      return fetch(`../ajax/compra_grano.php?op=desactivar_pagos&idpago_compras=${idpago_compras}`).then(response => {
         //console.log(response);
         if (!response.ok) { throw new Error(response.statusText) }
         return response.json();
@@ -1873,7 +1872,7 @@ function eliminar_pago_compra(idpago_compras, nombre) {
     },
     showLoaderOnDeny: true,
     preDeny: (input) => {       
-      return fetch(`../ajax/compra_insumos.php?op=eliminar_pago_compra&idpago_compras=${idpago_compras}`).then(response => {
+      return fetch(`../ajax/compra_grano.php?op=eliminar_pago_compra&idpago_compras=${idpago_compras}`).then(response => {
         //console.log(response);
         if (!response.ok) { throw new Error(response.statusText) }
         return response.json();
@@ -2028,7 +2027,7 @@ function mostrar_material(idproducto, cont) {
 
   $("#modal-agregar-material-activos-fijos").modal("show");
 
-  $.post("../ajax/compra_insumos.php?op=mostrar_materiales", { 'idproducto_p': idproducto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=mostrar_materiales", { 'idproducto_p': idproducto }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);    
 
@@ -2137,7 +2136,7 @@ function guardar_y_editar_materiales(e) {
   var formData = new FormData($("#form-materiales")[0]);
 
   $.ajax({
-    url: "../ajax/compra_insumos.php?op=guardar_y_editar_materiales",
+    url: "../ajax/compra_grano.php?op=guardar_y_editar_materiales",
     type: "POST",
     data: formData,
     contentType: false,
@@ -2625,7 +2624,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: "../ajax/compra_insumos.php?op=guardaryeditarcompra",
+        url: "../ajax/compra_grano.php?op=guardaryeditarcompra",
         type: "POST",
         data: formData,
         contentType: false,
@@ -2685,7 +2684,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
 
 function sincronizar_comprobante() {
   $('#btn_sincronizar').html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-  $.post("../ajax/compra_insumos.php?op=sincronizar_comprobante",  function (e, textStatus, jqXHR) {
+  $.post("../ajax/compra_grano.php?op=sincronizar_comprobante",  function (e, textStatus, jqXHR) {
     e = JSON.parse(e); console.log(e);
     if (e.status == true) {
       tabla_compra_insumo.ajax.reload(null, false);

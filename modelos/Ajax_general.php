@@ -86,6 +86,19 @@
 		return ejecutarConsulta($sql);
     }
     
+    /* ══════════════════════════════════════ C L I E N T E  ══════════════════════════════════════ */
+    public function select2_cliente() {
+      $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, foto_perfil
+      FROM persona AS p, tipo_persona as tp
+      WHERE p.idtipo_persona = tp.idtipo_persona and p.idtipo_persona = 2 and p.estado='1' AND p.estado_delete = '1' AND p.idpersona > 1 ORDER BY p.nombres ASC;";
+      return ejecutarConsulta($sql);
+    }
+
+    /* ══════════════════════════════════════ TIPO PERSONA  ══════════════════════════════════════ */
+    public function select2_tipo_persona() {
+      $sql = "SELECT idtipo_persona, nombre, descripcion FROM tipo_persona WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC;";
+      return ejecutarConsulta($sql);
+    }
 
     /* ══════════════════════════════════════ P R O V E E D O R  ══════════════════════════════════════ */
 
@@ -157,13 +170,11 @@
     }
 
     public function tblaInsumos() {
-      $sql = "SELECT p.idproducto,p.idcategoria_insumos_af, p.nombre, p.modelo, p.serie, p.marca,p.precio_unitario, p.precio_igv as igv, 
-      p.precio_sin_igv, p.precio_total as precio_con_igv, p.ficha_tecnica, p.descripcion, p.imagen, um.nombre_medida, c.nombre_color, 
-      ciaf.nombre AS categoria
-      FROM producto as p, unidad_medida as um, color as c, categoria_insumos_af AS ciaf
-      WHERE p.idunidad_medida= um.idunidad_medida AND p.idcolor=c.idcolor AND p.idcategoria_insumos_af = ciaf.idcategoria_insumos_af AND p.idcategoria_insumos_af='1' AND 
-      p.estado='1' AND p.estado_delete='1'
-      ORDER BY p.nombre ASC;";
+      $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, 
+      p.descripcion, p.imagen, p.estado,  
+      um.nombre as nombre_medida, cp.nombre AS categoria
+      FROM producto as p, unidad_medida AS um, categoria_producto AS cp
+      WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
       return ejecutarConsulta($sql);
     }
 

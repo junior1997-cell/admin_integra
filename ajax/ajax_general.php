@@ -171,7 +171,57 @@
           echo json_encode($rspta, true); 
         }
       break;
-      
+
+      /* ══════════════════════════════════════ C L I E N T E  ══════════════════════════════════════ */
+      case 'select2Cliente': 
+
+        $rspta = $ajax_general->select2_cliente();  $cont = 1; $data = "";
+
+        if ($rspta['status'] == true) {
+
+          foreach ($rspta['data'] as $key => $value) {
+            $data .= '<option  value=' . $value['idpersona'] . ' title="'.$value['foto_perfil'].'">' . $cont++ . '. ' . $value['nombres'] .' - '. $value['numero_documento'] . '</option>';
+          }
+
+          $retorno = array(
+            'status' => true, 
+            'message' => 'Salió todo ok', 
+            'data' => '<option value="1" ruc="">CLIENTES VARIOS</option>' . $data, 
+          );
+  
+          echo json_encode($retorno, true);
+
+        } else {
+
+          echo json_encode($rspta, true); 
+        } 
+      break;
+
+      /* ══════════════════════════════════════ TIPO PERSONA  ══════════════════════════════════════ */
+      case 'select2TipoPersona': 
+
+        $rspta = $ajax_general->select2_tipo_persona();  $cont = 1; $data = "";
+
+        if ($rspta['status'] == true) {
+
+          foreach ($rspta['data'] as $key => $value) {
+            $data .= '<option  value=' . $value['idpersona'] . ' >' . $value['nombre']  . '</option>';
+          }
+
+          $retorno = array(
+            'status' => true, 
+            'message' => 'Salió todo ok', 
+            'data' =>  $data, 
+          );
+  
+          echo json_encode($retorno, true);
+
+        } else {
+
+          echo json_encode($rspta, true); 
+        } 
+      break;
+
       /* ══════════════════════════════════════ P R O V E E D O R  ══════════════════════════════════════ */
       case 'select2Proveedor': 
     
@@ -453,22 +503,19 @@
             } else {
               $img = 'src="../dist/docs/material/img_perfil/' . $reg->imagen . '"';
               $img_parametro = $reg->imagen;
-            }
-  
-            !empty($reg->ficha_tecnica) ? ($ficha_tecnica = '<center><a target="_blank" href="../dist/docs/material/ficha_tecnica/' . $reg->ficha_tecnica . '" data-toggle="tooltip" data-original-title="Ver Ficha Técnica"><i class="far fa-file-pdf fa-2x text-success"></i></a></center>')
-              : ($ficha_tecnica = '<center><span class="text-center" data-toggle="tooltip" data-original-title="Vacío"> <i class="far fa-times-circle fa-2x text-danger"></i></span></center>');
+            }           
   
             $datas[] = [
               "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\', \'' . $reg->nombre_color . '\', \'' . $reg->precio_sin_igv . '\', \'' . $reg->igv . '\', \'' . $reg->precio_con_igv . '\', \'' .  $img_parametro . '\', \'' . $reg->ficha_tecnica . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
               "1" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle" ' .  $img . ' alt="user image" onerror="' . $imagen_error .  '">'.
-                '<span class="username"><p style="margin-bottom: 0px !important;">' . $reg->nombre . '</p></span>
-                <span class="description"><b>Color: </b>' . $reg->nombre_color . '</span>'.
+                '<span class="username"><p class="mb-0" >' . $reg->nombre . '</p></span>
+                <span class="description"><b>Color: </b>' . $reg->marca . '</span>'.
               '</div>',
               "2" => $reg->categoria,
-              "3" => number_format($reg->precio_con_igv, 2, '.', ','),
+              "3" => number_format($reg->precio_unitario, 2, '.', ','),
               "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg->descripcion . '</textarea>',
-              "5" => $ficha_tecnica . $toltip,
+              "5" => $stock . $toltip,
             ];
           }
   

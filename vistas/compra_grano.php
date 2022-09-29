@@ -169,8 +169,7 @@
                                   <!-- <label for="filtros" class="cargando_proveedor">Proveedor &nbsp;<i class="text-dark fas fa-spinner fa-pulse fa-lg"></i><br /></label> -->
                                   <select id="filtro_proveedor" class="form-control select2" onchange="cargando_search(); delay(function(){filtros()}, 50 );" style="width: 100%;"> 
                                   </select>
-                                </div>
-                                
+                                </div>                                
                               </div>
 
                               <!-- filtro por: proveedor -->
@@ -207,7 +206,6 @@
                                   <th>Saldo</th>
                                   <th data-toggle="tooltip" data-original-title="Comprobantes">CFDI.</th>
                                   <th>Descripción</th>
-                                  <th> <button class="btn btn-info btn-sm btn-descarga-multiple" onclick="download_multimple();" data-toggle="tooltip" data-original-title="Descarga múltiple" ><i class="fas fa-cloud-download-alt"></i></button> </th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -224,7 +222,6 @@
                                   <th>Saldo</th>
                                   <th>CFDI.</th>
                                   <th>Descripción</th>
-                                  <th>Estado</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -470,45 +467,9 @@
                               <button type="button" class="btn btn-danger" onclick="regresar();" data-dismiss="modal">Close</button>
                               <button type="submit" class="btn btn-success" style="display: none;" id="guardar_registro_compras">Guardar Cambios</button>
                             </div>
-                          </div>
+                          </div>                          
 
-                          <!-- TABLA - FACTURAS COMPRAS-->
-                          <div id="factura_compras" style="display: none;">
-                            <h5><b>Lista de compras Por Facturas</b></h5>
-
-                            <!--<div style="text-align:center;"> <h4 style="background: aliceblue;">Costo parcial: <b id="total_costo" style="color: #e52929;"></b> </h5> </div>-->
-                            <table id="tabla_facturas" class="table table-bordered table-striped display" style="width: 100% !important;">
-                              <thead>
-                                <tr>
-                                  <th>Aciones</th>
-                                  <th>Código</th>
-                                  <th>Fecha Emisión</th>
-                                  <th>Sub total</th>
-                                  <th>IGV</th>
-                                  <th>Monto</th>
-                                  <th>Descripción</th>
-                                  <th>Factura</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </thead>
-                              <tbody></tbody>
-                              <tfoot>
-                                <tr>
-                                  <th>Aciones</th>
-                                  <th>Código</th>
-                                  <th>Fecha Emisión</th>
-                                  <th>Sub total</th>
-                                  <th>IGV</th>
-                                  <th id="monto_total_f" style="color: #ff0000; background-color: #f3e700;"></th>
-                                  <th>Descripción</th>
-                                  <th>Factura</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-
-                          <!-- TABLA - PAGOS SIN DETRACCION -->
+                          <!-- TABLA - PAGOS COMPRAS GRANO -->
                           <div id="pago_compras" style="display: none;">
                             <h5>pago Compras</h5>
                             <div style="text-align: center;">
@@ -550,132 +511,7 @@
                                 </tfoot>
                               </table>
                             </div>
-                          </div>
-
-                          <!-- TABLA - PAGOS CON DETRACCION-->
-                          <div id="pagos_con_detraccion" style="display: none;">
-                            <h5>pagos con detracccion</h5>
-                            <div style="text-align: center;">
-                              <div>
-                                <h4>Total a pagar: <b id="ttl_monto_pgs_detracc"></b></h4>
-                              </div>
-                              <br />
-
-                              <div style="background-color: aliceblue;">
-                                <h5>
-                                  Proveedor S/
-                                  <b id="t_proveedor"></b>
-                                  <input type="hidden" class="t_proveedor" />
-                                  <i class="fas fa-arrow-right fa-xs"></i>
-                                  <b id="t_provee_porc"></b>
-                                  <b>%</b>
-                                </h5>
-                              </div>
-                            </div>
-                            <!--tabla 1 t_proveedor, t_provee_porc,t_detaccion, t_detacc_porc -->
-                            <table id="tbl-pgs-detrac-prov-cmprs" class="table table-bordered table-striped display" style="width: 100% !important;">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Acciones</th>
-                                  <th>Forma pago</th>
-                                  <th>Beneficiario</th>
-                                  <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
-                                  <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
-                                  <th>Monto</th>
-                                  <th>Vaucher</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </thead>
-                              <tbody></tbody>
-                              <tfoot>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Aciones</th>
-                                  <th>Forma pago</th>
-                                  <th>Beneficiario</th>
-                                  <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
-                                  <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
-                                  <th style="color: #ff0000; background-color: #45c920;">
-                                    <b id="monto_total_prov"></b> <br />
-                                    <b id="porcnt_prove" style="color: black;"></b>
-                                  </th>
-                                  <th>Vaucher</th>
-                                  <th>Estado</th>
-                                </tr>
-                                <tr>
-                                  <td colspan="6"></td>
-                                  <td style="font-weight: bold; font-size: 20px; text-align: center;">Saldo</td>
-                                  <th style="color: #ff0000; background-color: #f3e700;">
-                                    <b id="saldo_p"></b> <br />
-                                    <b id="porcnt_sald_p" style="color: black;"></b>
-                                  </th>
-                                  <td colspan="2"></td>
-                                </tr>
-                              </tfoot>
-                            </table>
-
-                            <!--Tabla 2-->
-                            <br />
-                            <div style="text-align: center;">
-                              <div style="background-color: aliceblue;">
-                                <h5>
-                                  Detracción S/
-                                  <b id="t_detaccion"></b>
-                                  <input type="hidden" class="t_detaccion" />
-                                  <i class="fas fa-arrow-right fa-xs"></i>
-                                  <b id="t_detacc_porc"></b>
-                                  <b>%</b>
-                                </h5>
-                              </div>
-                            </div>
-                            <table id="tbl-pgs-detrac-detracc-cmprs" class="table table-bordered table-striped display" style="width: 100% !important;">
-                              <thead>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Acciones</th>
-                                  <th>Forma pago</th>
-                                  <th>Beneficiario</th> 
-                                  <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
-                                  <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
-                                  <th>Monto</th>
-                                  <th>Vaucher</th>
-                                  <th>Estado</th>
-                                </tr>
-                              </thead>
-                              <tbody></tbody>
-                              <tfoot>
-                                <tr>
-                                  <th>#</th>
-                                  <th>Aciones</th>
-                                  <th>Forma pago</th>
-                                  <th>Beneficiario</th> 
-                                  <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
-                                  <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
-                                  <th style="color: #ff0000; background-color: #45c920;">
-                                    <b id="monto_total_detracc"></b> <br />
-                                    <b id="porcnt_detrcc" style="color: black;"></b>
-                                  </th>
-                                  <th>Vaucher</th>
-                                  <th>Estado</th>
-                                </tr>
-                                <tr>
-                                  <td colspan="6"></td>
-                                  <td style="font-weight: bold; font-size: 20px; text-align: center;">Saldo</td>
-                                  <th style="color: #ff0000; background-color: #f3e700;">
-                                    <b id="saldo_d"></b> <br />
-                                    <!-- <input type="hidden" class="saldo_d">-->
-                                    <b id="porcnt_sald_d" style="color: black;"></b>
-                                  </th>
-                                  <td colspan="2"></td>
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
+                          </div>                        
 
                           <!-- /.card-body -->
                         </div>
