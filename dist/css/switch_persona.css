@@ -39,7 +39,7 @@
 
 .switch-toggle input[type="checkbox"] + label::before {
   position: absolute;
-  content: "OFF";
+  content: "NO";
   font-size: 13px;
   text-align: center;
   line-height: 25px;
@@ -55,7 +55,7 @@
 
 .switch-toggle input[type="checkbox"]:checked + label::before {
   left: 50%;
-  content: "ON";
+  content: "SI";
   color: #fff;
   background-color: #00b33c;
   box-shadow: -3px -3px 5px rgba(255, 255, 255, 0.5), 3px 3px 5px #00b33c;

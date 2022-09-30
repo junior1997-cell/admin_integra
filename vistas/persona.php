@@ -15,7 +15,7 @@
         <title>Clientes Proveedores | Admin Integra</title>
 
         <?php $title = "Personas"; require 'head.php'; ?>
-        <link rel="stylesheet" href="../dist/css/switch_domingo.css">
+        <link rel="stylesheet" href="../dist/css/switch_persona.css">
 
       </head>
       <body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
@@ -254,7 +254,7 @@
 
                               <!-- Swichs permanente -->
                               <div class="col-4 col-sm-5 col-md-6 col-lg-3">
-                                  <label for="socio" class="d-none show-min-width-576px">Socio <small class="text-danger sino">(NO)</small> </label>
+                                  <label for="socio">Es socio ? <small class="text-danger text-bold sino">(NO)</small> </label>
                                   <div class="switch-toggle">
                                     <input type="checkbox" id="socio" >
                                     <label for="socio" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>

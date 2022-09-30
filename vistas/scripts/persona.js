@@ -371,23 +371,15 @@ function mostrar(idpersona) {
 
       $("#input_socio").val(e.data.es_socio); 
       $("#id_tipo_persona").val(e.data.idtipo_persona); 
-      // $('#socio').is(':checked'); ("#definiendo").prop('checked', true); 
-
-      if ( e.data.es_socio==null || e.data.es_socio=="" ) {
+      // $('#socio').is(':checked'); ("#definiendo").prop('checked', true);
+      
+      if (e.data.es_socio==1) {
         
-        $("#input_socio").val('0');
-        $(".sino").html('(NO)');
-
-        if($('#socio').is(':checked') && e.data.es_socio=="0"){ $("#definiendo").prop('checked', false); }else{ $("#socio").prop('checked', false); }
-
-      }else{
-
         $("#input_socio").val('1');
         $(".sino").html('(SI)');
         
-        if($('#socio').is(':checked') && e.data.es_socio=="1"){$("#definiendo").prop('checked', false);  }else{ $("#socio").prop('checked', true); }
+        if($('#socio').is(':checked') ){$("#definiendo").prop('checked', false);  }else{ $("#socio").prop('checked', true); }
       }
-
 
       if (e.data.foto_perfil!="") {
         $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);

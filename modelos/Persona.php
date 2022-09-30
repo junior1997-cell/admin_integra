@@ -109,12 +109,12 @@
     public function tbla_principal($tipo_persona) {
       $filtro="";
 
-      if ($tipo_persona=='todos') { $filtro = "p.idtipo_persona>1 AND"; }else{ $filtro = "p.idtipo_persona='.$tipo_persona.' AND"; }
+      if ($tipo_persona=='todos') { $filtro = "AND p.idtipo_persona>1"; }else{ $filtro = "AND p.idtipo_persona='$tipo_persona' "; }
 
       $sql="SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.direccion, p.correo,p.estado, 
       p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.foto_perfil, b.nombre as banco, tp.nombre as tipo_persona 
       FROM persona as p, bancos as b, tipo_persona as tp 
-      WHERE $filtro p.idtipo_persona=tp.idtipo_persona AND p.idbancos=b.idbancos AND p.estado ='1' AND p.estado_delete='1';";
+      WHERE p.idtipo_persona=tp.idtipo_persona  AND p.idbancos=b.idbancos $filtro AND p.estado ='1' AND p.estado_delete='1';";
 
       $persona = ejecutarConsultaArray($sql); if ($persona['status'] == false) { return  $persona;}
 
