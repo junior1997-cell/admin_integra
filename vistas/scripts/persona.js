@@ -11,7 +11,6 @@ function init() {
   tbla_principal('todos');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2_cargo_persona", '#cargo_persona', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
@@ -20,7 +19,6 @@ function init() {
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#banco").select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
-  $("#cargo_persona").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -50,47 +48,27 @@ function foto1_eliminar() {
 	$("#foto1_nombre").html("");
 }
 
-// function habilitando_socio() {
-//   // $("#input_socio").val('NO');
-  
-//   if ($("#socio").val()==null || $("#socio").val()=="" || $('#socio').is(':checked') ) {
-//     $("#input_socio").val('0');
-//     $(".sino").html('(NO)');
-//   }else{
-//     $("#input_socio").val('1');
-//     $(".sino").html('(SI)');
-
-//   }
-
-  
-
-// }
-
-
 //Función limpiar
 function limpiar_form_persona() {
   
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
 
+  $("#idpersona").val(""); 
   $("#tipo_documento").val("null").trigger("change");
-  $("#cargo_persona").val("null").trigger("change");
-
-  $("#idpersona").val("");
-  $("#nombre").val(""); 
   $("#num_documento").val(""); 
-  $("#direccion").val(""); 
-  $("#telefono").val(""); 
+  $("#nombre").val(""); 
+  $("#input_socio").val("0"); 
   $("#email").val(""); 
-  $("#nacimiento").val("");
-  $("#edad").val("0");  $(".edad").html("0");    
-  $("#cta_bancaria").val("");  
-  $("#cci").val("");  
-  $("#ruc").val("");  
+  $("#telefono").val(""); 
   $("#banco").val("").trigger("change");
+  $("#cta_bancaria").val(""); 
+  $("#cci").val(""); 
+  $("#titular_cuenta").val(""); 
+  $("#direccion").val("");
+  $(".sino").html('(NO)');
 
-  $("#titular_cuenta").val("");
-  $("#sueldo_mensual").val("");
-  $("#sueldo_diario").val("");
+  $("#socio").prop('checked', false);
+
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");
@@ -109,7 +87,7 @@ function lista_de_items() {
 
   $.post("../ajax/persona.php?op=tipo_persona", function (e, status) {
     
-    e = JSON.parse(e); console.log(e);
+    e = JSON.parse(e); //console.log(e);
     // e.data.idtipo_tierra
     if (e.status) {
       var data_html = '';
@@ -135,7 +113,7 @@ function lista_de_items() {
 
 //Función Listar
 function tbla_principal(tipo_persona) {
-  console.log('tbl '+tipo_persona);
+  show_hide_btn_add(tipo_persona);
 
   tabla=$('#tabla-persona').dataTable({
     responsive: true,
@@ -144,12 +122,12 @@ function tbla_principal(tipo_persona) {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, {extend: "colvis"} ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, {extend: "colvis"} ,
     ],
     ajax:{
-      url: `../ajax/persona.php?op=tbla_principal&tipopersona=${tipo_persona}`,
+      url: `../ajax/persona.php?op=tbla_principal&tipo_persona=${tipo_persona}`,
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -171,9 +149,22 @@ function tbla_principal(tipo_persona) {
     iDisplayLength: 10,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
-      { targets: [8, 9, 10, 11, 12, 13, 14, 15, 16,17,18], visible: false, searchable: false, }, 
+      { targets: [6,7,8,9,10,11,12], visible: false, searchable: false, }, 
     ],
   }).DataTable();
+
+}
+
+function show_hide_btn_add(tipo_persona) {
+
+  if (tipo_persona=="todos") {
+    $("#id_tipo_persona").val("");
+    $(".class_btn").hide();
+    
+  }else{
+    $("#id_tipo_persona").val(tipo_persona);
+    $(".class_btn").show();
+  }
 
 }
 
@@ -360,14 +351,13 @@ function mostrar(idpersona) {
 
     if (e.status == true) {       
 
-      $("#cargo_persona").val(e.data.idcargo_persona).trigger("change");
       $("#tipo_documento").val(e.data.tipo_documento).trigger("change");
       $("#nombre").val(e.data.nombres);
       $("#num_documento").val(e.data.numero_documento);
       $("#direccion").val(e.data.direccion);
-      $("#telefono").val(e.data.telefono);
-      $("#email").val(e.data.email);
-      $("#nacimiento").val(e.data.fecha_nacimiento);      
+      $("#telefono").val(e.data.celular);
+      $("#email").val(e.data.correo);
+           
       $("#titular_cuenta").val(e.data.titular_cuenta);
       $("#idpersona").val(e.data.idpersona);
       $("#ruc").val(e.data.ruc);   
@@ -379,11 +369,31 @@ function mostrar(idpersona) {
       $("#sueldo_mensual").val(e.data.sueldo_mensual);
       $("#sueldo_diario").val(e.data.sueldo_diario);  
 
-      if (e.data.imagen_perfil!="") {
-        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.imagen_perfil);
-        $("#foto1_actual").val(e.data.imagen_perfil);
+      $("#input_socio").val(e.data.es_socio); 
+      $("#id_tipo_persona").val(e.data.idtipo_persona); 
+      // $('#socio').is(':checked'); ("#definiendo").prop('checked', true); 
+
+      if ( e.data.es_socio==null || e.data.es_socio=="" ) {
+        
+        $("#input_socio").val('0');
+        $(".sino").html('(NO)');
+
+        if($('#socio').is(':checked') && e.data.es_socio=="0"){ $("#definiendo").prop('checked', false); }else{ $("#socio").prop('checked', false); }
+
+      }else{
+
+        $("#input_socio").val('1');
+        $(".sino").html('(SI)');
+        
+        if($('#socio').is(':checked') && e.data.es_socio=="1"){$("#definiendo").prop('checked', false);  }else{ $("#socio").prop('checked', true); }
       }
-      calcular_edad('#nacimiento','.edad','#edad'); 
+
+
+      if (e.data.foto_perfil!="") {
+        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
+        $("#foto1_actual").val(e.data.foto_perfil);
+      }
+
 
       $("#cargando-1-fomulario").show();
       $("#cargando-2-fomulario").hide();
@@ -436,7 +446,6 @@ $(function () {
 
   $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
   $("#banco").on('change', function() { $(this).trigger('blur'); });
-  $("#cargo_persona").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-persona").validate({
     rules: {
@@ -448,7 +457,6 @@ $(function () {
       telefono:       { minlength: 8 },
       cta_bancaria:   { minlength: 10,},
       banco:          { required: true},
-      ruc:            { minlength: 11, maxlength: 11},
       sueldo_mensual: { required: true},
     },
     messages: {
@@ -460,7 +468,6 @@ $(function () {
       telefono:       { minlength: "MÍNIMO 8 caracteres.", },
       cta_bancaria:   { minlength: "MÍNIMO 10 caracteres.", },
       banco:          { required: "Campo requerido.", },
-      ruc:            { minlength: "MÍNIMO 11 caracteres.", maxlength: "MÁXIMO 11 caracteres.", },
       sueldo_mensual: { required: "Campo requerido.", }
     },
         
@@ -484,7 +491,6 @@ $(function () {
 
   $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#cargo_persona").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
@@ -521,15 +527,18 @@ function formato_banco() {
   }  
 }
 
-function sueld_mensual(){
 
-  var sueldo_mensual = $('#sueldo_mensual').val()
+function habilitando_socio() {
+  
+  if ($("#socio").val()==null || $("#socio").val()=="" || $('#socio').is(':checked') ) {
+    $("#input_socio").val('0');
+    $(".sino").html('(NO)');
+  }else{
+    $("#input_socio").val('1');
+    $(".sino").html('(SI)');
 
-  var sueldo_diario=(sueldo_mensual/30).toFixed(1);
-
-  var sueldo_horas=(sueldo_diario/8).toFixed(1);
-
-  $("#sueldo_diario").val(sueldo_diario);
+  }
 
 }
+
 

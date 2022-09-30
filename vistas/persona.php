@@ -54,12 +54,6 @@
                   <div class="row">
                     <div class="col-12">
                       <div class="card card-primary card-outline">
-                        <div class="card-header">
-                          <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
-                            Admnistra de manera eficiente a los Clientes - Proveedores
-                          </h3>
-                        </div>
                         <!-- /.card-header -->
                         <div class="card-body px-1 py-1">
                           <div class="row">                              
@@ -70,32 +64,38 @@
                                     <li class="nav-item">
                                       <a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a>
                                     </li>           
-                                  </ul>
+                                  </ul> 
+
                                 </div>
-                                <div class="card-body" >                                  
+                                <div class="card-body" > 
                                   <div class="tab-content" id="tabs-for-tabContent">
                                     <!-- TABLA - RESUMEN -->
                                     <div class="tab-pane fade show active" id="tabs-for-activo-fijo" role="tabpanel" aria-labelledby="tabs-for-activo-fijo-tab">
-                                      <div class="row">                                        
+                                      <div class="row">
+                                        <div class="col-12 mb-2 class_btn">
+                                          <h3 class="card-title">
+                                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-persona" onclick="limpiar_form_persona();"><i class="fas fa-user-plus"></i> Agregar</button>                           
+                                          </h3> 
+                                        </div>                                        
                                         <div class="col-12">
                                           <table id="tabla-persona" class="table table-bordered table-striped display" style="width: 100% !important;">
                                             <thead> 
                                               <tr>
                                                 <th class="text-center">#</th>
                                                 <th class="">Acciones</th>
-                                                <th class="">Code</th>
-                                                <th>Nombre</th>
-                                                <th>Categoria</th>
-                                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio Unitario">Precio ingresado</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Sub total">Sub total</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="IGV">IGV</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio real">Precio real</th>
-                                                <th data-toggle="tooltip" data-original-title="Ficha técnica">FT</th>
-                                                <th>Nombre</th>
-                                                <th>Marca</th>
-                                                <th>Color</th>
-                                                <th>Descripción</th>
+                                                <th class="">Nombres</th>
+                                                <th>Dirección</th>
+                                                <th>Telefono</th>
+                                                <th>C. Bancaria</th>
+
+                                                <th>Estado</th>
+                                                <th>Nombres</th>
+                                                <th>Tipo Doc.</th>
+                                                <th>Num. Doc</th>
+                                                <th>Banco</th>
+                                                <th>C. Bancaria</th>
+                                                <th>CCI</th>
+
                                               </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -103,19 +103,19 @@
                                               <tr>
                                                 <th class="text-center">#</th>
                                                 <th class="">Acciones</th>
-                                                <th class="">Code</th>
-                                                <th>Nombre</th>
-                                                <th>Categoria</th>
-                                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio Ingresado">Precio ingresado</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Sub total">Sub total</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="IGV">IGV</th>
-                                                <th class="text-center" data-toggle="tooltip" data-original-title="Precio real">Precio real</th>
-                                                <th data-toggle="tooltip" data-original-title="Ficha técnica">FT</th>
-                                                <th>Nombre</th>
-                                                <th>Marca</th>
-                                                <th>Color</th>
-                                                <th>Descripción</th>
+                                                <th class="">Nombres</th>
+                                                <th>Dirección</th>
+                                                <th>Telefono</th>
+                                                <th>C. Bancaria</th>
+
+                                                <th>Estado</th>
+                                                <th>Nombres</th>
+                                                <th>Tipo Doc.</th>
+                                                <th>Num. Doc.</th>
+                                                <th>Banco</th>
+                                                <th>C. Bancaria</th>
+                                                <th>CCI</th>
+
                                               </tr>
                                             </tfoot>
                                           </table>
@@ -163,10 +163,12 @@
                             <div class="row" id="cargando-1-fomulario">
                               <!-- id persona -->
                               <input type="hidden" name="idpersona" id="idpersona" />
+                              <!-- tipo persona  -->
+                              <input type="hidden" name="id_tipo_persona" id="id_tipo_persona" />
                               <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                 <div class="form-group">
-                                  <label for="tipo_documento">Tipo de documento</label>
+                                  <label for="tipo_documento">Tipo Doc.</label>
                                   <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
                                     <option selected value="DNI">DNI</option>
                                     <option value="RUC">RUC</option>
@@ -175,7 +177,7 @@
                                   </select>
                                 </div>
                               </div>
-
+                              
                               <!-- N° de documento -->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                                 <div class="form-group">
@@ -193,32 +195,10 @@
                               </div>
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                                 <div class="form-group">
-                                  <label for="nombre">Nombre y Apellidos/Razon Social</label>
+                                  <label for="nombre">Nombres/Razon Social</label>
                                   <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
-                                </div>
-                              </div>
-                              <!-- Swichs permanente -->
-                              <div class="col-4 col-sm-5 col-md-6 col-lg-2">
-                                  <label for="socio" class="d-none show-min-width-576px">Socio <small class="text-danger sino">(NO)</small> </label>
-                                  <div class="switch-toggle">
-                                    <input type="checkbox" id="socio" >
-                                    <label for="socio" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>
-                                  </div>
-                                  <input type="hidden" name="input_socio" id="input_socio" value="0"  >
-                              </div>
-
-                              <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
-                                <div class="form-group">
-                                  <label for="tipo_documento">Tipo de documento</label>
-                                  <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
-                                    <option selected value="DNI">DNI</option>
-                                    <option value="RUC">RUC</option>
-                                    <option value="CEDULA">CEDULA</option>
-                                    <option value="OTRO">OTRO</option>
-                                  </select>
                                 </div>
                               </div>
 
@@ -272,14 +252,24 @@
                                 </div>
                               </div>
 
+                              <!-- Swichs permanente -->
+                              <div class="col-4 col-sm-5 col-md-6 col-lg-3">
+                                  <label for="socio" class="d-none show-min-width-576px">Socio <small class="text-danger sino">(NO)</small> </label>
+                                  <div class="switch-toggle">
+                                    <input type="checkbox" id="socio" >
+                                    <label for="socio" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>
+                                  </div>
+                                  <input type="hidden" name="input_socio" id="input_socio" value="0"  >
+                              </div>
+
                               <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-8">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-9">
                                 <div class="form-group">
                                   <label for="direccion">Dirección</label>
                                   <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
                                 </div>
                               </div>
-
+                              <!-- idpersona,id_tipo_persona,tipo_documento,num_documento,nombre,input_socio,email,telefono,banco,cta_bancaria,cci,titular_cuenta,direccion -->
                               <!-- imagen perfil -->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                                 <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
@@ -293,8 +283,8 @@
                               <!-- Progress -->
                               <div class="col-md-12">
                                 <div class="form-group">
-                                  <div class="progress" id="div_barra_progress_persona" style="display: none !important;">
-                                    <div id="barra_progress_persona" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress" id="div_barra_progress" style="display: none !important;">
+                                    <div id="barra_progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>
                               </div>

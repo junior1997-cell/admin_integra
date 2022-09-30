@@ -9,7 +9,7 @@
     {
     }
 
-    public function insertar( $idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
+    public function insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1) {
       $sw = Array();
       // var_dump($idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc, $imagen1); die();
       $sql_0 = "SELECT nombres,tipo_documento, numero_documento,estado, estado_delete FROM persona as t WHERE numero_documento = '$num_documento';";
@@ -18,8 +18,8 @@
       
       if ( empty($existe['data']) ) {
 
-        $sql="INSERT INTO persona (idcargo_persona, idbancos, nombres, tipo_documento, numero_documento, fecha_nacimiento, edad, titular_cuenta,cuenta_bancaria,cci, direccion, telefono, email, imagen_perfil, ruc,sueldo_mensual,sueldo_diario,user_created)
-        VALUES ( '$idcargo_persona','$banco','$nombre', '$tipo_documento', '$num_documento', '$nacimiento', '$edad', '$titular_cuenta','$cta_bancaria', '$cci', '$direccion', '$telefono', '$email', '$imagen1', '$ruc','$sueldo_mensual','$sueldo_diario', '" . $_SESSION['idusuario'] . "')";
+        $sql="INSERT INTO persona(idtipo_persona, idbancos, nombres, tipo_documento, numero_documento, celular, direccion, correo, cuenta_bancaria, cci, titular_cuenta, es_socio, foto_perfil,user_created) 
+        VALUES ('$id_tipo_persona','$banco','$nombre','$tipo_documento','$num_documento','$telefono','$direccion','$email','$cta_bancaria','$cci','$titular_cuenta','$input_socio','$imagen1', '" . $_SESSION['idusuario'] . "')";
         $new_persona = ejecutarConsulta_retornarID($sql);
 
         if ($new_persona['status'] == false) { return $new_persona;}
@@ -48,12 +48,12 @@
       return $sw;        
     }
 
-    public function editar($idpersona,$idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1) {
-      $sql="UPDATE persona SET idcargo_persona='$idcargo_persona',idbancos='$banco',nombres='$nombre',tipo_documento='$tipo_documento',
-      numero_documento='$num_documento',ruc='$ruc',fecha_nacimiento='$nacimiento',edad='$edad',cuenta_bancaria='$cta_bancaria_format',
-      cci='$cci_format',titular_cuenta='$titular_cuenta',sueldo_mensual='$sueldo_mensual',sueldo_diario='$sueldo_diario',direccion='$direccion',
-      telefono='$telefono',email='$email',imagen_perfil='$imagen1' 
-      WHERE idpersona='$idpersona'";	      
+    public function editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1) {
+      $sql="UPDATE persona SET idtipo_persona='$id_tipo_persona',idbancos='$banco',nombres='$nombre',
+      tipo_documento='$tipo_documento',numero_documento='$num_documento',celular='$telefono',
+      direccion='$direccion',correo='$email',cuenta_bancaria='$cta_bancaria',
+      cci='$cci',titular_cuenta='$titular_cuenta',es_socio='$input_socio',
+      foto_perfil='$imagen1',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idpersona='$idpersona'";	      
       $trabajdor = ejecutarConsulta($sql);
       if ($trabajdor['status'] == false) { return  $trabajdor;}
 
@@ -99,7 +99,7 @@
     public function verdatos($idpersona) {
       $sql=" SELECT t.idpersona, t.idcargo_persona, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
       t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
-      t.direccion, t.telefono, t.email, t.imagen_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
+      t.direccion, t.telefono, t.email, t.foto_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
       FROM persona as t, cargo_persona as ct, bancos as b 
       WHERE t.idcargo_persona= ct.idcargo_persona AND t.idbancos=b.idbancos  AND t.idpersona='$idpersona' ";
       return ejecutarConsultaSimpleFila($sql);
@@ -109,23 +109,22 @@
     public function tbla_principal($tipo_persona) {
       $filtro="";
 
-      if ($tipo_persona=='todos') { $filtro = "p.idtipo_persona>1 AND"; }else{ $filtro = "p.idtipo_persona>'.$tipo_persona.' AND"; }
-      // var_dump($filtro);die();
-      $sql="SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.direccion, p.correo, 
+      if ($tipo_persona=='todos') { $filtro = "p.idtipo_persona>1 AND"; }else{ $filtro = "p.idtipo_persona='.$tipo_persona.' AND"; }
+
+      $sql="SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.direccion, p.correo,p.estado, 
       p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.foto_perfil, b.nombre as banco, tp.nombre as tipo_persona 
       FROM persona as p, bancos as b, tipo_persona as tp 
-      WHERE $filtro p.idtipo_persona=tp.idtipo_persona AND p.idbancos=b.idbancos p.estado ='1' AND p.estado_delete='1';";
+      WHERE $filtro p.idtipo_persona=tp.idtipo_persona AND p.idbancos=b.idbancos AND p.estado ='1' AND p.estado_delete='1';";
 
       $persona = ejecutarConsultaArray($sql); if ($persona['status'] == false) { return  $persona;}
 
       return $persona;
-      //  var_dump($persona);die();
 
     }
 
     public function obtenerImg($idpersona) {
 
-      $sql = "SELECT imagen_perfil FROM persona WHERE idpersona='$idpersona'";
+      $sql = "SELECT foto_perfil FROM persona WHERE idpersona='$idpersona'";
 
       return ejecutarConsultaSimpleFila($sql);
     }

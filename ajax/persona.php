@@ -26,24 +26,22 @@
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
       
       $idpersona	  	= isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
+      $id_tipo_persona 		      = isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
       $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
       $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
       $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
+      $input_socio     	= isset($_POST["input_socio"])? limpiarCadena($_POST["input_socio"]):"";
       $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
-      $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";
-      $nacimiento		    = isset($_POST["nacimiento"])? limpiarCadena($_POST["nacimiento"]):"";
-      $edad		          = isset($_POST["edad"])? limpiarCadena($_POST["edad"]):"";      
+      $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";     
       $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-      $banco            = isset($_POST["banco"])? $_POST["banco"] :"";     
-      $cta_bancaria		  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cta_bancaria_format= isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cci	          	= isset($_POST["cci"])?$_POST["cci"]:"";
+      $banco            = isset($_POST["banco"])? $_POST["banco"] :"";
+      $cta_bancaria_format  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
+      $cta_bancaria     = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
       $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
+      $cci            	= isset($_POST["cci"])? $_POST["cci"]:"";
       $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
-      $ruc	          	= isset($_POST["ruc"])? limpiarCadena($_POST["ruc"]):"";
-      $idcargo_persona = isset($_POST["cargo_persona"])? limpiarCadena($_POST["cargo_persona"]):"";
-      $sueldo_mensual   = isset($_POST["sueldo_mensual"])? limpiarCadena($_POST["sueldo_mensual"]):"";
-      $sueldo_diario    = isset($_POST["sueldo_diario"])? limpiarCadena($_POST["sueldo_diario"]):"";
+
+      //$idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion
        
       $imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
       switch ($_GET["op"]) {
@@ -67,7 +65,7 @@
 
           if (empty($idpersona)){
             
-            $rspta=$persona->insertar($idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1);
+            $rspta=$persona->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
             
             echo json_encode($rspta, true);
   
@@ -76,12 +74,12 @@
             // validamos si existe LA IMG para eliminarlo
             if ($flat_img1 == true) {
               $datos_f1 = $persona->obtenerImg($idpersona);
-              $img1_ant = $datos_f1['data']['imagen_perfil'];
+              $img1_ant = $datos_f1['data']['foto_perfil'];
               if ($img1_ant != "") { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
             }            
 
             // editamos un persona existente
-            $rspta=$persona->editar($idpersona,$idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1);
+            $rspta=$persona->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
             
             echo json_encode($rspta, true);
           }            
@@ -114,44 +112,34 @@
 
         case 'tbla_principal':          
 
-          $rspta=$persona->tbla_principal($_GET["tipopersona"]);
+          $rspta=$persona->tbla_principal($_GET["tipo_persona"]);
           
           //Vamos a declarar un array
           $data= Array(); $cont=1;
 
           if ($rspta['status'] == true) {
 
-            foreach ($rspta['data'] as $key => $value) {             
+            foreach ($rspta['data'] as $key => $value) {         
           
               $data[]=array(
                 "0"=>$cont++,
                 "1"=>'<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
-                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_persona('.$value['idpersona'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'.
-                  ' <button class="btn btn-info btn-sm" onclick="verdatos('.$value['idpersona'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
+                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_persona('.$value['idpersona'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
                 "2"=>'<div class="user-block">
-                  <img class="img-circle" src="../dist/docs/persona/perfil/'. $value['imagen_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
+                  <img class="img-circle" src="../dist/docs/persona/perfil/'. $value['foto_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                   </div>',
-                "3"=> $value['cargo'],
-                "4"=> '<div>
-                <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
-                <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
-                </div>',
-                "5"=>'<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al persona.">'. $value['telefono'] . '</a>',
-                "6"=>format_d_m_a($value['fecha_nacimiento']).'<b>: </b>'. '<b>'.calculaedad($value['fecha_nacimiento']).'</b>' ,
-                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
-                "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
-                "9"=> $value['nombres'],
-                "10"=> $value['tipo_documento'],
-                "11"=> $value['numero_documento'],
-                "12"=> format_d_m_a($value['fecha_nacimiento']),
-                "13"=>calculaedad($value['fecha_nacimiento']),
-                "14"=> $value['banco'],
-                "15"=> $value['cuenta_bancaria'],
-                "16"=> $value['cci'],
-                "17"=> number_format($value['sueldo_mensual']),
-                "18"=> $value['sueldo_diario'],
+                "3"=> $value['direccion'],
+                "4"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al persona.">'. $value['celular'] . '</a>',
+                "5"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
+                "6"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+                "7"=> $value['nombres'],
+                "8"=> $value['tipo_documento'],
+                "9"=> $value['numero_documento'],
+                "10"=> $value['banco'],
+                "11"=> $value['cuenta_bancaria'],
+                "12"=> $value['cci']
 
               );
             }
@@ -205,20 +193,6 @@
       $retorno = ['status'=>'nopermiso', 'message'=>'Tu sesion a terminado pe, inicia nuevamente', 'data' => [] ];
       echo json_encode($retorno);
     }
-  }
-
-  function calculaedad($fechanacimiento){
-    $ano_diferencia = '-';
-    if (empty($fechanacimiento) || $fechanacimiento=='0000-00-00') { } else{
-      list($ano,$mes,$dia) = explode("-",$fechanacimiento);
-      $ano_diferencia  = date("Y") - $ano;
-      $mes_diferencia = date("m") - $mes;
-      $dia_diferencia   = date("d") - $dia;
-      if ($dia_diferencia < 0 || $mes_diferencia < 0)
-        $ano_diferencia--;
-    } 
-    
-    return $ano_diferencia;
   }
 
   ob_end_flush();
