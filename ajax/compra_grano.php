@@ -11,11 +11,11 @@ if (!isset($_SESSION["nombre"])) {
 
   if ($_SESSION['compra_insumos'] == 1) {
     
-    require_once "../modelos/Compra_insumos.php";
+    require_once "../modelos/Compra_grano.php";
     //require_once "../modelos/Proveedor.php";
     require_once "../modelos/Producto.php";
 
-    $compra_insumos = new Compra_insumos();
+    $compra_grano = new Compra_grano();
     //$proveedor = new Proveedor();
     $insumos = new Producto();      
     
@@ -200,7 +200,7 @@ if (!isset($_SESSION["nombre"])) {
 
         if (empty($idcompra_proyecto)) {
 
-          $rspta = $compra_insumos->insertar( $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $compra_grano->insertar( $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $glosa, $total_venta, $subtotal_compra, $igv_compra, $estado_detraccion, $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["nombre_color"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
           $tipo_gravada, $_POST["ficha_tecnica_producto"] );
@@ -208,7 +208,7 @@ if (!isset($_SESSION["nombre"])) {
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $compra_insumos->editar( $idcompra_proyecto, $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, 
+          $rspta = $compra_grano->editar( $idcompra_proyecto, $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, 
           $descripcion, $glosa, $total_venta, $subtotal_compra, $igv_compra, $estado_detraccion, $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["nombre_color"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
           $tipo_gravada, $_POST["ficha_tecnica_producto"] );
@@ -219,14 +219,14 @@ if (!isset($_SESSION["nombre"])) {
       break;      
       
       case 'anular':
-        $rspta = $compra_insumos->desactivar($_GET["id_tabla"]);
+        $rspta = $compra_grano->desactivar($_GET["id_tabla"]);
     
         echo json_encode($rspta, true);
     
       break;
     
       case 'des_anular':
-        $rspta = $compra_insumos->activar($_GET["id_tabla"]);
+        $rspta = $compra_grano->activar($_GET["id_tabla"]);
     
         echo json_encode($rspta, true);
     
@@ -234,14 +234,14 @@ if (!isset($_SESSION["nombre"])) {
 
       case 'eliminar_compra':
 
-        $rspta = $compra_insumos->eliminar($_GET["id_tabla"]);
+        $rspta = $compra_grano->eliminar($_GET["id_tabla"]);
     
         echo json_encode($rspta, true);
     
       break;
     
       case 'tbla_principal':
-        $rspta = $compra_insumos->tbla_principal($_GET["nube_idproyecto"], $_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
+        $rspta = $compra_grano->tbla_principal( $_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
         
         //Vamos a declarar un array
         $data = []; $cont = 1;
@@ -290,39 +290,11 @@ if (!isset($_SESSION["nombre"])) {
               }
             }
       
-            if ($reg['estado_detraccion'] == "1") {
-      
-              $deposito_Actual = 0;
-      
-              if ($reg['total_pago_compras'] == null || empty($reg['total_pago_compras'])) {
-                $deposito_Actual = 0;
-              } else {
-                $deposito_Actual = $reg['total_pago_compras'];
-              }
-      
-              $list_segun_estado_detracc = '<div class="text-center formato-numero-conta"> <button class="btn btn-' .  $c . ' btn-xs" onclick="listar_pagos_detraccion(' . $reg['idcompra_proyecto'] . ',' . $reg['idproyecto'] . ',' . $reg['total'] . ',' . $deposito_Actual .')">'.
-                  '<i class="fas fa-' . $icon .' nav-icon"></i> ' .$nombre .
-                '</button>' .
-                ' <button style="font-size: 14px;" class="btn btn-' . $cc . ' btn-sm">' . number_format($reg['total_pago_compras'], 2, '.', ',') . '</button>'.
-              '</div>';
-      
-            } else {
-      
-              $deposito_Actual = 0;
-      
-              if ($reg['total_pago_compras'] == null || empty($reg['total_pago_compras'])) {
-                $deposito_Actual = 0;
-              } else {
-                $deposito_Actual = $reg['total_pago_compras'];
-              }
-      
-              $list_segun_estado_detracc = '<div class="text-center text-nowrap formato-numero-conta">'. 
-                '<button class="btn btn-' . $c . ' btn-xs m-t-2px" onclick="listar_pagos(' . $reg['idcompra_proyecto'] . ',' .  $reg['idproyecto'] .  ',' .    $reg['total'] . ', ' .  $deposito_Actual . ')">'.
-                  '<i class="fas fa-' . $icon . ' nav-icon"></i> ' . $nombre . 
-                '</button>' .
-                ' <button style="font-size: 14px;" class="btn btn-' .  $cc . ' btn-sm">' .  number_format($reg['total_pago_compras'], 2, '.', ',') . '</button>'.
-              '</div>';
-            }
+            $list_segun_estado_detracc = '<div class="text-center formato-numero-conta"> <button class="btn btn-' .  $c . ' btn-xs" onclick="listar_pagos_detraccion(' . $reg['idcompra_proyecto'] . ',' . $reg['idproyecto'] . ',' . $reg['total'] . ',' . $deposito_Actual .')">'.
+                '<i class="fas fa-' . $icon .' nav-icon"></i> ' .$nombre .
+              '</button>' .
+              ' <button style="font-size: 14px;" class="btn btn-' . $cc . ' btn-sm">' . number_format($reg['total_pago_compras'], 2, '.', ',') . '</button>'.
+            '</div>';                 
       
             $data[] = [
               "0" => $cont,
@@ -338,9 +310,8 @@ if (!isset($_SESSION["nombre"])) {
               "6" => $list_segun_estado_detracc,
               "7" => number_format($reg['total_pago'], 2, '.', ','),
               "8" => number_format($saldo, 2, '.', ','),
-              "9" => '<center> <button class="btn '.$btn_tipo.' btn-sm" onclick="comprobante_compras(' . $vercomprobantes . ', \''.$cont.'\', \''.encodeCadenaHtml($reg['tipo_comprobante'].' '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante'])).'\', \''.$reg['razon_social'].'\', \''.format_d_m_a($reg['fecha_compra']).'\')" data-toggle="tooltip" data-original-title="'.$descrip_toltip.'"><i class="fas fa-file-invoice fa-lg"></i></button> </center>',
-              "10" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
-              "11" => $toltip,
+              "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
+              "10" => $toltip,
             ];
             $cont++;
           }
@@ -357,9 +328,9 @@ if (!isset($_SESSION["nombre"])) {
     
       break;
     
-      case 'listar_compraxporvee':
-        $nube_idproyecto = $_GET["nube_idproyecto"];
-        $rspta = $compra_insumos->listar_compraxporvee($nube_idproyecto);
+      case 'tabla_compra_x_cliente':
+        
+        $rspta = $compra_grano->tabla_compra_x_cliente();
         //Vamos a declarar un array
         $data = []; $cont = 1;
         $c = "info";
@@ -371,11 +342,11 @@ if (!isset($_SESSION["nombre"])) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_proveedor(' . $reg->idproveedor . ',' . $reg->idproyecto . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
-              "2" => $reg->razon_social,
+              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_proveedor(' . $reg->idpersona . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
+              "2" => $reg->nombres,
               "3" => "<center>$reg->cantidad</center>",
-              "4" => $reg->telefono,
-              "5" => number_format($reg->total, 2, '.', ','),
+              "4" => $reg->celular,
+              "5" => number_format($reg->total_compra, 2, '.', ','),
             ];
           }
           $results = [
@@ -393,7 +364,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'listar_detalle_compraxporvee':
         
-        $rspta = $compra_insumos->listar_detalle_comprax_provee($_GET["idproyecto"], $_GET["idproveedor"]);
+        $rspta = $compra_grano->listar_detalle_comprax_provee($_GET["idproyecto"], $_GET["idproveedor"]);
         //Vamos a declarar un array
         $data = []; $cont = 1;
         
@@ -425,8 +396,8 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'ver_detalle_compras':
         
-        $rspta = $compra_insumos->ver_compra($_GET['id_compra']);
-        $rspta2 = $compra_insumos->ver_detalle_compra($_GET['id_compra']);
+        $rspta = $compra_grano->ver_compra($_GET['id_compra']);
+        $rspta2 = $compra_grano->ver_detalle_compra($_GET['id_compra']);
 
         $subtotal = 0;    $ficha = ''; 
 
@@ -568,7 +539,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'ver_compra_editar':
 
-        $rspta = $compra_insumos->mostrar_compra_para_editar($idcompra_proyecto);
+        $rspta = $compra_grano->mostrar_compra_para_editar($idcompra_proyecto);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
@@ -578,7 +549,7 @@ if (!isset($_SESSION["nombre"])) {
       case 'tbla_comprobantes_compra':
         $cont_compra = $_GET["num_orden"];
         $id_compra = $_GET["id_compra"];
-        $rspta = $compra_insumos->tbla_comprobantes( $id_compra );
+        $rspta = $compra_grano->tbla_comprobantes( $id_compra );
         //Vamos a declarar un array
         $data = []; $cont = 1;        
         
@@ -625,35 +596,35 @@ if (!isset($_SESSION["nombre"])) {
 
         if ( empty($idfactura_compra_insumo) ) {
           // agregar un documento
-          $rspta = $compra_insumos->agregar_comprobante($id_compra_proyecto, $doc_comprobante);    
+          $rspta = $compra_grano->agregar_comprobante($id_compra_proyecto, $doc_comprobante);    
           echo json_encode($rspta, true);
         } else {
           //Borramos el comprobante
           if ($flat_comprob == true) {
-            $datos_f1 = $compra_insumos->obtener_comprobante($idfactura_compra_insumo);    
+            $datos_f1 = $compra_grano->obtener_comprobante($idfactura_compra_insumo);    
             $doc1_ant = $datos_f1['data']->fetch_object()->comprobante;    
             if (!empty($doc1_ant) ) { unlink("../dist/docs/compra_insumo/comprobante_compra/" . $doc1_ant); }
           }
           // editamos un documento existente
-          $rspta = $compra_insumos->editar_comprobante($idfactura_compra_insumo, $doc_comprobante);    
+          $rspta = $compra_grano->editar_comprobante($idfactura_compra_insumo, $doc_comprobante);    
           echo json_encode($rspta, true);
         }
     
       break;
 
       case 'eliminar_comprobante':
-        $rspta = $compra_insumos->eliminar_comprobante($_GET["id_tabla"]);    
+        $rspta = $compra_grano->eliminar_comprobante($_GET["id_tabla"]);    
         echo json_encode($rspta, true);
       break;
 
       case 'desactivar_comprobante':
-        $rspta = $compra_insumos->desactivar_comprobante($_GET["id_tabla"]);    
+        $rspta = $compra_grano->desactivar_comprobante($_GET["id_tabla"]);    
         echo json_encode($rspta, true);
       break;
 
       case 'ver_comprobante_compra':
 
-        $rspta = $compra_insumos->comprobantes_compra($_POST['id_compra']);
+        $rspta = $compra_grano->comprobantes_compra($_POST['id_compra']);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
@@ -683,7 +654,7 @@ if (!isset($_SESSION["nombre"])) {
     
         if (empty($idpago_compras)) {
     
-          $rspta = $compra_insumos->insertar_pago( $idcompra_proyecto_p, $idproveedor_pago, $beneficiario_pago, $forma_pago, $tipo_pago, 
+          $rspta = $compra_grano->insertar_pago( $idcompra_proyecto_p, $idproveedor_pago, $beneficiario_pago, $forma_pago, $tipo_pago, 
           $cuenta_destino_pago, $banco_pago, $titular_cuenta_pago, $fecha_pago, $monto_pago, $numero_op_pago, $descripcion_pago, $imagen1 );
     
           echo json_encode($rspta, true);
@@ -693,7 +664,7 @@ if (!isset($_SESSION["nombre"])) {
           // validamos si existe LA IMG para eliminarlo
           if ($flat_img1 == true) {
     
-            $datos_f1 = $compra_insumos->obtenerComprobanteCompra($idpago_compras);
+            $datos_f1 = $compra_grano->obtenerComprobanteCompra($idpago_compras);
     
             $img1_ant = $datos_f1['data']->fetch_object()->imagen;
     
@@ -703,7 +674,7 @@ if (!isset($_SESSION["nombre"])) {
             }
           }
     
-          $rspta = $compra_insumos->editar_pago( $idpago_compras, $idcompra_proyecto_p, $idproveedor_pago, $beneficiario_pago, $forma_pago, $tipo_pago, 
+          $rspta = $compra_grano->editar_pago( $idpago_compras, $idcompra_proyecto_p, $idproveedor_pago, $beneficiario_pago, $forma_pago, $tipo_pago, 
           $cuenta_destino_pago, $banco_pago, $titular_cuenta_pago, $fecha_pago, $monto_pago, $numero_op_pago, $descripcion_pago, $imagen1 );
     
           echo json_encode($rspta, true);
@@ -714,7 +685,7 @@ if (!isset($_SESSION["nombre"])) {
       case 'most_datos_prov_pago':
 
         $idcompra_proyecto = $_POST["idcompra_proyecto"];
-        $rspta = $compra_insumos->most_datos_prov_pago($idcompra_proyecto);
+        $rspta = $compra_grano->most_datos_prov_pago($idcompra_proyecto);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
 
@@ -722,7 +693,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'desactivar_pagos':
 
-        $rspta = $compra_insumos->desactivar_pagos($_GET["idpago_compras"]);
+        $rspta = $compra_grano->desactivar_pagos($_GET["idpago_compras"]);
 
         echo json_encode($rspta, true);
 
@@ -730,7 +701,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'activar_pagos':
 
-        $rspta = $compra_insumos->activar_pagos($_GET["idpago_compras"]);
+        $rspta = $compra_grano->activar_pagos($_GET["idpago_compras"]);
 
         echo json_encode($rspta, true);
 
@@ -738,7 +709,7 @@ if (!isset($_SESSION["nombre"])) {
 
       case 'eliminar_pago_compra':
         
-        $rspta = $compra_insumos->eliminar_pagos($_GET["idpago_compras"]);
+        $rspta = $compra_grano->eliminar_pagos($_GET["idpago_compras"]);
     
         echo json_encode($rspta, true);
     
@@ -747,7 +718,7 @@ if (!isset($_SESSION["nombre"])) {
       case 'listar_pagos_proveedor':
         $idcompra_proyecto = $_GET["idcompra_proyecto"];
             
-        $rspta = $compra_insumos->listar_pagos($idcompra_proyecto);
+        $rspta = $compra_grano->listar_pagos($idcompra_proyecto);
         //Vamos a declarar un array
           
         $data = []; $cont = 1;
@@ -803,7 +774,7 @@ if (!isset($_SESSION["nombre"])) {
     
         $tipo_pago = 'Proveedor';
         
-        $rspta = $compra_insumos->listar_pagos_compra_prov_con_dtracc($idcompra_proyecto, $tipo_pago);
+        $rspta = $compra_grano->listar_pagos_compra_prov_con_dtracc($idcompra_proyecto, $tipo_pago);
         //Vamos a declarar un array   
         $data = []; $cont  =1;
     
@@ -854,7 +825,7 @@ if (!isset($_SESSION["nombre"])) {
     
         $tipo_pago = 'Detraccion';
         
-        $rspta = $compra_insumos->listar_pagos_compra_prov_con_dtracc($idcompra_proyecto, $tipo_pago);
+        $rspta = $compra_grano->listar_pagos_compra_prov_con_dtracc($idcompra_proyecto, $tipo_pago);
         //Vamos a declarar un array
         
         $data = []; $cont = 1;
@@ -904,7 +875,7 @@ if (!isset($_SESSION["nombre"])) {
 
         $idcompra_proyecto = $_POST["idcompra_proyecto"];
         
-        $rspta = $compra_insumos->suma_total_pagos($idcompra_proyecto);
+        $rspta = $compra_grano->suma_total_pagos($idcompra_proyecto);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
 
@@ -917,7 +888,7 @@ if (!isset($_SESSION["nombre"])) {
 
         $tipopago = 'Proveedor';
     
-        $rspta = $compra_insumos->suma_total_pagos_detraccion($idcompra_proyecto, $tipopago);
+        $rspta = $compra_grano->suma_total_pagos_detraccion($idcompra_proyecto, $tipopago);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
@@ -929,7 +900,7 @@ if (!isset($_SESSION["nombre"])) {
 
         $tipopago = 'Detraccion';
     
-        $rspta = $compra_insumos->suma_total_pagos_detraccion($idcompra_proyecto, $tipopago);
+        $rspta = $compra_grano->suma_total_pagos_detraccion($idcompra_proyecto, $tipopago);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
@@ -940,7 +911,7 @@ if (!isset($_SESSION["nombre"])) {
         $idmaquinaria = $_POST["idmaquinaria"];
         $idproyecto = $_POST["idproyecto"];
     
-        $rspta = $compra_insumos->total_costo_parcial_pago($idmaquinaria, $idproyecto);
+        $rspta = $compra_grano->total_costo_parcial_pago($idmaquinaria, $idproyecto);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
@@ -948,7 +919,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'mostrar_pagos':
 
-        $rspta = $compra_insumos->mostrar_pagos($idpago_compras);
+        $rspta = $compra_grano->mostrar_pagos($idpago_compras);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
 
@@ -957,7 +928,7 @@ if (!isset($_SESSION["nombre"])) {
       // ::::::::::::::::::::::::::::::::::::::::: S I N C R O N I Z A R  :::::::::::::::::::::::::::::::::::::::::
       case 'sincronizar_comprobante':
 
-        $rspta = $compra_insumos->sincronizar_comprobante();
+        $rspta = $compra_grano->sincronizar_comprobante();
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
 
