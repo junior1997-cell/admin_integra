@@ -57,7 +57,7 @@ function limpiar_form_material() {
 
   //Mostramos los Materiales
   $("#idproducto").val("");  
-  $("#nombre").val("");
+  $("#nombre_producto").val("");
   // $("#marca").val("");
   $("#descripcion").val("");
 
@@ -95,7 +95,7 @@ function lista_de_items() {
       e.data.forEach((val, index) => {
         data_html = data_html.concat(`
         <li class="nav-item">
-          <a class="nav-link" onclick="delay(function(){tabla_principal('${val.idcategoria}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
+          <a class="nav-link" onclick="delay(function(){tabla_principal('${val.idcategoria}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre_producto}</a>
         </li>`);
       });
 
@@ -120,9 +120,9 @@ function tbla_principal() {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } },
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8], } },
     ],
     ajax: {
       url: "../ajax/producto.php?op=tbla_principal",
@@ -291,7 +291,7 @@ function verdatos(idproducto){
             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/material/img_perfil/${e.data.imagen}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/material/img_perfil/${e.data.imagen}" download="PERFIL - ${removeCaracterEspecial(e.data.nombre)}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/material/img_perfil/${e.data.imagen}" download="PERFIL - ${removeCaracterEspecial(e.data.nombre_producto)}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
@@ -315,13 +315,14 @@ function verdatos(idproducto){
                   <td> <b>Nombre: </b> ${e.data.nombre}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <td> <b>Color: </b> ${e.data.marca}</td>
+                  <td> <b>Marca: </b> ${e.data.marca}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <td> <b>Color: </b> ${e.data.contenido_neto}</td>
+                  <th> <b>Contenido Neto: </b> </th>
+                  <td>${e.data.contenido_neto}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Clasificación</th>
+                  <th>Categoria</th>
                   <td>${e.data.categoria}</td>
                 </tr> 
                 <tr data-widget="expandable-table" aria-expanded="false">
@@ -329,17 +330,13 @@ function verdatos(idproducto){
                   <td>${e.data.nombre_medida}</td>
                 </tr>                
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Marca</th>
+                  <th>Stock</th>
                     <td>${e.data.stock}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Precio  </th>
                   <td>${e.data.precio_unitario}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Precio  </th>
-                  <td>${e.data.contenido_neto}</td>
-                </tr>               
+                </tr>            
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Descripción</th>
                   <td>${e.data.descripcion}</td>
