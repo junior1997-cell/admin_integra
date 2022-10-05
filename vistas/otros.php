@@ -175,65 +175,6 @@
                   <!-- /.content -->
                 </div>
 
-                
-                
-
-                <!-- TBLA - OCUPACION -->
-                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
-                  <!-- Content Header (Page header) -->
-                  <section class="content-header">
-                    <div class="container-fluid">
-                      <div class="row mb-2">
-                        <div class="col-sm-6">
-                          <h1>Ocupación</h1>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.container-fluid -->
-                  </section>
-
-                  <!-- Main content -->
-
-                  <!-- Main content -->
-                  <section class="content">
-                    <div class="container-fluid">
-                      <div class="card card-primary card-outline">
-                        <div class="card-header">
-                          <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-ocupacion" onclick="limpiar_ocupacion();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                            Admnistrar Ocupaciones.
-                          </h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                          <table id="tabla-ocupacion" class="table table-bordered table-striped display" style="width: 100% !important;">
-                            <thead>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Nombre</th>
-                                <th>Estado</th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Nombre</th>
-                                <th>Estado</th>
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
-                        <!-- /.card-body -->
-                      </div>
-                      <!-- /.card -->
-                    </div>
-                    <!-- /.container-fluid -->
-                  </section>
-                  <!-- /.content -->
-                </div>
 
                 <!-- TBLA - TIPO TRABAJADOR-->
                 <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
@@ -269,6 +210,7 @@
                                 <th class="text-center">#</th>
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
+                                <th>Descripcion</th>
                                 <th>Estado</th>
                               </tr>
                             </thead>
@@ -278,6 +220,7 @@
                                 <th class="text-center">#</th>
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
+                                <th>Descripcion</th>
                                 <th>Estado</th>
                               </tr>
                             </tfoot>
@@ -330,8 +273,7 @@
                             <thead>
                               <tr>
                                 <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Tipo</th>
+                                <th class="">Acciones</th>                                
                                 <th>Nombre</th>
                                 <th>Estado</th>
                               </tr>
@@ -340,8 +282,7 @@
                             <tfoot>
                               <tr>
                                 <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th>Tipo</th>
+                                <th class="">Acciones</th>                                
                                 <th>Nombre</th>
                                 <th>Estado</th>
                               </tr>
@@ -364,12 +305,12 @@
                     <div class="container-fluid">
                       <div class="row mb-2">
                         <div class="col-sm-6">
-                          <h1>Categorias activos fijos</h1>
+                          <h1>Categorias Producto</h1>
                         </div>
                         <div class="col-sm-6">
                           <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">activos fijos</li>
+                            <li class="breadcrumb-item active">Producto</li>
                           </ol>
                         </div>
                       </div>
@@ -386,7 +327,7 @@
                         <div class="card-header">
                           <h3 class="card-title">
                             <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-categorias-af" onclick="limpiar_c_af();"><i class="fas fa-plus-circle"></i> Agregar</button>
-                            Categorías activos fijos.
+                            Categorías Producto.
                           </h3>
                         </div>
                         <!-- /.card-header -->
@@ -397,6 +338,7 @@
                                 <th class="text-center">#</th>
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
+                                <th>Descripcion</th>
                                 <th>Estado</th>
                               </tr>
                             </thead>
@@ -406,6 +348,7 @@
                                 <th class="text-center">#</th>
                                 <th class="">Acciones</th>
                                 <th>Nombre</th>
+                                <th>Descripcion</th>
                                 <th>Estado</th>
                               </tr>
                             </tfoot>
@@ -443,8 +386,8 @@
                             <!-- Nombre -->
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                               <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre del banco." />
+                                <label for="nombre_b">Nombre</label>
+                                <input type="text" name="nombre_b" id="nombre_b" class="form-control" placeholder="Nombre del banco." />
                               </div>
                             </div>
 
@@ -521,7 +464,7 @@
                       </form>
                     </div>
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar();">Close</button>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_banco();">Close</button>
                       <button type="submit" class="btn btn-success" id="guardar_registro">Guardar Cambios</button>
                     </div>
                   </div>
@@ -529,85 +472,7 @@
               </div>
 
               <!-- MODAL - COLOR -->
-              <div class="modal fade" id="modal-agregar-color">
-                <div class="modal-dialog modal-dialog-scrollable modal-md">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title">Agregar Color</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span class="text-danger" aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-
-                    <div class="modal-body">
-                      <!-- form start -->
-                      <form id="form-color" name="form-color" method="POST" autocomplete="off">
-                        <div class="card-body">
-                          <div class="row" id="cargando-1-fomulario">
-                            <!-- id banco -->
-                            <input type="hidden" name="idcolor" id="idcolor" />
-
-                            <!-- Nombre -->
-                            <div class="col-lg-12 class_pading">
-                              <div class="form-group">
-                                <label for="nombre_color">Nombre</label>
-                                <input type="text" name="nombre_color" class="form-control" id="nombre_color" placeholder="Nombre del color." />
-                              </div>
-                            </div>
-
-                            <!-- hexadecimal -->
-                            <div class="col-lg-12 class_pading">
-                              <div class="form-group">
-                                <label>Color hexadecimal:</label>
-                                <div class="input-group my-colorpicker2">
-                                  <input type="text" name="hexadecimal" id="hexadecimal" class="form-control" placeholder="#00AFB">
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="fas fa-square fa-lg"></i></span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="col-lg-12 mt-4">
-                              <div class="alert alert-warning alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <h5><i class="icon fas fa-exclamation-triangle"></i> <b>Que es un Hexadecimal?</b></h5>
-                                Un <b>color hexadecimal</b> sigue el formato #RRVVAA, donde RR es rojo, VV es verde y AA es azul. 
-                                Estos enteros hexadecimales pueden encontrarse en un <b>rango de 00 a FF</b> para especificar la intensidad del color.
-                                Mas informacion en: <a href="https://htmlcolorcodes.com/es/nombres-de-los-colores/" class="font-weight-bold" target="_blank" rel="noopener noreferrer" style="color: #000 !important;">https://htmlcolorcodes.com</a>
-                              </div>
-                            </div>
-
-                            <!-- barprogress -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                              <div class="progress" id="div_barra_progress_color">
-                                <div id="barra_progress_color" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
-                                  0%
-                                </div>
-                              </div>
-                            </div>
-
-                          </div>
-
-                          <div class="row" id="cargando-2-fomulario" style="display: none;">
-                            <div class="col-lg-12 text-center">
-                              <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
-                              <br />
-                              <h4>Cargando...</h4>
-                            </div>
-                          </div>
-                        </div>
-                        <!-- /.card-body -->
-                        <button type="submit" style="display: none;" id="submit-form-color">Submit</button>
-                      </form>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar();">Close</button>
-                      <button type="submit" class="btn btn-success" id="guardar_registro_color">Guardar Cambios</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
 
               <!-- MODAL - UNIDAD DE MEDIDA-->
               <div class="modal fade" id="modal-agregar-unidad-m">
@@ -639,8 +504,16 @@
                             <!-- abreviacion -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="abreviacion">Abreviación</label>
-                                <input type="text" name="abreviacion" class="form-control" id="abreviacion" placeholder="Abreviación." />
+                                <label for="abreviatura">Abreviación</label>
+                                <input type="text" name="abreviatura" class="form-control" id="abreviatura" placeholder="abreviatura." />
+                              </div>
+                            </div>
+
+                            <!-- Descripciòn -->
+                            <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="descripcion_m">Descripciòn</label>
+                                <input type="text" name="descripcion_m" class="form-control" id="descripcion_m" placeholder="Descripcion." />
                               </div>
                             </div>
 
@@ -754,8 +627,16 @@
                             <!-- nombre_medida -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="nombre">Nombre Tipo</label>
+                                <label for="nombre_tipo">Nombre Tipo</label>
                                 <input type="text" name="nombre_tipo" id="nombre_tipo" class="form-control" placeholder="Nombre tipo" />
+                              </div>
+                            </div>
+
+                              <!-- Descripciòn -->
+                              <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="descripcion_t">Descripciòn</label>
+                                <input type="text" name="descripcion_t" class="form-control" id="descripcion_t" placeholder="Descripcion." />
                               </div>
                             </div>
 
@@ -809,14 +690,6 @@
                             <!-- id idunidad_medida -->
                             <input type="hidden" name="idcargo_trabajador" id="idcargo_trabajador" />
 
-                            <!-- tipo -->
-                            <div class="col-lg-6">
-                              <div class="form-group">
-                                <label for="idtipo_trabjador_c">Tipo trabajador</label>
-                                <select name="idtipo_trabjador_c" id="idtipo_trabjador_c" class="form-control select2" style="width: 100%;"> </select>
-                                <!--<input type="hidden" name="color_old" id="color_old" />-->
-                              </div>
-                            </div>
 
                             <!-- nombre_trabajador -->
                             <div class="col-lg-6 class_pading">
@@ -862,7 +735,7 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Agregar categoría activo fijo</h4>
+                      <h4 class="modal-title">Agregar categoría Producto</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -874,13 +747,20 @@
                         <div class="card-body">
                           <div class="row" id="cargando-11-fomulario">
                             <!-- id categoria_insumos_af -->
-                            <input type="hidden" name="idcategoria_insumos_af" id="idcategoria_insumos_af" />
+                            <input type="hidden" name="idcategoria_producto" id="idcategoria_producto" />
 
                             <!-- nombre categoria -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
                                 <label for="nombre_categoria">Nombre categoría</label>
-                                <input type="text" name="nombre_categoria_af" id="nombre_categoria_af" class="form-control" placeholder="Nombre categoría" />
+                                <input type="text" name="nombre_categoria" id="nombre_categoria" class="form-control" placeholder="Nombre categoría" />
+                              </div>
+                            </div>
+                            <!-- descripcion_cat categoria -->
+                            <div class="col-lg-12 class_pading">
+                              <div class="form-group">
+                                <label for="descripcion_cat">Descripcion Cataegoria</label>
+                                <input type="text" name="descripcion_cat" id="descripcion_cat" class="form-control" placeholder="Descripcion" />
                               </div>
                             </div>
 
@@ -949,12 +829,10 @@
         
         <script type="text/javascript" src="scripts/otros.js"></script>
         <script type="text/javascript" src="scripts/bancos.js"></script>
-        <script type="text/javascript" src="scripts/color.js"></script>
         <script type="text/javascript" src="scripts/unidades_m.js"></script>
-        <script type="text/javascript" src="scripts/ocupacion.js"></script>
         <script type="text/javascript" src="scripts/tipo.js"></script>
         <script type="text/javascript" src="scripts/cargo.js"></script>
-        <script type="text/javascript" src="scripts/categoria_af.js"></script>
+        <script type="text/javascript" src="scripts/categoria_p.js"></script>
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

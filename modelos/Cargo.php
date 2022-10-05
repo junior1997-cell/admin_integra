@@ -11,10 +11,10 @@ Class Cargo
 	}
 
 	//Implementamos un método para insertar registros
-	public function insertar($idtipo_trabjador,$nombre)
+	public function insertar($nombre)
 	{
 		//var_dump($nombre);die();
-		$sql="INSERT INTO cargo_trabajador(idtipo_trabjador,nombre, user_created)VALUES('$idtipo_trabjador','$nombre','" . $_SESSION['idusuario'] . "')";
+		$sql="INSERT INTO cargo_trabajador(nombre, user_created)VALUES('$nombre','" . $_SESSION['idusuario'] . "')";
 		$intertar =  ejecutarConsulta_retornarID($sql); 
 		if ($intertar['status'] == false) {  return $intertar; } 
 		
@@ -26,9 +26,9 @@ Class Cargo
 	}
 
 	//Implementamos un método para editar registros
-	public function editar($idcargo_trabajador,$idtipo_trabjador,$nombre)
+	public function editar($idcargo_trabajador,$nombre)
 	{
-		$sql="UPDATE cargo_trabajador SET idtipo_trabjador='$idtipo_trabjador',nombre='$nombre',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcargo_trabajador='$idcargo_trabajador'";
+		$sql="UPDATE cargo_trabajador SET nombre='$nombre',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcargo_trabajador='$idcargo_trabajador'";
 		$editar =  ejecutarConsulta($sql);
 		if ( $editar['status'] == false) {return $editar; } 
 	
@@ -86,15 +86,9 @@ Class Cargo
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT 
-		ct.idcargo_trabajador as idcargo_trabajador,
-		ct.idtipo_trabjador as idtipo_trabjador,
-		ct.nombre as nombre,
-		tt.nombre as nombre_tipo_t,
-		ct.estado as estado
-		FROM cargo_trabajador as ct, tipo_trabajador as tt
-		WHERE ct.idtipo_trabjador=tt.idtipo_trabajador AND ct.estado=1 AND ct.estado_delete=1";
-		return ejecutarConsulta($sql);		
+		$sql="SELECT * FROM cargo_trabajador WHERE estado=1 AND estado_delete=1  ORDER BY nombre ASC";
+		return ejecutarConsulta($sql);
+				
 	}
 	//Implementar un método para listar los registros y mostrar en el select
 	public function select()
@@ -102,11 +96,6 @@ Class Cargo
 		$sql="SELECT * FROM cargo_trabajador where estado=1";
 		return ejecutarConsulta($sql);		
 	}
-	//Implementar un método para listar los registros y mostrar en el select
-	public function select_tipo_trab()
-	{
-		$sql="SELECT * FROM tipo_trabajador where estado=1";
-		return ejecutarConsulta($sql);		
-	}
+	
 }
 ?>

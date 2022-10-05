@@ -20,9 +20,9 @@ function limpiar_unidades_m() {
   $("#guardar_registro_unidad_m").html('Guardar Cambios').removeClass('disabled');
   //Mostramos los Materiales
   $("#idunidad_medida").val("");
-  $("#nombre").val(""); 
-  $("#abreviacion").val(""); 
-  $("#descripcion").val(""); 
+  $("#nombre_medida").val(""); 
+  $("#abreviatura").val(""); 
+  $("#descripcion_m").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -146,9 +146,9 @@ function mostrar_unidades_m(idunidad_medida) {
 
     if (e.status) {
       $("#idunidad_medida").val(e.data.idunidad_medida);
-      $("#nombre").val(e.data.nombre); 
-      $("#abreviacion").val(e.data.abreviacion);
-      $("#descripcion").val(e.data.descripcion); 
+      $("#nombre_medida").val(e.data.nombre); 
+      $("#abreviatura").val(e.data.abreviatura);
+      $("#descripcion_m").val(e.data.descripcion); 
 
       $("#cargando-3-fomulario").show();
       $("#cargando-4-fomulario").hide();
@@ -159,13 +159,13 @@ function mostrar_unidades_m(idunidad_medida) {
 }
 
 //Función para desactivar registros
-function eliminar_unidades_m(idunidad_medida, nombre) {
+function eliminar_unidades_m(idunidad_medida, nombre_medida) {
   crud_eliminar_papelera(
     "../ajax/unidades_m.php?op=desactivar_unidades_m",
     "../ajax/unidades_m.php?op=eliminar_unidades_m", 
     idunidad_medida, 
     "!Elija una opción¡", 
-    `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    `<b class="text-danger"><del>${nombre_medida}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
     function(){  tabla_unidades_m.ajax.reload(null, false); },
@@ -183,10 +183,10 @@ $(function () {
 
   $("#form-unidad-m").validate({
     rules: {
-      nombre: { required: true }      // terms: { required: true },
+      nombre_medida: { required: true }      // terms: { required: true },
     },
     messages: {
-      nombre: { required: "Campo requerido.", },
+      nombre_medida: { required: "Campo requerido.", },
 
     },
         

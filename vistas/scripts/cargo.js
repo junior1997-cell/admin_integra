@@ -12,13 +12,13 @@ function init() {
   listar_cargo();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#idtipo_trabjador_c', null);
+  //lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#idtipo_trabjador_c', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro_cargo").on("click", function (e) {$("#submit-form-cargo").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
-  $("#idtipo_trabjador_c").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo", allowClear: true, });
+  //$("#idtipo_trabjador_c").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo", allowClear: true, });
   
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -29,7 +29,6 @@ function limpiar_cargo() {
   $("#guardar_registro_cargo").html('Guardar Cambios').removeClass('disabled');
   $("#idcargo_trabajador").val("");
   $("#nombre_cargo").val(""); 
-  $("#idtipo_trabjador_c").val("null").trigger("change");
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -47,7 +46,7 @@ function listar_cargo() {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3], } } ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2,3], } } ,
     ],
     ajax:{
       url: '../ajax/cargo.php?op=listar_cargo',
@@ -148,7 +147,6 @@ function mostrar_cargo(idcargo_trabajador) {
     if (e.status) {
       $("#idcargo_trabajador").val(e.data.idcargo_trabajador);
       $("#nombre_cargo").val(e.data.nombre); 
-      $("#idtipo_trabjador_c").val(e.data.idtipo_trabjador).trigger("change");
 
       $("#cargando-9-fomulario").show();
       $("#cargando-10-fomulario").hide();
@@ -185,11 +183,11 @@ $(function () {
 
   $("#form-cargo").validate({
     rules: {
-      idtipo_trabjador_c: { required: true },      // terms: { required: true },
+      
       nombre_cargo: { required: true }
     },
     messages: {
-      idtipo_trabjador_c: { required: "Campo requerido", },
+      
       nombre_cargo:       { required: "Campo requerido", },
     },
         

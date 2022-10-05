@@ -9,43 +9,44 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     
-    require_once "../modelos/Categoria_af.php";
+    require_once "../modelos/categoria_p.php";
 
-    $categoria_af = new Categoria_af();
+    $categoria_p = new Categoria_p();
 
-    $idcategoria_insumos_af = isset($_POST["idcategoria_insumos_af"]) ? limpiarCadena($_POST["idcategoria_insumos_af"]) : "";
-    $nombre_categoria_af = isset($_POST["nombre_categoria_af"]) ? limpiarCadena($_POST["nombre_categoria_af"]) : "";
+    $idcategoria_producto = isset($_POST["idcategoria_producto"]) ? limpiarCadena($_POST["idcategoria_producto"]) : "";
+    $nombre_categoria = isset($_POST["nombre_categoria"]) ? limpiarCadena($_POST["nombre_categoria"]) : "";
+    $descripcion = isset($_POST["descripcion_cat"]) ? limpiarCadena($_POST["descripcion_cat"]) : "";
 
     switch ($_GET["op"]) {
       case 'guardaryeditar_c_insumos_af':
-        if (empty($idcategoria_insumos_af)) {
-          $rspta = $categoria_af->insertar($nombre_categoria_af);
+        if (empty($idcategoria_producto)) {
+          $rspta = $categoria_p->insertar($nombre_categoria, $descripcion);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $categoria_af->editar($idcategoria_insumos_af, $nombre_categoria_af);
+          $rspta = $categoria_p->editar($idcategoria_producto, $nombre_categoria, $descripcion);
           echo json_encode( $rspta, true) ;
         }
       break;
 
       case 'desactivar':
-        $rspta = $categoria_af->desactivar($_GET["id_tabla"]);
+        $rspta = $categoria_p->desactivar($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
 
       case 'delete':
-        $rspta = $categoria_af->delete($_GET["id_tabla"]);
+        $rspta = $categoria_p->delete($_GET["id_tabla"]);
         echo json_encode( $rspta, true) ;
       break;
 
       case 'mostrar':
-        //$idcategoria_insumos_af='1';
-        $rspta = $categoria_af->mostrar($idcategoria_insumos_af);
+        //$idcategoria_producto='1';
+        $rspta = $categoria_p->mostrar($idcategoria_producto, $descripcion);
         //Codificar el resultado utilizando json
         echo json_encode( $rspta, true) ;
       break;
 
-      case 'listar_c_insumos_af':
-        $rspta = $categoria_af->listar();
+      case 'listar_c_producto':
+        $rspta = $categoria_p->listar();
         //Vamos a declarar un array
         $data = [];  $cont = 1;
 
@@ -56,11 +57,12 @@
             $data[] = [
               "0" => $cont++,
               "1" => $reg->estado
-                ? '<button class="btn btn-warning btn-sm" onclick="mostrar_c_insumos_af(' .  $reg->idcategoria_insumos_af . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_c_insumos_af(' . $reg->idcategoria_insumos_af .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'
+                ? '<button class="btn btn-warning btn-sm" onclick="mostrar_c_insumos_af(' .  $reg->idcategoria_producto . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_c_insumos_af(' . $reg->idcategoria_producto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'
                 : '',
               "2" => $reg->nombre,
-              "3" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "3" => $reg->descripcion,
+              "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [

@@ -17,7 +17,7 @@
     $date_now = date("d-m-Y h.i.s A");
 
     $idbancos = isset($_POST["idbancos"]) ? limpiarCadena($_POST["idbancos"]) : "";
-    $nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : "";
+    $nombre = isset($_POST["nombre_b"]) ? limpiarCadena($_POST["nombre_b"]) : "";
     $alias = isset($_POST["alias"]) ? limpiarCadena($_POST["alias"]) : "";
 
     $formato_cci = isset($_POST["formato_cci"]) ? limpiarCadena($_POST["formato_cci"]) : "";
