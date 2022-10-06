@@ -25,7 +25,7 @@ function init() {
 // ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
   //$('#precio_unitario').number( true, 2 );
   $('#precio_unitario').number( true, 2 );
-  formato_miles_input('#precio_unitario');
+  //formato_miles_input('#precio_unitario');
   $('.jq_image_zoom').zoom({ on:'grab' });
   // Formato para telefono
   $("[data-mask]").inputmask();

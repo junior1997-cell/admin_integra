@@ -123,7 +123,7 @@
                 $clas_stok = 'badge-danger';
               }else if ($reg->stock > 0 && $reg->stock <= 10) {
                 $clas_stok = 'badge-warning';
-              }else if ($reg->stock > 10 && $reg->stock <= 100) {
+              }else if ($reg->stock > 10) {
                 $clas_stok = 'badge-success';
               }
               
