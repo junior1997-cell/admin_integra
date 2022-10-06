@@ -117,6 +117,15 @@
             while ($reg = $rspta['data']->fetch_object()) {
 
               $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen );
+              $clas_stok = "";
+
+              if ($reg->stock == 0 && $reg->stock <= 0) {
+                $clas_stok = 'badge-danger';
+              }else if ($reg->stock > 0 && $reg->stock <= 10) {
+                $clas_stok = 'badge-warning';
+              }else if ($reg->stock > 10 && $reg->stock <= 100) {
+                $clas_stok = 'badge-success';
+              }
               
               $data[] = [
                 "0"=>$cont++,
@@ -133,7 +142,7 @@
                 "4" =>  $reg->categoria,
                 "5" => $reg->nombre_medida,     
                 "6" => $reg->precio_unitario,
-                "7" =>  '<span class="badge badge-danger font-size-14px">'.$reg->stock.'</span>',
+                "7" =>  '<span class="badge '.$clas_stok.' font-size-14px">'.$reg->stock.'</span>',
                 "8" => $reg->contenido_neto,
                 "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
 

@@ -61,7 +61,9 @@
                   ' <button class="btn btn-danger btn-sm" onclick="eliminar_c_insumos_af(' . $reg->idcategoria_producto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'
                 : '',
               "2" => $reg->nombre,
-              "3" => $reg->descripcion,
+              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
+                $reg->descripcion,
+              '</div>',
               "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }

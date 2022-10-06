@@ -57,9 +57,15 @@ function listar_unidades_m() {
       // columna: #
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
-      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
+      // columna: #
+      //if (data[2] != '') { $("td", row).eq(2).addClass("text-center"); }
       // columna: #
       if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
+      // columna: #
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
+      // columna: #
+      if (data[5] != '') { $("td", row).eq(5).addClass("text-center"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",

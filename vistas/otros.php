@@ -183,7 +183,7 @@
                     <div class="container-fluid">
                       <div class="row mb-2">
                         <div class="col-sm-6">
-                          <h1>Tipo</h1>
+                          <h1>Tipo Persona</h1>
                         </div>
                       </div>
                     </div>
@@ -299,7 +299,7 @@
                 </div>
 
                 <!-- TBLA - CATEGORIAS - ACTIVOS FIJO -->
-                <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                <div class="col-sm-12 col-md-12 col-lg-6g col-xl-6">
                   <!-- Content Header (Page header) -->
                   <section class="content-header">
                     <div class="container-fluid">
@@ -513,7 +513,7 @@
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
                                 <label for="descripcion_m">Descripciòn</label>
-                                <input type="text" name="descripcion_m" class="form-control" id="descripcion_m" placeholder="Descripcion." />
+                                <textarea name="descripcion_m" id="descripcion_m" class="form-control" rows="2"></textarea>                              
                               </div>
                             </div>
 
@@ -610,7 +610,7 @@
                 <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h4 class="modal-title">Tipo</h4>
+                      <h4 class="modal-title">Tipo Persona</h4>
                       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span class="text-danger" aria-hidden="true">&times;</span>
                       </button>
@@ -627,8 +627,8 @@
                             <!-- nombre_medida -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="nombre_tipo">Nombre Tipo</label>
-                                <input type="text" name="nombre_tipo" id="nombre_tipo" class="form-control" placeholder="Nombre tipo" />
+                                <label for="nombre_tipo">Nombre Tipo Persona</label>
+                                <input type="text" name="nombre_tipo" id="nombre_tipo" class="form-control" placeholder="Nombre tipo Persona" />
                               </div>
                             </div>
 
@@ -636,7 +636,7 @@
                               <div class="col-lg-12 class_pading">
                               <div class="form-group">
                                 <label for="descripcion_t">Descripciòn</label>
-                                <input type="text" name="descripcion_t" class="form-control" id="descripcion_t" placeholder="Descripcion." />
+                                <textarea name="descripcion_t" id="descripcion_t" class="form-control" rows="2"></textarea>
                               </div>
                             </div>
 
@@ -673,7 +673,7 @@
 
               <!-- MODAL - CARGO TRABAJDOR-->
               <div class="modal fade" id="modal-agregar-cargo">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                <div class="modal-dialog modal-dialog-scrollable modal-md">
                   <div class="modal-content">
                     <div class="modal-header">
                       <h4 class="modal-title">Cargo</h4>
@@ -692,7 +692,7 @@
 
 
                             <!-- nombre_trabajador -->
-                            <div class="col-lg-6 class_pading">
+                            <div class="col-lg-12 class_pading">
                               <div class="form-group">
                                 <label for="nombre_cargo">Nombre Cargo</label>
                                 <input type="text" name="nombre_cargo" id="nombre_cargo" class="form-control" placeholder="Nombre Cargo" />
@@ -759,8 +759,8 @@
                             <!-- descripcion_cat categoria -->
                             <div class="col-lg-12 class_pading">
                               <div class="form-group">
-                                <label for="descripcion_cat">Descripcion Cataegoria</label>
-                                <input type="text" name="descripcion_cat" id="descripcion_cat" class="form-control" placeholder="Descripcion" />
+                                <label for="descripcion_cat">Descripcion Categoria</label>
+                                <textarea name="descripcion_cat" id="descripcion_cat" class="form-control" rows="2"></textarea>                                
                               </div>
                             </div>
 

@@ -46,7 +46,10 @@ function listar_c_insumos_af () {
       // columna: #
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
-      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
+      // columna: #
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
+
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",

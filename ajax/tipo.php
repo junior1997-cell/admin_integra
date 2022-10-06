@@ -60,7 +60,9 @@
                 : '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_persona . ')"><i class="fas fa-pencil-alt"></i></button>' .
                   ' <button class="btn btn-primary btn-sm" onclick="activar_tipo(' . $reg->idtipo_persona . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => $reg->descripcion,
+              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
+                $reg->descripcion,
+              '</div>',
               "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }

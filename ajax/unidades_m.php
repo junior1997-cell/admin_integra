@@ -64,7 +64,9 @@
                   ' <button class="btn btn-primary btn-sm" onclick="activar_unidades_m(' . $reg->idunidad_medida . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
               "3" => $reg->abreviatura,
-              "4" => $reg->descripcion,
+              "4" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
+                $reg->descripcion,
+              '</div>',
               "5" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
