@@ -56,7 +56,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true);
 
@@ -75,7 +75,7 @@
               }
             }
             
-            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true) ;
           }
