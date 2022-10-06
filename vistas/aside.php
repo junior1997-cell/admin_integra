@@ -229,7 +229,7 @@
             <?php if ($_SESSION['pago_trabajador']==1) {  ?>
               <!-- RESUMEN DE GASTOS -->
               <li class="nav-item ">
-                <a href="resumen_gasto.php" class="nav-link pl-2" id="lResumenGastos">
+                <a href="pago_trabajador.php" class="nav-link pl-2" id="lPagoTrabajador">
                   <i class="fas fa-dollar-sign nav-icon"></i>
                   <p>Pago Trabajador</p>
                 </a>
