@@ -149,7 +149,7 @@
                   <div class="modal-dialog modal-dialog-scrollable modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Agregar persona</h4>
+                        <h4 class="modal-title btn_add">Agregar persona</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -253,7 +253,7 @@
                               </div>
 
                               <!-- Swichs permanente -->
-                              <div class="col-4 col-sm-5 col-md-6 col-lg-3">
+                              <div class="col-4 col-sm-5 col-md-6 col-lg-3 classswichs">
                                   <label for="socio">Es socio ? <small class="text-danger text-bold sino">(NO)</small> </label>
                                   <div class="switch-toggle">
                                     <input type="checkbox" id="socio" >
@@ -263,7 +263,7 @@
                               </div>
 
                               <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-9">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-9 classdirecc">
                                 <div class="form-group">
                                   <label for="direccion">Dirección</label>
                                   <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />

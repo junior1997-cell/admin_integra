@@ -162,8 +162,24 @@ function show_hide_btn_add(tipo_persona) {
     $(".class_btn").hide();
     
   }else{
+
     $("#id_tipo_persona").val(tipo_persona);
     $(".class_btn").show();
+
+    if (tipo_persona=="3") {
+      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Proveedor`);
+      //add class
+      $(".classswichs").addClass("hidden");
+      $(".classdirecc").removeClass("col-lg-9").addClass("col-lg-12");
+
+    }else{
+      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Cliente`);
+      //remove class
+      $(".classswichs").removeClass("hidden");
+      $(".classdirecc").removeClass("col-lg-12").addClass("col-lg-9");
+    }
+      
+    
   }
 
 }
