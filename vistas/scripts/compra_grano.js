@@ -423,10 +423,10 @@ function agregarDetalleComprobante() {
     <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
 
-    <td class="form-group"><input type="number" class="w-140px form-control cantidad_${cont}" name="cantidad[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="0" readonly min="0" ></td>
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="0" readonly ></td>
-    <td class="form-group"><input type="number" class="w-140px form-control precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01" required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
     <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="0" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span></td>
     <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
@@ -487,7 +487,15 @@ function modificarSubtotales() {
     if (array_class_trabajador.length === 0) {
     } else {
       array_class_trabajador.forEach((element, index) => {
-        var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+        // calculando peso neto
+        var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+        var dcto_humendad = parseFloat($(`.dcto_humendad_${element.id_cont}`).val());
+        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+        var peso_neto = peso_bruto - (dcto_humendad + porcentaje_cascara + dcto_embase);
+        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+
         var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
         var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
         var subtotal_producto = 0;
@@ -501,7 +509,7 @@ function modificarSubtotales() {
         $(`.precio_igv_${element.id_cont}`).val(igv);
 
         // Calculamos: Subtotal de cada producto
-        subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
+        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
         $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(4)));
       });
       calcularTotalesSinIgv();
@@ -530,7 +538,14 @@ function modificarSubtotales() {
         // validamos el valor del igv ingresado        
 
         array_class_trabajador.forEach((element, index) => {
-          var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+          var dcto_humendad = parseFloat($(`.dcto_humendad_${element.id_cont}`).val());
+          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+          var peso_neto = peso_bruto - (dcto_humendad + porcentaje_cascara + dcto_embase);
+          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+
           var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
           var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
           var subtotal_producto = 0;
@@ -544,7 +559,7 @@ function modificarSubtotales() {
           $(`.precio_igv_${element.id_cont}`).val(igv);
 
           // Calculamos: Subtotal de cada producto
-          subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
+          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
           $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(2)));
         });
 
@@ -566,7 +581,14 @@ function modificarSubtotales() {
       if (array_class_trabajador.length === 0) {
       } else {
         array_class_trabajador.forEach((element, index) => {
-          var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+          var dcto_humendad = parseFloat($(`.dcto_humendad_${element.id_cont}`).val());
+          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+          var peso_neto = peso_bruto - (dcto_humendad + porcentaje_cascara + dcto_embase);
+          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+          
           var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
           var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
           var subtotal_producto = 0;
@@ -580,7 +602,7 @@ function modificarSubtotales() {
           $(`.precio_igv_${element.id_cont}`).val(igv);
 
           // Calculamos: Subtotal de cada producto
-          subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
+          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
           $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(4)));
         });
 
