@@ -87,7 +87,7 @@
                                 </div>
                               </div>
                               <!-- Leyecnda pagos -->
-                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_pagos" style="background-color: aliceblue;">
+                              <!-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_pagos" style="background-color: aliceblue;">
                                 <div class="text-slid-box">
                                   <div id="offer-box" class="contenedor">
                                     <div> <b>Leyenda-pago</b> </div>
@@ -104,9 +104,9 @@
                                     </ul>
                                   </div>
                                 </div>
-                              </div>
+                              </div> -->
                               <!-- Leyecnda saldos -->
-                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_saldos" style="background-color: #f0f8ff7d;">
+                              <!-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_saldos" style="background-color: #f0f8ff7d;">
                                 <div class="text-slid-box">
                                   <div id="offer-box" class="contenedorr">
                                     <div> <b>Leyenda-saldos</b> </div>
@@ -123,7 +123,7 @@
                                     </ul>
                                   </div>
                                 </div>
-                              </div>
+                              </div> -->
                             </div>
                           </div>
                         </div>
@@ -198,12 +198,11 @@
                                   <th class="">#</th>
                                   <th class="">Acciones</th>
                                   <th>Fecha</th>
-                                  <th>Proveedor</th>
-                                  <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
+                                  <th>Cliente</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo de Persona">Tipo</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Comprobante</th>
                                   <th>Total</th>
-                                  <th>Añadir pago</th>
-                                  <th>Deposito</th>
-                                  <th>Saldo</th>
+                                  <th>Metodo de Pago</th>
                                   <th>Descripción</th>
                                 </tr>
                               </thead>
@@ -213,13 +212,12 @@
                                   <th class="">#</th>
                                   <th class="">Acciones</th>
                                   <th>Fecha</th>
-                                  <th>Proveedor</th>
-                                  <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
+                                  <th>Cliente</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo de Persona">Tipo</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Comprobante</th>
                                   <th>Total</th>
-                                  <th>Añadir pago</th>
-                                  <th>Deposito</th>
-                                  <th>Saldo</th>
-                                  <th>Descripción</th>
+                                  <th>Metodo de Pago</th>
+                                  <th>Descripción</th> 
                                 </tr>
                               </tfoot>
                             </table>
@@ -324,14 +322,13 @@
                                     </div>
                                   </div>
 
-                                  <!-- Glosa -->
+                                  <!-- metodo de pago -->
                                   <div class="col-lg-3">
                                     <div class="form-group">
-                                      <label for="glosa">Glosa <sup class="text-danger">*</sup></label>
-                                      <select id="glosa" name="glosa" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
-                                        <option title="fas fa-hammer" value="MATERIAL">MATERIAL</option>
-                                        <option title="fas fa-gas-pump" value="COMBUSTIBLE">COMBUSTIBLE</option>
-                                        <option title="fas fa-snowplow" value="EQUIPOS">EQUIPOS</option>
+                                      <label for="metodo_de_pago">Método de pago <sup class="text-danger">*</sup></label>
+                                      <select id="metodo_de_pago" name="metodo_de_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
+                                        <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
+                                        <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
                                       </select>
                                     </div> 
                                   </div>
@@ -388,7 +385,7 @@
                                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
                                     <br />
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                                      <thead style="background-color: #ff6c046b;">
+                                      <thead style="background-color: #00821e80;">
                                         <tr class="text-center">
                                           <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                                           <th rowspan="2" class="p-y-2px">Material</th>

@@ -14,12 +14,7 @@ class Compra_grano
   //Implementamos un método para insertar registros
   public function insertar( $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante,  $serie_comprobante, $val_igv,  $descripcion, $glosa,
     $total_compra, $subtotal_compra, $igv_compra, $estado_detraccion, $idproducto, $unidad_medida,  $nombre_color,
-    $cantidad, $precio_sin_igv, $precio_igv, $precio_con_igv, $descuento, $tipo_gravada, $ficha_tecnica_producto ) {
-
-    $sql_1 = "SELECT ruc FROM proveedor WHERE idproveedor ='$idproveedor';";
-    $proveedor = ejecutarConsultaSimpleFila($sql_1);  if ($proveedor['status'] == false) { return  $proveedor;}
-
-    $ruc = $proveedor['data']['ruc'];
+    $cantidad, $precio_sin_igv, $precio_igv, $precio_con_igv, $descuento, $tipo_gravada, $ficha_tecnica_producto ) {   
 
     $sql_2 = "SELECT p.razon_social, p.tipo_documento, p.ruc, cpp.fecha_compra, cpp.tipo_comprobante, cpp.serie_comprobante, cpp.glosa, cpp.total, cpp.estado, cpp.estado_delete 
     FROM compra_por_proyecto as cpp, proveedor as p 
@@ -221,32 +216,28 @@ class Compra_grano
 
     $data = Array();    
 
-    $sql = "SELECT cg.idcompra_grano, cg.idpersona, cg.fecha_compra, cg.metodo_pago, cg.tipo_comprobante, cg.numero_comprobante, cg.total_compra, cg.descripcion,
-    p.nombres as nombre_cliente, p.tipo_documento, p.numero_documento
-    FROM compra_grano as cg, persona as p
-    WHERE cg.idpersona = p.idpersona and  cg.estado = '1' AND cg.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
+    $sql = "SELECT p.nombres as cliente, p.tipo_documento, p.numero_documento, tp.nombre as tipo_persona, cg.idcompra_grano, cg.idpersona, cg.fecha_compra, cg.metodo_pago, cg.tipo_comprobante, cg.numero_comprobante, cg.total_compra, cg.descripcion
+    FROM compra_grano as cg, persona  p, tipo_persona as tp
+    WHERE cg.idpersona = p.idpersona AND p.idtipo_persona = tp.idtipo_persona AND cg.estado = '1' AND cg.estado_delete = '1'
+     $filtro_proveedor $filtro_comprobante $filtro_fecha
 		ORDER BY cg.fecha_compra DESC ";
-    $compra = ejecutarConsultaArray($sql);
-    if ($compra['status'] == false) { return $compra; }
+    $compra = ejecutarConsultaArray($sql); if ($compra['status'] == false) { return $compra; }
 
-    foreach ($compra['data'] as $key => $value) {
-      $idcompra_grano = $value['idcompra_grano'];
-      $sql2 = "SELECT SUM(monto) as total_pago FROM pago_compra_grano WHERE idcompra_grano='$idcompra_grano' AND estado='1' AND estado_delete='1'";
-      $pagos = ejecutarConsultaSimpleFila($sql2);
-      if ($pagos['status'] == false) { return $pagos; }
+    foreach ($compra['data'] as $key => $value) {      
 
       $data[] = [
-        'idcompra_grano' => $value['idcompra_grano'],
-        'idcliente' => $value['idpersona'],
-        'fecha_compra' => $value['fecha_compra'],
-        'tipo_comprobante' => $value['tipo_comprobante'],
+        'idcompra_grano'  => $value['idcompra_grano'],
+        'idcliente'       => $value['idpersona'],
+        'cliente'         => $value['cliente'],
+        'tipo_documento'  => $value['tipo_documento'],
+        'numero_documento'=> $value['numero_documento'],
+        'tipo_persona'    => $value['tipo_persona'],
+        'fecha_compra'    => $value['fecha_compra'],
+        'tipo_comprobante'=> $value['tipo_comprobante'],
         'numero_comprobante' => $value['numero_comprobante'],
-        'descripcion' => $value['descripcion'],
-        'total_compra' => $value['total_compra'],
-        'metodo_pago' => $value['metodo_pago'],
-        'nombre_cliente' => $value['nombre_cliente'],
-        'tipo_documento' => $value['tipo_documento'],
-        'numero_documento' => $value['numero_documento'],
+        'descripcion'     => $value['descripcion'],
+        'total_compra'    => $value['total_compra'],
+        'metodo_pago'     => $value['metodo_pago'],
         'total_pago' => (empty($pagos['data']['total_pago']) ? 0 : floatval($pagos['data']['total_pago']) ),
       ];
     }

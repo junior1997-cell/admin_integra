@@ -88,7 +88,7 @@
     
     /* ══════════════════════════════════════ C L I E N T E  ══════════════════════════════════════ */
     public function select2_cliente() {
-      $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, foto_perfil
+      $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, p.foto_perfil, tp.nombre as tipo_persona
       FROM persona AS p, tipo_persona as tp
       WHERE p.idtipo_persona = tp.idtipo_persona and p.idtipo_persona = 2 and p.estado='1' AND p.estado_delete = '1' AND p.idpersona > 1 ORDER BY p.nombres ASC;";
       return ejecutarConsulta($sql);

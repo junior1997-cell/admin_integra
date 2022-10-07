@@ -180,7 +180,7 @@
         if ($rspta['status'] == true) {
 
           foreach ($rspta['data'] as $key => $value) {
-            $data .= '<option  value=' . $value['idpersona'] . ' title="'.$value['foto_perfil'].'">' . $cont++ . '. ' . $value['nombres'] .' - '. $value['numero_documento'] . '</option>';
+            $data .= '<option  value=' . $value['idpersona'] . ' title="'.$value['foto_perfil'].'">' . $cont++ . '. ' . $value['nombres'] .' - '. $value['numero_documento'] . ' - ' . $value['tipo_persona'] . '</option>';
           }
 
           $retorno = array(

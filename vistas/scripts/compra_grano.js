@@ -62,6 +62,8 @@ function init() {
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione Comprobante", allowClear: true, });
 
+  $("#metodo_de_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
+
   // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
 
   $("#banco_pago").select2({ templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });  
@@ -76,8 +78,6 @@ function init() {
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
-
-
   // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
   $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
   $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione Cliente", allowClear: true, });
@@ -91,6 +91,8 @@ function init() {
   $('#precio_sin_igv_p').number( true, 2 );
   $('#precio_igv_p').number( true, 2 );
   $('#precio_total_p').number( true, 2 );
+
+  no_select_tomorrow('#fecha_compra');
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -242,18 +244,7 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
       //console.log(data);
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
       if (data[5] != '') { $("td", row).eq(5).addClass('text-center'); }
-      if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }
-      if (data[9] != "") {
-        var num = parseFloat(quitar_formato_miles(data[9])); //console.log(num);
-        if (num > 0) {
-          $("td", row).eq(8).addClass('bg-warning text-right');
-        } else if (num == 0) {
-          $("td", row).eq(8).addClass('bg-success text-right');            
-        } else if (num < 0) {
-          $("td", row).eq(8).addClass('bg-danger text-right');
-        }
-      }   
-      if (data[12] != '') { $("td", row).eq(1).addClass('text-nowrap'); }   
+      if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }    
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -306,7 +297,7 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
 }
 
 //facturas agrupadas por proveedor.
-function listar_facuras_proveedor(idproveedor, idproyecto) {
+function listar_facuras_cliente(idproveedor, idproyecto) {
 
   show_hide_form(2)
 
@@ -318,7 +309,7 @@ function listar_facuras_proveedor(idproveedor, idproyecto) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_grano.php?op=listar_detalle_compraxporvee&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
+      url: "../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -886,15 +877,6 @@ function ver_detalle_compras(idcompra_proyecto) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
-//Detraccion
-$("#my-switch_detracc").on("click ", function (e) {
-  if ($("#my-switch_detracc").is(":checked")) {
-    $("#estado_detraccion").val("1");
-  } else {
-    $("#estado_detraccion").val("0");
-  }
-});
-
 // :::::::::::::::::::::::::: S E C C I O N   C O M P R O B A N T E   C O M P R A  ::::::::::::::::::::::::::
 
 
@@ -1088,287 +1070,6 @@ function extrae_ruc() {
 
 // :::::::::::::::::::::::::: S E C C I O N   P A G O   C O M P R A S  ::::::::::::::::::::::::::
 
-//Función limpiar FORM
-function limpiar_form_pago_compra() {
-  
-  $("#forma_pago").val("").trigger("change");
-  $("#tipo_pago").val("").trigger("change");
-  $("#monto_pago").val("");
-  $("#numero_op_pago").val("");
-  $("#idpago_compras").val("");   
-  $("#descripcion_pago").val("");
-  $("#idpago_compra").val("");
-
-  no_select_tomorrow("#fecha_pago");
-
-  $("#doc_old_3").val("");
-  $("#doc3").val("");  
-  $('#doc3_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
-  $('#doc3_nombre').html("");
-
-  // Limpiamos las validaciones
-  $(".form-control").removeClass('is-valid');
-  $(".form-control").removeClass('is-invalid');
-  $(".error.invalid-feedback").remove();
-}
-
-function listar_pagos(idcompra_proyecto, idproyecto, monto_total, total_deposito) {
- 
-  show_hide_form(4)
-
-  $("#total_compra").html(formato_miles(monto_total));  
-
-  tabla_pagos1 = $("#tabla-pagos-proveedor").dataTable({
-    responsive: true,
-    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
-    aProcessing: true, //Activamos el procesamiento del datatables
-    aServerSide: true, //Paginación y filtrado realizados por el servidor
-    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
-    ajax: {
-      url: "../ajax/compra_grano.php?op=listar_pagos_proveedor&idcompra_proyecto=" + idcompra_proyecto,
-      type: "get",
-      dataType: "json",
-      error: function (e) {
-        console.log(e.responseText); ver_errores(e);
-      },
-    },
-    createdRow: function (row, data, ixdex) {
-      //console.log(data);
-      if (data[3] != '') { $("td", row).eq(3).addClass('text-left'); } 
-      if (data[7] != '') { $("td", row).eq(7).addClass('text-right'); }  
-    },
-    language: {
-      lengthMenu: "Mostrar: _MENU_ registros",
-      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
-      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
-    },
-    bDestroy: true,
-    iDisplayLength: 5, //Paginación
-    order: [[0, "asc"]], //Ordenar (columna,orden)
-  }).DataTable();
-
-  total_pagos(idcompra_proyecto);
-}
-
-//Guardar y editar PAGOS
-function guardaryeditar_pago(e) {
-  // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-pago-compra")[0]);
-
-  $.ajax({
-    url: "../ajax/compra_grano.php?op=guardaryeditar_pago",
-    type: "POST",
-    data: formData,
-    contentType: false,
-    processData: false,
-    success: function (e) {      
-      try {
-        e = JSON.parse(e);
-        if (e.status == true) {
-          
-          Swal.fire("Correcto!", "Pago guardado correctamente", "success");
-          tabla_compra_insumo.ajax.reload(null, false);
-          $("#modal-agregar-pago").modal("hide");
-
-          if (reload_detraccion == "si") {
-            if (tabla_pagos2) { tabla_pagos2.ajax.reload(null, false); }
-            if (tabla_pagos3) { tabla_pagos3.ajax.reload(null, false); }
-          } else {
-            if (tabla_pagos1) { tabla_pagos1.ajax.reload(null, false); }
-          }
-
-          /**================================================== */
-          total_pagos(localStorage.getItem("idcompra_pago_comp_nube"));
-          total_pagos_detracc(localStorage.getItem("idcompra_pago_detracc_nub"));
-          limpiar_form_pago_compra();
-        } else {
-          ver_errores(e);
-        }
-      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); } 
-      
-      $("#guardar_registro_pago").html('Guardar Cambios').removeClass('disabled');
-    },
-    beforeSend: function () {
-      $("#guardar_registro_pago").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-    },
-    error: function (jqXhr) { ver_errores(jqXhr); },
-  });
-}
-
-//mostrar
-function mostrar_pagos(idpago_compras) {
-
-  $("#cargando-3-fomulario").hide();
-  $("#cargando-4-fomulario").show();
-
-  limpiar_form_pago_compra();
-  $("#h4_mostrar_beneficiario").html("");
-  $("#idproveedor_pago").val("");
-  $("#modal-agregar-pago").modal("show");
-  $("#banco_pago").val("").trigger("change");
-  $("#forma_pago").val("").trigger("change");
-  $("#tipo_pago").val("").trigger("change");
-
-  $.post("../ajax/compra_grano.php?op=mostrar_pagos", { idpago_compras: idpago_compras }, function (e, status) {
-    
-    e = JSON.parse(e);  console.log(e);
-
-    if (e.status == true) {
-      $("#idproveedor_pago").val(e.data.idproveedor);
-      $("#idcompra_proyecto_p").val(e.data.idcompra_proyecto);
-      // $("#maquinaria_pago").html(e.data.nombre_maquina);
-      $("#beneficiario_pago").val(e.data.beneficiario);
-      $("#h4_mostrar_beneficiario").html(e.data.beneficiario);
-      $("#cuenta_destino_pago").val(e.data.cuenta_destino);
-      $("#banco_pago").val(e.data.id_banco).trigger("change");
-      $("#titular_cuenta_pago").val(e.data.titular_cuenta);
-      $("#forma_pago").val(e.data.forma_pago).trigger("change");
-      $("#tipo_pago").val(e.data.tipo_pago).trigger("change");
-      $("#fecha_pago").val(e.data.fecha_pago);
-      $("#monto_pago").val(e.data.monto);
-      $("#numero_op_pago").val(e.data.numero_operacion);
-      $("#descripcion_pago").val(e.data.descripcion);
-      $("#idpago_compras").val(e.data.idpago_compras);
-      
-      // COMPROBANTE COMPRA
-      if (e.data.imagen == "" || e.data.imagen == null  ) {
-
-        $("#doc3_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-        $("#doc3_nombre").html('');
-        $("#doc_old_3").val(""); $("#doc3").val("");
-
-      } else {
-
-        $("#doc_old_3").val(e.data.imagen);
-        $("#doc3_nombre").html(`<div class="row"> <div class="col-md-12"><i>Ficha-tecnica.${extrae_extencion(e.data.imagen)}</i></div></div>`);
-        // cargamos la imagen adecuada par el archivo
-        $("#doc3_ver").html( doc_view_extencion(e.data.imagen, 'compra_insumo', 'comprobante_pago', '100%', '210') ); 
-      }
-      $('.jq_image_zoom').zoom({ on:'grab' });
-      $("#cargando-3-fomulario").show();
-      $("#cargando-4-fomulario").hide();
-    } else {
-      ver_errores(e);
-    }
-  }).fail( function(e) { ver_errores(e); } );
-}
-
-function eliminar_pago_compra(idpago_compras, nombre) {
-
-  Swal.fire({
-    title: "!Elija una opción¡",
-    html: `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`,
-    icon: "warning",
-    showCancelButton: true,
-    showDenyButton: true,
-    confirmButtonColor: "#17a2b8",
-    denyButtonColor: "#d33",
-    cancelButtonColor: "#6c757d",    
-    confirmButtonText: `<i class="fas fa-times"></i> Papelera`,
-    denyButtonText: `<i class="fas fa-skull-crossbones"></i> Eliminar`,
-    showLoaderOnConfirm: true,
-    preConfirm: (input) => {       
-      return fetch(`../ajax/compra_grano.php?op=desactivar_pagos&idpago_compras=${idpago_compras}`).then(response => {
-        //console.log(response);
-        if (!response.ok) { throw new Error(response.statusText) }
-        return response.json();
-      }).catch(error => { Swal.showValidationMessage(`<b>Solicitud fallida:</b> ${error}`); })
-    },
-    showLoaderOnDeny: true,
-    preDeny: (input) => {       
-      return fetch(`../ajax/compra_grano.php?op=eliminar_pago_compra&idpago_compras=${idpago_compras}`).then(response => {
-        //console.log(response);
-        if (!response.ok) { throw new Error(response.statusText) }
-        return response.json();
-      }).catch(error => { Swal.showValidationMessage(`<b>Solicitud fallida:</b> ${error}`); })
-    },
-    allowOutsideClick: () => !Swal.isLoading()
-  }).then((result) => {
-    if (result.isConfirmed) {
-      if (result.value.status) {
-        Swal.fire("Papelera!", "Tu Pago sido enviado a la <b>PAPELERA</b>.", "success");
-        total_pagos(localStorage.getItem("idcompra_pago_comp_nube"));
-        total_pagos_detracc(localStorage.getItem("idcompra_pago_detracc_nub"));
-        if (reload_detraccion == "si") {
-          if (tabla_pagos2) { tabla_pagos2.ajax.reload(null, false); }
-          if (tabla_pagos3) { tabla_pagos3.ajax.reload(null, false); }
-        } else {
-          if (tabla_pagos1) { tabla_pagos1.ajax.reload(null, false); }
-        }
-        if (tabla_compra_x_proveedor) { tabla_compra_x_proveedor.ajax.reload(null, false); }
-        $(".tooltip").removeClass("show").addClass("hidde");
-      }else{
-        ver_errores(result.value);
-      }
-    }else if (result.isDenied) {
-      if (result.value.status) {
-        Swal.fire("ELIMINADO!", "Tu Pago a sido <b>ELIMINADO</b> permanentemente.", "success");
-        total_pagos(localStorage.getItem("idcompra_pago_comp_nube"));
-        total_pagos_detracc(localStorage.getItem("idcompra_pago_detracc_nub"));
-        if (reload_detraccion == "si") {
-          if (tabla_pagos2) { tabla_pagos2.ajax.reload(null, false); }
-          if (tabla_pagos3) { tabla_pagos3.ajax.reload(null, false); }
-        } else {
-          if (tabla_pagos1) { tabla_pagos1.ajax.reload(null, false); }
-        }
-        if (tabla_compra_x_proveedor) { tabla_compra_x_proveedor.ajax.reload(null, false); }
-        $(".tooltip").removeClass("show").addClass("hidde");
-      }else{
-        ver_errores(result.value);
-      }
-    }
-  });
-}
-
-function ver_modal_vaucher(imagen, fecha_pago) {
-
-  var data_comprobante = ""; var url = ""; var nombre_download = "Comprobante";
-
-  $("#modal-ver-vaucher").modal("show");  
-
-  if (imagen == "" || imagen == null  ) {
-    data_comprobante = `<div class="alert alert-warning alert-dismissible"><button type="button" class="close" data-dismiss="Alerta" aria-hidden="true">&times;</button><h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>No hay un documento para ver. Edite este registre para subir un comprobante de pago.</div>`;
-
-  } else {    
-    
-    // cargamos la imagen adecuada par el archivo
-    if ( extrae_extencion(imagen) == "pdf" ) {       
-      data_comprobante = `<div class="col-md-12 mt-4"><iframe src="../dist/docs/compra_insumo/comprobante_pago/${imagen}" frameborder="0" scrolling="no" width="100%" height="210"> </iframe></div><div class="col-md-12 mt-2"><i>Voucher.${extrae_extencion(imagen)}</i></div>`;      
-      url = `../dist/docs/compra_insumo/comprobante_pago/${imagen}`;
-      nombre_download = `${format_d_m_a(fecha_pago)} - Comprobante`;
-    }else{
-      if (
-        extrae_extencion(imagen) == "jpeg" || extrae_extencion(imagen) == "jpg" || extrae_extencion(imagen) == "jpe" ||
-        extrae_extencion(imagen) == "jfif" || extrae_extencion(imagen) == "gif" || extrae_extencion(imagen) == "png" ||
-        extrae_extencion(imagen) == "tiff" || extrae_extencion(imagen) == "tif" || extrae_extencion(imagen) == "webp" ||
-        extrae_extencion(imagen) == "bmp" || extrae_extencion(imagen) == "svg" ) {
-         
-        data_comprobante = `<div class="col-md-12 mt-4"><img src="../dist/docs/compra_insumo/comprobante_pago/${imagen}" alt="" width="100%" onerror="this.src='../dist/svg/error-404-x.svg';" ></div><div class="col-md-12 mt-2"><i>Voucher.${extrae_extencion(imagen)}</i></div>`;         
-        url = `../dist/docs/compra_insumo/comprobante_pago/${imagen}`;
-        nombre_download = `${format_d_m_a(fecha_pago)} - Comprobante`;
-      } else {
-        data_comprobante = `<div class="col-md-12 mt-4"><img src="../dist/svg/doc_si_extencion.svg" alt="" width="50%" ></div><div class="col-md-12 mt-2"><i>Voucher.${extrae_extencion(imagen)}</i></div>`;
-        url = `../dist/docs/compra_insumo/comprobante_pago/${imagen}`;
-        nombre_download = `${format_d_m_a(fecha_pago)} - Comprobante`;
-      }        
-    }      
-  }
-
-  $(".ver-comprobante-pago").html(`<div class="row" >
-    <div class="col-md-6 text-center">
-      <a type="button" class="btn btn-warning btn-block btn-xs" href="${url}" download="${nombre_download}"> <i class="fas fa-download"></i> Descargar. </a>
-    </div>
-    <div class="col-md-6 text-center">
-      <a type="button" class="btn btn-info btn-block btn-xs" href="${url}" target="_blank" <i class="fas fa-expand"></i> Ver completo. </a>
-    </div>
-    <div class="col-md-12 mt-4">     
-      ${data_comprobante}
-    </div>
-  </div>`);
-
-  $(".tooltip").removeClass("show").addClass("hidde");
-}
 
 
 // :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S  ::::::::::::::::::::::::::

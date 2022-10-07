@@ -95,81 +95,7 @@ if (!isset($_SESSION["nombre"])) {
     $banco_prov			    = isset($_POST["banco_prov"])? limpiarCadena($_POST["banco_prov"]):"";
     $titular_cuenta_prov= isset($_POST["titular_cuenta_prov"])? limpiarCadena($_POST["titular_cuenta_prov"]):"";
 
-    switch ($_GET["op"]) {   
-      
-      // :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S ::::::::::::::::::::::::::
-      case 'guardar_y_editar_materiales':
-        // imgen
-        if (!file_exists($_FILES['foto2']['tmp_name']) || !is_uploaded_file($_FILES['foto2']['tmp_name'])) {
-    
-          $img_pefil_p = $_POST["foto2_actual"];
-    
-          $flat_img1 = false;
-    
-        } else {
-    
-          $ext1 = explode(".", $_FILES["foto2"]["name"]);
-    
-          $flat_img1 = true;
-    
-          $img_pefil_p = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
-    
-          move_uploaded_file($_FILES["foto2"]["tmp_name"], "../dist/docs/material/img_perfil/" . $img_pefil_p);
-        }
-    
-        // ficha técnica
-        if (!file_exists($_FILES['doc2']['tmp_name']) || !is_uploaded_file($_FILES['doc2']['tmp_name'])) {
-    
-          $ficha_tecnica_p = $_POST["doc_old_2"];
-    
-          $flat_ficha1 = false;
-    
-        } else {
-    
-          $ext1 = explode(".", $_FILES["doc2"]["name"]);
-    
-          $flat_ficha1 = true;
-    
-          $ficha_tecnica_p = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
-    
-          move_uploaded_file($_FILES["doc2"]["tmp_name"], "../dist/docs/material/ficha_tecnica/" . $ficha_tecnica_p);
-        }
-    
-        if (empty($idproducto_p)) {
-          //var_dump($idproyecto,$idproveedor);
-          $rspta = $insumos->insertar( $categoria_insumos_af_p, $idgrupo,$nombre_p, $modelo_p, $serie_p, $marca_p,$precio_unitario_p, $descripcion_p,$img_pefil_p,$ficha_tecnica_p,
-          $estado_igv_p, $precio_igv_p, $precio_sin_igv_p,$unidad_medida_p, $color_p, $precio_total_p   );
-          
-          echo json_encode($rspta, true);
-    
-        } else {
-    
-          // validamos si existe LA IMG para eliminarlo
-          if ($flat_img1 == true) {
-    
-            $datos_f1 = $insumos->obtenerImg($idproducto_p);    
-            $img1_ant = (empty($datos_f1['data']) ? '' : $datos_f1['data']['imagen']);
-    
-            if (validar_url_completo($scheme_host. "dist/docs/material/img_perfil/" . $img1_ant)  == 200) {    
-              unlink("../dist/docs/material/img_perfil/" . $img1_ant);
-            }
-          }
-          
-          $rspta = $insumos->editar($idproducto_p, $categoria_insumos_af_p, $idgrupo,$nombre_p, $modelo_p, $serie_p, $marca_p,$precio_unitario_p, $descripcion_p,$img_pefil_p,$ficha_tecnica_p,
-          $estado_igv_p, $precio_igv_p, $precio_sin_igv_p,$unidad_medida_p, $color_p, $precio_total_p);
-          //var_dump($idactivos_fijos,$idproveedor);
-          echo json_encode($rspta, true);
-        }
-    
-      break;
-    
-      case 'mostrar_materiales':
-    
-        $rspta = $insumos->mostrar($idproducto_p);
-        //Codificar el resultado utilizando json
-        echo json_encode($rspta, true);
-    
-      break;
+    switch ($_GET["op"]) {       
         
       // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
       case 'guardar_proveedor':
@@ -245,56 +171,9 @@ if (!isset($_SESSION["nombre"])) {
         
         //Vamos a declarar un array
         $data = []; $cont = 1;
-        $c = "";
-        $cc = "";
-        $nombre = "";
-        $info = "";
-        $icon = "";
-        $stdo_detraccion = "";
-        $serie_comprobante = "";
-        $function_tipo_comprob = "";
-        $list_segun_estado_detracc = "";
-         
-        $num_comprob = "";
         
         if ($rspta['status'] == true) {
-          foreach ($rspta['data'] as $key => $reg) {
-      
-            $saldo = $reg['total_compra'] - $reg['total_pago'];       
-      
-            if ($saldo == $reg['total_compra']) {
-              $estado = '<span class="text-center badge badge-danger">Sin pagar</span>';
-              $c = "danger";
-              $nombre = "Pagar";
-              $icon = "dollar-sign";
-              $cc = "danger";
-            } else {
-              if ($saldo < $reg['total_compra'] && $saldo > "0") {
-                $estado = '<span class="text-center badge badge-warning">En proceso</span>';
-                $c = "warning";
-                $nombre = "Pagar";
-                $icon = "dollar-sign";
-                $cc = "warning";
-              } else {
-                if ($saldo <= "0" || $saldo == "0") {
-                  $estado = '<span class="text-center badge badge-success">Pagado</span>';
-                  $c = "success";
-                  $nombre = "Ver";
-                  $info = "info";
-                  $icon = "eye";
-                  $cc = "success";
-                } else {
-                  $estado = '<span class="text-center badge badge-success">Error</span>';
-                }
-                //$estado = '<span class="text-center badge badge-success">Terminado</span>';
-              }
-            }
-      
-            $list_segun_estado_detracc = '<div class="text-center formato-numero-conta"> <button class="btn btn-' .  $c . ' btn-xs" onclick="listar_pagos_detraccion(' . $reg['idcompra_proyecto'] . ',' . $reg['idproyecto'] . ',' . $reg['total'] . ',' . $deposito_Actual .')">'.
-                '<i class="fas fa-' . $icon .' nav-icon"></i> ' .$nombre .
-              '</button>' .
-              ' <button style="font-size: 14px;" class="btn btn-' . $cc . ' btn-sm">' . number_format($reg['total_pago_compras'], 2, '.', ',') . '</button>'.
-            '</div>';                 
+          foreach ($rspta['data'] as $key => $reg) {                          
       
             $data[] = [
               "0" => $cont,
@@ -304,14 +183,13 @@ if (!isset($_SESSION["nombre"])) {
                   : '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' .  $reg['idcompra_grano'] . ')"data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>' .
                     ' <button class="btn btn-success btn-sm" onclick="des_anular(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Recuperar Compra"><i class="fas fa-check"></i></button>',
               "2" => $reg['fecha_compra'],
-              "3" => '<span class="text-primary font-weight-bold" >' . $reg['nombre_cliente'] . '</span>',
-              "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</span>',              
-              "5" => $reg['total_compra'],
-              "6" => $list_segun_estado_detracc,
-              "7" => number_format($reg['total_pago'], 2, '.', ','),
-              "8" => number_format($saldo, 2, '.', ','),
-              "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
-              "10" => $toltip,
+              "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
+              "4" => $reg['tipo_persona'],
+              "5" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</span>',              
+              "6" => $reg['total_compra'],              
+              "7" => $reg['metodo_pago'],
+              "8" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
+              "9" => $toltip,
             ];
             $cont++;
           }
@@ -342,7 +220,7 @@ if (!isset($_SESSION["nombre"])) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_proveedor(' . $reg->idpersona . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
+              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_cliente(' . $reg->idpersona . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
               "2" => $reg->nombres,
               "3" => "<center>$reg->cantidad</center>",
               "4" => $reg->celular,
@@ -362,7 +240,7 @@ if (!isset($_SESSION["nombre"])) {
     
       break;
     
-      case 'listar_detalle_compraxporvee':
+      case 'listar_detalle_compra_x_cliente':
         
         $rspta = $compra_grano->listar_detalle_comprax_provee($_GET["idproyecto"], $_GET["idproveedor"]);
         //Vamos a declarar un array
