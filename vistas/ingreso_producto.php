@@ -25,10 +25,6 @@
       </head>
       <body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
         <div class="wrapper">
-          <!-- Preloader -->
-          <!-- <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="../dist/svg/logo-principal.svg" alt="AdminLTELogo" width="360" />
-          </div> -->
 
           <?php
           require 'nav.php';
@@ -86,44 +82,7 @@
                                   </h3>
                                 </div>
                               </div>
-                              <!-- Leyecnda pagos -->
-                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_pagos" style="background-color: aliceblue;">
-                                <div class="text-slid-box">
-                                  <div id="offer-box" class="contenedor">
-                                    <div> <b>Leyenda-pago</b> </div>
-                                    <ul class="offer-box cls-ul">
-                                      <li>
-                                        <span class="text-center badge badge-danger" >Pago sin iniciar </span> 
-                                      </li>
-                                      <li>
-                                        <span class="text-center badge badge-warning" >Pago en proceso </span>
-                                      </li>
-                                      <li>
-                                        <span class="text-center badge badge-success" >Pago completo</span>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                              <!-- Leyecnda saldos -->
-                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_saldos" style="background-color: #f0f8ff7d;">
-                                <div class="text-slid-box">
-                                  <div id="offer-box" class="contenedorr">
-                                    <div> <b>Leyenda-saldos</b> </div>
-                                    <ul class="offer-box clss-ul">
-                                      <li>
-                                        <span class="text-center badge badge-warning " >Pago nulo o pago en proceso </span> 
-                                      </li>
-                                      <li>
-                                        <span class="text-center badge badge-success" >Pago Completo </span>
-                                      </li>
-                                      <li>
-                                        <span class="text-center badge badge-danger" >Pago excedido</span>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -133,7 +92,7 @@
                         <div class="card-body">
                           <!-- TABLA - COMPRAS -->
                           <div id="div_tabla_compra">
-                            <h5><b>Lista de compras Por Facturas</b></h5>
+                            <h5><b>Lista de ingresos</b></h5>
                             <!-- filtros -->
                             <div class="filtros-inputs row mb-4">
 

@@ -158,7 +158,7 @@
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->
                   <li class="nav-item ">
-                    <a href="compra_insumos.php" class="nav-link" id="lCompras">
+                    <a href="ingreso_producto.php" class="nav-link" id="lCompras">
                       <i class="nav-icon fas fa-cart-plus"></i> <p>Compras</p>
                     </a>
                   </li>
