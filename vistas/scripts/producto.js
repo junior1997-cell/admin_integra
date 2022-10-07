@@ -70,7 +70,7 @@ function limpiar_form_material() {
 
   $("#unidad_medida").val("null").trigger("change");
   $("#contenido_neto").val(1).trigger("change");
-  $("#stock").val(1).trigger("change");
+  $("#stock").val(0).trigger("change");
   $("#marca").val("").trigger("change");
   $("#categoria_producto").val("").trigger("change");
  
@@ -120,9 +120,9 @@ function tbla_principal() {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8], } },
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } },
     ],
     ajax: {
       url: "../ajax/producto.php?op=tbla_principal",
@@ -241,7 +241,8 @@ function mostrar(idproducto) {
       $("#nombre_producto").val(e.data.nombre);
       $("#marca").val(e.data.marca).trigger("change");  
       $("#descripcion").val(e.data.descripcion);
-      $("#stock").val(e.data.stock);  
+      $("#stock").val(e.data.stock); 
+      $("#contenido_neto").val(e.data.contenido_neto);  
       $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
       
       $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
@@ -318,25 +319,25 @@ function verdatos(idproducto){
                   <td> <b>Marca: </b> ${e.data.marca}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th> <b>Contenido Neto: </b> </th>
-                  <td>${e.data.contenido_neto}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Categoria</th>
                   <td>${e.data.categoria}</td>
                 </tr> 
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>U.M.</th>
                   <td>${e.data.nombre_medida}</td>
-                </tr>                
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Stock</th>
-                    <td>${e.data.stock}</td>
-                </tr>
+                </tr>  
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Precio  </th>
                   <td>${e.data.precio_unitario}</td>
-                </tr>            
+                </tr> 
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Stock</th>
+                    <td>${e.data.stock}</td>
+                </tr> 
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th> <b>Contenido Neto: </b> </th>
+                  <td>${e.data.contenido_neto}</td>
+                </tr>   
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Descripción</th>
                   <td>${e.data.descripcion}</td>

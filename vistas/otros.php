@@ -622,7 +622,7 @@
                         <div class="card-body">
                           <div class="row" id="cargando-7-fomulario">
                             <!-- id idunidad_medida -->
-                            <input type="hidden" name="idtipo_trabajador" id="idtipo_trabajador" />
+                            <input type="hidden" name="idtipo_persona" id="idtipo_persona" />
 
                             <!-- nombre_medida -->
                             <div class="col-lg-12 class_pading">

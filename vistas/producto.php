@@ -140,13 +140,21 @@
                               </div>
 
                               <!-- Categoria -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="categoria_producto">Categoria <sup class="text-danger">(unico*)</sup></label>
                                   <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
                                   </select>
                                 </div>
-                              </div>                             
+                              </div>   
+                              
+                              <!-- Stock -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
+                              <div class="form-group">
+                                <label for="nombre_producto">Stock: </label>
+                                <input type="text" name="stock" value="0" id="stock" class="form-control" readonly="readonly">                                  
+                              </div>
+                            </div>
 
                               <!-- Unnidad de medida-->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6" >

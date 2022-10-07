@@ -10,7 +10,7 @@ class Producto
   }
 
   //Implementamos un método para insertar registros
-  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto, $stock, $precio_unitario,  $descripcion, $imagen)
+  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto,  $precio_unitario, $stock, $descripcion, $imagen)
   {
     $sql = "SELECT p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, p.estado, p.descripcion,
     p.imagen, p.estado, p.estado_delete, um.nombre as nombre_medida, cp.nombre as nombre_categoria
