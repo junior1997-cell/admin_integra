@@ -260,7 +260,7 @@
                                   <input type="hidden" name="idcompra_proyecto" id="idcompra_proyecto" /> 
 
                                   <!-- Tipo de Empresa -->
-                                  <div class="col-lg-5">
+                                  <div class="col-lg-7">
                                     <div class="form-group">
                                       <label for="idproveedor">Proveedor <sup class="text-danger">(único*)</sup></label>
                                       <select id="idproveedor" name="idproveedor" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
@@ -283,23 +283,11 @@
                                   </div>
 
                                   <!-- fecha -->
-                                  <div class="col-lg-3" >
+                                  <div class="col-lg-4" >
                                     <div class="form-group">
                                       <label for="fecha_compra">Fecha <sup class="text-danger">*</sup></label>
                                       <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" />
                                     </div>
-                                  </div>
-
-                                  <!-- Glosa -->
-                                  <div class="col-lg-3">
-                                    <div class="form-group">
-                                      <label for="glosa">Glosa <sup class="text-danger">*</sup></label>
-                                      <select id="glosa" name="glosa" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
-                                        <option title="fas fa-hammer" value="MATERIAL">MATERIAL</option>
-                                        <option title="fas fa-gas-pump" value="COMBUSTIBLE">COMBUSTIBLE</option>
-                                        <option title="fas fa-snowplow" value="EQUIPOS">EQUIPOS</option>
-                                      </select>
-                                    </div> 
                                   </div>
 
                                   <!-- Tipo de comprobante -->
@@ -349,30 +337,9 @@
                                               <button id="btnAgregarArt" type="button" class="btn btn-primary btn-block"><span class="fa fa-plus"></span> Agregar Productos</button>
                                             </a>
                                         </div>
-                                        <div class="col-lg-6">
-                                          <!-- <label for="" style="color: white;">.</label> <br />
-                                          <a data-toggle="modal" data-target="#modal-agregar-material-activos-fijos">
-                                            <button id="btnAgregarArt" type="button" class="btn btn-success btn-block" onclick="limpiar_materiales()"><span class="fa fa-plus"></span> Crear Productos</button>
-                                          </a> -->
-                                        </div>
                                       </div>
                                     </div>
 
-                                    <!-- Rounded switch -->
-                                    <div class="col-lg-1 col-xs-3">
-                                      <div class="form-group">
-                                        <div id="switch_detracc">
-                                          <label for="" style="font-size: 13px;" >Detracción ?</label> <br />
-                                          <div class="myestilo-switch2" >
-                                            <div class="switch-toggle">
-                                              <input type="checkbox" id="my-switch_detracc" />
-                                              <label for="my-switch_detracc"></label>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <input type="hidden" name="estado_detraccion" id="estado_detraccion" value="0" />
-                                      </div>
-                                    </div>
                                   </div>
 
                                   <!--tabla detalles plantas-->
@@ -1404,7 +1371,7 @@
         <script src="../plugins/jszip/dist/jszip-utils.js"></script>
         <script src="../plugins/FileSaver/dist/FileSaver.js"></script>
         
-        <script type="text/javascript" src="scripts/compra_insumos.js"></script>         
+        <script type="text/javascript" src="scripts/ingreso_producto.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

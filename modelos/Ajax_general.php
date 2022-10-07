@@ -103,7 +103,7 @@
     /* ══════════════════════════════════════ P R O V E E D O R  ══════════════════════════════════════ */
 
     public function select2_proveedor() {
-      $sql = "SELECT idproveedor, razon_social, ruc FROM proveedor WHERE estado='1' AND estado_delete = '1' AND idproveedor > 1 ORDER BY razon_social ASC;";
+      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='3' AND estado='1' AND estado_delete ='1'";
       return ejecutarConsulta($sql);
     }
 

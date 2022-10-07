@@ -11,13 +11,13 @@ if (!isset($_SESSION["nombre"])) {
 
   if ($_SESSION['compra_insumos'] == 1) {
     
-    require_once "../modelos/Compra_insumos.php";
-    require_once "../modelos/AllProveedor.php";
-    require_once "../modelos/Materiales.php";
+    require_once "../modelos/Ingreso_producto.php";
+    require_once "../modelos/Persona.php";
+    require_once "../modelos/Producto.php";
 
-    $compra_insumos = new Compra_insumos();
-    $proveedor = new AllProveedor();
-    $insumos = new Materiales();      
+    $compra_insumos = new Ingreso_producto();
+    $proveedor = new Persona();
+    $insumos = new Producto();      
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
@@ -172,22 +172,22 @@ if (!isset($_SESSION["nombre"])) {
       break;
         
       // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
-      case 'guardar_proveedor':
+      // case 'guardar_proveedor':
     
-        if (empty($idproveedor_prov)){
+      //   if (empty($idproveedor_prov)){
     
-          $rspta=$proveedor->insertar($nombre_prov, $tipo_documento_prov, $num_documento_prov, $direccion_prov, $telefono_prov,
-          $c_bancaria_prov, $cci_prov, $c_detracciones_prov, $banco_prov, $titular_cuenta_prov);
+      //     $rspta=$proveedor->insertar($nombre_prov, $tipo_documento_prov, $num_documento_prov, $direccion_prov, $telefono_prov,
+      //     $c_bancaria_prov, $cci_prov, $c_detracciones_prov, $banco_prov, $titular_cuenta_prov);
           
-          echo json_encode($rspta, true);
-        }else{
-          $rspta=$proveedor->editar($idproveedor_prov, $nombre_prov, $tipo_documento_prov, $num_documento_prov, $direccion_prov, $telefono_prov,
-          $c_bancaria_prov, $cci_prov, $c_detracciones_prov, $banco_prov, $titular_cuenta_prov);
+      //     echo json_encode($rspta, true);
+      //   }else{
+      //     $rspta=$proveedor->editar($idproveedor_prov, $nombre_prov, $tipo_documento_prov, $num_documento_prov, $direccion_prov, $telefono_prov,
+      //     $c_bancaria_prov, $cci_prov, $c_detracciones_prov, $banco_prov, $titular_cuenta_prov);
           
-          echo json_encode($rspta, true);
-        }
+      //     echo json_encode($rspta, true);
+      //   }
     
-      break;
+      // break;
 
       case 'mostrar_editar_proveedor':
         $rspta = $proveedor->mostrar($_POST["idproveedor"]);
