@@ -21,8 +21,9 @@ function init() {
 function limpiar_tipo() {
   $("#guardar_registro_tipo").html('Guardar Cambios').removeClass('disabled');
   //Mostramos los Materiales
-  $("#idtipo_trabajador").val("");
+  $("#idtipo_persona").val("");
   $("#nombre_tipo").val(""); 
+  $("#descripcion_t").val(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -40,7 +41,7 @@ function listar_tipo() {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2], } } ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3], } }, { extend: 'pdfHtml5', footer: false, exportOptions: { columns: [0,2], } } ,
     ],
     ajax:{
       url: '../ajax/tipo.php?op=listar_tipo',
@@ -127,7 +128,7 @@ function guardaryeditar_tipo(e) {
   });
 }
 
-function mostrar_tipo(idtipo_trabajador) {
+function mostrar_tipo(idtipo_persona) {
   $(".tooltip").removeClass("show").addClass("hidde");
   $("#cargando-7-fomulario").hide();
   $("#cargando-8-fomulario").show();
@@ -136,13 +137,14 @@ function mostrar_tipo(idtipo_trabajador) {
 
   $("#modal-agregar-tipo").modal("show")
 
-  $.post("../ajax/tipo.php?op=mostrar_tipo", { idtipo_trabajador: idtipo_trabajador }, function (e, status) {
+  $.post("../ajax/tipo.php?op=mostrar_tipo", { idtipo_persona: idtipo_persona }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);  
 
     if (e.status) {
-      $("#idtipo_trabajador").val(e.data.idtipo_trabajador);
+      $("#idtipo_persona").val(e.data.idtipo_persona);
       $("#nombre_tipo").val(e.data.nombre);
+      $("#descripcion_t").val(e.data.descripcion);
 
       $("#cargando-7-fomulario").show();
       $("#cargando-8-fomulario").hide();
@@ -153,12 +155,12 @@ function mostrar_tipo(idtipo_trabajador) {
 }
 
 //Función para eliminar registros
-function eliminar_tipo(idtipo_trabajador, nombre) {  
+function eliminar_tipo(idtipo_persona, nombre) {  
   
   crud_eliminar_papelera(
     "../ajax/tipo.php?op=desactivar_tipo",
     "../ajax/tipo.php?op=eliminar_tipo", 
-    idtipo_trabajador, 
+    idtipo_persona, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 

@@ -13,16 +13,17 @@
 
     $tipo = new Tipo();
 
-    $idtipo_trabajador = isset($_POST["idtipo_trabajador"]) ? limpiarCadena($_POST["idtipo_trabajador"]) : "";
+    $idtipo_persona = isset($_POST["idtipo_persona"]) ? limpiarCadena($_POST["idtipo_persona"]) : "";
     $nombre_tipo = isset($_POST["nombre_tipo"]) ? limpiarCadena($_POST["nombre_tipo"]) : "";
+    $descripcion = isset($_POST["descripcion_t"]) ? limpiarCadena($_POST["descripcion_t"]) : "";
 
     switch ($_GET["op"]) {
       case 'guardaryeditar_tipo':
-        if (empty($idtipo_trabajador)) {
-          $rspta = $tipo->insertar($nombre_tipo);
+        if (empty($idtipo_persona)) {
+          $rspta = $tipo->insertar($nombre_tipo, $descripcion);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $tipo->editar($idtipo_trabajador, $nombre_tipo);
+          $rspta = $tipo->editar($idtipo_persona, $nombre_tipo, $descripcion);
           echo json_encode( $rspta, true) ;
         }
       break;
@@ -38,13 +39,13 @@
       break;
 
       case 'mostrar_tipo':
-        $rspta = $tipo->mostrar($idtipo_trabajador);
+        $rspta = $tipo->mostrar($idtipo_persona);
         //Codificar el resultado utilizando json
         echo json_encode( $rspta, true) ;
       break;
 
       case 'listar_tipo':
-        $rspta = $tipo->listar();
+        $rspta = $tipo->listar_tipo();
         //Vamos a declarar un array
         $data = [];  $cont = 1;
 
@@ -54,12 +55,15 @@
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_trabajador . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_tipo(' .  $reg->idtipo_trabajador .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
-                : '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_trabajador . ')"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-primary btn-sm" onclick="activar_tipo(' . $reg->idtipo_trabajador . ')"><i class="fa fa-check"></i></button>',
+              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_persona . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_tipo(' .  $reg->idtipo_persona .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
+                : '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_persona . ')"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-primary btn-sm" onclick="activar_tipo(' . $reg->idtipo_persona . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
+                $reg->descripcion,
+              '</div>',
+              "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [

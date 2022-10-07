@@ -13,16 +13,15 @@
     $cargo = new Cargo();
 
     $idcargo_trabajador = isset($_POST["idcargo_trabajador"]) ? limpiarCadena($_POST["idcargo_trabajador"]) : "";
-    $idtipo_trabjador_c = isset($_POST["idtipo_trabjador_c"]) ? limpiarCadena($_POST["idtipo_trabjador_c"]) : "";
     $nombre = isset($_POST["nombre_cargo"]) ? limpiarCadena($_POST["nombre_cargo"]) : "";
 
     switch ($_GET["op"]) {
       case 'guardaryeditar_cargo':
         if (empty($idcargo_trabajador)) {
-          $rspta = $cargo->insertar($idtipo_trabjador_c, $nombre);
+          $rspta = $cargo->insertar( $nombre);
           echo json_encode( $rspta, true) ;
         } else {
-          $rspta = $cargo->editar($idcargo_trabajador, $idtipo_trabjador_c, $nombre);
+          $rspta = $cargo->editar($idcargo_trabajador,  $nombre);
           echo json_encode( $rspta, true) ;
         }
       break;
@@ -60,9 +59,8 @@
                   ' <button class="btn btn-danger  btn-sm" onclick="eliminar_cargo(' . $reg->idcargo_trabajador .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
                 : '<button class="btn btn-warning btn-sm" onclick="mostrar_cargo(' . $reg->idcargo_trabajador . ')"><i class="fa fa-pencil-alt"></i></button>' .
                   ' <button class="btn btn-primary btn-sm" onclick="activar_cargo(' . $reg->idcargo_trabajador . ')"><i class="fa fa-check"></i></button>',
-              "2" => $reg->nombre_tipo_t,
-              "3" => $reg->nombre,
-              "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+              "2" => $reg->nombre,
+              "3" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }
           $results = [

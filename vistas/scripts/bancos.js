@@ -30,7 +30,7 @@ function limpiar_banco() {
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
   //Mostramos los Materiales
   $("#idbancos").val("");
-  $("#nombre").val(""); 
+  $("#nombre_b").val(""); 
   $("#alias").val("");
   $("#formato_cta").val("00000000"); 
   $("#formato_cci").val("00000000"); 
@@ -69,7 +69,9 @@ function listar_bancos() {
       // columna: #
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
-      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
+      // columna: #
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -109,7 +111,7 @@ function guardaryeditar_bancos(e) {
 
 	      tabla_bancos.ajax.reload(null, false);
          
-				limpiar();
+				limpiar_banco();
 
         $("#modal-agregar-bancos").modal("hide");
 
@@ -157,7 +159,7 @@ function mostrar_bancos(idbancos) {
   $("#cargando-a-fomulario").hide();
   $("#cargando-b-fomulario").show();
 
-  limpiar(); //console.log(idbancos);
+  limpiar_banco(); //console.log(idbancos);
 
   $("#modal-agregar-bancos").modal("show")
 
@@ -167,7 +169,7 @@ function mostrar_bancos(idbancos) {
 
     if (e.status) {
       $("#idbancos").val(e.data.idbancos);
-      $("#nombre").val(e.data.nombre); 
+      $("#nombre_b").val(e.data.nombre); 
       $("#alias").val(e.data.alias);
       $("#formato_cta").val(e.data.formato_cta); 
       $("#formato_cci").val(e.data.formato_cci); 

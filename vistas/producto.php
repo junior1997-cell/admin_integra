@@ -132,7 +132,7 @@
                               <!-- id proveedores -->
                               <input type="hidden" name="idproducto" id="idproducto" />
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
                                   <label for="nombre_producto">Nombre <sup class="text-danger">(unico*)</sup></label>
                                   <input type="text" name="nombre_producto" class="form-control" id="nombre_producto" placeholder="Nombre del Insumo." />
@@ -140,7 +140,7 @@
                               </div>
 
                               <!-- Categoria -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
                                   <label for="categoria_producto">Categoria <sup class="text-danger">(unico*)</sup></label>
                                   <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
@@ -169,7 +169,7 @@
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
-                                  <input type="text" name="precio_unitario" class="form-control" id="precio_unitario" placeholder="Precio Unitario." />
+                                  <input type="text" name="precio_unitario" class="form-control" onClick="this.select();" id="precio_unitario" placeholder="Precio Unitario." />
                                 </div>
                               </div>
 

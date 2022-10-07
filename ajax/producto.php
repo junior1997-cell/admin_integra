@@ -24,7 +24,7 @@
       $idproducto     = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
       $idcategoria_producto  = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
       $unidad_medida          = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "" ;
-      $nombre         = isset($_POST["nombre"]) ? encodeCadenaHtml($_POST["nombre"]) : "" ;
+      $nombre         = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
       $marca         = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
       $contenido_neto          = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
       $precio_unitario= isset($_POST["precio_unitario"]) ? limpiarCadena($_POST["precio_unitario"]) : "" ;      
@@ -56,7 +56,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true);
 
@@ -75,7 +75,7 @@
               }
             }
             
-            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true) ;
           }
@@ -117,6 +117,15 @@
             while ($reg = $rspta['data']->fetch_object()) {
 
               $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen );
+              $clas_stok = "";
+
+              if ($reg->stock == 0 && $reg->stock <= 0) {
+                $clas_stok = 'badge-danger';
+              }else if ($reg->stock > 0 && $reg->stock <= 10) {
+                $clas_stok = 'badge-warning';
+              }else if ($reg->stock > 10) {
+                $clas_stok = 'badge-success';
+              }
               
               $data[] = [
                 "0"=>$cont++,
@@ -126,14 +135,14 @@
                 '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')"><i class="fa fa-pencil-alt"></i></button>',
                 "2" => $reg->idproducto,
                 "3" => '<div class="user-block">'.
-                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/material/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/material/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
+                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/material/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/material/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
                   <span class="username"><p class="mb-0">' . $reg->nombre . '</p></span>
                   <span class="description"><b>Marca: </b>' . $reg->marca . '</span>
                 </div>',
                 "4" =>  $reg->categoria,
                 "5" => $reg->nombre_medida,     
                 "6" => $reg->precio_unitario,
-                "7" =>  '<span class="badge badge-danger font-size-14px">'.$reg->stock.'</span>',
+                "7" =>  '<span class="badge '.$clas_stok.' font-size-14px">'.$reg->stock.'</span>',
                 "8" => $reg->contenido_neto,
                 "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
 

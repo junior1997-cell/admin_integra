@@ -2,7 +2,7 @@
 //Incluímos inicialmente la conexión a la base de datos
 require "../config/Conexion_v2.php";
 
-class Compra_insumos
+class Compra_grano
 {
   //Implementamos nuestro constructor
   public function __construct()
@@ -201,7 +201,7 @@ class Compra_insumos
   }
 
   //Implementar un método para listar los registros
-  public function tbla_principal($nube_idproyecto, $fecha_1, $fecha_2, $id_proveedor, $comprobante) {
+  public function tbla_principal( $fecha_1, $fecha_2, $id_proveedor, $comprobante) {
 
     $filtro_proveedor = ""; $filtro_fecha = ""; $filtro_comprobante = ""; 
 
@@ -264,13 +264,11 @@ class Compra_insumos
   }
 
   //Implementar un método para listar los registros x proveedor
-  public function listar_compraxporvee($nube_idproyecto) {
+  public function tabla_compra_x_cliente() {
     // $idproyecto=2;
-    $sql = "SELECT cpp.idproyecto as idproyecto, COUNT(cpp.idcompra_proyecto) as cantidad, SUM(cpp.total) as total, 
-    p.idproveedor as idproveedor, p.razon_social as razon_social, p.telefono
-		FROM compra_por_proyecto as cpp, proveedor as p 
-		WHERE cpp.idproyecto='$nube_idproyecto' AND cpp.idproveedor=p.idproveedor AND cpp.estado = '1' AND cpp.estado_delete = '1'
-    GROUP BY cpp.idproveedor ORDER BY p.razon_social ASC";
+    $sql = "SELECT p.idpersona, p.nombres, p.tipo_documento, p.numero_documento, p.celular, COUNT(idcompra_grano) as cantidad, SUM(total_compra) as total_compra
+    FROM compra_grano AS cg, persona AS p
+    WHERE cg.idpersona = p.idpersona AND cg.estado AND cg.estado_delete GROUP BY cg.idpersona ORDER BY p.nombres ASC;";
     return ejecutarConsulta($sql);
   }
 

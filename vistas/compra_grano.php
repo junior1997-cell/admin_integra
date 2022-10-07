@@ -74,13 +74,13 @@
                                 <div class="card-header">
                                   <h3 class="card-title">
                                     <!--data-toggle="modal" data-target="#modal-agregar-compra"  onclick="limpiar();"-->
-                                    <button type="button" class="btn bg-gradient-success" id="btn_agregar" onclick="ver_form_add(); limpiar_form_compra();">
+                                    <button type="button" class="btn bg-gradient-success" id="btn_agregar" onclick="show_hide_form(3); limpiar_form_compra();">
                                       <i class="fas fa-plus-circle"></i> Agregar
                                     </button>                                    
-                                    <button type="button" class="btn bg-gradient-warning" id="regresar" style="display: none;" onclick="regresar();">
+                                    <button type="button" class="btn bg-gradient-warning" id="btn_regresar" style="display: none;" onclick="show_hide_form(1);">
                                       <i class="fas fa-arrow-left"></i> Regresar
                                     </button>
-                                    <button type="button" id="btn-pagar" class="btn bg-gradient-success" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago" onclick="limpiar_form_pago_compra();">
+                                    <button type="button" class="btn bg-gradient-success" id="btn_pagar" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago" onclick="limpiar_form_pago_compra();">
                                       <i class="fas fa-dollar-sign"></i> Agregar Pago
                                     </button>                                     
                                   </h3>
@@ -189,7 +189,7 @@
                             </div>
                             <!-- /.filtro -->
                             
-                            <table id="tabla-compra" class="table table-bordered table-striped display" style="width: 100% !important;">
+                            <table id="tabla-compra-grano" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
                                   <th colspan="13" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
@@ -204,7 +204,6 @@
                                   <th>Añadir pago</th>
                                   <th>Deposito</th>
                                   <th>Saldo</th>
-                                  <th data-toggle="tooltip" data-original-title="Comprobantes">CFDI.</th>
                                   <th>Descripción</th>
                                 </tr>
                               </thead>
@@ -220,14 +219,13 @@
                                   <th>Añadir pago</th>
                                   <th>Deposito</th>
                                   <th>Saldo</th>
-                                  <th>CFDI.</th>
                                   <th>Descripción</th>
                                 </tr>
                               </tfoot>
                             </table>
                             <br />
                             <h4><b>Lista de Compras Por Cliente</b></h4>
-                            <table id="tabla-compra-proveedor" class="table table-bordered table-striped display" style="width: 100% !important;">
+                            <table id="tabla-compra-cliente" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
                                   <th class="">#</th>
@@ -284,8 +282,8 @@
                             </table>
                           </div>
 
-                          <!-- TABLA - AGREGAR COMPRA-->
-                          <div id="agregar_compras" style="display: none;">
+                          <!-- FORM - AGREGAR COMPRA GRANO-->
+                          <div id="div_form_agregar_compras_grano" style="display: none;">
                             <div class="modal-body p-0px mb-2">
                               <!-- form start -->
                               <form id="form-compras" name="form-compras" method="POST">
@@ -379,55 +377,41 @@
                                   <div class="row col-lg-12 justify-content-between">
                                     <div class="col-lg-4 col-xs-12">
                                       <div class="row">
-                                        <div class="col-lg-6">
-                                            <label for="" style="color: white;">.</label> <br />
-                                            <a data-toggle="modal" data-target="#modal-elegir-material">
-                                              <button id="btnAgregarArt" type="button" class="btn btn-primary btn-block"><span class="fa fa-plus"></span> Agregar Productos</button>
-                                            </a>
-                                        </div>
-                                        <div class="col-lg-6">
-                                          <!-- <label for="" style="color: white;">.</label> <br />
-                                          <a data-toggle="modal" data-target="#modal-agregar-material-activos-fijos">
-                                            <button id="btnAgregarArt" type="button" class="btn btn-success btn-block" onclick="limpiar_materiales()"><span class="fa fa-plus"></span> Crear Productos</button>
-                                          </a> -->
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <!-- Rounded switch -->
-                                    <div class="col-lg-1 col-xs-3">
-                                      <div class="form-group">
-                                        <div id="switch_detracc">
-                                          <label for="" style="font-size: 13px;" >Detracción ?</label> <br />
-                                          <div class="myestilo-switch2" >
-                                            <div class="switch-toggle">
-                                              <input type="checkbox" id="my-switch_detracc" />
-                                              <label for="my-switch_detracc"></label>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <input type="hidden" name="estado_detraccion" id="estado_detraccion" value="0" />
+                                        <div class="col-lg-6">                                                                                      
+                                          <button id="btn-agregar-detalle-form-compra" type="button" class="btn btn-primary btn-block"><span class="fa fa-plus"></span> Agregar Detalle</button>                                            
+                                        </div>                                        
                                       </div>
                                     </div>
                                   </div>
 
-                                  <!--tabla detalles plantas-->
+                                  <!--tabla detalles compra-->
                                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
                                     <br />
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
                                       <thead style="background-color: #ff6c046b;">
-                                        <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
-                                        <th>Material</th>
-                                        <th>Unidad</th>
-                                        <th>Cantidad</th>
-                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
-                                        <th class="hidden">IGV</th>
-                                        <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
-                                        <th>Descuento</th>
-                                        <th>Subtotal</th>
+                                        <tr class="text-center">
+                                          <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                                          <th rowspan="2" class="p-y-2px">Material</th>
+                                          <th rowspan="2" class="p-y-2px">Unidad</th>
+                                          <th rowspan="2" class="p-y-2px">Peso Bruto</th>
+                                          <th colspan="3" class="p-y-2px">Descuento en KG</th>
+                                          <th rowspan="2" class="p-y-2px">Peso Neto</th>
+                                          <th rowspan="2" class="p-y-2px hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
+                                          <th rowspan="2" class="p-y-2px hidden">IGV</th>
+                                          <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
+                                          <th rowspan="2" class="p-y-2px">Descuento</th>
+                                          <th rowspan="2" class="p-y-2px">Subtotal</th>
+                                        </tr>
+
+                                        <tr class="text-center">
+                                          <th class="p-y-1px" >Humedad</th>
+                                          <th class="p-y-1px" >Cascara</th>
+                                          <th class="p-y-1px" >Embase</th>
+                                        </tr>
+                                        
                                       </thead>
                                       <tfoot>
-                                        <td colspan="5" id="colspan_subtotal"></td>
+                                        <td colspan="11" id="colspan_subtotal"></td>
                                         <th class="text-right">
                                           <h6 class="tipo_gravada">GRAVADA</h6>
                                           <h6 class="val_igv">IGV (18%)</h6>
@@ -464,13 +448,13 @@
                             </div>
 
                             <div class="modal-footer justify-content-between pl-0 pb-0 ">
-                              <button type="button" class="btn btn-danger" onclick="regresar();" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-danger" onclick="show_hide_form();" data-dismiss="modal">Close</button>
                               <button type="submit" class="btn btn-success" style="display: none;" id="guardar_registro_compras">Guardar Cambios</button>
                             </div>
                           </div>                          
 
                           <!-- TABLA - PAGOS COMPRAS GRANO -->
-                          <div id="pago_compras" style="display: none;">
+                          <div id="div_tabla_pago_compras_grano" style="display: none;">
                             <h5>pago Compras</h5>
                             <div style="text-align: center;">
                               <div>
