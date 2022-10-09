@@ -4,8 +4,8 @@ var reload_detraccion = "";
 var tabla_compra_insumo;
 var tabla_comprobantes;
 
-var tabla_compra_x_proveedor;
-var tabla_detalle_compra_x_proveedor;
+var tabla_compra_x_cliente;
+var tabla_detalle_compra_x_cliente;
 
 var tablamateriales;
 
@@ -34,8 +34,8 @@ function init() {
   //$("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idproveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_proveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_cliente', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_pago', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Color", '#color_p', null);
@@ -47,7 +47,7 @@ function init() {
 
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
 
-  $("#guardar_registro_proveedor").on("click", function (e) { $("#submit-form-proveedor").submit(); });
+  $("#guardar_registro_cliente").on("click", function (e) { $("#submit-form-cliente").submit(); });
 
   $("#guardar_registro_pago").on("click", function (e) {  $("#submit-form-pago").submit(); });
 
@@ -58,11 +58,11 @@ function init() {
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
 
-  $("#idproveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true, });
+  $("#idcliente").select2({templateResult: templateCliente, theme: "bootstrap4", placeholder: "Selecione cliente", allowClear: true, });
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione Comprobante", allowClear: true, });
 
-  $("#metodo_de_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
+  $("#metodo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
 
@@ -72,7 +72,7 @@ function init() {
 
   $("#tipo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo de pago", allowClear: true, });
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - PROVEEDOR ══════════════════════════════════════
+  // ══════════════════════════════════════ INITIALIZE SELECT2 - cliente ══════════════════════════════════════
 
   $("#banco_prov").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
   
@@ -80,7 +80,7 @@ function init() {
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
   $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
-  $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione Cliente", allowClear: true, });
+  $("#filtro_cliente").select2({ theme: "bootstrap4", placeholder: "Selecione Cliente", allowClear: true, });
 
   // Inicializar - Date picker  
   $('#filtro_fecha_inicio').datepicker({ format: "dd-mm-yyyy", clearBtn: true, language: "es", autoclose: true, weekStart: 0, orientation: "bottom auto", todayBtn: true });
@@ -112,6 +112,15 @@ function templateBanco (state) {
   return $state;
 };
 
+function templateCliente (state) {
+  //console.log(state);
+  if (!state.id) { return state.text; }
+  var baseUrl = state.title != '' ? `../dist/docs/persona/perfil/${state.title}`: '../dist/svg/user_default.svg'; 
+  var onerror = `onerror="this.src='../dist/svg/user_default.svg';"`;
+  var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
+  return $state;
+};
+
 
 //vaucher - pago
 $("#doc3_i").click(function () { $("#doc3").trigger("click"); });
@@ -131,17 +140,16 @@ function doc3_eliminar() {
 function limpiar_form_compra() {
   $(".tooltip").removeClass("show").addClass("hidde");
 
-  $("#idcompra_proyecto").val("");
-  $("#idproveedor").val("null").trigger("change");
+  $("#idcompra_grano").val("");
+  $("#idcliente").val("null").trigger("change");
   $("#tipo_comprobante").val("Ninguno").trigger("change");
-  $("#glosa").val("null").trigger("change");
 
-  $("#serie_comprobante").val("");
+  $("#numero_comprobante").val("");
   $("#val_igv").val(0);
   $("#descripcion").val("");
   
-  $("#total_venta").val("");  
-  $(".total_venta").html("0");
+  $("#total_compra").val("");  
+  $(".total_compra").html("0");
 
   $(".subtotal_compra").html("S/ 0.00");
   $("#subtotal_compra").val("");
@@ -149,11 +157,8 @@ function limpiar_form_compra() {
   $(".igv_compra").html("S/ 0.00");
   $("#igv_compra").val("");
 
-  $(".total_venta").html("S/ 0.00");
-  $("#total_venta").val("");
-
-  $("#estado_detraccion").val("0");
-  $('#my-switch_detracc').prop('checked', false); 
+  $(".total_compra").html("S/ 0.00");
+  $("#total_compra").val("");
 
   $(".filas").remove();
 
@@ -170,7 +175,7 @@ function show_hide_form(flag) {
   if (flag == 1) {
     // show tabla principal
     $("#div_tabla_compra").show();
-    $("#div_tabla_compra_proveedor").hide();
+    $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").hide();
 
@@ -183,7 +188,7 @@ function show_hide_form(flag) {
   } else if(flag == 2) {
     // show tabla detalle compra por cliente
     $("#div_tabla_compra").hide();
-    $("#div_tabla_compra_proveedor").show();
+    $("#div_tabla_compra_cliente").show();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").hide();
 
@@ -193,7 +198,7 @@ function show_hide_form(flag) {
   } else if(flag == 3) {
     // show form compra
     $("#div_tabla_compra").hide();
-    $("#div_tabla_compra_proveedor").hide();
+    $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").show();
     $("#div_tabla_pago_compras_grano").hide();
 
@@ -203,7 +208,7 @@ function show_hide_form(flag) {
   } else if(flag == 4) {
     // show form pago
     $("#div_tabla_compra").hide();
-    $("#div_tabla_compra_proveedor").hide();
+    $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").show();
 
@@ -217,11 +222,11 @@ function show_hide_form(flag) {
   // $(".leyecnda_saldos").hide();
 
   limpiar_form_compra();
-  limpiar_form_proveedor();
+  limpiar_form_cliente();
 }
 
 //TABLA - COMPRAS
-function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
+function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
   //console.log(idproyecto);
   tabla_compra_insumo = $("#tabla-compra-grano").dataTable({
     responsive: true, 
@@ -230,10 +235,12 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, {extend: "colvis"} ,        
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } } ,        
     ],
     ajax: {
-      url: `../ajax/compra_grano.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/compra_grano.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_cliente=${id_cliente}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -255,8 +262,8 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      // { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
-      // { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
       // { targets: [8,11],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
@@ -264,7 +271,7 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
   $(tabla_compra_insumo).ready(function () {  $('.cargando').hide(); });
 
   //console.log(idproyecto);
-  tabla_compra_x_proveedor = $("#tabla-compra-cliente").dataTable({
+  tabla_compra_x_cliente = $("#tabla-compra-cliente").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
@@ -296,12 +303,12 @@ function tbla_principal( fecha_1, fecha_2, id_proveedor, comprobante) {
   }).DataTable();
 }
 
-//facturas agrupadas por proveedor.
-function listar_facuras_cliente(idproveedor, idproyecto) {
+//facturas agrupadas por cliente.
+function listar_facuras_cliente(idcliente, idproyecto) {
 
   show_hide_form(2)
 
-  tabla_detalle_compra_x_proveedor = $("#detalles-tabla-compra-prov").dataTable({
+  tabla_detalle_compra_x_cliente = $("#detalles-tabla-compra-prov").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
@@ -309,7 +316,7 @@ function listar_facuras_cliente(idproveedor, idproyecto) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
+      url: "../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idproyecto=" + idproyecto + "&idcliente=" + idcliente,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -341,7 +348,7 @@ function guardar_y_editar_compras(e) {
     cancelButtonColor: "#d33",
     confirmButtonText: "Si, Guardar!",
     preConfirm: (input) => {
-      return fetch("../ajax/compra_grano.php?op=guardaryeditarcompra", {
+      return fetch("../ajax/compra_grano.php?op=guardar_y_editar_compra_grano", {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!        
       }).then(response => {
@@ -357,9 +364,9 @@ function guardar_y_editar_compras(e) {
         Swal.fire("Correcto!", "Compra guardada correctamente", "success");
 
         tabla_compra_insumo.ajax.reload(null, false);
-        tabla_compra_x_proveedor.ajax.reload(null, false);
+        tabla_compra_x_cliente.ajax.reload(null, false);
 
-        limpiar_form_compra(); show_hide_form();
+        limpiar_form_compra(); show_hide_form(1);
         
         $("#modal-agregar-usuario").modal("hide");        
       } else {
@@ -382,7 +389,7 @@ function eliminar_compra(idcompra_proyecto, nombre) {
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
-    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_proveedor.ajax.reload(null, false); },
+    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_cliente.ajax.reload(null, false); },
     false, 
     false, 
     false,
@@ -419,16 +426,16 @@ function agregarDetalleComprobante() {
       <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
     </td>
     <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-    <td class="form-group"><input type="number" class="w-140px form-control dcto_humendad_${cont}" name="dcto_humendad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
 
-    <td class="form-group"><input type="number" class="w-140px form-control cantidad_${cont}" name="cantidad[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="0" readonly min="0" ></td>
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="0" readonly ></td>
-    <td class="form-group"><input type="number" class="w-140px form-control precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01" required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
     <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="0" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-    <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span></td>
+    <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span> <input type="hidden" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
     <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
   </tr>`;
 
@@ -459,7 +466,7 @@ function evaluar() {
     $(".igv_compra").html("S/ 0.00");
     $("#igv_compra").val(0);
 
-    $(".total_venta").html("S/ 0.00");
+    $(".total_compra").html("S/ 0.00");
     $("#total_compra").val(0);
 
   }
@@ -487,7 +494,15 @@ function modificarSubtotales() {
     if (array_class_trabajador.length === 0) {
     } else {
       array_class_trabajador.forEach((element, index) => {
-        var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+        // calculando peso neto
+        var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
+        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+
         var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
         var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
         var subtotal_producto = 0;
@@ -501,8 +516,9 @@ function modificarSubtotales() {
         $(`.precio_igv_${element.id_cont}`).val(igv);
 
         // Calculamos: Subtotal de cada producto
-        subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
-        $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(4)));
+        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
+        $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
       });
       calcularTotalesSinIgv();
     }
@@ -530,7 +546,14 @@ function modificarSubtotales() {
         // validamos el valor del igv ingresado        
 
         array_class_trabajador.forEach((element, index) => {
-          var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+          var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+          var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
+          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+
           var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
           var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
           var subtotal_producto = 0;
@@ -544,8 +567,9 @@ function modificarSubtotales() {
           $(`.precio_igv_${element.id_cont}`).val(igv);
 
           // Calculamos: Subtotal de cada producto
-          subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
-          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(2)));
+          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
+          $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
         });
 
         calcularTotalesConIgv();
@@ -566,7 +590,14 @@ function modificarSubtotales() {
       if (array_class_trabajador.length === 0) {
       } else {
         array_class_trabajador.forEach((element, index) => {
-          var cantidad = parseFloat($(`.cantidad_${element.id_cont}`).val());
+          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+          var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+          var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
+          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+          
           var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
           var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
           var subtotal_producto = 0;
@@ -580,8 +611,9 @@ function modificarSubtotales() {
           $(`.precio_igv_${element.id_cont}`).val(igv);
 
           // Calculamos: Subtotal de cada producto
-          subtotal_producto = cantidad * parseFloat(precio_con_igv) - deacuento;
-          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto.toFixed(4)));
+          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
+          $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
         });
 
         calcularTotalesSinIgv();
@@ -609,8 +641,8 @@ function calcularTotalesSinIgv() {
     $("#igv_compra").val(0.0);
     $(".val_igv").html('IGV (0%)');
 
-    $(".total_venta").html("S/ " + formato_miles(total.toFixed(2)));
-    $("#total_venta").val(redondearExp(total, 4));
+    $(".total_compra").html("S/ " + formato_miles(total.toFixed(2)));
+    $("#total_compra").val(redondearExp(total, 4));
   }
 }
 
@@ -636,8 +668,8 @@ function calcularTotalesConIgv() {
   $(".igv_compra").html("S/ " + formato_miles(igv));
   $("#igv_compra").val(igv);
 
-  $(".total_venta").html("S/ " + formato_miles(total.toFixed(2)));
-  $("#total_venta").val(redondearExp(total, 4));
+  $(".total_compra").html("S/ " + formato_miles(total.toFixed(2)));
+  $("#total_compra").val(redondearExp(total, 4));
 
   total = 0.0;
 }
@@ -743,7 +775,7 @@ function mostrar_compra(idcompra_proyecto) {
   detalles = 0;
   show_hide_form();
 
-  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { idcompra_proyecto: idcompra_proyecto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_proyecto': idcompra_proyecto }, function (e, status) {
     
     e = JSON.parse(e); // console.log(e);
 
@@ -767,26 +799,17 @@ function mostrar_compra(idcompra_proyecto) {
         $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7").addClass("col-lg-8");
       } else {
         $(".content-serie-comprobante").show();
-        //$(".content-descripcion").removeClass("col-lg-7").addClass("col-lg-4");
       }
 
       $("#idproyecto").val(e.data.idproyecto);
       $("#idcompra_proyecto").val(e.data.idcompra_x_proyecto);
-      $("#idproveedor").val(e.data.idproveedor).trigger("change");
+      $("#idcliente").val(e.data.idcliente).trigger("change");
       $("#fecha_compra").val(e.data.fecha_compra);
       $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
-      $("#serie_comprobante").val(e.data.serie_comprobante).trigger("change");
+      $("#numero_comprobante").val(e.data.numero_comprobante).trigger("change");
       $("#val_igv").val(e.data.val_igv);
       $("#descripcion").val(e.data.descripcion);
       $("#glosa").val(e.data.glosa).trigger("change");
-
-      if (e.data.estado_detraccion == 0) {
-        $("#estado_detraccion").val("0");
-        $('#my-switch_detracc').prop('checked', false); 
-      } else {
-        $("#estado_detraccion").val("1");
-        $('#my-switch_detracc').prop('checked', true); 
-      }
 
       if (e.data.producto) {
 
@@ -802,27 +825,30 @@ function mostrar_compra(idcompra_proyecto) {
 
           var fila = `
           <tr class="filas" id="fila${cont}">
-            <td>
-              <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_material(${element.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
-              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button></td>
+            <td class="">      
+              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
             </td>
-            <td>
-              <input type="hidden" name="idproducto[]" value="${element.idproducto}">
-              <input type="hidden" name="ficha_tecnica_producto[]" value="${element.ficha_tecnica_producto}">
-              <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img}', '${encodeHtml(element.nombre_producto)}')">
-                <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre_producto}</p></span>
-                <span class="description color_${cont}"><b>Color: </b>${element.color}</span>
-              </div>
+            <td class="">       
+              <select class="form-control w-140px" name="tipo_grano[]">
+                <option>PERGAMINO</option>
+                <option>COCO</option>
+              </select>   
             </td>
-            <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="color_${cont}" type="hidden" name="nombre_color[]" id="nombre_color[]" value="${element.color}"></td>
-            <td class="form-group"><input class="producto_${element.idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${element.cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="hidden"><input class="w-135px input-no-border precio_sin_igv_${cont}" type="number" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${element.precio_sin_igv}" readonly ></td>
-            <td class="hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number"  name="precio_igv[]" id="precio_igv[]" value="${element.igv}" readonly ></td>
-            <td class="form-group"><input type="number" class="w-135px precio_con_igv_${cont} form-control" type="number"  name="precio_con_igv[]" id="precio_con_igv[]" value="${parseFloat(element.precio_con_igv).toFixed(2)}" min="0.01" required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
-            <td><input type="number" class="w-135px descuento_${cont}" name="descuento[]" value="${element.descuento}" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="text-right"><span class="text-right subtotal_producto_${cont}" name="subtotal_producto" id="subtotal_producto">0.00</span></td>
-            <td><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
+            <td class="">
+              <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
+            </td>
+            <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+        
+            <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="0" readonly min="0" ></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="0" readonly ></td>
+            <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="0" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span> <input type="hidden" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
+            <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
           </tr>`;
 
           detalles = detalles + 1;
@@ -885,10 +911,10 @@ function ver_detalle_compras(idcompra_proyecto) {
 
 
 
-// :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
+// :::::::::::::::::::::::::: S E C C I O N   C L I E N T E  ::::::::::::::::::::::::::
 //Función limpiar
-function limpiar_form_proveedor() {
-  $("#idproveedor_prov").val("");
+function limpiar_form_cliente() {
+  $("#idcliente_prov").val("");
   $("#tipo_documento_prov option[value='RUC']").attr("selected", true);
   $("#nombre_prov").val("");
   $("#num_documento_prov").val("");
@@ -969,13 +995,13 @@ function decifrar_format_banco(format) {
   return format_final;
 }
 
-//guardar proveedor
-function guardar_proveedor(e) {
+//guardar cliente
+function guardar_y_editar_cliente(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-proveedor")[0]);
+  var formData = new FormData($("#form-cliente")[0]);
 
   $.ajax({
-    url: "../ajax/compra_grano.php?op=guardar_proveedor",
+    url: "../ajax/compra_grano.php?op=guardar_cliente",
     type: "POST",
     data: formData,
     contentType: false,
@@ -984,18 +1010,18 @@ function guardar_proveedor(e) {
       e = JSON.parse(e);
       try {
         if (e.status == true) {
-          // toastr.success("proveedor registrado correctamente");
-          Swal.fire("Correcto!", "Proveedor guardado correctamente.", "success");          
-          limpiar_form_proveedor();
-          $("#modal-agregar-proveedor").modal("hide");
+          // toastr.success("cliente registrado correctamente");
+          Swal.fire("Correcto!", "cliente guardado correctamente.", "success");          
+          limpiar_form_cliente();
+          $("#modal-agregar-cliente").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2cliente", '#idcliente', e.data);
         } else {
           ver_errores(e);
         }
       } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }       
       
-      $("#guardar_registro_proveedor").html('Guardar Cambios').removeClass('disabled');
+      $("#guardar_registro_cliente").html('Guardar Cambios').removeClass('disabled');
     },
     xhr: function () {
       var xhr = new window.XMLHttpRequest();
@@ -1003,38 +1029,38 @@ function guardar_proveedor(e) {
         if (evt.lengthComputable) {
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_proveedor").css({"width": percentComplete+'%'});
-          $("#barra_progress_proveedor").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_cliente").css({"width": percentComplete+'%'});
+          $("#barra_progress_cliente").text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
-      $("#guardar_registro_proveedor").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_proveedor").css({ width: "0%",  });
-      $("#barra_progress_proveedor").text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#guardar_registro_cliente").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_cliente").css({ width: "0%",  });
+      $("#barra_progress_cliente").text("0%").addClass('progress-bar-striped progress-bar-animated');
     },
     complete: function () {
-      $("#barra_progress_proveedor").css({ width: "0%", });
-      $("#barra_progress_proveedor").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_cliente").css({ width: "0%", });
+      $("#barra_progress_cliente").text("0%").removeClass('progress-bar-striped progress-bar-animated');
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
 }
 
-function mostrar_para_editar_proveedor() {
+function mostrar_para_editar_cliente() {
   $("#cargando-11-fomulario").hide();
   $("#cargando-12-fomulario").show();
 
-  $('#modal-agregar-proveedor').modal('show');
+  $('#modal-agregar-cliente').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/compra_grano.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=mostrar_editar_cliente", { 'idcliente': $('#idcliente').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
     if (e.status == true) {     
-      $("#idproveedor_prov").val(e.data.idproveedor);
+      $("#idcliente_prov").val(e.data.idcliente);
       $("#tipo_documento_prov option[value='" + e.data.tipo_documento + "']").attr("selected", true);
       $("#nombre_prov").val(e.data.razon_social);
       $("#num_documento_prov").val(e.data.ruc);
@@ -1055,14 +1081,17 @@ function mostrar_para_editar_proveedor() {
 }
 
 function extrae_ruc() {
-  if ($('#idproveedor').select2("val") == null || $('#idproveedor').select2("val") == '') { 
-    $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','Seleciona un proveedor');
+  $('#ruc_dni_cliente').val(""); 
+  if ($('#idcliente').select2("val") == null || $('#idcliente').select2("val") == '') { 
+    $('.btn-editar-cliente').addClass('disabled').attr('data-original-title','Seleciona un cliente');
   } else { 
-    if ($('#idproveedor').select2("val") == 1) {
-      $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','No editable');      
+    if ($('#idcliente').select2("val") == 1) {
+      $('.btn-editar-cliente').addClass('disabled').attr('data-original-title','No editable');      
     } else{
-      var name_proveedor = $('#idproveedor').select2('data')[0].text;
-      $('.btn-editar-proveedor').removeClass('disabled').attr('data-original-title',`Editar: ${recorte_text(name_proveedor, 15)}`);      
+      var name_cliente = $('#idcliente').select2('data')[0].text;
+      var ruc_dni = $('#idcliente').select2('data')[0].element.attributes.ruc_dni.value;
+      $('.btn-editar-cliente').removeClass('disabled').attr('data-original-title',`Editar: ${recorte_text(name_cliente, 15)}`);   
+      $('#ruc_dni_cliente').val(ruc_dni);  
     }
   }
   $('[data-toggle="tooltip"]').tooltip();
@@ -1081,7 +1110,7 @@ init();
 $(function () {
 
   // Aplicando la validacion del select cada vez que cambie
-  // $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
+  // $("#idcliente").on('change', function() { $(this).trigger('blur'); });
   // $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
   // $("#forma_pago").on('change', function() { $(this).trigger('blur'); });
   // $("#tipo_pago").on('change', function() { $(this).trigger('blur'); });
@@ -1090,24 +1119,24 @@ $(function () {
   $("#form-compras").validate({
     ignore: '.select2-input, .select2-focusser',
     rules: {
-      idproveedor:        { required: true },
+      idcliente:        { required: true },
       tipo_comprobante:   { required: true },
-      serie_comprobante:  { minlength: 2 },
+      numero_comprobante:  { minlength: 2 },
       descripcion:        { minlength: 4 },
       fecha_compra:       { required: true },
       glosa:              { required: true },
       val_igv:            { required: true, number: true, min:0, max:1 },
     },
     messages: {
-      idproveedor:        { required: "Campo requerido", },
+      idcliente:        { required: "Campo requerido", },
       tipo_comprobante:   { required: "Campo requerido", },
-      serie_comprobante:  { minlength: "Minimo 2 caracteres", },
+      numero_comprobante:  { minlength: "Minimo 2 caracteres", },
       descripcion:        { minlength: "Minimo 4 caracteres", },
       fecha_compra:       { required: "Campo requerido", },
       glosa:              { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       'peso_bruto[]':     { min: "Mínimo 0.01", required: "Campo requerido"},
-      'dcto_humendad[]':  { min: "Mínimo 0.00", required: "Campo requerido"},
+      'dcto_humedad[]':  { min: "Mínimo 0.00", required: "Campo requerido"},
       'porcentaje_cascara[]':{ min: "Mínimo 0.00", required: "Campo requerido"},
       'dcto_embase[]':    { min: "Mínimo 0.00", required: "Campo requerido"},
       'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
@@ -1135,7 +1164,7 @@ $(function () {
     },
   });  
 
-  $("#form-proveedor").validate({
+  $("#form-cliente").validate({
     rules: {
       tipo_documento_prov:  { required: true },
       num_documento_prov:   { required: true, minlength: 6, maxlength: 20 },
@@ -1178,7 +1207,7 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardar_proveedor(e);
+      guardar_cliente(e);
     },
   });
 
@@ -1224,7 +1253,7 @@ $(function () {
     },
   });  
 
-  // $("#idproveedor").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  // $("#idcliente").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   // $("#banco_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   // $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   // $("#forma_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
@@ -1243,26 +1272,26 @@ function filtros() {
 
   var fecha_1       = $("#filtro_fecha_inicio").val();
   var fecha_2       = $("#filtro_fecha_fin").val();  
-  var id_proveedor  = $("#filtro_proveedor").select2('val');
+  var id_cliente  = $("#filtro_cliente").select2('val');
   var comprobante   = $("#filtro_tipo_comprobante").select2('val');   
   
-  var nombre_proveedor = $('#filtro_proveedor').find(':selected').text();
+  var nombre_cliente = $('#filtro_cliente').find(':selected').text();
   var nombre_comprobante = ' ─ ' + $('#filtro_tipo_comprobante').find(':selected').text();
 
   // filtro de fechas
   if (fecha_1 == "" || fecha_1 == null) { fecha_1 = ""; } else{ fecha_1 = format_a_m_d(fecha_1) == '-'? '': format_a_m_d(fecha_1);}
   if (fecha_2 == "" || fecha_2 == null) { fecha_2 = ""; } else{ fecha_2 = format_a_m_d(fecha_2) == '-'? '': format_a_m_d(fecha_2);} 
 
-  // filtro de proveedor
-  if (id_proveedor == '' || id_proveedor == 0 || id_proveedor == null) { id_proveedor = ""; nombre_proveedor = ""; }
+  // filtro de cliente
+  if (id_cliente == '' || id_cliente == 0 || id_cliente == null) { id_cliente = ""; nombre_cliente = ""; }
 
   // filtro de trabajdor
   if (comprobante == '' || comprobante == null || comprobante == 0 ) { comprobante = ""; nombre_comprobante = "" }
 
-  $('.cargando').show().html(`<i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando ${nombre_proveedor} ${nombre_comprobante}...`);
-  //console.log(fecha_1, fecha_2, id_proveedor, comprobante);
+  $('.cargando').show().html(`<i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando ${nombre_cliente} ${nombre_comprobante}...`);
+  //console.log(fecha_1, fecha_2, id_cliente, comprobante);
 
-  tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante);
+  tbla_principal(fecha_1, fecha_2, id_cliente, comprobante);
 }
 
 
@@ -1357,7 +1386,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
               Swal.fire("Correcto!", "Compra guardada correctamente", "success");
 
               tabla_compra_insumo.ajax.reload(null, false);
-              tabla_compra_x_proveedor.ajax.reload(null, false);
+              tabla_compra_x_cliente.ajax.reload(null, false);
 
               limpiar_form_compra(); show_hide_form();
               

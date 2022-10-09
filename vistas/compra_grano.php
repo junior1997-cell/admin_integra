@@ -167,7 +167,7 @@
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <!-- <label for="filtros" class="cargando_proveedor">Proveedor &nbsp;<i class="text-dark fas fa-spinner fa-pulse fa-lg"></i><br /></label> -->
-                                  <select id="filtro_proveedor" class="form-control select2" onchange="cargando_search(); delay(function(){filtros()}, 50 );" style="width: 100%;"> 
+                                  <select id="filtro_cliente" class="form-control select2" onchange="cargando_search(); delay(function(){filtros()}, 50 );" style="width: 100%;"> 
                                   </select>
                                 </div>                                
                               </div>
@@ -287,15 +287,14 @@
                               <form id="form-compras" name="form-compras" method="POST">
                                  
                                 <div class="row" id="cargando-1-fomulario">
-                                  <!-- id proyecto -->
-                                  <input type="hidden" name="idproyecto" id="idproyecto" />
-                                  <input type="hidden" name="idcompra_proyecto" id="idcompra_proyecto" /> 
+                                  <input type="hidden" name="idcompra_grano" id="idcompra_grano" /> 
 
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-5">
                                     <div class="form-group">
-                                      <label for="idproveedor">Proveedor <sup class="text-danger">(único*)</sup></label>
-                                      <select id="idproveedor" name="idproveedor" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                      <label for="idcliente">Cliente <sup class="text-danger">(único*)</sup></label>
+                                      <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                      <input type="hidden" name="ruc_dni_cliente" id="ruc_dni_cliente" /> 
                                     </div>
                                   </div>
 
@@ -303,12 +302,12 @@
                                   <div class="col-lg-1">
                                     <div class="form-group">
                                     <label for="Add" class="d-none d-sm-inline-block text-break" style="color: white;">.</label> <br class="d-none d-sm-inline-block">
-                                      <a data-toggle="modal" href="#modal-agregar-proveedor" >
-                                        <button type="button" class="btn btn-success p-x-6px" data-toggle="tooltip" data-original-title="Agregar Provedor" onclick="limpiar_form_proveedor();">
+                                      <a data-toggle="modal" href="#modal-agregar-cliente" >
+                                        <button type="button" class="btn btn-success p-x-6px" data-toggle="tooltip" data-original-title="Agregar Provedor" onclick="limpiar_form_cliente();">
                                           <i class="fa fa-user-plus" aria-hidden="true"></i>
                                         </button>
                                       </a>
-                                      <button type="button" class="btn btn-warning p-x-6px btn-editar-proveedor" data-toggle="tooltip" data-original-title="Editar:" onclick="mostrar_para_editar_proveedor();">
+                                      <button type="button" class="btn btn-warning p-x-6px btn-editar-cliente" data-toggle="tooltip" data-original-title="Editar:" onclick="mostrar_para_editar_cliente();">
                                         <i class="fa-solid fa-pencil" aria-hidden="true"></i>
                                       </button>
                                     </div>
@@ -325,8 +324,8 @@
                                   <!-- metodo de pago -->
                                   <div class="col-lg-3">
                                     <div class="form-group">
-                                      <label for="metodo_de_pago">Método de pago <sup class="text-danger">*</sup></label>
-                                      <select id="metodo_de_pago" name="metodo_de_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
+                                      <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
+                                      <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
                                         <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
                                         <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
                                       </select>
@@ -346,11 +345,11 @@
                                     </div>
                                   </div> 
 
-                                  <!-- serie_comprobante-->
+                                  <!-- numero_comprobante -->
                                   <div class="col-lg-2" id="content-serie-comprobante">
                                     <div class="form-group">
-                                      <label for="serie_comprobante">N° de Comprobante <sup class="text-danger">(único*)</sup></label>
-                                      <input type="text" name="serie_comprobante" id="serie_comprobante" class="form-control" placeholder="N° de Comprobante" />
+                                      <label for="numero_comprobante">N° de Comprobante <sup class="text-danger">(único*)</sup></label>
+                                      <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" placeholder="N° de Comprobante" />
                                     </div>
                                   </div>
 
@@ -396,7 +395,7 @@
                                           <th rowspan="2" class="p-y-2px hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
                                           <th rowspan="2" class="p-y-2px hidden">IGV</th>
                                           <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
-                                          <th rowspan="2" class="p-y-2px">Descuento</th>
+                                          <th rowspan="2" class="p-y-2px">Descuento <br> <small>(adicional)</small></th>
                                           <th rowspan="2" class="p-y-2px">Subtotal</th>
                                         </tr>
 
@@ -422,8 +421,8 @@
                                           <h6 class="font-weight-bold igv_compra">S/ 0.00</h6>
                                           <input type="hidden" name="igv_compra" id="igv_compra" />
                                           
-                                          <h5 class="font-weight-bold total_venta">S/ 0.00</h5>
-                                          <input type="hidden" name="total_venta" id="total_venta" />
+                                          <h5 class="font-weight-bold total_compra">S/ 0.00</h5>
+                                          <input type="hidden" name="total_compra" id="total_compra" />
                                           
                                         </th>
                                       </tfoot>
@@ -504,12 +503,12 @@
                   </div>
                   <!-- /.container-fluid -->
 
-                  <!-- Modal agregar proveedores -->
-                  <div class="modal fade" id="modal-agregar-proveedor">
+                  <!-- MODAL - agregar cliente -->
+                  <div class="modal fade" id="modal-agregar-cliente">
                     <div class="modal-dialog modal-dialog-scrollable modal-xl">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title">Agregar proveedor</h4>
+                          <h4 class="modal-title">Agregar Cliente</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span class="text-danger" aria-hidden="true">&times;</span>
                           </button>
@@ -517,11 +516,11 @@
 
                         <div class="modal-body">
                           <!-- form start -->
-                          <form id="form-proveedor" name="form-proveedor" method="POST">
+                          <form id="form-cliente" name="form-cliente" method="POST">
                             <div class="card-body ">  
                               <div class="row" id="cargando-11-fomulario">  
-                                <!-- id proveedores -->
-                                <input type="hidden" name="idproveedor_prov" id="idproveedor_prov" />
+                                <!-- id clientees -->
+                                <input type="hidden" name="idcliente_prov" id="idcliente_prov" />
 
                                 <!-- Tipo de documento -->
                                 <div class="col-lg-4">
