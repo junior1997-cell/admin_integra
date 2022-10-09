@@ -26,36 +26,24 @@ if (!isset($_SESSION["nombre"])) {
 
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R A ::::::::::::::::::::::::::::::::::::::
-    $idproyecto         = isset($_POST["idproyecto"]) ? limpiarCadena($_POST["idproyecto"]) : "";
-    $idcompra_proyecto  = isset($_POST["idcompra_proyecto"]) ? limpiarCadena($_POST["idcompra_proyecto"]) : "";
-    $idproveedor        = isset($_POST["idproveedor"]) ? limpiarCadena($_POST["idproveedor"]) : "";
+    $idcompra_grano     = isset($_POST["idcompra_grano"]) ? limpiarCadena($_POST["idcompra_grano"]) : "";
+    $idcliente          = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
+    $ruc_dni_cliente    = isset($_POST["ruc_dni_cliente"]) ? limpiarCadena($_POST["ruc_dni_cliente"]) : "";
     $fecha_compra       = isset($_POST["fecha_compra"]) ? limpiarCadena($_POST["fecha_compra"]) : "";
-    $glosa              = isset($_POST["glosa"]) ? limpiarCadena($_POST["glosa"]) : "";
+    $metodo_pago        = isset($_POST["metodo_pago"]) ? limpiarCadena($_POST["metodo_pago"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
-    $serie_comprobante  = isset($_POST["serie_comprobante"]) ? limpiarCadena($_POST["serie_comprobante"]) : "";
-    $val_igv            = isset($_POST["val_igv"]) ? limpiarCadena($_POST["val_igv"]) : "";
+    $numero_comprobante = isset($_POST["numero_comprobante"]) ? limpiarCadena($_POST["numero_comprobante"]) : "";    
     $descripcion        = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : "";
+
     $subtotal_compra    = isset($_POST["subtotal_compra"]) ? limpiarCadena($_POST["subtotal_compra"]) : "";
-    $tipo_gravada       = isset($_POST["tipo_gravada"]) ? limpiarCadena($_POST["tipo_gravada"]) : "";    
+    $val_igv            = isset($_POST["val_igv"]) ? limpiarCadena($_POST["val_igv"]) : "";  
     $igv_compra         = isset($_POST["igv_compra"]) ? limpiarCadena($_POST["igv_compra"]) : "";
-    $total_venta        = isset($_POST["total_venta"]) ? limpiarCadena($_POST["total_venta"]) : "";
-    $estado_detraccion  = isset($_POST["estado_detraccion"]) ? limpiarCadena($_POST["estado_detraccion"]) : "";
+    $total_compra       = isset($_POST["total_compra"]) ? limpiarCadena($_POST["total_compra"]) : "";
+
+    
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   P A G O   C O M P R A ::::::::::::::::::::::::::::::::::::::
-    $beneficiario_pago  = isset($_POST["beneficiario_pago"]) ? limpiarCadena($_POST["beneficiario_pago"]) : "";
-    $forma_pago         = isset($_POST["forma_pago"]) ? limpiarCadena($_POST["forma_pago"]) : "";
-    $tipo_pago          = isset($_POST["tipo_pago"]) ? limpiarCadena($_POST["tipo_pago"]) : "";
-    $cuenta_destino_pago = isset($_POST["cuenta_destino_pago"]) ? limpiarCadena($_POST["cuenta_destino_pago"]) : "";
-    $banco_pago         = isset($_POST["banco_pago"]) ? limpiarCadena($_POST["banco_pago"]) : "";
-    $titular_cuenta_pago = isset($_POST["titular_cuenta_pago"]) ? limpiarCadena($_POST["titular_cuenta_pago"]) : "";
-    $fecha_pago         = isset($_POST["fecha_pago"]) ? limpiarCadena($_POST["fecha_pago"]) : "";
-    $monto_pago         = isset($_POST["monto_pago"]) ? limpiarCadena($_POST["monto_pago"]) : "";
-    $numero_op_pago     = isset($_POST["numero_op_pago"]) ? limpiarCadena($_POST["numero_op_pago"]) : "";
-    $descripcion_pago   = isset($_POST["descripcion_pago"]) ? limpiarCadena($_POST["descripcion_pago"]) : "";
-    $idcompra_proyecto_p = isset($_POST["idcompra_proyecto_p"]) ? limpiarCadena($_POST["idcompra_proyecto_p"]) : "";
-    $idpago_compras     = isset($_POST["idpago_compras"]) ? limpiarCadena($_POST["idpago_compras"]) : ""; 
-    $idproveedor_pago   = isset($_POST["idproveedor_pago"]) ? limpiarCadena($_POST["idproveedor_pago"]) : "";
-    $imagen1            = isset($_POST["doc3"]) ? limpiarCadena($_POST["doc3"]) : "";
+
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R O B A N T E ::::::::::::::::::::::::::::::::::::::
     $id_compra_proyecto = isset($_POST["id_compra_proyecto"]) ? limpiarCadena($_POST["id_compra_proyecto"]) : "";
@@ -64,25 +52,9 @@ if (!isset($_SESSION["nombre"])) {
     $doc_old_1          = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   M A T E R I A L E S ::::::::::::::::::::::::::::::::::::::
-    $idproducto_p     = isset($_POST["idproducto_p"]) ? limpiarCadena($_POST["idproducto_p"]) : "" ;
-    $unidad_medida_p  = isset($_POST["unidad_medida_p"]) ? limpiarCadena($_POST["unidad_medida_p"]) : "" ;
-    $color_p          = isset($_POST["color_p"]) ? limpiarCadena($_POST["color_p"]) : "" ;
-    $categoria_insumos_af_p    = isset($_POST["categoria_insumos_af_p"]) ? limpiarCadena($_POST["categoria_insumos_af_p"]) : "" ;
-    $idgrupo          = isset($_POST["idtipo_tierra_concreto"]) ? limpiarCadena($_POST["idtipo_tierra_concreto"]) : "";
-    $nombre_p         = isset($_POST["nombre_p"]) ? encodeCadenaHtml($_POST["nombre_p"]) : "" ;
-    $modelo_p         = isset($_POST["modelo_p"]) ? encodeCadenaHtml($_POST["modelo_p"]) : "" ;
-    $serie_p          = isset($_POST["serie_p"]) ? limpiarCadena($_POST["serie_p"]) : "" ;
-    $marca_p          = isset($_POST["marca_p"]) ? encodeCadenaHtml($_POST["marca_p"]) : "" ;
-    $estado_igv_p     = isset($_POST["estado_igv_p"]) ? limpiarCadena($_POST["estado_igv_p"]) : "" ;
-    $precio_unitario_p= isset($_POST["precio_unitario_p"]) ? limpiarCadena($_POST["precio_unitario_p"]) : "" ;      
-    $precio_sin_igv_p = isset($_POST["precio_sin_igv_p"]) ? limpiarCadena($_POST["precio_sin_igv_p"]) : "" ;
-    $precio_igv_p     = isset($_POST["precio_igv_p"]) ? limpiarCadena($_POST["precio_igv_p"]) : "" ;
-    $precio_total_p   = isset($_POST["precio_total_p"]) ? limpiarCadena($_POST["precio_total_p"]) : "" ;      
-    $descripcion_p    = isset($_POST["descripcion_p"]) ? encodeCadenaHtml($_POST["descripcion_p"]) : "" ; 
-    $img_pefil_p      = isset($_POST["foto2"]) ? limpiarCadena($_POST["foto2"]) : "" ;
-    $ficha_tecnica_p  = isset($_POST["doc2"]) ? limpiarCadena($_POST["doc2"]) : "" ;
 
-    // :::::::::::::::::::::::::::::::::::: D A T O S   P R O V E E D O R ::::::::::::::::::::::::::::::::::::::
+
+    // :::::::::::::::::::::::::::::::::::: D A T O S   C L I E N T E ::::::::::::::::::::::::::::::::::::::
     $idproveedor_prov		= isset($_POST["idproveedor_prov"])? limpiarCadena($_POST["idproveedor_prov"]):"";
     $nombre_prov 		    = isset($_POST["nombre_prov"])? limpiarCadena($_POST["nombre_prov"]):"";
     $tipo_documento_prov= isset($_POST["tipo_documento_prov"])? limpiarCadena($_POST["tipo_documento_prov"]):"";
@@ -97,7 +69,7 @@ if (!isset($_SESSION["nombre"])) {
 
     switch ($_GET["op"]) {       
         
-      // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
+      // :::::::::::::::::::::::::: S E C C I O N   C L I E N T E  ::::::::::::::::::::::::::
       case 'guardar_proveedor':
     
         if (empty($idproveedor_prov)){
@@ -122,22 +94,22 @@ if (!isset($_SESSION["nombre"])) {
       break;
     
       // :::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::
-      case 'guardaryeditarcompra':
+      case 'guardar_y_editar_compra_grano':
 
         if (empty($idcompra_proyecto)) {
 
-          $rspta = $compra_grano->insertar( $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
-          $glosa, $total_venta, $subtotal_compra, $igv_compra, $estado_detraccion, $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["nombre_color"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
-          $tipo_gravada, $_POST["ficha_tecnica_producto"] );
+          $rspta = $compra_grano->insertar(  $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
+          $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
+          $_POST["dcto_humedad"], $_POST["porcentaje_cascara"], $_POST["dcto_embase"], $_POST["peso_neto"], $_POST["precio_sin_igv"],
+          $_POST["precio_igv"], $_POST["precio_con_igv"], $_POST["descuento"], $_POST["subtotal_producto"] );
 
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $compra_grano->editar( $idcompra_proyecto, $idproyecto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, 
-          $descripcion, $glosa, $total_venta, $subtotal_compra, $igv_compra, $estado_detraccion, $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["nombre_color"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
-          $tipo_gravada, $_POST["ficha_tecnica_producto"] );
+          $rspta = $compra_grano->editar( $idcompra_grano, $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
+          $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
+          $_POST["dcto_humedad"], $_POST["porcentaje_cascara"], $_POST["dcto_embase"], $_POST["peso_neto"], $_POST["precio_sin_igv"],
+          $_POST["precio_igv"], $_POST["precio_con_igv"], $_POST["descuento"], $_POST["subtotal_producto"] );
     
           echo json_encode($rspta, true);
         }
@@ -167,7 +139,7 @@ if (!isset($_SESSION["nombre"])) {
       break;
     
       case 'tbla_principal':
-        $rspta = $compra_grano->tbla_principal( $_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
+        $rspta = $compra_grano->tbla_principal( $_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_cliente"], $_GET["comprobante"]);
         
         //Vamos a declarar un array
         $data = []; $cont = 1;
@@ -179,12 +151,12 @@ if (!isset($_SESSION["nombre"])) {
               "0" => $cont,
               "1" => $reg['estado'] == '1' ? '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
                     ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_grano'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</del> <del>'.$reg['nombre_cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>'
+                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_grano'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>'
                   : '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' .  $reg['idcompra_grano'] . ')"data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>' .
                     ' <button class="btn btn-success btn-sm" onclick="des_anular(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Recuperar Compra"><i class="fas fa-check"></i></button>',
               "2" => $reg['fecha_compra'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
-              "4" => $reg['tipo_persona'],
+              "4" => $reg['es_socio'],
               "5" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</span>',              
               "6" => $reg['total_compra'],              
               "7" => $reg['metodo_pago'],
@@ -253,7 +225,7 @@ if (!isset($_SESSION["nombre"])) {
               "1" => '<center><button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg->idcompra_proyecto . ')" data-toggle="tooltip" data-original-title="Ver detalle">Ver detalle <i class="fa fa-eye"></i></button></center>',
               "2" => $reg->fecha_compra,
               "3" => $reg->tipo_comprobante,
-              "4" => $reg->serie_comprobante,
+              "4" => $reg->numero_comprobante,
               "5" => number_format($reg->total, 2, '.', ','),
               "6" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg->descripcion.'</textarea>',
               "7" => $reg->estado == '1' ? '<span class="badge bg-success">Aceptado</span>' : '<span class="badge bg-danger">Anulado</span>',
@@ -311,7 +283,7 @@ if (!isset($_SESSION["nombre"])) {
           <div class="col-lg-2">
             <div class="form-group">
               <label class="font-size-15px" for="serie_comprovante">N° de Comprobante</label>
-              <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['serie_comprobante'])) ? '- - -' :  $rspta['data']['serie_comprobante']).' </span>
+              <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['numero_comprobante'])) ? '- - -' :  $rspta['data']['numero_comprobante']).' </span>
             </div>
           </div>
           <!-- IGV-->
@@ -363,7 +335,7 @@ if (!isset($_SESSION["nombre"])) {
                 <th class="text-center p-10px" colspan="9" >'.$rspta['data']['razon_social'].'</th>
               </tr>
               <tr class="text-center hidden">                
-                <th class="text-center p-10px" colspan="2" >'.((empty($rspta['data']['tipo_comprobante'])) ? '' :  $rspta['data']['tipo_comprobante']). ' ─ ' . ((empty($rspta['data']['serie_comprobante'])) ? '' :  $rspta['data']['serie_comprobante']) .'</th>
+                <th class="text-center p-10px" colspan="2" >'.((empty($rspta['data']['tipo_comprobante'])) ? '' :  $rspta['data']['tipo_comprobante']). ' ─ ' . ((empty($rspta['data']['numero_comprobante'])) ? '' :  $rspta['data']['numero_comprobante']) .'</th>
                 <th class="p-10px">Fecha:</th>
                 <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['fecha_compra']).'</th>
                 <th class="p-10px">Glosa:</th>
@@ -424,89 +396,7 @@ if (!isset($_SESSION["nombre"])) {
       break;      
       
       // :::::::::::::::::::::::::: S E C C I O N   C O M P R O B A N T E  :::::::::::::::::::::::::: 
-      case 'tbla_comprobantes_compra':
-        $cont_compra = $_GET["num_orden"];
-        $id_compra = $_GET["id_compra"];
-        $rspta = $compra_grano->tbla_comprobantes( $id_compra );
-        //Vamos a declarar un array
-        $data = []; $cont = 1;        
-        
-        if ($rspta['status']) {
-          while ($reg = $rspta['data']->fetch_object()) {
-            $data[] = [
-              "0" => $cont,
-              "1" => '<div class="text-nowrap">'.
-              ' <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_editar_comprobante(' . $reg->idfactura_compra_insumo .','.$id_compra.', \''.$reg->comprobante.'\', \''.$cont.'. '.date("d/m/Y h:i:s a", strtotime($reg->updated_at)).'\')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.              
-              ' <a class="btn btn-info btn-sm " href="../dist/docs/compra_insumo/comprobante_compra/'.$reg->comprobante.'"  download="'.$cont_compra.'·'.$cont.' '.removeSpecialChar((empty($reg->serie_comprobante) ?  " " :  ' ─ '.$reg->serie_comprobante).' ─ '.$reg->razon_social).' ─ '. format_d_m_a($reg->fecha_compra).'" data-toggle="tooltip" data-original-title="Descargar" ><i class="fas fa-cloud-download-alt"></i></a>' .              
-              ' <button type="button" class="btn btn-danger btn-sm" onclick="eliminar_comprobante_insumo(' . $reg->idfactura_compra_insumo .', \''.encodeCadenaHtml($cont.'. '.date("d/m/Y h:i:s a", strtotime($reg->updated_at))).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button> 
-              </div>'.$toltip,
-              "2" => '<a class="btn btn-info btn-sm" href="../dist/docs/compra_insumo/comprobante_compra/'.$reg->comprobante.'" target="_blank" rel="noopener noreferrer"><i class="fas fa-receipt"></i></a>' ,
-              "3" => $reg->updated_at,
-            ];
-            $cont++;
-          }
-          $results = [
-            "sEcho" => 1, //Información para el datatables
-            "iTotalRecords" => count($data), //enviamos el total registros al datatable
-            "iTotalDisplayRecords" => count($data), //enviamos el total registros a visualizar
-            "aaData" => $data,
-          ];
-          echo json_encode($results, true);
-        } else {
-          echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
-        }
-      break;
 
-      case 'guardaryeditar_comprobante':
-        // COMPROBANTE
-        if (!file_exists($_FILES['doc1']['tmp_name']) || !is_uploaded_file($_FILES['doc1']['tmp_name'])) {
-
-          $doc_comprobante = $_POST["doc_old_1"];
-          $flat_comprob = false;
-
-        } else {
-
-          $ext1 = explode(".", $_FILES["doc1"]["name"]);
-          $flat_comprob = true;    
-          $doc_comprobante = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);    
-          move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/compra_insumo/comprobante_compra/" . $doc_comprobante);
-        }        
-
-        if ( empty($idfactura_compra_insumo) ) {
-          // agregar un documento
-          $rspta = $compra_grano->agregar_comprobante($id_compra_proyecto, $doc_comprobante);    
-          echo json_encode($rspta, true);
-        } else {
-          //Borramos el comprobante
-          if ($flat_comprob == true) {
-            $datos_f1 = $compra_grano->obtener_comprobante($idfactura_compra_insumo);    
-            $doc1_ant = $datos_f1['data']->fetch_object()->comprobante;    
-            if (!empty($doc1_ant) ) { unlink("../dist/docs/compra_insumo/comprobante_compra/" . $doc1_ant); }
-          }
-          // editamos un documento existente
-          $rspta = $compra_grano->editar_comprobante($idfactura_compra_insumo, $doc_comprobante);    
-          echo json_encode($rspta, true);
-        }
-    
-      break;
-
-      case 'eliminar_comprobante':
-        $rspta = $compra_grano->eliminar_comprobante($_GET["id_tabla"]);    
-        echo json_encode($rspta, true);
-      break;
-
-      case 'desactivar_comprobante':
-        $rspta = $compra_grano->desactivar_comprobante($_GET["id_tabla"]);    
-        echo json_encode($rspta, true);
-      break;
-
-      case 'ver_comprobante_compra':
-
-        $rspta = $compra_grano->comprobantes_compra($_POST['id_compra']);
-        //Codificar el resultado utilizando json
-        echo json_encode($rspta, true);
-    
-      break; 
 
       // :::::::::::::::::::::::::: S E C C I O N   P A G O  ::::::::::::::::::::::::::     
 
