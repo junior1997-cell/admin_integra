@@ -14,7 +14,7 @@ class Compra_grano
   //Implementamos un método para insertar registros
   
   public function insertar(  $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
-  $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_grano, $unidad_medida, $peso_bruto, 
+  $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $tipo_grano, $unidad_medida, $peso_bruto, 
   $dcto_humedad, $porcentaje_cascara, $dcto_embase, $peso_neto, $precio_sin_igv,
   $precio_igv, $precio_con_igv, $descuento, $subtotal_producto ) {   
 
@@ -25,16 +25,15 @@ class Compra_grano
     $compra_existe = ejecutarConsultaArray($sql_2); if ($compra_existe['status'] == false) { return  $compra_existe;}
 
     if (empty($compra_existe['data']) || $tipo_comprobante == 'Ninguno') {
-      $sql_3 = "INSERT INTO compra_grano( idpersona, fecha_compra, metodo_pago, tipo_comprobante, numero_comprobante, val_igv, subtotal_compra, igv_compra, total_compra, descripcion) 
-      VALUES ('$idcliente','$fecha_compra','$metodo_pago','$tipo_comprobante','$numero_comprobante','$val_igv','$subtotal_compra','$igv_compra','$total_compra','$descripcion')";
+      $sql_3 = "INSERT INTO compra_grano( idpersona, fecha_compra, metodo_pago, tipo_comprobante, numero_comprobante, val_igv, subtotal_compra, igv_compra, total_compra, tipo_gravada, descripcion) 
+      VALUES ('$idcliente','$fecha_compra','$metodo_pago','$tipo_comprobante','$numero_comprobante','$val_igv','$subtotal_compra','$igv_compra','$total_compra', '$tipo_gravada', '$descripcion')";
       $id_compra = ejecutarConsulta_retornarID($sql_3); if ($id_compra['status'] == false) { return  $id_compra;}
 
       //add registro en nuestra bitacora
       $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$id_compra['data']."','Agregar compra grano','" . $_SESSION['idusuario'] . "')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
-      $indice = 0;
-      $det_compra_new = "";
+      $indice = 0;  $det_compra_new = "";
 
       if ( !empty($id_compra['data']) ) {
         
@@ -81,7 +80,7 @@ class Compra_grano
 
   //Implementamos un método para editar registros
   public function editar( $idcompra_grano, $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
-  $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_grano, $unidad_medida, $peso_bruto, 
+  $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $tipo_grano, $unidad_medida, $peso_bruto, 
   $dcto_humedad, $porcentaje_cascara, $dcto_embase, $peso_neto, $precio_sin_igv,
   $precio_igv, $precio_con_igv, $descuento, $subtotal_producto ) {
 
@@ -90,114 +89,114 @@ class Compra_grano
       $sqldel = "DELETE FROM detalle_compra_grano WHERE idcompra_grano='$idcompra_grano';";
       $delete_compra = ejecutarConsulta($sqldel); if ($delete_compra['status'] == false) { return $delete_compra; }
 
-      $sql = "UPDATE compra_por_proyecto SET idproyecto = '$idproyecto', idproveedor = '$idproveedor', fecha_compra = '$fecha_compra',
-      tipo_comprobante = '$tipo_comprobante', serie_comprobante = '$serie_comprobante', val_igv = '$val_igv', descripcion = '$descripcion',
-      glosa = '$glosa', total = '$total_venta', subtotal = '$subtotal_compra', igv = '$igv_compra', tipo_gravada = '$tipo_gravada',
-      estado_detraccion = '$estado_detraccion',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcompra_proyecto = '$idcompra_proyecto'";
+      $sql = "UPDATE compra_grano SET idpersona='$idcliente',fecha_compra='$fecha_compra',
+      metodo_pago='$metodo_pago',tipo_comprobante='$tipo_comprobante',numero_comprobante='$numero_comprobante',val_igv='$val_igv',subtotal_compra='$subtotal_compra',
+      igv_compra='$igv_compra',total_compra='$total_compra', tipo_gravada='$tipo_gravada', descripcion='$descripcion', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano = '$idcompra_grano'";
       $update_compra = ejecutarConsulta($sql); if ($update_compra['status'] == false) { return $update_compra; }
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_por_proyecto','$idcompra_proyecto','Editar compra proyecto','" . $_SESSION['idusuario'] . "')";
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Editar compra grano','" . $_SESSION['idusuario'] . "')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }
 
-      $num_elementos = 0; $detalle_compra = "";
+      $indice = 0;  $det_compra_new = "";
+        
+      while ($indice < count($tipo_grano)) {            
 
-      while ($num_elementos < count($idproducto)) {
-        $subtotal_producto = (floatval($cantidad[$num_elementos]) * floatval($precio_con_igv[$num_elementos])) - $descuento[$num_elementos];
-        $sql_detalle = "INSERT INTO detalle_compra(idcompra_proyecto, idproducto, unidad_medida, color, cantidad, precio_sin_igv, igv, precio_con_igv, descuento, subtotal, ficha_tecnica_producto, user_created) 
-        VALUES ('$idcompra_proyecto', '$idproducto[$num_elementos]', '$unidad_medida[$num_elementos]', '$nombre_color[$num_elementos]', '$cantidad[$num_elementos]', '$precio_sin_igv[$num_elementos]', '$precio_igv[$num_elementos]', '$precio_con_igv[$num_elementos]', '$descuento[$num_elementos]', '$subtotal_producto', '$ficha_tecnica_producto[$num_elementos]','" . $_SESSION['idusuario'] . "')";
-        $detalle_compra = ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return $detalle_compra; }
+        $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, porcentaje_cascara, dcto_embase, 
+        peso_neto, precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
+        VALUES ('$idcompra_grano','$tipo_grano[$indice]','$unidad_medida[$indice]','$peso_bruto[$indice]','$dcto_humedad[$indice]','$porcentaje_cascara[$indice]',
+        '$dcto_embase[$indice]','$peso_neto[$indice]','$precio_sin_igv[$indice]','$precio_igv[$indice]','$precio_con_igv[$indice]','$descuento[$indice]',
+        '$subtotal_producto[$indice]')";
+        
+        $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
 
         //add registro en nuestra bitacora.
-        $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra','".$detalle_compra['data']."','Detalle editado compra','" . $_SESSION['idusuario'] . "')";
+        $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_grano','".$det_compra_new['data']."','Agregar Detalle compra grano','" . $_SESSION['idusuario'] . "')";
         $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
 
-        $num_elementos = $num_elementos + 1;
+        $indice ++;
       }
-      return $detalle_compra; 
+
+      return $det_compra_new;
     } else { 
       return $retorno = ['status'=>false, 'mesage'=>'no hay nada', 'data'=>'sin data', ]; 
     }
   }
 
-  public function mostrar_compra_para_editar($id_compras_x_proyecto) {
+  public function mostrar_compra_para_editar($idcompra_grano) {
 
-    $sql = "SELECT  cpp.idcompra_proyecto, cpp.idproyecto, cpp.idproveedor, cpp.fecha_compra, cpp.tipo_comprobante, cpp.serie_comprobante, cpp.val_igv, 
-    cpp.descripcion, cpp.glosa, cpp.subtotal, cpp.igv, cpp.total, cpp.estado_detraccion, cpp.estado
-    FROM compra_por_proyecto as cpp
-    WHERE idcompra_proyecto='$id_compras_x_proyecto';";
+    $sql = "SELECT p.nombres as cliente, p.es_socio, p.tipo_documento, p.numero_documento, p.celular, p.direccion, p.correo, tp.nombre as tipo_persona, 
+    cg.idcompra_grano, cg.idpersona, cg.fecha_compra, cg.metodo_pago, cg.tipo_comprobante, cg.numero_comprobante, cg.val_igv, 
+    cg.subtotal_compra, cg.igv_compra, cg.total_compra, cg.tipo_gravada, cg.descripcion
+    FROM compra_grano as cg, persona  p, tipo_persona as tp
+    WHERE cg.idpersona = p.idpersona AND p.idtipo_persona = tp.idtipo_persona AND idcompra_grano = '$idcompra_grano' ;";
 
-    $compra = ejecutarConsultaSimpleFila($sql);
-    if ($compra['status'] == false) { return $compra; }
+    $compra = ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) { return $compra; }
 
-    $sql_2 = "SELECT 	dc.idproducto, dc.ficha_tecnica_producto, dc.cantidad, dc.precio_sin_igv, dc.igv, dc.precio_con_igv,
-		dc.descuento,	p.nombre as nombre_producto, p.imagen, dc.unidad_medida, dc.color
-		FROM detalle_compra AS dc, producto AS p, unidad_medida AS um, color AS c
-		WHERE idcompra_proyecto='$id_compras_x_proyecto' AND  dc.idproducto=p.idproducto AND p.idcolor = c.idcolor 
-    AND p.idunidad_medida = um.idunidad_medida;";
+    $sql_2 = "SELECT iddetalle_compra_grano, idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, porcentaje_cascara, 
+    dcto_embase, peso_neto, precio_sin_igv, precio_igv, precio_con_igv, descuento_adicional, subtotal
+    FROM detalle_compra_grano 
+    WHERE estado = '1' AND estado_delete = '1' AND idcompra_grano = '$idcompra_grano'; ";
 
-    $producto = ejecutarConsultaArray($sql_2);
-    if ($producto['status'] == false) { return $producto;  }
+    $producto = ejecutarConsultaArray($sql_2); if ($producto['status'] == false) { return $producto;  }
 
     $results = [
-      "idcompra_x_proyecto" => $compra['data']['idcompra_proyecto'],      
-      "idproyecto" => $compra['data']['idproyecto'],
-      "idproveedor" => $compra['data']['idproveedor'],
-      "fecha_compra" => $compra['data']['fecha_compra'],
-      "tipo_comprobante" => $compra['data']['tipo_comprobante'],
-      "serie_comprobante" => $compra['data']['serie_comprobante'],
-      "val_igv" => $compra['data']['val_igv'],
-      "descripcion" => $compra['data']['descripcion'],
-      "glosa" => $compra['data']['glosa'],
-      "subtotal" => $compra['data']['subtotal'],
-      "igv" => $compra['data']['igv'],
-      "total" => $compra['data']['total'],
-      "estado_detraccion" => $compra['data']['estado_detraccion'],
-      "estado" => $compra['data']['estado'],
-      "producto" => $producto['data'],
+      "idcompra_grano"    => $compra['data']['idcompra_grano'],      
+      "idpersona"         => $compra['data']['idpersona'],
+      "fecha_compra"      => $compra['data']['fecha_compra'],
+      "metodo_pago"       => $compra['data']['metodo_pago'],
+      "tipo_comprobante"  => $compra['data']['tipo_comprobante'],
+      "numero_comprobante"=> $compra['data']['numero_comprobante'],
+      "val_igv"           => $compra['data']['val_igv'],
+      "subtotal_compra"   => $compra['data']['subtotal_compra'],
+      "igv_compra"        => $compra['data']['igv_compra'],
+      "total_compra"      => $compra['data']['total_compra'],
+      "tipo_gravada"      => $compra['data']['tipo_gravada'],
+      "descripcion"       => $compra['data']['descripcion'],
+
+      "cliente"           => $compra['data']['cliente'],
+      "es_socio"          => $compra['data']['es_socio'],
+      "tipo_documento"    => $compra['data']['tipo_documento'],
+      "numero_documento"  => $compra['data']['numero_documento'],
+      "celular"           => $compra['data']['celular'],
+      "direccion"         => $compra['data']['direccion'],
+      "correo"            => $compra['data']['correo'],
+      "tipo_persona"      => $compra['data']['tipo_persona'],
+
+      "detalle_compra"    => $producto['data'],
     ];
 
     return $retorno = ["status" => true, "message" => 'todo oka', "data" => $results] ;
   }
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idcompra_proyecto) {
-    $sql = "UPDATE compra_por_proyecto SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idcompra_proyecto='$idcompra_proyecto'";
-		$desactivar= ejecutarConsulta($sql);
-
-		if ($desactivar['status'] == false) {  return $desactivar; }
+  public function desactivar($idcompra_grano) {
+    $sql = "UPDATE compra_grano SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano='$idcompra_grano'";
+		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_por_proyecto','".$idcompra_proyecto."','Compra desactivada','" . $_SESSION['idusuario'] . "')";
+		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$idcompra_grano."','Compra desactivada','" . $_SESSION['idusuario'] . "')";
 		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 		
 		return $desactivar;
   }
 
   //Implementamos un método para activar categorías
-  public function activar($idcompra_por_proyecto) {
-    $sql = "UPDATE compra_por_proyecto SET estado='1' WHERE idcompra_proyecto='$idcompra_por_proyecto'";
+  public function activar($idcompra_grano) {
+    $sql = "UPDATE compra_grano SET estado='1' WHERE idcompra_grano='$idcompra_grano'";
     return ejecutarConsulta($sql);
   }
 
   //Implementamos un método para activar categorías
-  public function eliminar($idcompra_por_proyecto) {
-    $sql = "UPDATE compra_por_proyecto SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idcompra_proyecto='$idcompra_por_proyecto'";
-
-		$eliminar =  ejecutarConsulta($sql);
-		if ( $eliminar['status'] == false) {return $eliminar; }  
+  public function eliminar($idcompra_grano) {
+    $sql = "UPDATE compra_grano SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idcompra_grano='$idcompra_grano'";
+		$eliminar =  ejecutarConsulta($sql);if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_por_proyecto','$idcompra_por_proyecto','Compra Eliminada','" . $_SESSION['idusuario'] . "')";
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','$idcompra_grano','Compra Eliminada','" . $_SESSION['idusuario'] . "')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;
-  }
-
-  //Implementar un método para mostrar los datos de un registro a modificar
-  public function mostrar($idcompra_por_proyecto) {
-    $sql = "SELECT * FROM compra_por_proyecto WHERE idcompra_por_proyecto='$idcompra_por_proyecto'";
-    return ejecutarConsultaSimpleFila($sql);
   }
 
   //Implementar un método para listar los registros
@@ -213,7 +212,7 @@ class Compra_grano
       $filtro_fecha = "AND cg.fecha_compra = '$fecha_2'";
     }    
 
-    if (empty($id_proveedor) ) {  $filtro_proveedor = ""; } else { $filtro_proveedor = "AND cg.idproveedor = '$id_proveedor'"; }
+    if (empty($id_proveedor) ) {  $filtro_proveedor = ""; } else { $filtro_proveedor = "AND cg.idpersona = '$id_proveedor'"; }
 
     if ( empty($comprobante) ) { } else {
       $filtro_comprobante = "AND cg.tipo_comprobante = '$comprobante'"; 
@@ -272,9 +271,9 @@ class Compra_grano
   }
 
   //Implementar un método para listar los registros x proveedor
-  public function listar_detalle_comprax_provee($idproyecto, $idproveedor) {
+  public function listar_detalle_comprax_provee($idpersona) {
 
-    $sql = "SELECT * FROM compra_por_proyecto WHERE idproyecto='$idproyecto' AND idproveedor='$idproveedor' AND estado = '1' AND estado_delete = '1'";
+    $sql = "SELECT * FROM compra_grano WHERE idpersona='$idpersona' AND estado = '1' AND estado_delete = '1'";
 
     return ejecutarConsulta($sql);
   }
