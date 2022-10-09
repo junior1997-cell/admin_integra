@@ -7,20 +7,18 @@ function init() {
 
   $("#bloc_LogisticaAdquisiciones").addClass("menu-open");
 
-  $("#bloc_Compras").addClass("menu-open bg-color-191f24");
+  $("#bloc_ComprasGrano").addClass("menu-open bg-color-191f24");
 
-  $("#mLogisticaAdquisiciones").addClass("active");
+  $("#mCompraGrano").addClass("active bg-green");
 
-	$("#mCompra").addClass("active bg-green");
+  $("#lChartCompraGrano").addClass("active");
 
-  $("#lChartCompraInsumo").addClass("active");
-
-  box_content_reporte(localStorage.getItem("nube_idproyecto"));
+  box_content_reporte();
   //chart_linea_barra(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
-  lista_select2(`../ajax/chart_compra_insumo.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
+  lista_select2(`../ajax/chart_compra_grano.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
 
@@ -36,22 +34,22 @@ function init() {
 // ::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C H A R T :::::::::::::::::::::::::::::::::::::::::::::
 
 //mostrar datos proveedor pago
-function box_content_reporte(idnubeproyecto) {
+function box_content_reporte() {
 
   $(".cant_proveedores_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_producto_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_insumos_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_activo_fijo_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
 
-  $.post("../ajax/chart_compra_insumo.php?op=box_content_reporte", { 'idnubeproyecto': idnubeproyecto }, function (e, status) {
+  $.post("../ajax/chart_compra_grano.php?op=box_content_reporte", function (e, status) {
 
     e = JSON.parse(e);   //console.log(e);
 
     if (e.status == true) {
-      $(".cant_proveedores_box").html(e.data.cant_proveedores);
-      $(".cant_producto_box").html(e.data.cant_producto);
-      $(".cant_insumos_box").html(e.data.cant_insumo);
-      $(".cant_activo_fijo_box").html(e.data.cant_activo_fijo);
+      $(".cant_proveedores_box").html( formato_miles(e.data.cant_clientes) );
+      $(".cant_producto_box").html( 'Kg. ' + formato_miles(e.data.kilo_coco) );
+      $(".cant_insumos_box").html( 'Kg. ' + formato_miles(e.data.kilo_pergamino) );
+      $(".cant_activo_fijo_box").html('S/. '+ formato_miles(e.data.total_compra) );
     } else {
       ver_errores(e);
     }    
@@ -82,7 +80,7 @@ function chart_linea_barra(idnubeproyecto) {
   var month_filtro = $("#month_filtro").select2("val");
   var dias_por_mes =cant_dias_mes(year_filtro, month_filtro);
   
-  $.post("../ajax/chart_compra_insumo.php?op=chart_linea", { 'idnubeproyecto': idnubeproyecto , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
+  $.post("../ajax/chart_compra_grano.php?op=chart_linea", { 'idnubeproyecto': idnubeproyecto , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
     e = JSON.parse(e);   console.log(e);
     if (e.status == true) {
       // :::::::::::::::::::::::::::::::::::::::::::: C H A R T    P R O G R E S ::::::::::::::::::::::::::::::::::::

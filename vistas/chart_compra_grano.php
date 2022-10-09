@@ -65,7 +65,7 @@
                           <span class="info-box-icon bg-info elevation-1"><i class="fas fa-people-arrows"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Proveedores</span>
+                            <span class="info-box-text">Clientes</span>
                             <span class="info-box-number cant_proveedores_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
@@ -75,10 +75,10 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3  col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-layer-group"></i></span>
+                          <span class="info-box-icon bg-danger elevation-1"><img src="../dist/svg/blanco-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Productos</span>
+                            <span class="info-box-text">COCO</span>
                             <span class="info-box-number cant_producto_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
@@ -92,10 +92,10 @@
 
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-success elevation-1"><img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
+                          <span class="info-box-icon bg-success elevation-1"><img src="../dist/svg/negro-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Insumos</span>
+                            <span class="info-box-text">PERGAMINO</span>
                             <span class="info-box-number cant_insumos_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
@@ -105,10 +105,10 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fas fa-truck-pickup"></i></span>
+                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fa-solid fa-sack-dollar"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Activos Fijos</span>
+                            <span class="info-box-text">Total Compra</span>
                             <span class="info-box-number cant_activo_fijo_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
@@ -481,7 +481,7 @@
         <script src="../plugins/export-xlsx/FileSaver.min.js"></script>
         <script src="../plugins/export-xlsx/tableexport.min.js"></script> 
         
-        <script type="text/javascript" src="scripts/chart_compra_insumo.js"></script>         
+        <script type="text/javascript" src="scripts/chart_compra_grano.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         
