@@ -39,9 +39,9 @@ function init() {
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_pago', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
   // lista_select2("../ajax/ajax_general.php?op=select2Color", '#color_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Categoria_all", '#categoria_insumos_af_p', null);
-  lista_select2("../ajax/ajax_general.php?op=select2TierraConcreto", '#idtipo_tierra_concreto', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_p', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Categoria_all", '#categoria_insumos_af_p', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2TierraConcreto", '#idtipo_tierra_concreto', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
@@ -267,7 +267,7 @@ function regresar() {
 }
 
 //TABLA - COMPRAS
-function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprobante) {
+function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
   //console.log(idproyecto);
   tabla_compra_insumo = $("#tabla-compra").dataTable({
     responsive: true, 
@@ -276,10 +276,12 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9], } }, { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, {extend: "colvis"} ,        
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } }, {extend: "colvis"} ,        
     ],
     ajax: {
-      url: `../ajax/ingreso_producto.php?op=tbla_principal&nube_idproyecto=${nube_idproyecto}&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/ingreso_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -289,19 +291,7 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     createdRow: function (row, data, ixdex) {
       //console.log(data);
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-      if (data[5] != '') { $("td", row).eq(5).addClass('text-center'); }
       if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }
-      if (data[9] != "") {
-        var num = parseFloat(quitar_formato_miles(data[9])); //console.log(num);
-        if (num > 0) {
-          $("td", row).eq(8).addClass('bg-warning text-right');
-        } else if (num == 0) {
-          $("td", row).eq(8).addClass('bg-success text-right');            
-        } else if (num < 0) {
-          $("td", row).eq(8).addClass('bg-danger text-right');
-        }
-      }   
-      if (data[12] != '') { $("td", row).eq(1).addClass('text-nowrap'); }   
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -312,9 +302,11 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); 
+      if (type === 'display') { let color = 'numero_positivos'; 
+      if (data < 0) {color = 'numero_negativos'; } 
+      return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
-      { targets: [8,11],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
 
@@ -329,7 +321,7 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_compraxporvee&nube_idproyecto=" + nube_idproyecto,
+      url: "../ajax/ingreso_producto.php?op=listar_compraxporvee",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -354,7 +346,7 @@ function tbla_principal(nube_idproyecto, fecha_1, fecha_2, id_proveedor, comprob
 }
 
 //facturas agrupadas por proveedor.
-function listar_facuras_proveedor(idproveedor, idproyecto) {
+function listar_facuras_proveedor(idproveedor) {
   //console.log('idproyecto '+idproyecto, 'idproveedor '+idproveedor);
   $("#div_tabla_compra").hide();
   $("#agregar_compras").hide();
@@ -370,7 +362,7 @@ function listar_facuras_proveedor(idproveedor, idproyecto) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_detalle_compraxporvee&idproyecto=" + idproyecto + "&idproveedor=" + idproveedor,
+      url: "../ajax/ingreso_producto.php?op=listar_detalle_compraxporvee&idproveedor=" + idproveedor,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -431,14 +423,14 @@ function guardar_y_editar_compras(e) {
 }
 
 //Función para eliminar registros
-function eliminar_compra(idcompra_proyecto, nombre) {
+function eliminar_compra(idcompra_producto, nombre) {
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
     "../ajax/ingreso_producto.php?op=anular",
     "../ajax/ingreso_producto.php?op=eliminar_compra", 
-    idcompra_proyecto, 
+    idcompra_producto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
@@ -2555,7 +2547,7 @@ function filtros() {
   $('.cargando').show().html(`<i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando ${nombre_proveedor} ${nombre_comprobante}...`);
   //console.log(fecha_1, fecha_2, id_proveedor, comprobante);
 
-  tbla_principal(localStorage.getItem("nube_idproyecto"), fecha_1, fecha_2, id_proveedor, comprobante);
+  tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante);
 }
 
 function dowload_pdf() {
