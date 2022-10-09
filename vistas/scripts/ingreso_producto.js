@@ -457,23 +457,18 @@ function eliminar_compra(idcompra_proyecto, nombre) {
 var impuesto = 18;
 var cont = 0;
 var detalles = 0;
-// , nombre, unidad_medida, categoria, precio_sin_igv, img
+
 function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,precio_total,img) {
   console.log(idproducto);
   var stock = 5;
   var precio_venta = 0;
   var precio_sin_igv =0;
-  // var nombre ="aaa"; 
-  // var unidad_medida ='kg'; 
-  // var categoria ='aaa'; 
-  // var img = 'src="../dist/docs/material/img_perfil/producto-sin-foto.svg';
   var cantidad = 1;
   var descuento = 0;
   var precio_igv = 0;
-  // var precio_total = 0;
 
   if (idproducto != "") {
-    // $('.producto_'+idproducto).addClass('producto_selecionado');
+
     if ($(".producto_" + idproducto).hasClass("producto_selecionado")) {
       
       toastr_success("Agregado!!",`Material: ${nombre} agregado !!`, 700);
@@ -534,14 +529,14 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
 
       modificarSubtotales();
       
-      toastr_success("Agregado!!",`Material: ${nombre} agregado !!`, 700);
+      toastr_success("Agregado!!",`Producto: ${nombre} agregado !!`, 700);
 
       cont++;
       evaluar();
     }
   } else {
     // alert("Error al ingresar el detalle, revisar los datos del artículo");
-    toastr_error("Error!!",`Error al ingresar el detalle, revisar los datos del material.`, 700);
+    toastr_error("Error!!",`Error al ingresar el detalle, revisar los datos del producto.`, 700);
   }
 }
 
