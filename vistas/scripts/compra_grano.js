@@ -23,13 +23,11 @@ function init() {
 
   $("#bloc_LogisticaAdquisiciones").addClass("menu-open");
 
-  $("#bloc_ComprasGrano").addClass("menu-open bg-color-191f24");
-
-  $("#mLogisticaAdquisiciones").addClass("active");
+  $("#bloc_ComprasGrano").addClass("menu-open");
 
   $("#mCompraGrano").addClass("active bg-green");
 
-  $("#lComprasGrano").addClass("active");
+  $("#lComprasGrano").addClass("active ");
 
   //$("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 

@@ -11,12 +11,11 @@
 
     if ($_SESSION['recurso'] == 1) {
       
-      require_once "../modelos/Chart_compra_insumo.php";
+      require_once "../modelos/Chart_compra_grano.php";
 
-      $chart_compra_insumo = new ChartCompraInsumo();
+      $chart_compra_grano = new ChartCompraGrano();
 
-      date_default_timezone_set('America/Lima');
-      $date_now = date("d-m-Y h.i.s A");
+      date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
 
       $idproducto = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "";
       $idcategoria = isset($_POST["idcategoria_insumos_af"]) ? limpiarCadena($_POST["idcategoria_insumos_af"]) : "";
@@ -24,19 +23,19 @@
       switch ($_GET["op"]) {
         
         case 'box_content_reporte':
-          $rspta = $chart_compra_insumo->box_content_reporte($_POST["idnubeproyecto"]);
+          $rspta = $chart_compra_grano->box_content_reporte();
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
         break;
 
         case 'chart_linea':
-          $rspta = $chart_compra_insumo->chart_linea($_POST["idnubeproyecto"], $_POST["year_filtro"], $_POST["month_filtro"], $_POST["dias_por_mes"]);
+          $rspta = $chart_compra_grano->chart_linea($_POST["idnubeproyecto"], $_POST["year_filtro"], $_POST["month_filtro"], $_POST["dias_por_mes"]);
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
         break;
 
         case 'anios_select2':
-          $rspta = $chart_compra_insumo->anios_select2($_GET["nube_idproyecto"]);
+          $rspta = $chart_compra_grano->anios_select2($_GET["nube_idproyecto"]);
 
           $data ="";
          
