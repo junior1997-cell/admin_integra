@@ -354,6 +354,7 @@
                                         <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
                                         <th class="hidden">IGV</th>
                                         <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
+                                        <th data-toggle="tooltip" data-original-title="Precio Venta">P/V</th>
                                         <th>Descuento</th>
                                         <th>Subtotal</th>
                                       </thead>
@@ -778,10 +779,9 @@
                             <thead>
                               <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                               <th>Nombre Producto</th>
-                              <th>Clasificación</th>
+                              <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
                               <th>Descripción</th>
-                              <th data-toggle="tooltip" data-original-title="Ficha Técnica" >F.T.</th>
                             </thead>
                             <tbody></tbody>
                           </table>
