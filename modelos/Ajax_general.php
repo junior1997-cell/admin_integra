@@ -157,26 +157,6 @@
       return ejecutarConsulta($sql);
     }
 
-    /* ══════════════════════════════════════ P R O D U C T O  ══════════════════════════════════════ */
-    // public function tblaActivosFijos() {
-    //   $sql = "SELECT p.idproducto,p.idcategoria_insumos_af, p.nombre, p.modelo, p.serie, p.marca,p.precio_unitario, p.precio_igv as igv, 
-    //   p.precio_sin_igv, p.precio_total as precio_con_igv, p.ficha_tecnica, p.descripcion, p.imagen, um.nombre_medida, c.nombre_color, 
-    //   ciaf.nombre AS categoria
-    //   FROM producto as p, unidad_medida as um, color as c, categoria_insumos_af AS ciaf
-    //   WHERE p.idunidad_medida= um.idunidad_medida AND p.idcolor=c.idcolor AND p.idcategoria_insumos_af = ciaf.idcategoria_insumos_af AND p.idcategoria_insumos_af!='1' AND 
-    //   p.estado='1' AND p.estado_delete='1'
-    //   ORDER BY p.nombre ASC;";
-    //   return ejecutarConsulta($sql);
-    // }
-
-    // public function tblaInsumos() {
-    //   $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, 
-    //   p.descripcion, p.imagen, p.estado,  
-    //   um.nombre as nombre_medida, cp.nombre AS categoria
-    //   FROM producto as p, unidad_medida AS um, categoria_producto AS cp
-    //   WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
-    //   return ejecutarConsulta($sql);
-    // }
 
     //funcion para mostrar registros de prosuctos
     public function tblaProductos() {

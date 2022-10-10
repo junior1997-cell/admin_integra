@@ -58,6 +58,7 @@ class Ingreso_producto
           $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
           $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
 
+
           //add registro en nuestra bitacora.
           $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_producto','".$compra_new['data']."','Detalle compra','" . $_SESSION['idusuario'] . "')";
           $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
@@ -89,83 +90,70 @@ class Ingreso_producto
   }
 
   //Implementamos un método para editar registros
-  public function editar($idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
-  $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv,  $precio_con_igv, $descuento, $tipo_gravada) {
+  public function editar( $idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
+  $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv,  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
 
-    // if ( !empty($idcompra_producto) ) {
-    //   //Eliminamos todos los permisos asignados para volverlos a registrar
-    //   $sqldel = "DELETE FROM detalle_compra WHERE idcompra_producto='$idcompra_producto';";
-    //   $delete_compra = ejecutarConsulta($sqldel);
-    //   if ($delete_compra['status'] == false) { return $delete_compra; }
+    if ( !empty($idcompra_producto) ) {
+      //Eliminamos todos los permisos asignados para volverlos a registrar
+      $sqldel = "DELETE FROM detalle_compra_producto WHERE idcompra_producto='$idcompra_producto';";
+      $delete_compra = ejecutarConsulta($sqldel);
+      if ($delete_compra['status'] == false) { return $delete_compra; }
 
-    //   $sql = "UPDATE compra_producto SET idproyecto = '$idproyecto', idproveedor = '$idproveedor', fecha_compra = '$fecha_compra',
-    //   tipo_comprobante = '$tipo_comprobante', serie_comprobante = '$serie_comprobante', val_igv = '$val_igv', descripcion = '$descripcion',
-    //   glosa = '$glosa', total = '$total_venta', subtotal = '$subtotal_compra', igv = '$igv_compra', tipo_gravada = '$tipo_gravada',
-    //   estado_detraccion = '$estado_detraccion',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idcompra_producto = '$idcompra_producto'";
-    //   $update_compra = ejecutarConsulta($sql); if ($update_compra['status'] == false) { return $update_compra; }
+      $sql = "UPDATE compra_producto SET idpersona='$idproveedor',fecha_compra='$fecha_compra',tipo_comprobante='$tipo_comprobante',
+      serie_comprobante='$serie_comprobante',val_igv='$val_igv',subtotal='$subtotal_compra',igv='$igv_compra',
+      total='$total_venta',tipo_gravada='$tipo_gravada',descripcion='$descripcion' 
+      WHERE idcompra_producto = '$idcompra_producto'";
 
-    //   //add registro en nuestra bitacora
-    //   $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_producto','$idcompra_producto','Editar compra proyecto','" . $_SESSION['idusuario'] . "')";
-    //   $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }
+      $update_compra = ejecutarConsulta($sql); if ($update_compra['status'] == false) { return $update_compra; }
 
-    //   $num_elementos = 0; $detalle_compra = "";
+      //add registro en nuestra bitacora
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_producto','$idcompra_producto','Editar compra','" . $_SESSION['idusuario'] . "')";
+      $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }
 
-    //   while ($num_elementos < count($idproducto)) {
-    //     $subtotal_producto = (floatval($cantidad[$num_elementos]) * floatval($precio_con_igv[$num_elementos])) - $descuento[$num_elementos];
-    //     $sql_detalle = "INSERT INTO detalle_compra(idcompra_producto, idproducto, unidad_medida, color, cantidad, precio_sin_igv, igv, precio_con_igv, descuento, subtotal, ficha_tecnica_producto, user_created) 
-    //     VALUES ('$idcompra_producto', '$idproducto[$num_elementos]', '$unidad_medida[$num_elementos]', '$nombre_color[$num_elementos]', '$cantidad[$num_elementos]', '$precio_sin_igv[$num_elementos]', '$precio_igv[$num_elementos]', '$precio_con_igv[$num_elementos]', '$descuento[$num_elementos]', '$subtotal_producto', '$ficha_tecnica_producto[$num_elementos]','" . $_SESSION['idusuario'] . "')";
-    //     $detalle_compra = ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return $detalle_compra; }
+      $num_elementos = 0; $detalle_compra = "";
 
-    //     //add registro en nuestra bitacora.
-    //     $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra','".$detalle_compra['data']."','Detalle editado compra','" . $_SESSION['idusuario'] . "')";
-    //     $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
+      while ($num_elementos < count($idproducto)) {
 
-    //     $num_elementos = $num_elementos + 1;
-    //   }
-    //   return $detalle_compra; 
-    // } else { 
-    //   return $retorno = ['status'=>false, 'mesage'=>'no hay nada', 'data'=>'sin data', ]; 
-    // }
+        $subtotal_producto = (floatval($cantidad[$num_elementos]) * floatval($precio_con_igv[$num_elementos])) - $descuento[$num_elementos];
+
+          $sql_detalle = "INSERT INTO detalle_compra_producto(idcompra_producto, idproducto, unidad_medida, categoria, cantidad, precio_sin_igv, igv, 
+          precio_con_igv,precio_venta, descuento, subtotal, user_created) 
+          VALUES ('$idcompra_producto','$idproducto[$num_elementos]', '$unidad_medida[$num_elementos]',  '$categoria[$num_elementos]', '$cantidad[$num_elementos]', 
+          '$precio_sin_igv[$num_elementos]', '$precio_igv[$num_elementos]', '$precio_con_igv[$num_elementos]','$precio_venta[$num_elementos]', '$descuento[$num_elementos]', 
+          '$subtotal_producto','" . $_SESSION['idusuario'] . "')";
+
+          $detalle_compra =  ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return  $detalle_compra;}
+
+        //add registro en nuestra bitacora.
+        $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_producto','".$detalle_compra['data']."','Detalle editado compra','" . $_SESSION['idusuario'] . "')";
+        $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
+
+        $num_elementos = $num_elementos + 1;
+      }
+      return $detalle_compra; 
+    } else { 
+      return $retorno = ['status'=>false, 'mesage'=>'no hay nada', 'data'=>'sin data', ]; 
+    }
   }
 
-  public function mostrar_compra_para_editar($id_compras_x_proyecto) {
+  public function mostrar_compra_para_editar($idcompra_producto) {
 
-    $sql = "SELECT  cpp.idcompra_producto, cpp.idproyecto, cpp.idproveedor, cpp.fecha_compra, cpp.tipo_comprobante, cpp.serie_comprobante, cpp.val_igv, 
-    cpp.descripcion, cpp.glosa, cpp.subtotal, cpp.igv, cpp.total, cpp.estado_detraccion, cpp.estado
-    FROM compra_producto as cpp
-    WHERE idcompra_producto='$id_compras_x_proyecto';";
+    $sql = "SELECT  cp.idcompra_producto,cp.fecha_compra,cp.idpersona, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
+    cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
+    FROM compra_producto as cp, persona as p 
+    WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
 
-    $compra = ejecutarConsultaSimpleFila($sql);
-    if ($compra['status'] == false) { return $compra; }
+    $compra=  ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) {return $compra; }
 
-    $sql_2 = "SELECT 	dc.idproducto, dc.ficha_tecnica_producto, dc.cantidad, dc.precio_sin_igv, dc.igv, dc.precio_con_igv,
-		dc.descuento,	p.nombre as nombre_producto, p.imagen, dc.unidad_medida, dc.color
-		FROM detalle_compra AS dc, producto AS p, unidad_medida AS um, color AS c
-		WHERE idcompra_producto='$id_compras_x_proyecto' AND  dc.idproducto=p.idproducto AND p.idcolor = c.idcolor 
-    AND p.idunidad_medida = um.idunidad_medida;";
+    $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.categoria, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
+    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria 
+    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c 
+    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND dcp.idcompra_producto ='$idcompra_producto';";
 
-    $producto = ejecutarConsultaArray($sql_2);
-    if ($producto['status'] == false) { return $producto;  }
+    $detalle = ejecutarConsultaArray($sql);    if ($detalle['status'] == false) {return $detalle; }
 
-    $results = [
-      "idcompra_x_proyecto" => $compra['data']['idcompra_producto'],      
-      "idproyecto" => $compra['data']['idproyecto'],
-      "idproveedor" => $compra['data']['idproveedor'],
-      "fecha_compra" => $compra['data']['fecha_compra'],
-      "tipo_comprobante" => $compra['data']['tipo_comprobante'],
-      "serie_comprobante" => $compra['data']['serie_comprobante'],
-      "val_igv" => $compra['data']['val_igv'],
-      "descripcion" => $compra['data']['descripcion'],
-      "glosa" => $compra['data']['glosa'],
-      "subtotal" => $compra['data']['subtotal'],
-      "igv" => $compra['data']['igv'],
-      "total" => $compra['data']['total'],
-      "estado_detraccion" => $compra['data']['estado_detraccion'],
-      "estado" => $compra['data']['estado'],
-      "producto" => $producto['data'],
-    ];
+    return $datos= Array('status' => true, 'data' => ['compra' => $compra['data'], 'detalle' => $detalle['data']], 'message' => 'Todo ok' );
 
-    return $retorno = ["status" => true, "message" => 'todo oka', "data" => $results] ;
   }
 
   //Implementamos un método para desactivar categorías
@@ -260,27 +248,17 @@ class Ingreso_producto
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
 
-    return ejecutarConsultaSimpleFila($sql);
-  }
+    $compra=  ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) {return $compra; }
 
-  //lismatamos los detalles
-  public function ver_detalle_compra($id_compra) {
+    $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.categoria, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
+    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria 
+    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c 
+    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND dcp.idcompra_producto ='$idcompra_producto';";
 
-    $sql = "SELECT 
-		dp.idproducto as idproducto,
-		dp.ficha_tecnica_producto  as ficha_tecnica_old, p.ficha_tecnica as ficha_tecnica_new,
-		dp.cantidad ,
-    dp.unidad_medida, dp.color,
-		dp.precio_sin_igv ,
-    dp.igv ,
-    dp.precio_con_igv ,
-		dp.descuento ,
-    dp.subtotal ,
-		p.nombre as nombre, p.imagen, um.abreviacion
-		FROM detalle_compra  dp, producto as p, unidad_medida as um
-		WHERE p.idunidad_medida = um.idunidad_medida AND idcompra_producto='$id_compra' AND  dp.idproducto=p.idproducto";
+    $detalle = ejecutarConsultaArray($sql);    if ($detalle['status'] == false) {return $detalle; }
 
-    return ejecutarConsulta($sql);
+    return $datos= Array('status' => true, 'data' => ['compra' => $compra['data'], 'detalle' => $detalle['data']], 'message' => 'Todo ok' );
+
   }
 
   // ::::::::::::::::::::::::::::::::::::::::: S I N C R O N I Z A R  ::::::::::::::::::::::::::::::::::::::::: 
