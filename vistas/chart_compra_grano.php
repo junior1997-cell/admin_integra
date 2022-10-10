@@ -155,7 +155,7 @@
                         <div class="card">
                           <div class="card-header border-0 ">
                             <div class=" d-flex justify-content-center ">
-                              <h3 class="card-title font-weight-bold">Compras y Pagos por Mes</h3>
+                              <h3 class="card-title font-weight-bold">Compras y Kilos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
                             </div>
                           </div>
@@ -176,19 +176,13 @@
 
                             <div class="position-relative mb-4">
                               <canvas id="visitors-chart" height="350">
-                                
-                              </canvas>
-                              
+                                <!-- aqui se crea el grafico de lineas -->
+                              </canvas>                              
                             </div>
 
                             <div class="d-flex flex-row justify-content-end">
-                              <span class="mr-2">
-                                <i class="fas fa-square text-primary"></i>Compra
-                              </span>
-
-                              <span>
-                                <i class="fas fa-square text-gray"></i> Pago
-                              </span>
+                              <span class="mr-2"><i class="fas fa-square text-primary"></i>Total Compra </span>
+                              <span> <i class="fas fa-square " style="color: #6b3109;"></i> Total Kilos</span>
                             </div>
                           </div>
                         </div>
@@ -199,7 +193,7 @@
                         <div class="card">
                           <div class="card-header border-0">
                             <div class="d-flex justify-content-center">
-                              <h3 class="card-title font-weight-bold">Compras y Pagos por Mes</h3>
+                              <h3 class="card-title font-weight-bold">Compras y Kilos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
                             </div>
                           </div>
@@ -225,13 +219,8 @@
                                 </div>
 
                                 <div class="d-flex flex-row justify-content-end">
-                                  <span class="mr-2">
-                                    <i class="fas fa-square text-primary"></i> Compra
-                                  </span>
-
-                                  <span>
-                                    <i class="fas fa-square text-gray"></i> Pago
-                                  </span>
+                                  <span class="mr-2"> <i class="fas fa-square text-primary"></i> Total Compra </span>
+                                  <span> <i class="fas fa-square" style="color: #6b3109;"></i> Total Kilos </span>
                                 </div>
                               </div>
                               <div class="col-md-4">
@@ -273,30 +262,8 @@
                                     <div class="progress-bar bg-danger progress_ft_rechazadas_eliminadas" style="width: 0%"></div>
                                   </div>
                                 </div>
-                                <!-- /.progress-group -->
-
-                                <p class="text-center mt-4">
-                                  <strong class="mt-2">Pagos de Factura</strong>
-                                </p>
-                                 <!-- /.seccion -->
-
-                                <div class="progress-group">
-                                  <span class="progress-text font-weight-bold text--success">Montos Pagadas</span>
-                                  <span class="float-right monto_pagado"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
-                                  <div class="progress progress-sm">
-                                    <div class="progress-bar bg-success progress_monto_pagado" style="width: 0%"></div>
-                                  </div>
-                                </div>
-                                <!-- /.progress-group -->
+                                <!-- /.progress-group -->                                
                                 
-                                <div class="progress-group">
-                                  <span class="progress-text font-weight-bold text-danger">Montos NO Pagadas</span>
-                                  <span class="float-right monto_no_pagado"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
-                                  <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger progress_monto_no_pagado" style="width: 0%"></div>
-                                  </div>
-                                </div>
-                                <!-- /.progress-group -->
                               </div>
                             </div>
                             
@@ -308,9 +275,9 @@
                       <div class="col-lg-6">
                         <div class="card">
                           <div class="card-header border-0">
-                            <h3 class="card-title text-center">Productos mas usados</h3>
+                            <h3 class="card-title text-center">Sumas por Tipos de Cafe</h3>
                             <div class="card-tools">
-                              <button class="btn btn-tool btn-sm" onclick="export_excel('#tbla_productos_mas_vendidos','Productos mas usados');">
+                              <button class="btn btn-tool btn-sm" onclick="export_excel('#tbla_productos_mas_vendidos','Sumas por Tipos de Cafe');">
                                 <i class="fas fa-download"></i>
                               </button>
                               <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="fas fa-bars"></i> </a> -->
@@ -320,9 +287,11 @@
                             <table class="table table-striped table-valign-middle" id="tbla_productos_mas_vendidos">
                               <thead>
                               <tr>
-                                <th>Producto</th>
-                                <th>Precio referencial</th>
-                                <th>Cantidad</th>
+                                <th>Tipo</th>
+                                <th>Dcto. Humedad</th>
+                                <th>Dcto. Cascara</th>
+                                <th>Dcto. Embase</th>
+                                <th>Peso Neto</th>
                                 <th>Mas</th>
                               </tr>
                               </thead>

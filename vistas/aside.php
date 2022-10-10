@@ -234,17 +234,7 @@
                   <p>Pago Trabajador</p>
                 </a>
               </li>
-            <?php  }  ?>            
-            
-            <?php if ($_SESSION['prestamo']==1) {  ?>
-              <!-- PRESTAMOS -->
-              <li class="nav-item ">
-                <a href="prestamo.php" class="nav-link pl-2" id="lPrestamo">
-                  <i class="nav-icon fas fa-university"></i>
-                  <p>Prestamos y Créditos</p>
-                </a>
-              </li>
-            <?php  }  ?>              
+            <?php  }  ?>
 
             <?php if ($_SESSION['otro_ingreso']==1) {  ?>
               <li class="nav-item ">
