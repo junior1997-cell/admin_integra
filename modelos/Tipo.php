@@ -84,7 +84,7 @@ Class Tipo
 	//Implementar un método para listar los registros
 	public function listar_tipo()
 	{
-		$sql="SELECT * FROM tipo_persona WHERE estado=1 AND estado_delete=1 ORDER BY nombre ASC";
+		$sql="SELECT * FROM tipo_persona WHERE estado=1 AND estado_delete=1 ORDER BY idtipo_persona ASC";
 		return ejecutarConsulta($sql);		
 	}
 	//Implementar un método para listar los registros y mostrar en el select

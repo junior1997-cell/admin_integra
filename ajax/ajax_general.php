@@ -56,7 +56,7 @@
 
           foreach ($rspta['data'] as $key => $value) {
 
-            $data .= '<option  value=' . $value['id'] . ' title="'.$value['imagen_perfil'].'">' . $cont++ . '. ' . $value['nombre'] .' - '. $value['numero_documento'] . '</option>';
+            $data .= '<option  value=' . $value['id'] . ' title="'.$value['imagen_perfil'].'" cargo_trabajador="'.$value['cargo_trabajador'].'" sueldo_mensual="'. $value['sueldo_mensual'].'" >' . $cont++ . '. ' . $value['nombre'] .' - '. $value['numero_documento'] . '</option>';
           }
 
           $retorno = array(

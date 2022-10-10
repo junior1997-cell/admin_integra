@@ -56,6 +56,8 @@ function listar_tipo() {
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
       if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      // columna: #
+      if (data[4] != '') { $("td", row).eq(4).addClass("text-center"); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -88,11 +90,10 @@ function guardaryeditar_tipo(e) {
 
 	      tabla_tipo.ajax.reload(null, false);
          
-				limpiar();
+				limpiar_tipo();
 
-        $("#modal-agregar-tipo").modal("hide");
+        $("#modal-agregar-tipo").modal("hide");        
         
-        lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#idtipo_trabjador_c', null);
         $("#guardar_registro_tipo").html('Guardar Cambios').removeClass('disabled');
 			}else{
 				ver_errores(e);	
