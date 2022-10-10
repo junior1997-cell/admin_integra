@@ -285,7 +285,7 @@ function chart_linea_barra(idnubeproyecto) {
         var imgageData = getCanvas.toDataURL("image/jpg");
         //Now browser starts downloading it instead of just showing it
         var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
-        $("#btn-download-chart-pie-productos-mas-usados").attr("download", "productos-mas-usados.jpg").attr("href", newData);
+        $("#btn-download-chart-pie-productos-mas-usados").attr("download", "Sumas-por-Tipos-de-cafe.jpg").attr("href", newData);
       });
 
     } else {

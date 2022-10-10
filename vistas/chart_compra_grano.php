@@ -275,7 +275,7 @@
                       <div class="col-lg-6">
                         <div class="card">
                           <div class="card-header border-0">
-                            <h3 class="card-title text-center">Sumas por Tipos de Cafe</h3>
+                            <h3 class="card-title text-center">Sumas por Tipos de Café</h3>
                             <div class="card-tools">
                               <button class="btn btn-tool btn-sm" onclick="export_excel('#tbla_productos_mas_vendidos','Sumas por Tipos de Cafe');">
                                 <i class="fas fa-download"></i>
@@ -307,7 +307,7 @@
                       <div class="col-lg-6">
                         <div class="card">
                           <div class="card-header border-0">
-                            <h3 class="card-title text-center">Productos mas usados</h3>
+                            <h3 class="card-title text-center">Sumas por Tipos de Café</h3>
                             <div class="card-tools">                              
                               <a class="btn btn-tool btn-sm" id="btn-download-chart-pie-productos-mas-usados">
                                 <i class="fas fa-download"></i>
