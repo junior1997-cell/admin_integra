@@ -152,7 +152,7 @@
                             <table id="tabla-compra" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="13" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="7" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -160,14 +160,8 @@
                                   <th>Fecha</th>
                                   <th>Proveedor</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
-                                  <th data-toggle="tooltip" data-original-title="Detraccion">Detrac.</th>
                                   <th>Total</th>
-                                  <th>Añadir pago</th>
-                                  <th>Deposito</th>
-                                  <th>Saldo</th>
-                                  <th data-toggle="tooltip" data-original-title="Comprobantes">CFDI.</th>
                                   <th>Descripción</th>
-                                  <th> <button class="btn btn-info btn-sm btn-descarga-multiple" onclick="download_multimple();" data-toggle="tooltip" data-original-title="Descarga múltiple" ><i class="fas fa-cloud-download-alt"></i></button> </th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -178,14 +172,8 @@
                                   <th>Fecha</th>
                                   <th>Proveedor</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
-                                  <th>Detrac.</th>
                                   <th>Total</th>
-                                  <th>Añadir pago</th>
-                                  <th>Deposito</th>
-                                  <th>Saldo</th>
-                                  <th>CFDI.</th>
                                   <th>Descripción</th>
-                                  <th>Estado</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -229,7 +217,6 @@
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
                                   <th>Descripcion</th>
-                                  <th>Estado</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -242,7 +229,6 @@
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
                                   <th>Descripcion</th>
-                                  <th>Estado</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -255,9 +241,8 @@
                               <form id="form-compras" name="form-compras" method="POST">
                                  
                                 <div class="row" id="cargando-1-fomulario">
-                                  <!-- id proyecto -->
-                                  <input type="hidden" name="idproyecto" id="idproyecto" />
-                                  <input type="hidden" name="idcompra_proyecto" id="idcompra_proyecto" /> 
+                                  <!-- id compra_producto  -->
+                                  <input type="hidden" name="idcompra_producto" id="idcompra_producto" /> 
 
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-7">
@@ -354,6 +339,7 @@
                                         <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
                                         <th class="hidden">IGV</th>
                                         <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
+                                        <th data-toggle="tooltip" data-original-title="Precio Venta">P/V</th>
                                         <th>Descuento</th>
                                         <th>Subtotal</th>
                                       </thead>
@@ -778,10 +764,9 @@
                             <thead>
                               <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                               <th>Nombre Producto</th>
-                              <th>Clasificación</th>
+                              <th>Stock</th>
                               <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
                               <th>Descripción</th>
-                              <th data-toggle="tooltip" data-original-title="Ficha Técnica" >F.T.</th>
                             </thead>
                             <tbody></tbody>
                           </table>

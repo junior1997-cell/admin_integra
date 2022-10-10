@@ -438,17 +438,18 @@
       break;
 
       /* ══════════════════════════════════════ P R O D U C T O ══════════════════════════════════════ */
-      case 'tblaActivosFijos':
+
+      case 'tblaProductos':
           
-        $rspta = $ajax_general->tblaActivosFijos();
-        //Vamos a declarar un array
+        $rspta = $ajax_general->tblaProductos(); 
+
         $datas = []; 
 
         if ($rspta['status'] == true) {
-          
+
           while ($reg = $rspta['data']->fetch_object()) {
 
-            $img_parametro = ""; $img = "";  $ficha_tecnica = "";  $color_stock = "";
+            $img_parametro = ""; $img = ""; 
   
             if (empty($reg->imagen)) {
               $img = 'src="../dist/docs/material/img_perfil/producto-sin-foto.svg"';
@@ -456,67 +457,24 @@
               $img = 'src="../dist/docs/material/img_perfil/' . $reg->imagen . '"';
               $img_parametro = $reg->imagen;
             }
-  
-            !empty($reg->ficha_tecnica) ? ($ficha_tecnica = '<center><a target="_blank" href="../dist/docs/material/ficha_tecnica/' . $reg->ficha_tecnica . '" data-toggle="tooltip" data-original-title="Ver Ficha Técnica"><i class="far fa-file-pdf fa-2x text-success"></i></a></center>')
-              : ($ficha_tecnica = '<center><span class="text-center" data-toggle="tooltip" data-original-title="Vacío"> <i class="far fa-times-circle fa-2x text-danger"></i></span></center>');
-  
+            if ($reg->stock == 0 && $reg->stock <= 0) {
+              $clas_stok = 'badge-danger';
+            }else if ($reg->stock > 0 && $reg->stock <= 10) {
+              $clas_stok = 'badge-warning';
+            }else if ($reg->stock > 10) {
+              $clas_stok = 'badge-success';
+            }
+
             $datas[] = [
-              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\', \'' . $reg->nombre_color . '\', \'' . $reg->precio_sin_igv . '\', \'' . $reg->igv . '\', \'' . $reg->precio_con_igv . '\', \'' .  $img_parametro . '\', \'' . $reg->ficha_tecnica . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
-              "1" => '<div class="user-block w-250px">'.
-                '<img class="profile-user-img img-responsive img-circle" ' .  $img . ' alt="user image" onerror="' . $imagen_error .  '">'.
-                '<span class="username"><p style="margin-bottom: 0px !important;">' . $reg->nombre . '</p></span>
-                <span class="description"><b>Color: </b>' . $reg->nombre_color . '</span>'.
-              '</div>',
-              "2" => $reg->categoria,
-              "3" => number_format($reg->precio_con_igv, 2, '.', ','),
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg->descripcion . '</textarea>',
-              "5" => $ficha_tecnica . $toltip,
-            ];
-          }
-  
-          $results = [
-            "sEcho" => 1, //Información para el datatables
-            "iTotalRecords" => count($datas), //enviamos el total registros al datatable
-            "iTotalDisplayRecords" => count($datas), //enviamos el total registros a visualizar
-            "aaData" => $datas,
-          ];
-          echo json_encode($results, true);
-        } else {
-          echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
-        }
-    
-      break;
-
-      case 'tblaInsumos':
-          
-        $rspta = $ajax_general->tblaInsumos();
-        //Vamos a declarar un array
-        $datas = []; 
-
-        if ($rspta['status'] == true) {
-
-          while ($reg = $rspta['data']->fetch_object()) {
-
-            $img_parametro = ""; $img = "";  $ficha_tecnica = "";  $color_stock = "";
-  
-            if (empty($reg->imagen)) {
-              $img = 'src="../dist/docs/material/img_perfil/producto-sin-foto.svg"';
-            } else {
-              $img = 'src="../dist/docs/material/img_perfil/' . $reg->imagen . '"';
-              $img_parametro = $reg->imagen;
-            }           
-  
-            $datas[] = [
-              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\', \'' . $reg->nombre_color . '\', \'' . $reg->precio_sin_igv . '\', \'' . $reg->igv . '\', \'' . $reg->precio_con_igv . '\', \'' .  $img_parametro . '\', \'' . $reg->ficha_tecnica . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
+              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\',\'' . $reg->categoria . '\',\'' . $reg->precio_unitario . '\',\'' . $img_parametro . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
               "1" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle" ' .  $img . ' alt="user image" onerror="' . $imagen_error .  '">'.
                 '<span class="username"><p class="mb-0" >' . $reg->nombre . '</p></span>
-                <span class="description"><b>Color: </b>' . $reg->marca . '</span>'.
+                <span class="description"><b>Categoria: </b>' . $reg->categoria . '</span>'.
               '</div>',
-              "2" => $reg->categoria,
+              "2" =>'<span class="badge '.$clas_stok.' font-size-14px">'.$reg->stock.'</span>',
               "3" => number_format($reg->precio_unitario, 2, '.', ','),
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg->descripcion . '</textarea>',
-              "5" => $stock . $toltip,
+              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg->descripcion . '</textarea>'. $toltip,
             ];
           }
   
@@ -534,58 +492,7 @@
         }
     
       break;
-
-      case 'tblaInsumosYActivosFijos':
-          
-        $rspta = $ajax_general->tblaInsumosYActivosFijos(); 
-        //echo json_encode($rspta, true);
-        //Vamos a declarar un array
-        $datas = []; 
-
-        if ($rspta['status'] == true) {
-
-          while ($reg = $rspta['data']->fetch_object()) {
-
-            $img_parametro = ""; $img = "";  $color_stock = "";
-  
-            if (empty($reg->imagen)) {
-              $img = 'src="../dist/docs/material/img_perfil/producto-sin-foto.svg"';
-            } else {
-              $img = 'src="../dist/docs/material/img_perfil/' . $reg->imagen . '"';
-              $img_parametro = $reg->imagen;
-            }
-  
-            $ficha_tecnica = !empty($reg->ficha_tecnica) ? ( '<center><a target="_blank" href="../dist/docs/material/ficha_tecnica/' . $reg->ficha_tecnica . '" data-toggle="tooltip" data-original-title="Ver Ficha Técnica"><i class="far fa-file-pdf fa-2x text-success"></i></a></center>')
-              : ( '<center><span class="text-center" data-toggle="tooltip" data-original-title="Vacío"> <i class="far fa-times-circle fa-2x text-danger"></i></span></center>');
-  
-            $datas[] = [
-              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\', \'' . $reg->nombre_color . '\', \'' . $reg->precio_sin_igv . '\', \'' . $reg->igv . '\', \'' . $reg->precio_con_igv . '\', \'' .  $img_parametro . '\', \'' . $reg->ficha_tecnica . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
-              "1" => '<div class="user-block w-250px">'.
-                '<img class="profile-user-img img-responsive img-circle" ' .  $img . ' alt="user image" onerror="' . $imagen_error .  '">'.
-                '<span class="username"><p class="mb-0" >' . $reg->nombre . '</p></span>
-                <span class="description"><b>Color: </b>' . $reg->nombre_color . '</span>'.
-              '</div>',
-              "2" => $reg->categoria,
-              "3" => number_format($reg->precio_con_igv, 2, '.', ','),
-              "4" => '<textarea class="form-control textarea_datatable" cols="30" rows="1">' . $reg->descripcion . '</textarea>',
-              "5" => $ficha_tecnica . $toltip,
-            ];
-          }
-  
-          $results = [
-            "sEcho" => 1, //Información para el datatables
-            "iTotalRecords" => count($datas), //enviamos el total registros al datatable
-            "iTotalDisplayRecords" => count($datas), //enviamos el total registros a visualizar
-            "aaData" => $datas,
-          ];
-
-          echo json_encode($results, true);
-        } else {
-
-          echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
-        }
-    
-      break;
+      
       /* ══════════════════════════════════════ S E R V i C I O S  M A Q U I N A R I A ════════════════════════════ */
 
       case 'select2_servicio_maquina':

@@ -1,26 +1,24 @@
 var chart_linea ;
 var chart_barras;
 var chart_pie_productos_mas_vendidos;
-var color_char_pie = ['text-danger','text-success','text-warning','text-info','text-primary','text-indigo',]
+var color_char_pie = ['text-danger','text-success']
 //Función que se ejecuta al inicio
 function init() {
 
   $("#bloc_LogisticaAdquisiciones").addClass("menu-open");
 
-  $("#bloc_Compras").addClass("menu-open bg-color-191f24");
+  $("#bloc_ComprasGrano").addClass("menu-open bg-color-191f24");
 
-  $("#mLogisticaAdquisiciones").addClass("active");
+  $("#mCompraGrano").addClass("active bg-green");
 
-	$("#mCompra").addClass("active bg-green");
+  $("#lChartCompraGrano").addClass("active");
 
-  $("#lChartCompraInsumo").addClass("active");
-
-  box_content_reporte(localStorage.getItem("nube_idproyecto"));
+  box_content_reporte();
   //chart_linea_barra(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
-  lista_select2(`../ajax/chart_compra_insumo.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
+  lista_select2(`../ajax/chart_compra_grano.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
 
@@ -36,22 +34,22 @@ function init() {
 // ::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C H A R T :::::::::::::::::::::::::::::::::::::::::::::
 
 //mostrar datos proveedor pago
-function box_content_reporte(idnubeproyecto) {
+function box_content_reporte() {
 
   $(".cant_proveedores_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_producto_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_insumos_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_activo_fijo_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
 
-  $.post("../ajax/chart_compra_insumo.php?op=box_content_reporte", { 'idnubeproyecto': idnubeproyecto }, function (e, status) {
+  $.post("../ajax/chart_compra_grano.php?op=box_content_reporte", function (e, status) {
 
     e = JSON.parse(e);   //console.log(e);
 
     if (e.status == true) {
-      $(".cant_proveedores_box").html(e.data.cant_proveedores);
-      $(".cant_producto_box").html(e.data.cant_producto);
-      $(".cant_insumos_box").html(e.data.cant_insumo);
-      $(".cant_activo_fijo_box").html(e.data.cant_activo_fijo);
+      $(".cant_proveedores_box").html( formato_miles(e.data.cant_clientes) );
+      $(".cant_producto_box").html( 'Kg. ' + formato_miles(e.data.kilo_coco) );
+      $(".cant_insumos_box").html( 'Kg. ' + formato_miles(e.data.kilo_pergamino) );
+      $(".cant_activo_fijo_box").html('S/. '+ formato_miles(e.data.total_compra) );
     } else {
       ver_errores(e);
     }    
@@ -82,7 +80,7 @@ function chart_linea_barra(idnubeproyecto) {
   var month_filtro = $("#month_filtro").select2("val");
   var dias_por_mes =cant_dias_mes(year_filtro, month_filtro);
   
-  $.post("../ajax/chart_compra_insumo.php?op=chart_linea", { 'idnubeproyecto': idnubeproyecto , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
+  $.post("../ajax/chart_compra_grano.php?op=chart_linea", { 'idnubeproyecto': idnubeproyecto , 'year_filtro': year_filtro, 'month_filtro':month_filtro, 'dias_por_mes':dias_por_mes }, function (e, status) {
     e = JSON.parse(e);   console.log(e);
     if (e.status == true) {
       // :::::::::::::::::::::::::::::::::::::::::::: C H A R T    P R O G R E S ::::::::::::::::::::::::::::::::::::
@@ -120,18 +118,18 @@ function chart_linea_barra(idnubeproyecto) {
               type: 'line', data: e.data.total_gasto, 
               backgroundColor: 'transparent', borderColor: '#007bff',
               pointBorderColor: '#007bff', pointBackgroundColor: '#007bff',
-              fill: false, label: 'Compras',
+              fill: false, label: 'Total Compras',
               // pointHoverBackgroundColor: '#007bff',
               // pointHoverBorderColor    : '#007bff'
             },
             {
               type: 'line',
               data: e.data.total_deposito,
-              backgroundColor: 'tansparent', borderColor: '#ced4da',
-              pointBorderColor: '#ced4da', pointBackgroundColor: '#ced4da',
-              fill: false, label: 'Pago',
-              // pointHoverBackgroundColor: '#ced4da',
-              // pointHoverBorderColor    : '#ced4da'
+              backgroundColor: 'tansparent', borderColor: '#6b3109',
+              pointBorderColor: '#6b3109', pointBackgroundColor: '#6b3109',
+              fill: false, label: 'Total Kilos',
+              // pointHoverBackgroundColor: '#6b3109',
+              // pointHoverBorderColor    : '#6b3109'
             }
           ]
         },
@@ -164,8 +162,8 @@ function chart_linea_barra(idnubeproyecto) {
         data: {
           labels: mes_o_dia(year_filtro, month_filtro),
           datasets: [
-            { backgroundColor: '#007bff', borderColor: '#007bff', data: e.data.total_gasto, label: 'Compras', },
-            { backgroundColor: '#ced4da', borderColor: '#ced4da', data: e.data.total_deposito, label: 'Pago', }
+            { backgroundColor: '#007bff', borderColor: '#007bff', data: e.data.total_gasto, label: 'Total Compras', },
+            { backgroundColor: '#6b3109', borderColor: '#6b3109', data: e.data.total_deposito, label: 'Total Kilos', }
           ]
         },
         options: {
@@ -198,22 +196,16 @@ function chart_linea_barra(idnubeproyecto) {
       // :::::::::::::::::::::::::::::::::::::::::::: P R O D U C T O S   M A S   V E N D I D O S ::::::::::::::::::::::::::::::::::::
       var productos_mas_vendidos = ""; var colores_leyenda = "";
       e.data.productos_mas_vendidos.forEach((key, indice) => {
-        colores_leyenda = colores_leyenda.concat(`<li><i class="fas fa-circle ${color_char_pie[indice]}"></i> ${key.producto}</li>`);
+        colores_leyenda = colores_leyenda.concat(`<li><i class="fas fa-circle ${color_char_pie[indice]}"></i> ${key.tipo_grano}</li>`);
         productos_mas_vendidos = productos_mas_vendidos.concat(`
           <tr>
-            <td>              
-              <div class="user-block">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/material/img_perfil/${key.imagen}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_perfil('../dist/docs/material/img_perfil/${key.imagen}', '${encodeHtml(key.producto)}');" data-toggle="tooltip" data-original-title="Ver imagen">
-                <span class="username"><p class="mb-0" >${key.producto}</p></span>
-                <span class="description">${key.descripcion}</span>
-              </div>
-            </td>
-            <td class="text-right">S/ ${formato_miles(key.precio_referencial)}</td>
-            <td>              
-              ${formato_miles(key.cantidad_vendida)}
-            </td>
+            <td> ${key.tipo_grano} </td>
+            <td> ${formato_miles(key.dcto_humedad)} </td>
+            <td> ${formato_miles(key.porcentaje_cascara)} </td>
+            <td> ${formato_miles(key.dcto_embase)} </td>
+            <td> ${formato_miles(key.peso_neto)} </td>
             <td class="text-right">
-              <a href="resumen_insumos.php" class="text-muted"> <i class="fas fa-search"></i> </a>
+              <a href="compra_grano.php" class="text-muted"> <i class="fas fa-search"></i> </a>
             </td>
           </tr>
         `);
@@ -238,7 +230,7 @@ function chart_linea_barra(idnubeproyecto) {
           datasets: [
             {
               data: e.data.producto_mas_vendido_cantidad,
-              backgroundColor: ['#dc3545', '#00a65a', '#f39c12', '#09a5be', '#007bff', '#2d1582']
+              backgroundColor: ['#dc3545', '#00a65a']
             }
           ]
         },
@@ -293,7 +285,7 @@ function chart_linea_barra(idnubeproyecto) {
         var imgageData = getCanvas.toDataURL("image/jpg");
         //Now browser starts downloading it instead of just showing it
         var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
-        $("#btn-download-chart-pie-productos-mas-usados").attr("download", "productos-mas-usados.jpg").attr("href", newData);
+        $("#btn-download-chart-pie-productos-mas-usados").attr("download", "Sumas-por-Tipos-de-cafe.jpg").attr("href", newData);
       });
 
     } else {

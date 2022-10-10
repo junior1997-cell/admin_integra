@@ -54,14 +54,16 @@
       direccion='$direccion',correo='$email',cuenta_bancaria='$cta_bancaria',
       cci='$cci',titular_cuenta='$titular_cuenta',es_socio='$input_socio',
       foto_perfil='$imagen1',user_updated= '" . $_SESSION['idusuario'] . "' WHERE idpersona='$idpersona'";	      
-      $trabajdor = ejecutarConsulta($sql);
-      if ($trabajdor['status'] == false) { return  $trabajdor;}
+      $persona = ejecutarConsulta($sql);
+      if ($persona['status'] == false) { return  $persona;}
 
       //add registro en nuestra bitacora
       $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona','".$idpersona."','Editamos el registro persona','" . $_SESSION['idusuario'] . "')";
       $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
       
-      return $trabajdor;      
+      // return $persona;     
+      return array( 'status' => true, 'message' => 'todo ok', 'data' => $idpersona, 'id_tabla' =>$idpersona ); 
+      
     }
 
     public function desactivar($idpersona) {
@@ -117,7 +119,7 @@
       WHERE p.idtipo_persona=tp.idtipo_persona  AND p.idbancos=b.idbancos $filtro AND p.estado ='1' AND p.estado_delete='1';";
 
       $persona = ejecutarConsultaArray($sql); if ($persona['status'] == false) { return  $persona;}
-
+      
       return $persona;
 
     }

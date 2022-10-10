@@ -23,37 +23,24 @@ function init() {
 
   $("#bloc_LogisticaAdquisiciones").addClass("menu-open");
 
-  $("#bloc_ComprasGrano").addClass("menu-open bg-color-191f24");
-
-  $("#mLogisticaAdquisiciones").addClass("active");
+  $("#bloc_ComprasGrano").addClass("menu-open");
 
   $("#mCompraGrano").addClass("active bg-green");
 
-  $("#lComprasGrano").addClass("active");
+  $("#lComprasGrano").addClass("active ");
 
   //$("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', null);
   lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_cliente', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_pago', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Color", '#color_p', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_p', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2Categoria_all", '#categoria_insumos_af_p', null);
-  // lista_select2("../ajax/ajax_general.php?op=select2TierraConcreto", '#idtipo_tierra_concreto', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_cli', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
 
   $("#guardar_registro_cliente").on("click", function (e) { $("#submit-form-cliente").submit(); });
-
-  $("#guardar_registro_pago").on("click", function (e) {  $("#submit-form-pago").submit(); });
-
-  $("#guardar_registro_comprobante_compra").on("click", function (e) {  $("#submit-form-comprobante-compra").submit();  });  
-
-  $("#guardar_registro_material").on("click", function (e) {  $("#submit-form-materiales").submit(); });  
   
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
@@ -66,15 +53,9 @@ function init() {
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
 
-  $("#banco_pago").select2({ templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });  
-
-  $("#forma_pago").select2({ theme: "bootstrap4", placeholder: "Selecione una forma de pago", allowClear: true, });
-
-  $("#tipo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo de pago", allowClear: true, });
-
   // ══════════════════════════════════════ INITIALIZE SELECT2 - cliente ══════════════════════════════════════
 
-  $("#banco_prov").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
+  $("#banco_cli").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
@@ -171,13 +152,14 @@ function limpiar_form_compra() {
 }
 
 function show_hide_form(flag) {
-
+  $('.h1-nombre-cliente').html('');
   if (flag == 1) {
     // show tabla principal
     $("#div_tabla_compra").show();
     $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").hide();
+    $("#div_tabla_detalle_compra_x_cliente").hide();
 
     $("#btn_agregar").show();
     $("#btn_regresar").hide();    
@@ -188,9 +170,9 @@ function show_hide_form(flag) {
   } else if(flag == 2) {
     // show tabla detalle compra por cliente
     $("#div_tabla_compra").hide();
-    $("#div_tabla_compra_cliente").show();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").hide();
+    $("#div_tabla_detalle_compra_x_cliente").show();
 
     $("#btn_agregar").hide();
     $("#btn_regresar").show();    
@@ -201,6 +183,7 @@ function show_hide_form(flag) {
     $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").show();
     $("#div_tabla_pago_compras_grano").hide();
+    $("#div_tabla_detalle_compra_x_cliente").hide();
 
     $("#btn_agregar").hide();
     $("#btn_regresar").show();    
@@ -211,6 +194,7 @@ function show_hide_form(flag) {
     $("#div_tabla_compra_cliente").hide();
     $("#div_form_agregar_compras_grano").hide();
     $("#div_tabla_pago_compras_grano").show();
+    $("#div_tabla_detalle_compra_x_cliente").hide();
 
     $("#btn_agregar").hide();
     $("#btn_regresar").show();    
@@ -235,9 +219,9 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6,8,9,11], } } ,        
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } } ,        
     ],
     ajax: {
       url: `../ajax/compra_grano.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_cliente=${id_cliente}&comprobante=${comprobante}`,
@@ -250,7 +234,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     createdRow: function (row, data, ixdex) {
       //console.log(data);
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-      if (data[5] != '') { $("td", row).eq(5).addClass('text-center'); }
+      if (data[5] != '') { $("td", row).eq(5).addClass('text-left'); }
       if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }    
     },
     language: {
@@ -263,8 +247,8 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
       { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
-       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
-      // { targets: [8,11],  visible: false,  searchable: false,  },
+      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      { targets: [9,10,11,12],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
 
@@ -277,7 +261,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
+    buttons: ["copyHtml5", "excelHtml5", "pdf"],
     ajax: {
       url: `../ajax/compra_grano.php?op=tabla_compra_x_cliente`,
       type: "get",
@@ -288,9 +272,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     },
     createdRow: function (row, data, ixdex) {
       //console.log(data);
-      if (data[5] != '') {
-        $("td", row).eq(5).addClass('text-right');
-      }
+      if (data[5] != '') { $("td", row).eq(5).addClass('text-right'); }
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -300,23 +282,30 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     bDestroy: true,
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      //{ targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      // { targets: [8,11],  visible: false,  searchable: false,  },
+    ],
   }).DataTable();
 }
 
 //facturas agrupadas por cliente.
-function listar_facuras_cliente(idcliente, idproyecto) {
+function listar_facuras_cliente(idcliente, nombre) {
+  
+  show_hide_form(2);
 
-  show_hide_form(2)
+  $('.h1-nombre-cliente').html(`- <b>${nombre}</b>`);
 
-  tabla_detalle_compra_x_cliente = $("#detalles-tabla-compra-prov").dataTable({
+  tabla_detalle_compra_x_cliente = $("#tabla-detalle-compra-grano-x-cliente").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
+    buttons: ["copyHtml5", "excelHtml5",  "pdf",],
     ajax: {
-      url: "../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idproyecto=" + idproyecto + "&idcliente=" + idcliente,
+      url: `../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idcliente=${idcliente}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -331,6 +320,10 @@ function listar_facuras_cliente(idcliente, idproyecto) {
     bDestroy: true,
     iDisplayLength: 5, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+    ],
   }).DataTable();
 }
 
@@ -395,7 +388,6 @@ function eliminar_compra(idcompra_proyecto, nombre) {
     false,
     false
   );
-
 }
 
 // .......::::::::::::::::::::::::::::::::::::::::: AGREGAR FACURAS, BOLETAS, NOTA DE VENTA, ETC :::::::::::::::::::::::::::::::::::.......
@@ -763,7 +755,7 @@ function eliminarDetalle(indice) {
 }
 
 //mostramos para editar el datalle del comprobante de la compras
-function mostrar_compra(idcompra_proyecto) {
+function ver_compra_editar(idcompra_grano) {
 
   $("#cargando-1-fomulario").hide();
   $("#cargando-2-fomulario").show();
@@ -773,11 +765,11 @@ function mostrar_compra(idcompra_proyecto) {
 
   cont = 0;
   detalles = 0;
-  show_hide_form();
+  show_hide_form(3);
 
-  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_proyecto': idcompra_proyecto }, function (e, status) {
+  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
     
-    e = JSON.parse(e); // console.log(e);
+    e = JSON.parse(e); console.log(e);
 
     if (e.status == true) {
 
@@ -801,27 +793,23 @@ function mostrar_compra(idcompra_proyecto) {
         $(".content-serie-comprobante").show();
       }
 
-      $("#idproyecto").val(e.data.idproyecto);
-      $("#idcompra_proyecto").val(e.data.idcompra_x_proyecto);
-      $("#idcliente").val(e.data.idcliente).trigger("change");
+      $("#idcompra_grano").val(e.data.idcompra_grano);
       $("#fecha_compra").val(e.data.fecha_compra);
-      $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
-      $("#numero_comprobante").val(e.data.numero_comprobante).trigger("change");
+      $("#numero_comprobante").val(e.data.numero_comprobante);
       $("#val_igv").val(e.data.val_igv);
       $("#descripcion").val(e.data.descripcion);
-      $("#glosa").val(e.data.glosa).trigger("change");
+      
+      $("#idcliente").val(e.data.idpersona).trigger("change");
+      $("#metodo_pago").val(e.data.metodo_pago).trigger("change");
+      $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
+      
 
-      if (e.data.producto) {
+      if (e.data.detalle_compra) {
 
-        e.data.producto.forEach((element, index) => {
-
-          var img = "";
-
-          if (element.imagen == "" || element.imagen == null) {
-            img = `../dist/docs/material/img_perfil/producto-sin-foto.svg`;
-          } else {
-            img = `../dist/docs/material/img_perfil/${element.imagen}`;
-          }
+        e.data.detalle_compra.forEach((key, index) => {
+          
+          var pergamino_select = (key.tipo_grano == 'PERGAMINO' ?  'selected' : '');
+          var coco_select = (key.tipo_grano == 'COCO' ? 'selected' : '');
 
           var fila = `
           <tr class="filas" id="fila${cont}">
@@ -830,24 +818,24 @@ function mostrar_compra(idcompra_proyecto) {
             </td>
             <td class="">       
               <select class="form-control w-140px" name="tipo_grano[]">
-                <option>PERGAMINO</option>
-                <option>COCO</option>
+                <option ${pergamino_select} >PERGAMINO</option>
+                <option ${coco_select} >COCO</option>
               </select>   
             </td>
             <td class="">
               <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
             </td>
-            <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="${key.peso_bruto}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="${key.dcto_humedad}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="${key.porcentaje_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="${key.dcto_embase}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
         
-            <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="0" readonly min="0" ></td>
-            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="0" readonly ></td>
-            <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="0" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span> <input type="hidden" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="${key.peso_neto}" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="${key.precio_sin_igv}" readonly min="0" ></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="${key.precio_igv}" readonly ></td>
+            <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="${key.precio_con_igv}" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="${key.descuento_adicional}" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="text-right"><span class="text-right subtotal_producto_${cont}">${key.subtotal}</span> <input type="hidden" value="${key.subtotal}" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
             <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
           </tr>`;
 
@@ -877,7 +865,7 @@ function mostrar_compra(idcompra_proyecto) {
 }
 
 //mostramos el detalle del comprobante de la compras
-function ver_detalle_compras(idcompra_proyecto) {
+function ver_detalle_compras(idcompra_grano) {
 
   $("#cargando-5-fomulario").hide();
   $("#cargando-6-fomulario").show();
@@ -885,18 +873,21 @@ function ver_detalle_compras(idcompra_proyecto) {
   $("#print_pdf_compra").addClass('disabled');
   $("#excel_compra").addClass('disabled');
 
-  $("#modal-ver-compras").modal("show");
+  $("#modal-ver-detalle-compras-grano").modal("show");
 
-  $.post("../ajax/compra_grano.php?op=ver_detalle_compras&id_compra=" + idcompra_proyecto, function (r) {
-    r = JSON.parse(r);
-    if (r.status == true) {
-      $(".detalle_de_compra").html(r.data); 
+  $.post("../ajax/compra_grano.php?op=ver_detalle_compras_grano&idcompra_grano=" + idcompra_grano, function (e) {
+    e = JSON.parse(e);
+    if (e.status == true) {
+      $(".detalle_de_compra_grano").html(e.data);       
+
+      $("#print_pdf_compra").removeClass('disabled');
+      $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_grano.php?id=${idcompra_grano}` );
+      $("#excel_compra").removeClass('disabled');
+
       $("#cargando-5-fomulario").show();
       $("#cargando-6-fomulario").hide();
 
-      $("#print_pdf_compra").removeClass('disabled');
-      $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_activos_fijos.php?id=${idcompra_proyecto}&op=insumo` );
-      $("#excel_compra").removeClass('disabled');
+      $('[data-toggle="tooltip"]').tooltip();
     } else {
       ver_errores(e);
     }    
@@ -914,24 +905,34 @@ function ver_detalle_compras(idcompra_proyecto) {
 // :::::::::::::::::::::::::: S E C C I O N   C L I E N T E  ::::::::::::::::::::::::::
 //Función limpiar
 function limpiar_form_cliente() {
-  $("#idcliente_prov").val("");
-  $("#tipo_documento_prov option[value='RUC']").attr("selected", true);
-  $("#nombre_prov").val("");
-  $("#num_documento_prov").val("");
-  $("#direccion_prov").val("");
-  $("#telefono_prov").val("");
-  $("#c_bancaria_prov").val("");
-  $("#cci_prov").val("");
-  $("#c_detracciones_prov").val("");
-  $("#banco_prov").val("").trigger("change");
-  $("#titular_cuenta_prov").val("");
+  $("#guardar_registro_cliente").html('Guardar Cambios').removeClass('disabled');
 
+  $("#idpersona_cli").val(""); 
+  $("#tipo_documento_cli").val("null").trigger("change");
+  $("#num_documento_cli").val(""); 
+  $("#nombre_cli").val(""); 
+  $("#input_socio_cli").val("0"); 
+  $("#email_cli").val(""); 
+  $("#telefono_cli").val(""); 
+  $("#banco_cli").val("").trigger("change");
+  $("#cta_bancaria_cli").val(""); 
+  $("#cci_cli").val(""); 
+  $("#titular_cuenta_cli").val(""); 
+  $("#direccion_cli").val("");
+
+  $(".sino_cli").html('(NO)');
+  $("#socio_cli").prop('checked', false);
+
+
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
+	$("#foto1").val("");
+	$("#foto1_actual").val("");  
+  $("#foto1_nombre").html(""); 
+  
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
   $(".form-control").removeClass('is-invalid');
   $(".error.invalid-feedback").remove();
-
-  $(".tooltip").removeClass("show").addClass("hidde");
 }
 
 // damos formato a: Cta, CCI
@@ -1001,7 +1002,7 @@ function guardar_y_editar_cliente(e) {
   var formData = new FormData($("#form-cliente")[0]);
 
   $.ajax({
-    url: "../ajax/compra_grano.php?op=guardar_cliente",
+    url: "../ajax/compra_grano.php?op=guardar_y_editar_cliente",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1015,7 +1016,8 @@ function guardar_y_editar_cliente(e) {
           limpiar_form_cliente();
           $("#modal-agregar-cliente").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2cliente", '#idcliente', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_cliente', null);
         } else {
           ver_errores(e);
         }
@@ -1049,8 +1051,10 @@ function guardar_y_editar_cliente(e) {
 }
 
 function mostrar_para_editar_cliente() {
-  $("#cargando-11-fomulario").hide();
-  $("#cargando-12-fomulario").show();
+  limpiar_form_cliente();
+
+  $("#cargando-3-fomulario").hide();
+  $("#cargando-4-fomulario").show();
 
   $('#modal-agregar-cliente').modal('show');
   $(".tooltip").remove();
@@ -1060,20 +1064,40 @@ function mostrar_para_editar_cliente() {
     e = JSON.parse(e);  console.log(e);
 
     if (e.status == true) {     
-      $("#idcliente_prov").val(e.data.idcliente);
-      $("#tipo_documento_prov option[value='" + e.data.tipo_documento + "']").attr("selected", true);
-      $("#nombre_prov").val(e.data.razon_social);
-      $("#num_documento_prov").val(e.data.ruc);
-      $("#direccion_prov").val(e.data.direccion);
-      $("#telefono_prov").val(e.data.telefono);
-      $("#banco_prov").val(e.data.idbancos).trigger("change");
-      $("#c_bancaria_prov").val(e.data.cuenta_bancaria);
-      $("#cci_prov").val(e.data.cci);
-      $("#c_detracciones_prov").val(e.data.cuenta_detracciones);
-      $("#titular_cuenta_prov").val(e.data.titular_cuenta);      
+      $("#tipo_documento_cli").val(e.data.tipo_documento).trigger("change");
+      $("#nombre_cli").val(e.data.nombres);
+      $("#num_documento_cli").val(e.data.numero_documento);
+      $("#direccion_cli").val(e.data.direccion);
+      $("#telefono_cli").val(e.data.celular);
+      $("#email_cli").val(e.data.correo);
+           
+      $("#titular_cuenta_cli").val(e.data.titular_cuenta);
+      $("#idpersona_cli").val(e.data.idpersona);
+      $("#ruc_cli").val(e.data.ruc);   
+    
+      $("#cta_bancaria_cli").val(e.data.cuenta_bancaria).trigger("change"); 
+      $("#cci_cli").val(e.data.cci).trigger("change"); 
+      $("#banco_cli").val(e.data.idbancos).trigger("change"); 
 
-      $("#cargando-11-fomulario").show();
-      $("#cargando-12-fomulario").hide();
+      $("#sueldo_mensual_cli").val(e.data.sueldo_mensual);
+      $("#sueldo_diario_cli").val(e.data.sueldo_diario);  
+
+      $("#input_socio_cli").val(e.data.es_socio); 
+      $("#id_tipo_persona_cli").val(e.data.idtipo_persona); 
+      
+      if (e.data.es_socio==1) {        
+        $("#input_socio_cli").val('1');
+        $(".sino_cli").html('(SI)');        
+        if($('#socio_cli').is(':checked') ){  }else{ $("#socio_cli").prop('checked', true); }
+      }
+
+      if (e.data.foto_perfil!="") {
+        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
+        $("#foto1_actual").val(e.data.foto_perfil);
+      }
+
+      $("#cargando-3-fomulario").show();
+      $("#cargando-4-fomulario").hide();
     } else {
       ver_errores(e);
     }    
@@ -1110,33 +1134,34 @@ init();
 $(function () {
 
   // Aplicando la validacion del select cada vez que cambie
-  // $("#idcliente").on('change', function() { $(this).trigger('blur'); });
-  // $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
-  // $("#forma_pago").on('change', function() { $(this).trigger('blur'); });
-  // $("#tipo_pago").on('change', function() { $(this).trigger('blur'); });
-  // $("#banco_prov").on('change', function() { $(this).trigger('blur'); });
+  $("#idcliente").on('change', function() { $(this).trigger('blur'); });
+  $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
+  $("#metodo_pagos").on('change', function() { $(this).trigger('blur'); });
+
+  $("#num_documento_cli").on('change', function() { $(this).trigger('blur'); });
+  $("#banco_cli").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-compras").validate({
     ignore: '.select2-input, .select2-focusser',
     rules: {
-      idcliente:        { required: true },
+      idcliente:          { required: true },
       tipo_comprobante:   { required: true },
-      numero_comprobante:  { minlength: 2 },
+      numero_comprobante: { minlength: 2 },
       descripcion:        { minlength: 4 },
       fecha_compra:       { required: true },
-      glosa:              { required: true },
+      metodo_pago:        { required: true },
       val_igv:            { required: true, number: true, min:0, max:1 },
     },
     messages: {
-      idcliente:        { required: "Campo requerido", },
+      idcliente:          { required: "Campo requerido", },
       tipo_comprobante:   { required: "Campo requerido", },
-      numero_comprobante:  { minlength: "Minimo 2 caracteres", },
+      numero_comprobante: { minlength: "Minimo 2 caracteres", },
       descripcion:        { minlength: "Minimo 4 caracteres", },
       fecha_compra:       { required: "Campo requerido", },
-      glosa:              { required: "Campo requerido", },
+      metodo_pago:        { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       'peso_bruto[]':     { min: "Mínimo 0.01", required: "Campo requerido"},
-      'dcto_humedad[]':  { min: "Mínimo 0.00", required: "Campo requerido"},
+      'dcto_humedad[]':   { min: "Mínimo 0.00", required: "Campo requerido"},
       'porcentaje_cascara[]':{ min: "Mínimo 0.00", required: "Campo requerido"},
       'dcto_embase[]':    { min: "Mínimo 0.00", required: "Campo requerido"},
       'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
@@ -1166,28 +1191,26 @@ $(function () {
 
   $("#form-cliente").validate({
     rules: {
-      tipo_documento_prov:  { required: true },
-      num_documento_prov:   { required: true, minlength: 6, maxlength: 20 },
-      nombre_prov:          { required: true, minlength: 3, maxlength: 100 },
-      direccion_prov:       { minlength: 5, maxlength: 150 },
-      telefono_prov:        { minlength: 8 },
-      c_bancaria_prov:      { minlength: 6,  },
-      cci_prov:             { minlength: 6,  },
-      c_detracciones_prov:  { minlength: 6,  },      
-      banco_prov:           { required: true },
-      titular_cuenta_prov:  { minlength: 4 },
+      tipo_documento_cli: { required: true },
+      num_documento_cli:  { required: true, minlength: 6, maxlength: 20 },
+      nombre_cli:         { required: true, minlength: 6, maxlength: 100 },
+      email_cli:          { email: true, minlength: 10, maxlength: 50 },
+      direccion_cli:      { minlength: 5, maxlength: 70 },
+      telefono_cli:       { minlength: 8 },
+      cta_bancaria_cli:   { minlength: 10,},
+      banco_cli:          { required: true},
+      sueldo_mensual_cli: { required: true},
     },
     messages: {
-      tipo_documento_prov:  { required: "Campo requerido.", },
-      num_documento_prov:   { required: "Campo requerido.",  minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
-      nombre_prov:          { required: "Campo requerido.", minlength: "MÍNIMO 3 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
-      direccion_prov:       { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 150 caracteres.", },
-      telefono_prov:        { minlength: "MÍNIMO 9 caracteres.", },
-      c_bancaria_prov:      { minlength: "MÍNIMO 6 caracteres.", },
-      cci_prov:             { minlength: "MÍNIMO 6 caracteres.",  },
-      c_detracciones_prov:  { minlength: "MÍNIMO 6 caracteres.", },      
-      banco_prov:           { required: "Campo requerido.",  },
-      titular_cuenta_prov:  { minlength: 'MÍNIMO 4 caracteres.' },
+      tipo_documento_cli: { required: "Campo requerido.", },
+      num_documento_cli:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
+      nombre_cli:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
+      email_cli:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
+      direccion_cli:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
+      telefono_cli:       { minlength: "MÍNIMO 8 caracteres.", },
+      cta_bancaria_cli:   { minlength: "MÍNIMO 10 caracteres.", },
+      banco_cli:          { required: "Campo requerido.", },
+      sueldo_mensual_cli: { required: "Campo requerido.", }
     },
 
     errorElement: "span",
@@ -1207,58 +1230,17 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardar_cliente(e);
+      guardar_y_editar_cliente(e);
     },
   });
 
-  $("#form-pago-compra").validate({
-    rules: {
-      forma_pago:         { required: true },
-      tipo_pago:          { required: true },
-      banco_pago:         { required: true },
-      fecha_pago:         { required: true },
-      monto_pago:         { required: true },
-      numero_op_pago:     { minlength: 3 },
-      descripcion_pago:   { minlength: 3 },
-      titular_cuenta_pago:{ minlength: 3 },
-    },
-    messages: {
-      forma_pago:         { required: "Campo requerido.", },
-      tipo_pago:          { required: "Campo requerido.", },
-      banco_pago:         { required: "Campo requerido.", },
-      fecha_pago:         { required: "Campo requerido.", },
-      monto_pago:         { required: "Campo requerido.", },
-      numero_op_pago:     { minlength: 'MÍNIMO 3 caracteres.' },
-      descripcion_pago:   { minlength: 'MÍNIMO 3 caracteres.' },
-      titular_cuenta_pago:{ minlength: 'MÍNIMO 3 caracteres.' },
-    },
 
-    errorElement: "span",
+  $("#idcliente").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#metodo_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
-    errorPlacement: function (error, element) {
-      error.addClass("invalid-feedback");
-      element.closest(".form-group").append(error);
-    },
-
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass("is-invalid").removeClass("is-valid");
-    },
-
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass("is-invalid").addClass("is-valid");
-    },
-
-    submitHandler: function (e) {
-      guardaryeditar_pago(e);
-    },
-  });  
-
-  // $("#idcliente").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#banco_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#forma_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#tipo_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#banco_prov").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#num_documento_cli").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#banco_cli").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });
 
 
