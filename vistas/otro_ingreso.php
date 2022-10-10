@@ -116,7 +116,7 @@
                                   <!--Proveedor-->
                                    
 
-                                  <div class="col-sm-12 col-md-9 col-lg-5 col-xl-5">
+                                  <div class="col-sm-12 col-md-9 col-lg-7 col-xl-7">
                                     <div class="form-group">
                                       <label for="idproveedor">Proveedor <sup class="text-danger">*</sup></label>
                                       <!-- <div class="input-group"> -->
@@ -141,10 +141,10 @@
                                         </button>
                                       </a>
                                     </div>
-                                  </div>                                 
-
+                                  </div>  
+                                  
                                   <!--forma pago-->
-                                  <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
                                       <label for="forma_pago">Forma Pago</label>
                                       <select name="forma_pago" id="forma_pago" class="form-control select2" style="width: 100%;">
@@ -166,65 +166,15 @@
                                         <option value="Nota de venta">Nota de venta</option>
                                       </select>
                                     </div>
-                                  </div>
-
-                                  <!-- RUC style="display: none;"-->
-                                  <!-- <div class="col-lg-4 div_ruc" style="display: none;"  >
-                                    <div class="form-group">
-                                      <label for="ruc">R.U.C</label>
-                                      <div class="input-group">
-                                        <input type="number" name="ruc" class="form-control" id="ruc" placeholder="N° de documento" />
-                                        <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar razón social" onclick="buscar_sunat();">
-                                          <span class="input-group-text" style="cursor: pointer;">
-                                            <i class="fas fa-search text-primary" id="search"></i>
-                                            <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge" style="display: none;"></i>
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div> -->
-
-                                  <!-- Razón social--> 
-                                  <!-- <div class="col-lg-8 div_razon_social" style="display: none;">
-                                    <div class="form-group">
-                                      <label class="razon_social" for="razon_social">Razón social </label>
-                                      <input type="text" name="razon_social" id="razon_social" class="form-control" placeholder="Razón social" readonly />
-                                      <input type="hidden" name="direccion" id="direccion"   />
-                                    </div>
-                                  </div> -->
-
-                                  <!-- Glosa-->
-                                  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" id="content-t-comprob">
-                                    <div class="form-group">
-                                      <label for="glosa">Selecc. Glosa</label>
-                                      <select name="glosa" id="glosa" class="form-control select2" placeholder="Seleccinar">
-                                      
-                                        <option value="ALIMENTACIÓN">ALIMENTACIÓN</option>
-                                        <option value="COMBUSTIBLE">COMBUSTIBLE</option>
-                                        <option value="MATERIAL">MATERIAL</option>
-                                        <option value="PLOTEO">PLOTEO</option>
-                                        <option value="AGUA">AGUA</option>
-                                        <option value="COMPRAS">COMPRAS</option>
-                                        <option value="SIERRA Y EXAGONALES">SIERRA Y EXAGONALES</option>
-                                        <option value="HERRAMIENTAS">HERRAMIENTAS</option>
-                                        <option value="ACERO Y CEMENTO">ACERO Y CEMENTO</option>
-                                        <option value="ESTACIONAMIENTO">ESTACIONAMIENTO</option>
-                                        <option value="PERSONALES">PERSONALES</option>
-                                        <option value="PASAJE">PASAJE</option>
-                                        <option value="EPPS">EPPS</option>
-                                        <option value="OTROS">OTROS</option>
-                                        
-                                      </select>
-                                    </div>
-                                  </div>
+                                  </div>                                  
 
                                   <!-- Código-->
-                                  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                  <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                     <div class="form-group">
                                       <label class="nro_comprobante" for="nro_comprobante">Núm. comprobante </label>
                                       <input type="text" name="nro_comprobante" id="nro_comprobante" class="form-control" placeholder="Código" />
                                     </div>
-                                  </div>
+                                  </div>                                  
 
                                   <!-- Fecha 1  -->
                                   <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">

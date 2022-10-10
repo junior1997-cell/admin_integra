@@ -92,7 +92,7 @@ class ChartCompraGrano
       // $factura_total_pago = ejecutarConsultaSimpleFila($sql_9);  if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
-      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto), SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
+      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
       FROM compra_grano as cg, detalle_compra_grano as dcg
       WHERE cg.idcompra_grano = dcg.idcompra_grano AND  YEAR(cg.fecha_compra) = '$year_filtro'
       GROUP BY dcg.tipo_grano ;";
@@ -100,14 +100,8 @@ class ChartCompraGrano
 
       if ( !empty($productos_mas_vendidos['data']) ) {
         foreach ($productos_mas_vendidos['data'] as $key => $value) {
-          array_push($producto_mas_vendido_nombre, 'peso neto');
-          array_push($producto_mas_vendido_nombre, 'decto humedad');
-          array_push($producto_mas_vendido_nombre, 'dcto cascara');
-          array_push($producto_mas_vendido_nombre, 'dcto embase');
+          array_push($producto_mas_vendido_nombre, $value['tipo_grano']);
           array_push($producto_mas_vendido_cantidad, $value['peso_neto']);
-          array_push($producto_mas_vendido_cantidad, $value['dcto_humedad']);
-          array_push($producto_mas_vendido_cantidad, $value['porcentaje_cascara']);
-          array_push($producto_mas_vendido_cantidad, $value['dcto_embase']);
         }        
       }
 
@@ -163,7 +157,7 @@ class ChartCompraGrano
       // if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
-      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto), SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
+      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
       FROM compra_grano as cg, detalle_compra_grano as dcg
       WHERE cg.idcompra_grano = dcg.idcompra_grano AND MONTH(cg.fecha_compra)='$mes_filtro' AND  YEAR(cg.fecha_compra) = '$year_filtro'
       GROUP BY dcg.tipo_grano;";
@@ -172,14 +166,8 @@ class ChartCompraGrano
 
       if ( !empty($productos_mas_vendidos['data']) ) {
         foreach ($productos_mas_vendidos['data'] as $key => $value) {
-          array_push($producto_mas_vendido_nombre, 'peso neto');
-          array_push($producto_mas_vendido_nombre, 'decto humedad');
-          array_push($producto_mas_vendido_nombre, 'dcto cascara');
-          array_push($producto_mas_vendido_nombre, 'dcto embase');
+          array_push($producto_mas_vendido_nombre, $value['tipo_grano']);
           array_push($producto_mas_vendido_cantidad, $value['peso_neto']);
-          array_push($producto_mas_vendido_cantidad, $value['dcto_humedad']);
-          array_push($producto_mas_vendido_cantidad, $value['porcentaje_cascara']);
-          array_push($producto_mas_vendido_cantidad, $value['dcto_embase']);
         }        
       }
     }
