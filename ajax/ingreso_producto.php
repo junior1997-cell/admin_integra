@@ -343,7 +343,7 @@ if (!isset($_SESSION["nombre"])) {
           <div class="col-lg-6">
             <div class="form-group">
               <label class="font-size-15px" for="idproveedor">Proveedor</label>
-              <h5 class="form-control form-control-sm" >'.$rspta['data']['razon_social'].'</h5>
+              <h5 class="form-control form-control-sm" >'.$rspta['data']['nombres'].'</h5>
             </div>
           </div>
           <!-- fecha -->
@@ -351,13 +351,6 @@ if (!isset($_SESSION["nombre"])) {
             <div class="form-group">
               <label class="font-size-15px" for="fecha_compra">Fecha </label>
               <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['fecha_compra']).' </span>
-            </div>
-          </div>
-          <!-- fecha -->
-          <div class="col-lg-3">
-            <div class="form-group">
-              <label class="font-size-15px" for="fecha_compra">Glosa </label>
-              <span class="form-control form-control-sm">'.$rspta['data']['glosa'].' </span>
             </div>
           </div>
           <!-- Tipo de comprobante -->

@@ -54,6 +54,10 @@ class Ingreso_producto
 
           $compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($compra_new['status'] == false) { return  $compra_new;}
 
+          //add update table producto el stock
+          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
+          $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
+
           //add registro en nuestra bitacora.
           $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_producto','".$compra_new['data']."','Detalle compra','" . $_SESSION['idusuario'] . "')";
           $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
@@ -166,6 +170,7 @@ class Ingreso_producto
 
   //Implementamos un método para desactivar categorías
   public function desactivar($idcompra_producto) {
+    // var_dump($idcompra_producto);die();
     $sql = "UPDATE compra_producto SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idcompra_producto='$idcompra_producto'";
 		$desactivar= ejecutarConsulta($sql);
 
@@ -250,23 +255,10 @@ class Ingreso_producto
   //mostrar detalles uno a uno de la factura
   public function ver_compra($idcompra_producto) {
 
-    $sql = "SELECT cpp.idcompra_producto as idcompra_producto, 
-		cpp.idproyecto , 
-		cpp.idproveedor , 
-		p.razon_social , p.tipo_documento, p.ruc, p.direccion, p.telefono, 
-		cpp.fecha_compra , 
-		cpp.tipo_comprobante , 
-		cpp.serie_comprobante , 
-    cpp.val_igv,
-		cpp.descripcion , 
-    cpp.glosa,
-		cpp.subtotal, 
-		cpp.igv , 
-		cpp.total ,
-    cpp.tipo_gravada ,
-		cpp.estado 
-		FROM compra_producto as cpp, proveedor as p 
-		WHERE idcompra_producto='$idcompra_producto'  AND cpp.idproveedor = p.idproveedor";
+    $sql = "SELECT cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
+    cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
+    FROM compra_producto as cp, persona as p 
+    WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
 
     return ejecutarConsultaSimpleFila($sql);
   }
