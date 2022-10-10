@@ -24,7 +24,7 @@ function init() {
   $("#categoria_producto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
 // ══════════════════════════════════════ I N I T I A L I Z E   N U M B E R   F O R M A T ══════════════════════════════════════
   //$('#precio_unitario').number( true, 2 );
-  $('#precio_unitario').number( true, 2 );
+  //$('#precio_unitario').number( true, 2 );
   //formato_miles_input('#precio_unitario');
   $('.jq_image_zoom').zoom({ on:'grab' });
   // Formato para telefono
@@ -61,7 +61,7 @@ function limpiar_form_material() {
   // $("#marca").val("");
   $("#descripcion").val("");
 
-  $("#precio_unitario").val("");
+  $("#precio_unitario").val('0:00');
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto_activo_fijo.png");
   $("#foto1").val("");
@@ -70,7 +70,7 @@ function limpiar_form_material() {
 
   $("#unidad_medida").val("null").trigger("change");
   $("#contenido_neto").val(1).trigger("change");
-  $("#stock").val(0).trigger("change");
+  $("#stock").val('0:00').trigger("change");
   $("#marca").val("").trigger("change");
   $("#categoria_producto").val("").trigger("change");
  
@@ -402,7 +402,7 @@ $(function () {
       marca:              { required: true },
       unidad_medida:      { required: true },
       contenido_neto:     {  min: 1, number: true },
-      precio_unitario:    { required: true },
+      //precio_unitario:    { required: true },
       descripcion:        { minlength: 4 },
       
     },
@@ -412,7 +412,7 @@ $(function () {
       marca:              { required: "Campo requerido" },
       unidad_medida:      { required: "Campo requerido" },
       contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },
-      precio_unitario:    { required: "Ingresar precio compra", },      
+      //precio_unitario:    { required: "Ingresar precio compra", },      
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 

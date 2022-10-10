@@ -73,20 +73,14 @@
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
-                                <th>Cuenta bancaria</th>
+                                <th>Fecha de Pago</th>
+                                <th>Monto a Pagar</th>
+                                <th>Descripción</th>
+                                <th>Comprobante</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
-                                <th>Tipo</th>
                                 <th>Num Doc.</th>
-                                <th>Nacimiento</th>
-                                <th>Edad</th>
-                                <th>Banco</th>
-                                <th>Cta. Cte.</th>
-                                <th>CCI</th>
-                                <th>Sueldo mensual</th>
-                                <th>Sueldo Diario</th>
+                                
                               </tr>
                             </thead>
                             <tbody></tbody>
@@ -97,20 +91,13 @@
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
-                                <th>Cuenta bancaria</th>
+                                <th>Fecha de Pago</th>
+                                <th>Monto a Pagar</th>
+                                <th>Descripción</th>
+                                <th>Comprobante</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
-                                <th>Tipo</th>
                                 <th>Num Doc.</th>
-                                <th>Nacimiento</th>
-                                <th>Edad</th>
-                                <th>Banco</th>
-                                <th>Cta. Cte.</th>
-                                <th>CCI</th>
-                                <th>Sueldo mensual</th>
-                                <th>Sueldo Diario</th>
                               </tr>
                             </tfoot>
                           </table>
@@ -128,10 +115,10 @@
 
                 <!-- Modal agregar trabajador -->
                 <div class="modal fade" id="modal-agregar-trabajador">
-                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                  <div class="modal-dialog modal-dialog-scrollable modal-md">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Agregar trabajador</h4>
+                        <h4 class="modal-title">Pagar trabajador</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
@@ -144,41 +131,15 @@
 
                             <div class="row" id="cargando-1-fomulario">
                               <!-- id trabajador -->
-                              <input type="hidden" name="idtrabajador" id="idtrabajador" />
-                              <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="tipo_documento">Tipo de documento</label>
-                                  <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
-                                    <option selected value="DNI">DNI</option>
-                                    <option value="RUC">RUC</option>
-                                    <option value="CEDULA">CEDULA</option>
-                                    <option value="OTRO">OTRO</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <!-- N° de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="num_documento">N° de documento</label>
-                                  <div class="input-group">
-                                    <input type="number" name="num_documento" class="form-control" id="num_documento" placeholder="N° de documento" />
-                                    <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('');">
-                                      <span class="input-group-text" style="cursor: pointer;">
-                                        <i class="fas fa-search text-primary" id="search"></i>
-                                        <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge" style="display: none;"></i>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                              <input type="hidden" name="idpago_trabajador" id="idpago_trabajador" />
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-12 ">
                                 <div class="form-group">
-                                  <label for="nombre">Nombre y Apellidos/Razon Social</label>
-                                  <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
+                                  <label for="nombre_trab">Nombre y Apellidos</label>                                  
+                                  <select name="nombre_trabajador" id="nombre_trabajador" class="form-control select2 nombre_trabajador" onchange="extraer_sueldo_trabajador();" style="width: 100%; ">
+                                    <!-- Aqui listamos los cargo_trabajador -->
+                                  </select>
                                 </div>
                               </div>
                               <!-- Swichs permanente -->
@@ -190,127 +151,67 @@
                                   </div>
                                   <input type="hidden" name="input_socio" id="input_socio" value="0"  >
                               </div> -->
-
-                              <!-- Correo electronico -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <!-- Sueldo(Mensual) -->
+                              <div class="col-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                  <label for="email">Correo electrónico</label>
-                                  <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
+                                  <label for="extraer_cargo">Cargo Trabajador</label>
+                                  <input type="text" disabled step="any" name="extraer_cargo" class="form-control" id="extraer_cargo" />
                                 </div>
                               </div>
-
-                              <!-- Telefono -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              
+                              <!-- Sueldo(Mensual) -->
+                              <div class="col-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                  <label for="telefono">Teléfono</label>
-                                  <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                  <label for="sueldo_mensual">Sueldo Mensual</label>
+                                  <input type="number" disabled step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
                                 </div>
                               </div>
 
                               <!-- fecha de nacimiento -->
-                              <div class="col-12 col-sm-10 col-md-6 col-lg-3">
+                              <div class="col-12 col-sm-10 col-md-6">
                                 <div class="form-group">
-                                  <label for="nacimiento">Fecha Nacimiento</label>
+                                  <label for="nacimiento">Fecha de Pago</label>
                                   <input
                                     type="date"
                                     class="form-control"
                                     name="nacimiento"
                                     id="nacimiento"
                                     placeholder="Fecha de Nacimiento"
-                                    onclick="calcular_edad('#nacimiento', '#edad', '.edad');"
-                                    onchange="calcular_edad('#nacimiento', '#edad', '.edad');"
+                                    
                                   />
                                   <input type="hidden" name="edad" id="edad" />
                                 </div>
-                              </div>
+                              </div> 
 
-                              <!-- edad -->
-                              <div class="col-12 col-sm-2 col-md-6 col-lg-1">
+                              <!-- Monto a pagar -->
+                              <div class="col-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                  <label for="edad">Edad</label>
-                                  <p class="edad" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
+                                  <label for="monto_pago">Monto a Pagar</label>
+                                  <input type="number" step="any" name="monto_pago" class="form-control" id="monto_pago" />
                                 </div>
                               </div>
 
-                              <!-- banco -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <!-- Monto a restante -->
+                              <!--<div class="col-12 col-sm-6 col-md-6">
                                 <div class="form-group">
-                                  <label for="banco">Banco</label>
-                                  <select name="banco" id="banco" class="form-control select2 banco" style="width: 100%;" onchange="formato_banco();">
-                                    <!-- Aqui listamos los bancos -->
-                                  </select>
+                                  <label for="monto_restante">Monto restante</label>
+                                  <input type="number" disabled step="any" name="monto_restante" class="form-control" id="monto_restante" />
                                 </div>
-                              </div>
+                              </div>  -->                     
 
-                              <!-- Cuenta bancaria -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cta_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
-                                  <input type="text" name="cta_bancaria" class="form-control" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
-                                </div>
-                              </div>
 
-                              <!-- CCI -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <!--descripcion-->
+                              <div class="col-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                  <label for="cci" class="chargue-format-2">CCI</label>
-                                  <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
-                                </div>
-                              </div>
-
-                              <!-- Titular de la cuenta -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="titular_cuenta">Titular de la cuenta</label>
-                                  <input type="text" name="titular_cuenta" class="form-control" id="titular_cuenta" placeholder="Titular de la cuenta" />
-                                </div>
-                              </div>
-
-                              <!-- Ruc -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="ruc">Ruc</label>
-                                  <input type="number" name="ruc" class="form-control" id="ruc" placeholder="Ingrese número de ruc" />
-                                </div>
-                              </div>
-                              <!-- cargo_trabajador  -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="cargo_trabajador">Cargo </label>
-                                  <select name="cargo_trabajador" id="cargo_trabajador" class="form-control select2 cargo_trabajador" style="width: 100%;">
-                                    <!-- Aqui listamos los cargo_trabajador -->
-                                  </select>
-                                </div>
-                              </div>
-
-                              <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-                                <div class="form-group">
-                                  <label for="sueldo_mensual">Sueldo(Mensual)</label>
-                                  <input type="number" step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
-                                </div>
-                              </div>
-
-                              <!-- Sueldo(Diario) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-                                <div class="form-group">
-                                  <label for="sueldo_diario">Sueldo(Diario)</label>
-                                  <input type="number" step="any" name="sueldo_diario" class="form-control" id="sueldo_diario" readonly />
-                                </div>
-                              </div>
-
-                              <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-8">
-                                <div class="form-group">
-                                  <label for="direccion">Dirección</label>
-                                  <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
+                                  <label for="descripcion">Descripción </label> <br />
+                                  <textarea name="descripcion" id="descripcion" class="form-control" rows="2"></textarea>
                                 </div>
                               </div>
 
                               <!-- imagen perfil -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-6 col-md-6 ">
                                 <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
-                                <label for="foto1">Foto de perfil</label> <br />
+                                <label for="foto1">Comprobante de Pago</label> <br />
                                 <img onerror="this.src='../dist/img/default/img_defecto.png';" src="../dist/img/default/img_defecto.png" class="img-thumbnail" id="foto1_i" style="cursor: pointer !important;" width="auto" />
                                 <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
                                 <input type="hidden" name="foto1_actual" id="foto1_actual" />

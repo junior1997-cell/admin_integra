@@ -61,9 +61,9 @@
     /* ══════════════════════════════════════ T R A B A J A D O R ══════════════════════════════════════ */
 
     public function select2_trabajador(){
-      $sql = "SELECT idtrabajador as id, nombres as nombre, tipo_documento as documento, numero_documento, imagen_perfil 
-      FROM trabajador WHERE estado = '1' AND estado_delete = '1' ORDER BY nombres ASC;";
-      return ejecutarConsulta($sql);
+      $sql = "SELECT t.idtrabajador as id, t.nombres as nombre, t.tipo_documento as documento, t.sueldo_mensual, t.numero_documento, t.imagen_perfil, ct.nombre as cargo_trabajador
+      FROM trabajador as t, cargo_trabajador as ct WHERE ct.idcargo_trabajador = t.idcargo_trabajador AND t.estado = '1' AND t.estado_delete = '1' ORDER BY t.nombres ASC;";
+      return ejecutarConsultaArray($sql);
     }
 
     public function select2_tipo_trabajador() {

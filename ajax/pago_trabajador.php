@@ -25,49 +25,38 @@
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
       
+      $idpago_trabajador	  	= isset($_POST["idpago_trabajador"])? limpiarCadena($_POST["idpago_trabajador"]):"";
       $idtrabajador	  	= isset($_POST["idtrabajador"])? limpiarCadena($_POST["idtrabajador"]):"";
-      $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
-      $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
+      $nombre_trabajador 		      = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
       $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
-      $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
-      $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";
-      $nacimiento		    = isset($_POST["nacimiento"])? limpiarCadena($_POST["nacimiento"]):"";
-      $edad		          = isset($_POST["edad"])? limpiarCadena($_POST["edad"]):"";      
-      $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-      $banco            = isset($_POST["banco"])? $_POST["banco"] :"";     
-      $cta_bancaria		  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cta_bancaria_format= isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-      $cci	          	= isset($_POST["cci"])?$_POST["cci"]:"";
-      $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
-      $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
-      $ruc	          	= isset($_POST["ruc"])? limpiarCadena($_POST["ruc"]):"";
-      $idcargo_trabajador = isset($_POST["cargo_trabajador"])? limpiarCadena($_POST["cargo_trabajador"]):"";
-      $sueldo_mensual   = isset($_POST["sueldo_mensual"])? limpiarCadena($_POST["sueldo_mensual"]):"";
-      $sueldo_diario    = isset($_POST["sueldo_diario"])? limpiarCadena($_POST["sueldo_diario"]):"";
+      $fecha_pago		      = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
+      $monto		    = isset($_POST["monto"])? limpiarCadena($_POST["monto"]):"";
+      $descripcion		    = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
+      
        
-      $imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
+      $imagen1			    = isset($_POST["comprobante"])? limpiarCadena($_POST["comprobante"]):"";
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
 
           // imgen de perfil
-          if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
+          if (!file_exists($_FILES['comprobante']['tmp_name']) || !is_uploaded_file($_FILES['comprobante']['tmp_name'])) {
 
 						$imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
 
 					} else {
 
-						$ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;						
+						$ext1 = explode(".", $_FILES["comprobante"]["name"]); $flat_img1 = true;						
 
             $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
-            move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/trabajador/perfil/" . $imagen1);
+            move_uploaded_file($_FILES["comprobante"]["tmp_name"], "../dist/docs/trabajador/perfil/" . $imagen1);
 						
 					}
 
-          if (empty($idtrabajador)){
+          if (empty($pago_trabajador)){
             
-            $rspta=$pago_trabajador->insertar($idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1);
+            $rspta=$pago_trabajador->insertar($idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1);
             
             echo json_encode($rspta, true);
   
@@ -81,7 +70,7 @@
             }            
 
             // editamos un trabajador existente
-            $rspta=$pago_trabajador->editar($idtrabajador,$idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria_format,  $cci_format,  $titular_cuenta, $ruc,$sueldo_mensual,$sueldo_diario, $imagen1);
+            $rspta=$pago_trabajador->editar($idpago_trabajador, $idtrabajador, $fecha_pago, $monto, $descripcion, $imagen1);
             
             echo json_encode($rspta, true);
           }            
@@ -126,32 +115,24 @@
               $data[]=array(
                 "0"=>$cont++,
                 "1"=>'<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idtrabajador'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
-                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_trabajador('.$value['idtrabajador'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'.
+                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_trabajador('.$value['idtrabajador'].', \''.encodeCadenaHtml($value['nombre_trab']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'.
                   ' <button class="btn btn-info btn-sm" onclick="verdatos('.$value['idtrabajador'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
                 "2"=>'<div class="user-block">
                   <img class="img-circle" src="../dist/docs/trabajador/perfil/'. $value['imagen_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
-                  <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
+                  <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombre_trabajador'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                   </div>',
                 "3"=> $value['cargo'],
                 "4"=> '<div>
                 <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
-                <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
-                "5"=>'<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['telefono'] . '</a>',
-                "6"=>format_d_m_a($value['fecha_nacimiento']).'<b>: </b>'. '<b>'.calculaedad($value['fecha_nacimiento']).'</b>' ,
-                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
-                "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
-                "9"=> $value['nombres'],
-                "10"=> $value['tipo_documento'],
+                "5"=> $value['fecha_pago'],
+                "6"=> $value['monto_pago'],
+                "7"=> $value['descripcion'],
+                "8"=> $value['comprobante'],
+                "9"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+                "10"=> $value['nombre_trabajador'],
                 "11"=> $value['numero_documento'],
-                "12"=> format_d_m_a($value['fecha_nacimiento']),
-                "13"=>calculaedad($value['fecha_nacimiento']),
-                "14"=> $value['banco'],
-                "15"=> $value['cuenta_bancaria'],
-                "16"=> $value['cci'],
-                "17"=> number_format($value['sueldo_mensual']),
-                "18"=> $value['sueldo_diario'],
 
               );
             }

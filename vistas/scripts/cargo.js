@@ -12,13 +12,11 @@ function init() {
   listar_cargo();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  //lista_select2("../ajax/ajax_general.php?op=select2TipoTrabajador", '#idtipo_trabjador_c', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro_cargo").on("click", function (e) {$("#submit-form-cargo").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
-  //$("#idtipo_trabjador_c").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo", allowClear: true, });
   
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -60,7 +58,10 @@ function listar_cargo() {
       // columna: #
       if (data[0] != '') { $("td", row).eq(0).addClass("text-center"); }
       // columna: #
-      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap"); }
+      if (data[1] != '') { $("td", row).eq(1).addClass("text-nowrap text-center"); }
+      // columna: #
+      if (data[3] != '') { $("td", row).eq(3).addClass("text-center"); }
+     
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",

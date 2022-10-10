@@ -49,16 +49,36 @@
         //Vamos a declarar un array
         $data = [];  $cont = 1;
 
+        
+
         $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
         if ($rspta['status']) {
           while ($reg = $rspta['data']->fetch_object()) {
+
+            //static butom
+
+            $disable = ""; $onclick = ""; $onclick_mostrar = ""; $editar_title = ""; $eliminar_title = "";
+
+            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
+              $disable = 'disabled';
+            }
+            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
+              $onclick = '';
+              $editar_title = 'Sin Acción';
+              $eliminar_title = 'Sin Acción';
+
+            }else {  $onclick = $reg->idtipo_persona;   $editar_title = 'Editar'; $eliminar_title = 'Eliminar o Papelera'; }
+            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
+              $onclick_mostrar = "";
+            }else {  $onclick_mostrar = 'mostrar_tipo(' . $reg->idtipo_persona . ')';  }
+            
             $data[] = [
               "0" => $cont++,
-              "1" => $reg->estado ? '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_persona . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-danger  btn-sm" onclick="eliminar_tipo(' .  $reg->idtipo_persona .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>'
-                : '<button class="btn btn-warning btn-sm" onclick="mostrar_tipo(' . $reg->idtipo_persona . ')"><i class="fas fa-pencil-alt"></i></button>' .
-                  ' <button class="btn btn-primary btn-sm" onclick="activar_tipo(' . $reg->idtipo_persona . ')"><i class="fa fa-check"></i></button>',
+              "1" => $reg->estado ? '<button class="btn btn-warning '.$disable.' btn-sm"  onclick="'.$onclick_mostrar.'" data-toggle="tooltip" data-original-title="'.$editar_title.'"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-danger '.$disable.' btn-sm" onclick="eliminar_tipo(' .  $onclick .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="'.$eliminar_title.'"><i class="fas fa-skull-crossbones"></i> </button>'
+                : '<button class="btn btn-warning '.$disable.' btn-sm"  onclick="'.$onclick_mostrar.'"><i class="fas fa-pencil-alt"></i></button>' .
+                  ' <button class="btn btn-primary '.$disable.' btn-sm" onclick="activar_tipo(' . $onclick . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
               "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
                 $reg->descripcion,
