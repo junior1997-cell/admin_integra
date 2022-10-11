@@ -37,6 +37,8 @@ function init() {
   lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#filtro_proveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
+  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
 
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
@@ -49,7 +51,7 @@ function init() {
 
   $("#guardar_registro_comprobante_compra").on("click", function (e) {  $("#submit-form-comprobante-compra").submit();  });  
 
-  $("#guardar_registro_material").on("click", function (e) {  $("#submit-form-materiales").submit(); });  
+  $("#guardar_registro_material").on("click", function (e) {  $("#submit-form-producto").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
   $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
@@ -59,13 +61,9 @@ function init() {
 
   $("#idproveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true, });
 
-  $("#glosa").select2({templateResult: templateGlosa, theme: "bootstrap4", placeholder: "Selecione Glosa", allowClear: true, });
-
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione Comprobante", allowClear: true, });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
-
-  $("#banco_pago").select2({ templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });  
 
   $("#forma_pago").select2({ theme: "bootstrap4", placeholder: "Selecione una forma de pago", allowClear: true, });
 
@@ -79,13 +77,8 @@ function init() {
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
-  $("#categoria_insumos_af_p").select2({ theme: "bootstrap4", placeholder: "Seleccinar Clasificación", allowClear: true, });
-
-  // $("#color_p").select2({templateResult: templateColor, theme: "bootstrap4", placeholder: "Seleccinar color", allowClear: true, });
-
-  $("#unidad_medida_p").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
-
-  $("#idtipo_tierra_concreto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una Grupo", allowClear: true, });
+  $("#unidad_medida").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
+  $("#categoria_producto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
 
   no_select_tomorrow("#fecha_compra");
 
@@ -120,21 +113,6 @@ function templateBanco (state) {
   return $state;
 };
 
-
-function templateColor (state) {
-  if (!state.id) { return state.text; }
-  var color_bg = state.title != '' ? `${state.title}`: '#ffffff00';   
-  var $state = $(`<span ><b style="background-color: ${color_bg}; color: ${color_bg};" class="mr-2"><i class="fas fa-square"></i><i class="fas fa-square"></i></b>${state.text}</span>`);
-  return $state;
-}
-
-function templateGlosa (state) {
-  if (!state.id) { return state.text; }  
-  var $state = $(`<span ><b class="mr-2"><i class="${state.title}"></i></b>${state.text}</span>`);
-  return $state;
-}
-
-
 // ::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A S :::::::::::::::::::::::::::::::::::::::::::::
 
 //Función limpiar
@@ -144,7 +122,6 @@ function limpiar_form_compra() {
   $("#idcompra_producto").val("");
   $("#idproveedor").val("null").trigger("change");
   $("#tipo_comprobante").val("Ninguno").trigger("change");
-  $("#glosa").val("null").trigger("change");
 
   $("#serie_comprobante").val("");
   $("#val_igv").val(0);
@@ -413,7 +390,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
 
     if ($(".producto_" + idproducto).hasClass("producto_selecionado")) {
       
-      toastr_success("Agregado!!",`Material: ${nombre} agregado !!`, 700);
+      toastr_success("Agregado!!",`Producto: ${nombre} agregado !!`, 700);
 
       var cant_producto = $(".producto_" + idproducto).val();
 
@@ -441,7 +418,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
       var fila = `
       <tr class="filas" id="fila${cont}">         
         <td class="">
-          <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_material(${idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
+          <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
           <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
         </td>
         <td class="">         
@@ -449,10 +426,10 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
           <div class="user-block text-nowrap">
             <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img_p}', '${encodeHtml(nombre)}')">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
-            <span class="description color_${cont}"><b>Categoría: </b>${categoria}</span>
+            <span class="description categoria_${cont}"><b>Categoría: </b>${categoria}</span>
           </div>
         </td>
-        <td class=""><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="color_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
+        <td class=""><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
         <td class=" form-group"><input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
         <td class=" hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
         <td class=" hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
@@ -829,7 +806,7 @@ function mostrar_compra(idcompra_producto) {
           var fila = `
           <tr class="filas" id="fila${cont}">
             <td>
-              <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_material(${element.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
+              <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${element.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
               <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button></td>
             </td>
             <td>
@@ -837,10 +814,10 @@ function mostrar_compra(idcompra_producto) {
               <div class="user-block text-nowrap">
                 <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img}', '${encodeHtml(element.nombre)}')">
                 <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre}</p></span>
-                <span class="description color_${cont}"><b>Categoría: </b>${element.categoria}</span>
+                <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
               </div>
             </td>
-            <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="color_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${element.categoria}"></td>
+            <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${element.categoria}"></td>
             <td class="form-group"><input class="producto_${element.idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${element.cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="hidden"><input class="w-135px input-no-border precio_sin_igv_${cont}" type="number" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${element.precio_sin_igv}" readonly ></td>
             <td class="hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number"  name="precio_igv[]" id="precio_igv[]" value="${element.igv}" readonly ></td>
@@ -1344,17 +1321,22 @@ function mostrar_para_editar_proveedor() {
     e = JSON.parse(e);  console.log(e);
 
     if (e.status == true) {     
-      $("#idproveedor_prov").val(e.data.idproveedor);
-      $("#tipo_documento_prov option[value='" + e.data.tipo_documento + "']").attr("selected", true);
-      $("#nombre_prov").val(e.data.razon_social);
-      $("#num_documento_prov").val(e.data.ruc);
-      $("#direccion_prov").val(e.data.direccion);
-      $("#telefono_prov").val(e.data.telefono);
-      $("#banco_prov").val(e.data.idbancos).trigger("change");
-      $("#c_bancaria_prov").val(e.data.cuenta_bancaria);
-      $("#cci_prov").val(e.data.cci);
-      $("#c_detracciones_prov").val(e.data.cuenta_detracciones);
-      $("#titular_cuenta_prov").val(e.data.titular_cuenta);      
+      $("#tipo_documento").val(e.data.tipo_documento).trigger("change");
+      $("#nombre").val(e.data.nombres);
+      $("#num_documento").val(e.data.numero_documento);
+      $("#direccion").val(e.data.direccion);
+      $("#telefono").val(e.data.celular);
+      $("#email").val(e.data.correo);
+           
+      $("#titular_cuenta").val(e.data.titular_cuenta);
+      $("#idpersona").val(e.data.idpersona);
+      $("#ruc").val(e.data.ruc);   
+    
+      $("#cta_bancaria").val(e.data.cuenta_bancaria).trigger("change"); 
+      $("#cci").val(e.data.cci).trigger("change"); 
+      $("#banco").val(e.data.idbancos).trigger("change"); 
+
+      $("#id_tipo_persona").val(e.data.idtipo_persona); 
 
       $("#cargando-11-fomulario").show();
       $("#cargando-12-fomulario").hide();
@@ -1855,7 +1837,6 @@ function eliminar_pago_compra(idpago_compras, nombre) {
   });
 }
 
-
 function ver_modal_vaucher(imagen, fecha_pago) {
 
   var data_comprobante = ""; var url = ""; var nombre_download = "Comprobante";
@@ -1957,71 +1938,33 @@ function listarmateriales() {
   }).DataTable();
 }
 
-function mostrar_material(idproducto, cont) { 
+function mostrar_productos(idproducto, cont) { 
 
   $("#cargando-9-fomulario").hide();
   $("#cargando-10-fomulario").show();
   
-  limpiar_materiales();  
+  limpiar_producto();  
 
-  $("#modal-agregar-material-activos-fijos").modal("show");
+  $("#modal-agregar-productos").modal("show");
 
-  $.post("../ajax/ingreso_producto.php?op=mostrar_materiales", { 'idproducto_p': idproducto }, function (e, status) {
+  $.post("../ajax/ingreso_producto.php?op=mostrar_productos", { 'idproducto': idproducto }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);    
 
     if (e.status == true) {
-      $("#idproducto_p").val(e.data.idproducto);
+      $("#idproducto").val(e.data.idproducto);
       $("#cont").val(cont);
-
-      $("#nombre_p").val(e.data.nombre);
-      $("#modelo_p").val(e.data.modelo);
-      $("#serie_p").val(e.data.serie);
-      $("#marca_p").val(e.data.marca);
-      $("#descripcion_p").val(e.data.descripcion);
-
-      $('#precio_unitario_p').val(e.data.precio_unitario);
-      $("#estado_igv_p").val(e.data.estado_igv);
-      $("#precio_sin_igv_p").val(e.data.precio_sin_igv);
-      $("#precio_igv_p").val(e.data.precio_igv);
-      $("#precio_total_p").val(e.data.precio_total);
+      $('#nombre_producto').val(e.data.nombre);
+      $("#marca").val(e.data.marca).trigger("change");  
+      $("#descripcion").val(e.data.descripcion);
+      $("#stock").val(e.data.stock); 
+      $("#contenido_neto").val(e.data.contenido_neto);  
+      $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
       
-      $("#unidad_medida_p").val(e.data.idunidad_medida).trigger("change");
-      $("#color_p").val(1);
-      $("#categoria_insumos_af_p").val(e.data.idcategoria_insumos_af).trigger("change");
-      $("#idtipo_tierra_concreto").val(e.data.idtipo_tierra_concreto).trigger("change");    
-
-      if (e.data.estado_igv == "1") {
-        $("#my-switch_igv").prop("checked", true);
-      } else {
-        $("#my-switch_igv").prop("checked", false);
-      }
+      $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
       
-      if (e.data.imagen != "") {
-        
-        $("#foto2_i").attr("src", "../dist/docs/material/img_perfil/" + e.data.imagen);
+      $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
 
-        $("#foto2_actual").val(e.data.imagen);
-      }
-
-      // FICHA TECNICA
-      if (e.data.ficha_tecnica == "" || e.data.ficha_tecnica == null  ) {
-
-        $("#doc2_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-
-        $("#doc2_nombre").html('');
-
-        $("#doc_old_2").val(""); $("#doc2").val("");
-
-      } else {
-
-        $("#doc_old_2").val(e.data.ficha_tecnica); 
-
-        $("#doc2_nombre").html(`<div class="row"> <div class="col-md-12"><i>Ficha-tecnica.${extrae_extencion(e.data.ficha_tecnica)}</i></div></div>`);
-        
-        $("#doc2_ver").html(doc_view_extencion(e.data.ficha_tecnica, 'material', 'ficha_tecnica', '100%', '210'));
-        
-      } 
       $('.jq_image_zoom').zoom({ on:'grab' });
       $("#cargando-9-fomulario").show();
       $("#cargando-10-fomulario").hide();
@@ -2032,36 +1975,19 @@ function mostrar_material(idproducto, cont) {
 }
 
 //Función limpiar
-function limpiar_materiales() {
-  $("#idproducto_p").val("");  
-  $("#nombre_p").val("");
-  $("#modelo_p").val("");
-  $("#serie_p").val("");
-  $("#marca_p").val("1");
-  $("#descripcion_p").val("");
+function limpiar_producto() {
 
-  $("#precio_unitario_p").val("");
-  $("#precio_sin_igv_p").val("");
-  $("#precio_igv_p").val("");
-  $("#precio_total_p").val("");
+  
+  //Mostramos los Materiales
+  $("#idproducto").val("");  
+  $("#nombre_producto").val("");
+  $("#descripcion").val("");
 
-  $("#foto2_i").attr("src", "../dist/img/default/img_defecto_activo_fijo_material.png");
-  $("#foto2").val("");
-  $("#foto2_actual").val("");
-  $("#foto2_nombre").html("");   
-
-  $("#doc_old_2").val("");
-  $("#doc2").val("");  
-  $('#doc2_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
-  $('#doc2_nombre').html("");
-
-  $("#unidad_medida_p").val("").trigger("change");
-  $("#color_p").val(1);
-  $("#categoria_insumos_af_p").val("").trigger("change");
-  $("#idtipo_tierra_concreto").val("").trigger("change");
-
-  $("#my-switch_igv").prop("checked", true);
-  $("#estado_igv_p").val("1");
+  $("#unidad_medida").val("null").trigger("change");
+  $("#contenido_neto").val(1);
+  $("#stock").val('0:00').trigger("change");
+  $("#marca").val("");
+  $("#categoria_producto").val("").trigger("change");
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -2070,12 +1996,12 @@ function limpiar_materiales() {
 }
 
 //Función para guardar o editar
-function guardar_y_editar_materiales(e) {
+function guardar_y_editar_productos(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-materiales")[0]);
+  var formData = new FormData($("#form-producto")[0]);
 
   $.ajax({
-    url: "../ajax/ingreso_producto.php?op=guardar_y_editar_materiales",
+    url: "../ajax/ingreso_producto.php?op=guardar_y_editar_productos",
     type: "POST",
     data: formData,
     contentType: false,
@@ -2087,7 +2013,7 @@ function guardar_y_editar_materiales(e) {
           Swal.fire("Correcto!", "Producto creado correctamente", "success");
           tablamateriales.ajax.reload(null, false);
           actualizar_producto();
-          $("#modal-agregar-material-activos-fijos").modal("hide");
+          $("#modal-agregar-productos").modal("hide");
 
         } else {
           ver_errores(e);
@@ -2177,20 +2103,21 @@ $("#my-switch_igv").on("click ", function (e) {
 
 function actualizar_producto() {
 
-  var idproducto = $("#idproducto_p").val(); 
+  var idproducto = $("#idproducto").val(); 
   var cont = $("#cont").val(); 
 
-  var nombre_p = $("#nombre_p").val();  
-  var precio_total_p = $("#precio_total_p").val();
-  var unidad_medida_p = $("#unidad_medida_p").find(':selected').text();
-  var color_p = $("#color_p").val();  
+  var nombre_p = $("#nombre_producto").val();  
+  var precio_total_p = $("#precio_unitario").val();
+  var unidad_medida_p = $("#unidad_medida").find(':selected').text();
+  var categoria_p = $("#categoria_producto").find(':selected').text();
+  console.log("idproducto: " + idproducto + " cont: " + cont + " nombre_p: " + nombre_p + " precio_total_p: " + precio_total_p + " unidad_medida_p: " + unidad_medida_p + " categoria_p: " + categoria_p);
 
   if (idproducto == "" || idproducto == null) {
      
   } else {
     $(`.nombre_producto_${cont}`).html(nombre_p); 
-    $(`.color_${cont}`).html(`<b>Color: </b>${color_p}`);
-    $(`.color_${cont}`).val(color_p); 
+    $(`.categoria_${cont}`).html(`<b>Cateogría: </b>${categoria_p}`);
+    $(`.categoria_${cont}`).val(categoria_p); 
     $(`.unidad_medida_${cont}`).html(unidad_medida_p); 
     $(`.unidad_medida_${cont}`).val(unidad_medida_p);
     $(`.precio_con_igv_${cont}`).val(precio_total_p);  
@@ -2219,20 +2146,15 @@ init();
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
 $(function () {
+    // Aplicando la validacion del select cada vez que cambie
+
+  $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
+  $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
   $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
   $("#banco").on('change', function() { $(this).trigger('blur'); });
-  // Aplicando la validacion del select cada vez que cambie
-  $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
-  $("#glosa").on('change', function() { $(this).trigger('blur'); });
-  $("#banco_pago").on('change', function() { $(this).trigger('blur'); });
-  $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
-  $("#forma_pago").on('change', function() { $(this).trigger('blur'); });
-  $("#tipo_pago").on('change', function() { $(this).trigger('blur'); });
-  // $("#banco_prov").on('change', function() { $(this).trigger('blur'); });
-  $("#categoria_insumos_af_p").on('change', function() { $(this).trigger('blur'); });
-  // $("#color_p").on('change', function() { $(this).trigger('blur'); });
-  $("#unidad_medida_p").on('change', function() { $(this).trigger('blur'); });
-  $("#idtipo_tierra_concreto").on('change', function() { $(this).trigger('blur'); });
+  
+  $('#unidad_medida').on('change', function() { $(this).trigger('blur'); });
+  $('#categoria_producto').on('change', function() { $(this).trigger('blur'); });
 
   $("#form-compras").validate({
     ignore: '.select2-input, .select2-focusser',
@@ -2242,7 +2164,6 @@ $(function () {
       serie_comprobante:  { minlength: 2 },
       descripcion:        { minlength: 4 },
       fecha_compra:       { required: true },
-      glosa:              { required: true },
       val_igv:            { required: true, number: true, min:0, max:1 },
     },
     messages: {
@@ -2251,7 +2172,6 @@ $(function () {
       serie_comprobante:  { minlength: "Minimo 2 caracteres", },
       descripcion:        { minlength: "Minimo 4 caracteres", },
       fecha_compra:       { required: "Campo requerido", },
-      glosa:              { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
       'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"}
@@ -2322,26 +2242,23 @@ $(function () {
     },
   });
 
-  $("#form-pago-compra").validate({
+  $("#form-producto").validate({
     rules: {
-      forma_pago:         { required: true },
-      tipo_pago:          { required: true },
-      banco_pago:         { required: true },
-      fecha_pago:         { required: true },
-      monto_pago:         { required: true },
-      numero_op_pago:     { minlength: 3 },
-      descripcion_pago:   { minlength: 3 },
-      titular_cuenta_pago:{ minlength: 3 },
+      nombre_producto:    { required: true, minlength:3, maxlength:200},
+      categoria_producto: { required: true },
+      marca:              { required: true },
+      unidad_medida:      { required: true },
+      contenido_neto:     {  min: 1, number: true },
+      descripcion:        { minlength: 4 },
+      
     },
     messages: {
-      forma_pago:         { required: "Campo requerido.", },
-      tipo_pago:          { required: "Campo requerido.", },
-      banco_pago:         { required: "Campo requerido.", },
-      fecha_pago:         { required: "Campo requerido.", },
-      monto_pago:         { required: "Campo requerido.", },
-      numero_op_pago:     { minlength: 'MÍNIMO 3 caracteres.' },
-      descripcion_pago:   { minlength: 'MÍNIMO 3 caracteres.' },
-      titular_cuenta_pago:{ minlength: 'MÍNIMO 3 caracteres.' },
+      nombre_producto:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
+      categoria_producto: { required: "Campo requerido", },
+      marca:              { required: "Campo requerido" },
+      unidad_medida:      { required: "Campo requerido" },
+      contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },    
+      descripcion:        { minlength: "Minimo 4 caracteres" },
     },
 
     errorElement: "span",
@@ -2360,96 +2277,19 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardaryeditar_pago(e);
-    },
-  });
-
-  $("#form-comprobante").validate({
-    rules: {
-      nombre: { required: true },
-    },
-
-    messages: {
-      nombre: {  required: "Este campo es requerido", },
-    },
-
-    errorElement: "span",
-
-    errorPlacement: function (error, element) {
-      error.addClass("invalid-feedback");
-      element.closest(".form-group").append(error);
-    },
-
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass("is-invalid").removeClass("is-valid");
-    },
-
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass("is-invalid").addClass("is-valid");
-    },
-
-    submitHandler: function (e) {
-      guardaryeditar_comprobante(e);
-    },
-  });
-
-  $("#form-materiales").validate({
-    rules: {
-      nombre_p:               { required: true, minlength:3, maxlength:200},      
-      // color_p:                { required: true },
-      descripcion_p:          { minlength: 3 },
-      // modelo_p:               { minlength: 3 },
-      unidad_medida_p:        { required: true },
-      precio_unitario_p:      { required: true },      
-      categoria_insumos_af_p: { required: true },
-      idtipo_tierra_concreto:  { required: true },
-    },
-    messages: {
-      nombre_p:               { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },      
-      // color_p:                { required: "Campo requerido" },
-      descripcion_p:          { minlength: "Minimo 3 caracteres" },
-      // modelo_p:               { minlength: "Minimo 3 caracteres", },
-      unidad_medida_p:        { required: "Campo requerido" },
-      precio_unitario_p:      { required: "Ingresar precio compra", },      
-      categoria_insumos_af_p: { required: "Campo requerido", },
-      idtipo_tierra_concreto:  { required: "Campo requerido", },
-    },
-
-    errorElement: "span",
-
-    errorPlacement: function (error, element) {
-      error.addClass("invalid-feedback");
-      element.closest(".form-group").append(error);
-    },
-
-    highlight: function (element, errorClass, validClass) {
-      $(element).addClass("is-invalid").removeClass("is-valid");
-    },
-
-    unhighlight: function (element, errorClass, validClass) {
-      $(element).removeClass("is-invalid").addClass("is-valid");
-    },
-
-    submitHandler: function (e) {
-      guardar_y_editar_materiales(e);
+      guardar_y_editar_productos(e);
     },
 
   });
 
   $("#idproveedor").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#glosa").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#banco_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#forma_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#tipo_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#banco_prov").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#categoria_insumos_af_p").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // $("#color_p").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#unidad_medida_p").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#idtipo_tierra_concreto").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  // ---------------------------
   $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+
+  $('#unidad_medida').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#categoria_producto').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+
 });
 
 function l_m() {

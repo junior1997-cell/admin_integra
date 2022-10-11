@@ -57,7 +57,7 @@ class Producto
   //Implementamos un método para editar registros
   public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil)
   {
-   
+    // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
     $sql = "UPDATE producto SET 
 
 		idcategoria_producto = '$idcategoria_producto',

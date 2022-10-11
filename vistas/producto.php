@@ -150,11 +150,11 @@
                               
                               <!-- Stock -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
-                              <div class="form-group">
-                                <label for="stock">Stock: </label>
-                                <input type="text" name="stock" value="0" id="stock" class="form-control" readonly="readonly">                                  
+                                <div class="form-group">
+                                  <label for="stock">Stock: </label>
+                                  <input type="text" name="stock" value="0" id="stock" class="form-control" readonly="readonly">                                  
+                                </div>
                               </div>
-                            </div>
 
                               <!-- Unnidad de medida-->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
@@ -171,7 +171,6 @@
                                   <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
                                 </div>
                               </div>
-
 
                               <!--Precio U-->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
