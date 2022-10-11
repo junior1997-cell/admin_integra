@@ -419,15 +419,6 @@ if (!isset($_SESSION["nombre"])) {
     
       break;      
 
-      // ::::::::::::::::::::::::::::::::::::::::: S I N C R O N I Z A R  :::::::::::::::::::::::::::::::::::::::::
-      case 'sincronizar_comprobante':
-
-        $rspta = $compra_producto->sincronizar_comprobante();
-        //Codificar el resultado utilizando json
-        echo json_encode($rspta, true);
-
-      break; 
-
       default: 
         $rspta = ['status'=>'error_code', 'message'=>'Te has confundido en escribir en el <b>swich.</b>', 'data'=>[]]; echo json_encode($rspta, true); 
       break;

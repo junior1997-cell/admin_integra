@@ -139,16 +139,16 @@ class Ingreso_producto
   public function mostrar_compra_para_editar($idcompra_producto) {
 
     $sql = "SELECT  cp.idcompra_producto,cp.fecha_compra,cp.idpersona, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
-    cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
+    cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, p.direccion,p.correo
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
 
     $compra=  ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) {return $compra; }
 
     $sql = "SELECT dcp.idproducto, dcp.unidad_medida, dcp.categoria, dcp.cantidad, dcp.precio_sin_igv, dcp.igv, dcp.precio_con_igv, 
-    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria 
-    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c 
-    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND dcp.idcompra_producto ='$idcompra_producto';";
+    dcp.precio_venta, dcp.descuento, dcp.subtotal, p.nombre, p.imagen, c.nombre as categoria, um.abreviatura
+    FROM detalle_compra_producto as dcp, producto as p, categoria_producto as c, unidad_medida as um
+    WHERE dcp.idproducto =p.idproducto AND p.idcategoria_producto = c.idcategoria_producto AND p.idunidad_medida = um.idunidad_medida AND dcp.idcompra_producto ='$idcompra_producto';";
 
     $detalle = ejecutarConsultaArray($sql);    if ($detalle['status'] == false) {return $detalle; }
 
@@ -261,26 +261,6 @@ class Ingreso_producto
 
   }
 
-  // ::::::::::::::::::::::::::::::::::::::::: S I N C R O N I Z A R  ::::::::::::::::::::::::::::::::::::::::: 
-  public function sincronizar_comprobante() {
-    $sql = "SELECT idcompra_producto, comprobante FROM compra_producto WHERE comprobante != 'null' AND comprobante != '';";
-    $comprobantes = ejecutarConsultaArray($sql);
-    if ($comprobantes == false) {  return $comprobantes; }
-
-    foreach ($comprobantes['data'] as $key => $value) {
-      $id_compra = $value['idcompra_producto']; $comprobante = $value['comprobante'];
-      $sql2 = "INSERT INTO factura_compra_insumo ( idcompra_producto, comprobante ) VALUES ( '$id_compra', '$comprobante')";
-      $factura_compra = ejecutarConsulta($sql2);
-      if ($factura_compra == false) {  return $factura_compra; }
-    }
-
-    $sql3 = "SELECT	idcompra_producto, comprobante FROM factura_compra_insumo ;";
-    $factura_compras = ejecutarConsultaArray($sql3);
-    if ($factura_compras == false) {  return $factura_compras; }
-
-    return $retorno = ['status'=>true, 'message'=>'todo oka', 'data'=>['comprobante'=>$comprobantes['data'],'factura_compras'=>$factura_compras['data'],], ];
-  } 
-   
 }
 
 ?>
