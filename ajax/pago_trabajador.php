@@ -17,6 +17,10 @@
 
       require_once "../modelos/Pago_trabajador.php";
 
+      require_once "../modelos/Trabajador.php";
+
+      $trabajador = new Trabajador();
+
       $pago_trabajador = new PagoTrabajador;
 
       date_default_timezone_set('America/Lima');
@@ -24,25 +28,24 @@
 
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+
       
       $idpago_trabajador	  	= isset($_POST["idpago_trabajador"])? limpiarCadena($_POST["idpago_trabajador"]):"";
-      $idtrabajador	  	= isset($_POST["idtrabajador"])? limpiarCadena($_POST["idtrabajador"]):"";
-      $nombre_trabajador 		      = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
-      $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
+      $idtrabajador 		      = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
       $fecha_pago		      = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
-      $monto		    = isset($_POST["monto"])? limpiarCadena($_POST["monto"]):"";
+      $monto		    = isset($_POST["monto_pago"])? limpiarCadena($_POST["monto_pago"]):"";
       $descripcion		    = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
       
-       
-      $imagen1			    = isset($_POST["comprobante"])? limpiarCadena($_POST["comprobante"]):"";
+      //$imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
+      $comprobante			    = isset($_POST["comprobante"])? limpiarCadena($_POST["comprobante"]):"";
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
-
+          
           // imgen de perfil
           if (!file_exists($_FILES['comprobante']['tmp_name']) || !is_uploaded_file($_FILES['comprobante']['tmp_name'])) {
 
-						$imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
+						$imagen1=$_POST["comprobante_actual"]; $flat_img1 = false;
 
 					} else {
 
@@ -54,7 +57,7 @@
 						
 					}
 
-          if (empty($pago_trabajador)){
+          if (empty($idpago_trabajador)){
             
             $rspta=$pago_trabajador->insertar($idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1);
             
@@ -95,15 +98,15 @@
 
         case 'mostrar':
 
-          $rspta=$pago_trabajador->mostrar($idtrabajador);
+          $rspta=$pago_trabajador->mostrar($idpago_trabajador);
           //Codificar el resultado utilizando json
           echo json_encode($rspta, true);
 
         break;
 
-        case 'tbla_principal':          
+        case 'tbla_trabajador':          
 
-          $rspta=$pago_trabajador->tbla_principal();
+          $rspta=$trabajador->tbla_principal();
           
           //Vamos a declarar un array
           $data= Array(); $cont=1;
@@ -115,24 +118,33 @@
               $data[]=array(
                 "0"=>$cont++,
                 "1"=>'<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idtrabajador'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
-                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_trabajador('.$value['idtrabajador'].', \''.encodeCadenaHtml($value['nombre_trab']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'.
+                  ' <button class="btn btn-danger btn-sm" onclick="eliminar_trabajador('.$value['idtrabajador'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'.
                   ' <button class="btn btn-info btn-sm" onclick="verdatos('.$value['idtrabajador'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
                 "2"=>'<div class="user-block">
                   <img class="img-circle" src="../dist/docs/trabajador/perfil/'. $value['imagen_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
-                  <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombre_trabajador'] .'</p></span>
+                  <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                   </div>',
                 "3"=> $value['cargo'],
                 "4"=> '<div>
                 <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
+                <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
-                "5"=> $value['fecha_pago'],
-                "6"=> $value['monto_pago'],
-                "7"=> $value['descripcion'],
-                "8"=> $value['comprobante'],
-                "9"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
-                "10"=> $value['nombre_trabajador'],
+                "5"=>'<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['telefono'] . '</a>',
+              "6"=> '<button class="btn btn-sm" onclick="tbla_pago_trabajador(' . $value['idtrabajador'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" ><i class="fas fa-file-invoice fa-lg"></i></button>',
+                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
+                "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+                
+                "9"=> $value['nombres'],
+                "10"=> $value['tipo_documento'],
                 "11"=> $value['numero_documento'],
+                "12"=> format_d_m_a($value['fecha_nacimiento']),
+                "13"=>calculaedad($value['fecha_nacimiento']),
+                "14"=> $value['banco'],
+                "15"=> $value['cuenta_bancaria'],
+                "16"=> $value['cci'],
+                "17"=> number_format($value['sueldo_mensual']),
+                "18"=> $value['sueldo_diario'],
 
               );
             }
@@ -146,7 +158,43 @@
           } else {
             echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
           }
-        break;  
+        break;
+
+        case 'tbla_pago_trabajador':          
+
+          $rspta=$pago_trabajador->tbla_principal($_GET["idpago_trabajador"]);
+          
+          //Vamos a declarar un array
+          $data= Array(); $cont=1;
+
+          if ($rspta['status'] == true) {
+
+            foreach ($rspta['data'] as $key => $value) {             
+          
+              $data[]=array(
+                "0"=>$cont++,
+                "1"=> $value['anio'],
+                "2"=>$value['nombre_mes'],
+                "3"=> $_GET["sueldo_mensual"],
+                "4"=> $value['monto_pagado'],
+                "5"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['nombre_mes'].');" >Ver Detalle</button>',
+                
+
+              );
+            }
+            $results = array(
+              "sEcho"=>1, //Información para el datatables
+              "iTotalRecords"=>count($data), //enviamos el total registros al datatable
+              "iTotalDisplayRecords"=>1, //enviamos el total registros a visualizar
+              "data"=>$data);
+            echo json_encode($results, true);
+
+          } else {
+            echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+          }
+        break; 
+        
+          
 
         case 'verdatos':
           $rspta=$pago_trabajador->verdatos($idtrabajador);

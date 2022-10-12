@@ -8,21 +8,20 @@ function init() {
 
   $("#lAllTrabajador").addClass("active");
 
-  tbla_principal();
+  tbla_trabajador();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   lista_select2("../ajax/ajax_general.php?op=select2Trabajador", '#nombre_trabajador', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
   $("#guardar_registro").on("click", function (e) {  $("#submit-form-trabajador").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
-  $("#banco").select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
+  
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
-  $("#nombre_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione Trabajador", allowClear: true, });
+  //$("#nombre_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione Trabajador", allowClear: true, });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -66,9 +65,6 @@ function limpiar_form_trabajador() {
   
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
 
-  $("#cargo_trabajador").val("null").trigger("change");
-  $("#nombre_trabajador").val("null").trigger("change");
-
   $("#idtrabajador").val("");
   $("#idpago_trabajador").val("");
   $("#num_documento").val(""); 
@@ -84,7 +80,7 @@ function limpiar_form_trabajador() {
 	$("#foto1_actual").val("");  
   $("#foto1_nombre").html("");
   
-  $("#comprobantei").attr("src", "../dist/img/default/img_defecto.png");
+  $("#comprobante_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#comprobante").val("");
 	$("#comprobante_actual").val("");  
   $("#comprobante_nombre").html("");
@@ -94,9 +90,22 @@ function limpiar_form_trabajador() {
   $(".form-control").removeClass('is-invalid');
   $(".error.invalid-feedback").remove();
 }
+function show_hide_table(flag) {
+  if (flag == 1) {
+    $("#div-tabla-trabajador").show();
+    $("#div-tabla-pago-trabajador").hide();
+    $("#btn-agregar").hide();
+    $("#btn-regresar").hide();
+  } else if (flag == 2) {
+    $("#div-tabla-trabajador").hide();
+    $("#div-tabla-pago-trabajador").show();
+    $("#btn-agregar").show();
+    $("#btn-regresar").show();
+  }
+}
 
 //Función Listar
-function tbla_principal() {
+function tbla_trabajador() {
 
   tabla=$('#tabla-trabajador').dataTable({
     responsive: true,
@@ -105,12 +114,12 @@ function tbla_principal() {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10,11], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10,11], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10,11], } }, {extend: "colvis"} ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10,11,12,13,5,3,17,18,14,15,16,], } }, {extend: "colvis"} ,
     ],
     ajax:{
-      url: '../ajax/trabajador.php?op=tbla_principal',
+      url: '../ajax/pago_trabajador.php?op=tbla_trabajador',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -132,11 +141,65 @@ function tbla_principal() {
     iDisplayLength: 10,//Paginación
     order: [[ 0, "asc" ]],//Ordenar (columna,orden)
     columnDefs: [
-      { targets: [9, 10, 11], visible: false, searchable: false, }, 
+      { targets: [8, 9, 10, 11, 12, 13, 14, 15, 16,17,18], visible: false, searchable: false, }, 
     ],
   }).DataTable();
 
 }
+
+//Función Listar
+function tbla_pago_trabajador(idpago_trabajador, nombres, sueldo_mensual, cargo) {
+  console.log(idpago_trabajador, sueldo_mensual, cargo);
+ limpiar_form_trabajador();
+
+
+  $("#nombre_trabajador").val(nombres);
+  $("#sueldo_mensual").val(sueldo_mensual);
+  $("#extraer_cargo").val(cargo);
+
+  show_hide_table(2);
+
+  tabla=$('#tabla-pago-trabajador').dataTable({
+    responsive: true,
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
+    aProcessing: true,//Activamos el procesamiento del datatables
+    aServerSide: true,//Paginación y filtrado realizados por el servidor
+    dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
+    buttons: [
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10], } }, {extend: "colvis"} ,
+    ],
+    ajax:{
+      url: `../ajax/pago_trabajador.php?op=tbla_pago_trabajador&idpago_trabajador=${idpago_trabajador}&nombre_trabajador=${nombres}&sueldo_mensual=${sueldo_mensual}&extraer_cargo=${cargo}`,
+      type : "get",
+      dataType : "json",						
+      error: function(e){
+        console.log(e.responseText);  ver_errores(e);
+      }
+    },
+    createdRow: function (row, data, ixdex) {
+      // columna: #
+      if (data[0] != '') { $("td", row).eq(0).addClass('text-center'); } 
+      // columna: 1
+      if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
+    },
+    language: {
+      lengthMenu: "Mostrar: _MENU_ registros",
+      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
+      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
+    },
+    bDestroy: true,
+    iDisplayLength: 10,//Paginación
+    order: [[ 0, "asc" ]],//Ordenar (columna,orden)
+    columnDefs: [
+      //{ targets: [], visible: false, searchable: false, }, 
+    ],
+  }).DataTable();
+
+}
+
+
 
 //Función para guardar o editar
 function guardar_y_editar_trabajador(e) {
@@ -144,7 +207,7 @@ function guardar_y_editar_trabajador(e) {
   var formData = new FormData($("#form-trabajador")[0]);
 
   $.ajax({
-    url: "../ajax/trabajador.php?op=guardaryeditar",
+    url: "../ajax/pago_trabajador.php?op=guardaryeditar",
     type: "POST",
     data: formData,
     contentType: false,
@@ -191,7 +254,7 @@ function guardar_y_editar_trabajador(e) {
 }
 
 // ver detallles del registro
-function verdatos(idtrabajador){
+function verdatos(idpago_trabajador){
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
@@ -208,9 +271,9 @@ function verdatos(idtrabajador){
 
   var imagen_perfil =''; btn_imagen_perfil=''; 
 
-  $("#modal-ver-trabajador").modal("show")
+  $("#modal-ver-pago_trabajador").modal("show")
 
-  $.post("../ajax/trabajador.php?op=verdatos", { idtrabajador: idtrabajador }, function (e, status) {
+  $.post("../ajax/pago_trabajador.php?op=verdatos", { idpago_trabajador: idpago_trabajador }, function (e, status) {
 
     e = JSON.parse(e);  //console.log(e); 
     
@@ -227,7 +290,7 @@ function verdatos(idtrabajador){
             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trab}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trabajador}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
@@ -244,43 +307,14 @@ function verdatos(idtrabajador){
               <tbody>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th rowspan="2" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
-                  <td> <b>Nombre: </b>${e.data.nombre_trab}</td>
+                  <td> <b>Nombre: </b>${e.data.nombre_trabajador}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <td> <b>DNI: </b>${e.data.numero_documento}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Dirección</th>
-                  <td>${e.data.direccion}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Correo</th>
-                  <td>${e.data.email}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Teléfono</th>
-                  <td>${e.data.telefono}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Fecha Nac.</th>
-                  <td>${e.data.fecha_nacimiento}</td>
-                </tr>
-                
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Titular cuenta </th>
-                  <td>${e.data.titular_cuenta}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Banco </th>
-                  <td>${e.data.banco}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Cuenta bancaria </th>
-                  <td>${e.data.cuenta_bancaria}</td>
-                </tr>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>cci </th>
-                  <td>${e.data.cci}</td>
+                  <th>Fecha de Pago</th>
+                  <td>${e.data.fecha_pago}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Sueldo mensual </th>
@@ -290,6 +324,15 @@ function verdatos(idtrabajador){
                   <th>Sueldo diario </th>
                   <td>${e.data.sueldo_diario}</td>
                 </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Monto a Pagar</th>
+                  <td>${e.data.monto_pago}</td>
+                </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>Descripcion</th>
+                  <td>${e.data.descripcion}</td>
+                </tr>
+                
               </tbody>
             </table>
           </div>
@@ -306,7 +349,7 @@ function verdatos(idtrabajador){
 }
 
 // mostramos los datos para editar
-function mostrar(idtrabajador) {
+function mostrar(idpago_trabajador) {
   $(".tooltip").removeClass("show").addClass("hidde");
   limpiar_form_trabajador();  
 
@@ -315,24 +358,26 @@ function mostrar(idtrabajador) {
 
   $("#modal-agregar-trabajador").modal("show")
 
-  $.post("../ajax/trabajador.php?op=mostrar", { idtrabajador: idtrabajador }, function (e, status) {
+  $.post("../ajax/pago_trabajador.php?op=mostrar", { idpago_trabajador: idpago_trabajador }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);   
 
-    if (e.status == true) {       
+    if (e.status == true) {         
       
-      $("#idpago_trabajador").val(e.data.idpago_trabajador).trigger("change");
-      $("#idtrabajador").val(e.data.idtrabajador);
-      $("#nombre_trabajador").val(e.data.nombre_trabajador).trigger("change");
-      $("#num_documento").val(e.data.numero_documento);
+      $("#idpago_trabajador").val(e.data.idpago_trabajador).trigger("change");      
+      $("#nombre_trabajador").val(e.data.idtrabajador).trigger("change");
       $("#fecha_pago").val(e.data.fecha_pago);
-      $("#monto_pago").val(e.data.monto_pago);
+      $("#monto_pago").val(e.data.monto);
       $("#descripcion").val(e.data.descripcion);
        
 
       if (e.data.imagen_perfil!="") {
         $("#foto1_i").attr("src", "../dist/docs/trabajador/perfil/" + e.data.imagen_perfil);
         $("#foto1_actual").val(e.data.imagen_perfil);
+      }
+      if (e.data.comprobante!="") {
+        $("#comprobante_i").attr("src", "../dist/docs/pago_trabajador/comprobante/" + e.data.comprobante);
+        $("#comprobante_actual").val(e.data.comprobante);
       }
       calcular_edad('#nacimiento','.edad','#edad'); 
 
@@ -346,12 +391,12 @@ function mostrar(idtrabajador) {
 }
 
 //Función para desactivar registros
-function eliminar_trabajador(idtrabajador, nombre) {
+function eliminar_trabajador(idpago_trabajador, nombre) {
 
   crud_eliminar_papelera(
-    "../ajax/trabajador.php?op=desactivar",
-    "../ajax/trabajador.php?op=eliminar", 
-    idtrabajador, 
+    "../ajax/pago_trabajador.php?op=desactivar",
+    "../ajax/pago_trabajador.php?op=eliminar", 
+    idpago_trabajador, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
@@ -365,20 +410,10 @@ function eliminar_trabajador(idtrabajador, nombre) {
  
 }
 
-/* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
+/* =========================== S E C C I O N   DE T A L L E   D E   P A G O S =========================== */
 
-function recuperar_banco() {
-  
-  $.post("../ajax/trabajador.php?op=recuperar_banco", function (e, textStatus, jqXHR) {
-    e = JSON.parse(e); console.log(e);
-    if (e.status == true) {
-      toastr_success('oka', 'se realzo toda la transaccion', 700);
-      tabla.ajax.reload(null, false); 
-    } else {
-      ver_errores(e);
-    }
-    $('#recuperar_banco').addClass('disabled');
-  });
+function ver_desglose_de_pago(nombre_mes) {
+  $('#nombre_mes').modal('show');
 }
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
@@ -441,38 +476,6 @@ $(function () {
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
 
-// damos formato a: Cta, CCI
-function formato_banco() {
-
-  if ($("#banco").select2("val") == null || $("#banco").select2("val") == "" || $("#banco").select2("val") == '1') {
-
-    $("#cta_bancaria").prop("readonly",true);   $("#cci").prop("readonly",true);
-  } else {
-    
-    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>'); $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-
-    $("#cta_bancaria").prop("readonly",false);   $("#cci").prop("readonly",false);
-
-    $.post("../ajax/ajax_general.php?op=formato_banco", { idbanco: $("#banco").select2("val") }, function (e, status) {
-
-      e = JSON.parse(e);  console.log(e); 
-
-      if (e.status) {
-        $(".chargue-format-1").html('Cuenta Bancaria'); $(".chargue-format-2").html('CCI');
-
-        var format_cta = decifrar_format_banco(e.data.formato_cta); var format_cci = decifrar_format_banco(e.data.formato_cci);
-
-        $("#cta_bancaria").inputmask(`${format_cta}`);
-
-        $("#cci").inputmask(`${format_cci}`);
-      } else {
-        ver_errores(e);
-      }      
-
-    }).fail( function(e) { ver_errores(e); } );   
-  }  
-}
-
 function sueld_mensual(){
 
   var sueldo_mensual = $('#sueldo_mensual').val()
@@ -502,6 +505,14 @@ function extraer_sueldo_trabajador() {
     
   }
   
+  
+}
+function extraer_nombre_mes() {
+  var fecha = $('#fecha_pago').val(); 
+  if (fecha == '' || fecha == null) { } else {
+    $('#nombre_mes').val();
+  }
+   
   
 }
 

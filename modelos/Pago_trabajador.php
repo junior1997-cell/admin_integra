@@ -9,20 +9,22 @@
     {
     }
 
-    public function insertar( $idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1) {
+    public function insertar( $idtrabajador,$fecha_pago, $monto, $descripcion, $comprobante) {
+      //var_dump($idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1);die();
       $sw = Array();
       // var_dump($idcargo_trabajador,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc, $imagen1); die();
       
-      $sql_0 = "SELECT pt.fecha_pago, pt.monto, pt.descripcion, pt.comprobante, t.nombres as nombre_trabajador, t.sueldo_mensual, tp.estado, tp.estado_delete 
-      FROM pago_trabajador as pt, trabajador as t
-      WHERE t.idtrabajador = pt.idtrabajador AND pt.idtrabajador = $idtrabajador";
+      $sql_0 = "SELECT pt.fecha_pago, pt.monto as monto_pago, pt.descripcion, pt.comprobante, t.idtrabajador, ct.nombre as cargo,
+      t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, t.imagen_perfil, t.tipo_documento, t.sueldo_diario, pt.estado, pt.estado_delete 
+      FROM pago_trabajador as pt, trabajador as t, cargo_trabajador as ct
+      WHERE pt.idtrabajador= t.idtrabajador AND t.idcargo_trabajador = ct.idcargo_trabajador  AND pt.idtrabajador='$idtrabajador' AND pt.fecha_pago = '$fecha_pago' AND pt.monto = '$monto' ";
 
       $existe = ejecutarConsultaArray($sql_0); if ($existe['status'] == false) { return $existe;}
       
       if ( empty($existe['data']) ) {
 
         $sql="INSERT INTO pago_trabajador (idtrabajador, fecha_pago, monto, descripcion, comprobante, user_created)
-        VALUES ( '$idtrabajador','$fecha_pago','$monto', '$descripcion', '$imagen1', '" . $_SESSION['idusuario'] . "')";
+        VALUES ( '$idtrabajador','$fecha_pago','$monto', '$descripcion', '$comprobante', '" . $_SESSION['idusuario'] . "')";
         $new_trabajador = ejecutarConsulta_retornarID($sql);
 
         if ($new_trabajador['status'] == false) { return $new_trabajador;}
@@ -50,15 +52,16 @@
       return $sw;        
     }
 
-    public function editar($idpago_trabajador, $idtrabajador, $fecha_pago, $monto, $descripcion, $imagen1) {
+    public function editar($idpago_trabajador, $idtrabajador, $fecha_pago, $monto, $descripcion, $comprobante) {
 
       $sql = "UPDATE pago_trabajador SET 
 
-      idtrabajador = '$idtrabajador',
+      idpago_trabajador = '$idpago_trabajador',
+      idtrabajador = '$idtrabajador',      
       fecha_pago = '$fecha_pago',
       monto = '$monto',
       descripcion = '$descripcion',
-      comprobante = '$imagen1',
+      comprobante = '$comprobante',
       
       user_updated= '" . $_SESSION['idusuario'] . "'
       WHERE idpago_trabajador='$idpago_trabajador'";
@@ -105,22 +108,28 @@
 
     }
 
-    public function verdatos($idtrabajador) {
-      $sql=" SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
-      t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
-      t.direccion, t.telefono, t.email, t.imagen_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
-      FROM trabajador as t, cargo_trabajador as ct, bancos as b 
-      WHERE t.idcargo_trabajador= ct.idcargo_trabajador AND t.idbancos=b.idbancos  AND t.idtrabajador='$idtrabajador' ";
+    public function verdatos($idpago_trabajador) {
+      $sql=" SELECT pt.idpago_trabajador, pt.fecha_pago, pt.monto as monto_pago, pt.descripcion, pt.comprobante, t.idtrabajador, ct.nombre as cargo,
+      t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, t.imagen_perfil, t.tipo_documento, t.sueldo_diario, pt.estado
+      FROM pago_trabajador as pt, trabajador as t, cargo_trabajador as ct
+      WHERE pt.idtrabajador= t.idtrabajador AND t.idcargo_trabajador = ct.idcargo_trabajador  AND pt.idpago_trabajador='$idpago_trabajador' ";
       return ejecutarConsultaSimpleFila($sql);
 
     }
 
-    public function tbla_principal() {
+    public function tbla_principal($idtrabajador) {
       
-      $sql="SELECT pt.idpago_trabajador, pt.fecha_pago, pt.monto, pt.descripcion, pt.comprobante, t.idtrabajador, 
-      t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, pt.estado
-      FROM pago_trabajador as pt, trabajador as t
-      WHERE pt.idtrabajador= t.idtrabajador AND pt.estado =1 AND pt.estado_delete=1 ORDER BY  t.nombres ASC ;";
+      $sql="SELECT year(fecha_pago) as anio, nombre_mes, SUM(monto) as monto_pagado  
+      FROM pago_trabajador 
+      WHERE idtrabajador = '$idtrabajador' and  estado = '1' AND estado_delete ='1' GROUP BY nombre_mes;";
+
+      //SELECT ELT(MONTH(fecha_pago), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre') as mes_name, 
+      //SUM(monto) FROM pago_trabajador WHERE idtrabajador = '2' GROUP BY MONTH(fecha_pago);
+
+      /*SELECT pt.idpago_trabajador, pt.fecha_pago, pt.monto as monto_pago, pt.descripcion, pt.comprobante, t.idtrabajador, ct.nombre as cargo,
+      t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, t.imagen_perfil, t.tipo_documento, pt.estado
+      FROM pago_trabajador as pt, trabajador as t, cargo_trabajador as ct
+      WHERE pt.idtrabajador= t.idtrabajador AND t.idcargo_trabajador = ct.idcargo_trabajador AND pt.estado =1 AND pt.estado_delete=1 ORDER BY  t.nombres ASC ;*/
 
       $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
 

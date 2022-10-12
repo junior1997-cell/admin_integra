@@ -35,7 +35,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1> <i class="fas fa-dollar-sign nav-icon"></i> Pago Trabajador</h1>
+                      <h1> <i class="fas fa-dollar-sign nav-icon"></i> Pago Trabajador: </h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
@@ -56,14 +56,16 @@
                       <div class="card card-primary card-outline">
                         <div class="card-header">
                           <h3 class="card-title">
-                            <button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-agregar-trabajador" onclick="limpiar_form_trabajador();"><i class="fas fa-user-plus"></i> Agregar</button>
                             
-                            
+                            <button type="button" class="btn bg-gradient-warning" id="btn-regresar" style="display: none;" onclick="show_hide_table(1);"><i class="fas fa-arrow-left"></i> Regresar</button>
+                            <button type="button" class="btn bg-gradient-success" id="btn-agregar"data-toggle="modal" style="display: none;" data-target="#modal-agregar-trabajador" ><i class="fa-solid fa-circle-plus"></i> Agregar</button>
                             Admnistra de manera tu pagos de trabajadores
                           </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
+
+                        <div id="div-tabla-trabajador">
                           <!-- Lista de trabajdores activos -->                      
                           <table id="tabla-trabajador" class="table table-bordered table-striped display" style="width: 100% !important;">
                             <thead>
@@ -73,14 +75,20 @@
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Fecha de Pago</th>
-                                <th>Monto a Pagar</th>
-                                <th>Descripción</th>
-                                <th>Comprobante</th>
+                                <th>Telefono</th>
+                                <th>Fecha Nac. / Edad</th>
+                                <th>Cuenta bancaria</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
+                                <th>Tipo</th>
                                 <th>Num Doc.</th>
-                                
+                                <th>Nacimiento</th>
+                                <th>Edad</th>
+                                <th>Banco</th>
+                                <th>Cta. Cte.</th>
+                                <th>CCI</th>
+                                <th>Sueldo mensual</th>
+                                <th>Sueldo Diario</th>
                               </tr>
                             </thead>
                             <tbody></tbody>
@@ -91,16 +99,57 @@
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Fecha de Pago</th>
-                                <th>Monto a Pagar</th>
-                                <th>Descripción</th>
-                                <th>Comprobante</th>
+                                <th>Telefono</th>
+                                <th>Fecha Nac. / Edad</th>
+                                <th>Cuenta bancaria</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
+                                <th>Tipo</th>
                                 <th>Num Doc.</th>
+                                <th>Nacimiento</th>
+                                <th>Edad</th>
+                                <th>Banco</th>
+                                <th>Cta. Cte.</th>
+                                <th>CCI</th>
+                                <th>Sueldo mensual</th>
+                                <th>Sueldo Diario</th>
                               </tr>
                             </tfoot>
                           </table>
+                        </div>
+                        <div id="div-tabla-pago-trabajador" style="display: none !important;">
+                          <!-- Lista de trabajdores activos -->                      
+                          <table id="tabla-pago-trabajador" class="table table-bordered table-striped display" style="width: 100% !important; ">
+                            <thead>
+                              <tr>
+                                <th class="text-center">#</th>
+                                
+                                <th>Año</th>
+                                <th>Mes</th>
+                                <th>Sueldo</th>
+                                <th >Total pagado</th>
+                                <th>Ver Detalle</th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                              <tr>
+                                <th class="text-center">#</th>
+                                
+                                <th>Año</th>
+                                <th>Mes</th>
+                                <th>Sueldo</th>
+                                <th>Total pagado</th>
+                                <th>Ver Detalle</th>
+
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div>
+
+                          
+                          
                           
                         </div>
                         <!-- /.card-body -->
@@ -132,12 +181,14 @@
                             <div class="row" id="cargando-1-fomulario">
                               <!-- id trabajador -->
                               <input type="hidden" name="idpago_trabajador" id="idpago_trabajador" />
+                              <input type="hidden" name="idtrabajador" id="idtrabajador" />
 
                               <!-- Nombre -->
                               <div class="col-12 col-sm-12 col-md-12 ">
                                 <div class="form-group">
-                                  <label for="nombre_trab">Nombre y Apellidos</label>                                  
-                                  <select name="nombre_trabajador" id="nombre_trabajador" class="form-control select2 nombre_trabajador" onchange="extraer_sueldo_trabajador();" style="width: 100%; ">
+                                  <label for="nombre_trab">Nombre y Apellidos</label>
+                                  <input type="text" disabled  name="nombre_trabajador" class="form-control" id="nombre_trabajador" />                                  
+                                  
                                     <!-- Aqui listamos los cargo_trabajador -->
                                   </select>
                                 </div>
@@ -163,23 +214,23 @@
                               <div class="col-12 col-sm-6 col-md-6">
                                 <div class="form-group">
                                   <label for="sueldo_mensual">Sueldo Mensual</label>
-                                  <input type="number" disabled step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
+                                  <input type="number" disabled step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual"/>
                                 </div>
                               </div>
 
                               <!-- fecha de nacimiento -->
                               <div class="col-12 col-sm-10 col-md-6">
                                 <div class="form-group">
-                                  <label for="nacimiento">Fecha de Pago</label>
+                                  <label for="fecha_pago">Fecha de Pago</label>
                                   <input
                                     type="date"
                                     class="form-control"
-                                    name="nacimiento"
-                                    id="nacimiento"
-                                    placeholder="Fecha de Nacimiento"
+                                    name="fecha_pago"
+                                    id="fecha_pago"
+                                    placeholder="Fecha de Pago"
                                     
                                   />
-                                  <input type="hidden" name="edad" id="edad" />
+                                  
                                 </div>
                               </div> 
 
@@ -211,11 +262,11 @@
                               <!-- imagen perfil -->
                               <div class="col-12 col-sm-6 col-md-6 ">
                                 <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
-                                <label for="foto1">Comprobante de Pago</label> <br />
-                                <img onerror="this.src='../dist/img/default/img_defecto.png';" src="../dist/img/default/img_defecto.png" class="img-thumbnail" id="foto1_i" style="cursor: pointer !important;" width="auto" />
-                                <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
-                                <input type="hidden" name="foto1_actual" id="foto1_actual" />
-                                <div class="text-center" id="foto1_nombre"><!-- aqui va el nombre de la FOTO --></div>
+                                <label for="comprobante">Comprobante de Pago</label> <br />
+                                <img onerror="this.src='../dist/img/default/img_defecto.png';" src="../dist/img/default/img_defecto.png" class="img-thumbnail" id="comprobante_i" style="cursor: pointer !important;" width="auto" />
+                                <input style="display: none;" type="file" name="comprobante" id="comprobante" accept="image/*" />
+                                <input type="hidden" name="comprobante_actual" id="comprobante_actual" />
+                                <div class="text-center" id="comprobante_nombre"><!-- aqui va el nombre de la FOTO --></div>
                               </div>
 
                               <!-- Progress -->
@@ -249,7 +300,7 @@
                 </div>
 
                 <!--Modal ver trabajador-->
-                <div class="modal fade" id="modal-ver-trabajador">
+                <div class="modal fade" id="modal-ver-pago_trabajador">
                   <div class="modal-dialog modal-dialog-scrollable modal-xm">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -263,6 +314,41 @@
                         <div id="datostrabajador" class="class-style">
                           <!-- vemos los datos del trabajador -->
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal elegir Activo -->
+                <div class="modal fade" id="modal-desglose-de-pago">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">
+                          <a data-toggle="modal" data-target="#modal-agregar-material-activos-fijos">
+                            <button id="btnAgregarArt" type="button" class="btn btn-success btn-sm" onclick="limpiar_materiales()"><span class="fa fa-plus"></span> Crear Productos</button>
+                          </a>
+                          Seleccionar Activo Fijo
+                        </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span class="text-danger" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body table-responsive">
+                        <table id="tblaactivos" class="table table-striped table-bordered table-condensed table-hover" style="width: 100% !important;">
+                          <thead>
+                            <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
+                            <th>Nombre Activo</th>
+                            <th>Clasificación</th>
+                            <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U.</th>
+                            <th>Descripción</th>
+                            <th data-toggle="tooltip" data-original-title="Ficha Técnica" >F.T.</th>
+                          </thead>
+                          <tbody></tbody>
+                        </table>
+                      </div>
+                      <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                       </div>
                     </div>
                   </div>
