@@ -27,8 +27,6 @@
       $nombre         = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
       $marca         = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
       $contenido_neto          = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
-      $precio_unitario= isset($_POST["precio_unitario"]) ? limpiarCadena($_POST["precio_unitario"]) : "" ;      
-      $stock = isset($_POST["stock"]) ? limpiarCadena($_POST["stock"]) : "" ;     
       $descripcion    = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
 
       $imagen1 = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
@@ -56,7 +54,7 @@
 
           if (empty($idproducto)) {
            
-            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true);
 
@@ -75,7 +73,7 @@
               }
             }
             
-            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, quitar_formato_miles($precio_unitario), $stock, $descripcion, $imagen1 );
+            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true) ;
           }

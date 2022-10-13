@@ -10,9 +10,9 @@ class Producto
   }
 
   //Implementamos un método para insertar registros
-  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto,  $precio_unitario, $stock, $descripcion, $imagen)
+  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen)
   {
-    $sql = "SELECT p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, p.estado, p.descripcion,
+    $sql = "SELECT p.nombre, p.marca, p.contenido_neto, p.estado, p.descripcion,
     p.imagen, p.estado, p.estado_delete, um.nombre as nombre_medida, cp.nombre as nombre_categoria
 		FROM producto p, unidad_medida as um, categoria_producto as cp
     WHERE um.idunidad_medida=p.idunidad_medida AND cp.idcategoria_producto=p.idcategoria_producto AND  
@@ -23,8 +23,8 @@ class Producto
     if ($buscando['status'] == false) { return $buscando; }
 
     if ( empty($buscando['data']) ) {
-      $sql = "INSERT INTO producto (idcategoria_producto, idunidad_medida, nombre, marca, contenido_neto, precio_unitario, stock, descripcion, imagen, user_created) 
-      VALUES ( '$idcategoria_producto', '$idunidad_medida', '$nombre', '$marca', '$contenido_neto', '$precio_unitario', '$stock','$descripcion', '$imagen','" . $_SESSION['idusuario'] . "')";
+      $sql = "INSERT INTO producto (idcategoria_producto, idunidad_medida, nombre, marca, contenido_neto, descripcion, imagen, user_created) 
+      VALUES ( '$idcategoria_producto', '$idunidad_medida', '$nombre', '$marca', '$contenido_neto', '$descripcion', '$imagen','" . $_SESSION['idusuario'] . "')";
      
       $intertar =  ejecutarConsulta_retornarID($sql); 
       if ($intertar['status'] == false) {  return $intertar; } 
@@ -55,9 +55,9 @@ class Producto
   }
 
   //Implementamos un método para editar registros
-  public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $precio_unitario, $stock, $descripcion, $img_pefil)
+  public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil)
   {
-   
+    // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
     $sql = "UPDATE producto SET 
 
 		idcategoria_producto = '$idcategoria_producto',
@@ -65,8 +65,6 @@ class Producto
 		nombre = '$nombre',
 		marca = '$marca',
 		contenido_neto = '$contenido_neto',
-		precio_unitario='$precio_unitario',
-		stock = '$stock',
 		descripcion = '$descripcion',
 		imagen = '$img_pefil',
 		
