@@ -52,10 +52,11 @@ function init() {
   $("#metodo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
-
+  $("#forma_pago_p").select2({ theme: "bootstrap4", placeholder: "Selecione forma de pago", allowClear: true, });
   // ══════════════════════════════════════ INITIALIZE SELECT2 - cliente ══════════════════════════════════════
 
   $("#banco_cli").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
+  $("#tipo_documento_cli").select2({theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
@@ -74,6 +75,8 @@ function init() {
   $('#precio_total_p').number( true, 2 );
 
   no_select_tomorrow('#fecha_compra');
+
+  $('#monto_pago_compra').number( true, 2 );
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -124,10 +127,12 @@ function limpiar_form_compra() {
   $("#idcompra_grano").val("");
   $("#idcliente").val("null").trigger("change");
   $("#tipo_comprobante").val("Ninguno").trigger("change");
+  $("#metodo_pago").val("").trigger("change");
 
   $("#numero_comprobante").val("");
   $("#val_igv").val(0);
   $("#descripcion").val("");
+  $("#fecha_compra").val(moment().format('YYYY-MM-DD'));
   
   $("#total_compra").val("");  
   $(".total_compra").html("0");
@@ -198,7 +203,7 @@ function show_hide_form(flag) {
 
     $("#btn_agregar").hide();
     $("#btn_regresar").show();    
-    $("#btn_pagar").hide();
+    $("#btn_pagar").show();
   }
   array_class_trabajador = [];  
 
@@ -236,6 +241,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
       if (data[5] != '') { $("td", row).eq(5).addClass('text-left'); }
       if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }    
+      if (data[9] != '' || data[9] == 0 ) { $("td", row).eq(9).addClass('text-right'); } 
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -246,9 +252,10 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [6], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [9], render: $.fn.dataTable.render.number( ',', '.', 2) },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
-      { targets: [9,10,11,12],  visible: false,  searchable: false,  },
+      { targets: [10,11,12,13],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
 
@@ -514,104 +521,104 @@ function modificarSubtotales() {
       });
       calcularTotalesSinIgv();
     }
-  } else {
-    if ($("#tipo_comprobante").select2("val") == "Factura") {
+  } else if ($("#tipo_comprobante").select2("val") == "Factura") {    
 
-      $(".hidden").show(); //Mostramos: IGV, PRECIO SIN IGV
+    $(".hidden").show(); //Mostramos: IGV, PRECIO SIN IGV
 
-      $("#colspan_subtotal").attr("colspan", 11); //cambiamos el: colspan
+    $("#colspan_subtotal").attr("colspan", 11); //cambiamos el: colspan
+    
+    $("#val_igv").prop("readonly",false);
+
+    if (array_class_trabajador.length === 0) {
+      if (val_igv == '' || val_igv <= 0) {
+        $("#tipo_gravada").val('NO GRAVADA');
+        $(".tipo_gravada").html('NO GRAVADA');
+        $(".val_igv").html(`IGV (0%)`);
+      } else {
+        $("#tipo_gravada").val('GRAVADA');
+        $(".tipo_gravada").html('GRAVADA');
+        $(".val_igv").html(`IGV (${(parseFloat(val_igv) * 100).toFixed(2)}%)`);
+      }
       
-      $("#val_igv").prop("readonly",false);
-
-      if (array_class_trabajador.length === 0) {
-        if (val_igv == '' || val_igv <= 0) {
-          $("#tipo_gravada").val('NO GRAVADA');
-          $(".tipo_gravada").html('NO GRAVADA');
-          $(".val_igv").html(`IGV (0%)`);
-        } else {
-          $("#tipo_gravada").val('GRAVADA');
-          $(".tipo_gravada").html('GRAVADA');
-          $(".val_igv").html(`IGV (${(parseFloat(val_igv) * 100).toFixed(2)}%)`);
-        }
-        
-      } else {
-        // validamos el valor del igv ingresado        
-
-        array_class_trabajador.forEach((element, index) => {
-          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
-          var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
-
-          var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
-          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
-
-          var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
-          var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
-          var subtotal_producto = 0;
-
-          // Calculamos: Precio sin IGV
-          var precio_sin_igv = ( quitar_igv_del_precio(precio_con_igv, val_igv, 'decimal')).toFixed(2);
-          $(`.precio_sin_igv_${element.id_cont}`).val(precio_sin_igv);
-
-          // Calculamos: IGV
-          var igv = (parseFloat(precio_con_igv) - parseFloat(precio_sin_igv)).toFixed(2);
-          $(`.precio_igv_${element.id_cont}`).val(igv);
-
-          // Calculamos: Subtotal de cada producto
-          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
-          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
-          $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
-        });
-
-        calcularTotalesConIgv();
-      }
     } else {
+      // validamos el valor del igv ingresado        
 
-      $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
+      array_class_trabajador.forEach((element, index) => {
+        var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
 
-      $("#colspan_subtotal").attr("colspan", 9); //cambiamos el: colspan
+        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
+        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
 
-      $("#val_igv").val(0);
-      $("#val_igv").prop("readonly",true);
-      $(".val_igv").html('IGV (0%)');
+        var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
+        var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
+        var subtotal_producto = 0;
 
-      $("#tipo_gravada").val('NO GRAVADA');
-      $(".tipo_gravada").html('NO GRAVADA');
+        // Calculamos: Precio sin IGV
+        var precio_sin_igv = ( quitar_igv_del_precio(precio_con_igv, val_igv, 'decimal')).toFixed(2);
+        $(`.precio_sin_igv_${element.id_cont}`).val(precio_sin_igv);
 
-      if (array_class_trabajador.length === 0) {
-      } else {
-        array_class_trabajador.forEach((element, index) => {
-          var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
-          var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-          var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-          var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        // Calculamos: IGV
+        var igv = (parseFloat(precio_con_igv) - parseFloat(precio_sin_igv)).toFixed(2);
+        $(`.precio_igv_${element.id_cont}`).val(igv);
 
-          var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
-          $(`.peso_neto_${element.id_cont}`).val(peso_neto);
-          
-          var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
-          var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
-          var subtotal_producto = 0;
+        // Calculamos: Subtotal de cada producto
+        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
+        $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
+      });
 
-          // Calculamos: IGV
-          var precio_sin_igv = precio_con_igv;
-          $(`.precio_sin_igv_${element.id_cont}`).val(precio_sin_igv);
-
-          // Calculamos: precio + IGV
-          var igv = 0;
-          $(`.precio_igv_${element.id_cont}`).val(igv);
-
-          // Calculamos: Subtotal de cada producto
-          subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
-          $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
-          $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
-        });
-
-        calcularTotalesSinIgv();
-      }
+      calcularTotalesConIgv();
     }
+  } else {
+
+    $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
+
+    $("#colspan_subtotal").attr("colspan", 9); //cambiamos el: colspan
+
+    $("#val_igv").val(0);
+    $("#val_igv").prop("readonly",true);
+    $(".val_igv").html('IGV (0%)');
+
+    $("#tipo_gravada").val('NO GRAVADA');
+    $(".tipo_gravada").html('NO GRAVADA');
+
+    if (array_class_trabajador.length === 0) {
+    } else {
+      array_class_trabajador.forEach((element, index) => {
+        var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
+        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
+        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+        
+        var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
+        var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
+        var subtotal_producto = 0;
+
+        // Calculamos: IGV
+        var precio_sin_igv = precio_con_igv;
+        $(`.precio_sin_igv_${element.id_cont}`).val(precio_sin_igv);
+
+        // Calculamos: precio + IGV
+        var igv = 0;
+        $(`.precio_igv_${element.id_cont}`).val(igv);
+
+        // Calculamos: Subtotal de cada producto
+        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
+        $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
+      });
+
+      calcularTotalesSinIgv();
+    }
+    
   }
+  capturar_pago_compra();
   toastr_success("Actualizado!!",`Precio Actualizado.`, 700);
 }
 
@@ -736,6 +743,33 @@ function ocultar_comprob() {
   }
 }
 
+function capturar_pago_compra() {
+
+  $(".span-pago-compra").html('(Seleccione metodo pago)');
+  $("#monto_pago_compra").prop("readonly", true).val(0);
+  $("#fecha_proximo_pago").prop("readonly", true);
+   
+
+  if ($("#idcompra_grano").val() == "" || $("#idcompra_grano").val() == null) {
+    if ($("#metodo_pago").select2("val") == "CONTADO") {      
+      var total_compra = $("#total_compra").val();
+      $("#monto_pago_compra").val(total_compra);   
+      $(".span-pago-compra").html('(Contado)');  
+      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+    } else if ($("#metodo_pago").select2("val") == "CREDITO") {
+      $("#monto_pago_compra").prop("readonly", false).val(0);
+      $("#fecha_proximo_pago").prop("readonly", false);
+      $(".span-pago-compra").html('(Crédito)'); 
+    }
+  } else {
+    if ($("#metodo_pago").select2("val") == "CONTADO") {      
+      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+    } else if ($("#metodo_pago").select2("val") == "CREDITO") {
+      $("#fecha_proximo_pago").prop("readonly", false);
+    }
+  }  
+}
+
 function eliminarDetalle(indice) {
   $("#fila" + indice).remove();
 
@@ -801,8 +835,8 @@ function ver_compra_editar(idcompra_grano) {
       
       $("#idcliente").val(e.data.idpersona).trigger("change");
       $("#metodo_pago").val(e.data.metodo_pago).trigger("change");
-      $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
-      
+      $("#fecha_proximo_pago").val(e.data.fecha_proximo_pago);
+      $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");      
 
       if (e.data.detalle_compra) {
 
@@ -894,10 +928,129 @@ function ver_detalle_compras(idcompra_grano) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
-// :::::::::::::::::::::::::: S E C C I O N   C O M P R O B A N T E   C O M P R A  ::::::::::::::::::::::::::
+// :::::::::::::::::::::::::: S E C C I O N   P A G O   C O M P R A  ::::::::::::::::::::::::::
 
+// abrimos el navegador de archivos
+$("#doc1_i").click(function() {  $('#doc1').trigger('click'); });
+$("#doc1").change(function(e) {  addImageApplication(e,$("#doc1").attr("id")) });
 
+// Eliminamos el doc 1
+function doc1_eliminar() {
 
+	$("#doc1").val("");
+
+	$("#doc1_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
+
+	$("#doc1_nombre").html("");
+}
+
+function limpiar_form_pago_compra() {  
+
+  $("#idpago_compra_grano_p").val(""); 
+  $("#idcompra_grano_p").val("null");
+  $("#forma_pago_p").val("null").trigger("change"); 
+  $("#fecha_pago_p").val(""); 
+  $("#monto_p").val(""); 
+  $("#descripcion_p").val(""); 
+  $(".deuda-actual").val("0.00"); 
+
+  $("#doc_old_1").val("");
+  $("#doc1").val("");  
+  $('#doc1_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
+  $('#doc1_nombre').html(""); 
+  
+  // Limpiamos las validaciones
+  $(".form-control").removeClass('is-valid');
+  $(".form-control").removeClass('is-invalid');
+  $(".error.invalid-feedback").remove();
+}
+
+function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
+  show_hide_form(4);
+  $("#idcompra_grano_p").val(idcompra_grano);
+  $("#total_de_compra").html(formato_miles(total_compra));
+  $(".h1-nombre-cliente").html(` - <b>${cliente}</b>` );
+
+  var pago_compra_total = 0; $("#total_depositos").html('0.00')
+
+  tabla_compra_insumo = $("#tabla-pagos-compras").dataTable({
+    responsive: true, 
+    lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
+    aProcessing: true, //Activamos el procesamiento del datatables
+    aServerSide: true, //Paginación y filtrado realizados por el servidor
+    dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
+    buttons: [
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } } ,        
+    ],
+    ajax: {
+      url: `../ajax/compra_grano.php?op=tabla_pago_compras&idcompra_grano=${idcompra_grano}`,
+      type: "get",
+      dataType: "json",
+      error: function (e) {
+        console.log(e.responseText); ver_errores(e);
+      },
+    },     
+    createdRow: function (row, data, ixdex) {
+      //console.log(data);
+      if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
+      if (data[4] != '') { $("#total_depositos").html(formato_miles( pago_compra_total += parseFloat(data[4]) )); }  
+    },
+    language: {
+      lengthMenu: "Mostrar: _MENU_ registros",
+      buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
+      sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
+    },
+    bDestroy: true,
+    iDisplayLength: 10, //Paginación
+    order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      //{ targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      //{ targets: [9], render: $.fn.dataTable.render.number( ',', '.', 2) },
+      { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      //{ targets: [10,11,12,13],  visible: false,  searchable: false,  },
+    ],
+  }).DataTable();
+
+}
+
+//Función para eliminar registros
+function eliminar_pago_compra(idcompra_proyecto, nombre) {
+
+  $(".tooltip").removeClass("show").addClass("hidde");
+
+  crud_eliminar_papelera(
+    "../ajax/compra_grano.php?op=papelera_pago_compra",
+    "../ajax/compra_grano.php?op=eliminar_pago_compra", 
+    idcompra_proyecto, 
+    "!Elija una opción¡", 
+    `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
+    function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
+    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_cliente.ajax.reload(null, false); },
+    false, 
+    false, 
+    false,
+    false
+  );
+}
+
+function calcular_deuda() {
+  var monto_actual = $('#monto_p').val() == '' || $('#monto_p').val() == null ? 0 : quitar_formato_miles($('#monto_p').val());
+  var monto_pagados = $('#total_depositos').text() == '' || $('#total_depositos').text() == null ? 0 : quitar_formato_miles($('#total_depositos').text());
+  var monto_de_compra = $('#total_de_compra').text() == '' || $('#total_de_compra').text() == null ? 0 : quitar_formato_miles($('#total_de_compra').text());
+
+  var monto_deuda = parseFloat(monto_de_compra) - parseFloat(monto_pagados) - parseFloat(monto_actual);
+
+  if (monto_deuda < 0) {
+    $('.deuda-actual').html(monto_deuda).addClass('input-no-valido').removeClass('input-valido input-no-valido-warning');
+  } else if (monto_deuda == 0 ) {
+    $('.deuda-actual').html(monto_deuda).addClass('input-valido').removeClass('input-no-valido input-no-valido-warning');
+  }else if (monto_deuda > 0) {
+    $('.deuda-actual').html(monto_deuda).addClass('input-no-valido-warning').removeClass('input-no-valido input-valid');
+  }
+}
 // :::::::::::::::::::::::::: - S E C C I O N   D E S C A R G A S -  ::::::::::::::::::::::::::
 
 
@@ -1121,11 +1274,60 @@ function extrae_ruc() {
   $('[data-toggle="tooltip"]').tooltip();
 }
 
-// :::::::::::::::::::::::::: S E C C I O N   P A G O   C O M P R A S  ::::::::::::::::::::::::::
+//Función para guardar o editar
+function guardaryeditar(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-comidas_ex")[0]);
+ 
+  $.ajax({
+    url: "../ajax/comidas_extras.php?op=guardaryeditar",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) {
+      try {
+        e = JSON.parse(e);  console.log(e); 
+        if (e.status == true) {
+          toastr.success('Registrado correctamente');
+          tabla.ajax.reload(null, false); 
+          limpiar();
+          $("#modal-agregar-comidas_ex").modal("hide");
+          total(fecha_1_r,fecha_2_r,id_proveedor_r,comprobante_r);
+        }else{  
+          ver_errores(e);
+        } 
+        $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
+      } catch (err) {
+        console.log('Error: ', err.message); toastr.error('<h5 class="font-size-16px">Error temporal!!</h5> puede intentalo mas tarde, o comuniquese con <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>');
+      } 
 
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = (evt.loaded / evt.total)*100;
+          /*console.log(percentComplete + '%');*/
+          $("#barra_progress").css({"width": percentComplete+'%'});
+          $("#barra_progress").text(percentComplete.toFixed(2)+" %");
+        }
+      }, false);
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress").css({ width: "0%",  });
+      $("#barra_progress").text("0%").addClass('progress-bar-striped progress-bar-animated');
+    },
+    complete: function () {
+      $("#barra_progress").css({ width: "0%", });
+      $("#barra_progress").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
+}
 
-
-// :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S  ::::::::::::::::::::::::::
 
 
 init();
@@ -1164,7 +1366,7 @@ $(function () {
       'dcto_humedad[]':   { min: "Mínimo 0.00", required: "Campo requerido"},
       'porcentaje_cascara[]':{ min: "Mínimo 0.00", required: "Campo requerido"},
       'dcto_embase[]':    { min: "Mínimo 0.00", required: "Campo requerido"},
-      'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
+      'peso_neto[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
       'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
       'descuento[]':      { min: "Mínimo 0.00", required: "Campo requerido"}
     },
@@ -1211,6 +1413,39 @@ $(function () {
       cta_bancaria_cli:   { minlength: "MÍNIMO 10 caracteres.", },
       banco_cli:          { required: "Campo requerido.", },
       sueldo_mensual_cli: { required: "Campo requerido.", }
+    },
+
+    errorElement: "span",
+
+    errorPlacement: function (error, element) {
+      error.addClass("invalid-feedback");
+
+      element.closest(".form-group").append(error);
+    },
+
+    highlight: function (element, errorClass, validClass) {
+      $(element).addClass("is-invalid").removeClass("is-valid");
+    },
+
+    unhighlight: function (element, errorClass, validClass) {
+      $(element).removeClass("is-invalid").addClass("is-valid");
+    },
+
+    submitHandler: function (e) {
+      guardar_y_editar_cliente(e);
+    },
+  });
+
+  $("#form-pago-compras").validate({
+    rules: {
+      fecha_pago_p: { required: true },
+      monto_p:      { required: true, },
+      descripcion_p:{ required: true, minlength: 4, maxlength: 200 },
+    },
+    messages: {
+      fecha_pago_p: { required: "Campo requerido.", },
+      monto_p:      { required: "Campo requerido.",  },
+      descripcion_p:{ required: "Campo requerido.", minlength: "MÍNIMO 4 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
     },
 
     errorElement: "span",

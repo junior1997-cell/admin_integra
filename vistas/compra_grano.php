@@ -43,13 +43,16 @@
                 <div class="container-fluid"> 
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0"> <img src="../dist/svg/negro-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" > Compras Grano <span class="h1-nombre-cliente"></span> </h1>
+                      <h1 class="m-0"> 
+                        <img src="../dist/svg/negro-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" > Compras Café 
+                        <span class="h1-nombre-cliente"></span>  
+                      </h1>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="compra_insumos.php">Home</a></li>
-                        <li class="breadcrumb-item active">Compras Grano</li>
+                        <li class="breadcrumb-item active">Compras Café</li>
                       </ol>
                     </div>
                     <!-- /.col -->
@@ -80,14 +83,14 @@
                                     <button type="button" class="btn bg-gradient-warning" id="btn_regresar" style="display: none;" onclick="show_hide_form(1);">
                                       <i class="fas fa-arrow-left"></i> Regresar
                                     </button>
-                                    <button type="button" class="btn bg-gradient-success" id="btn_pagar" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago" onclick="limpiar_form_pago_compra();">
+                                    <button type="button" class="btn bg-gradient-success" id="btn_pagar" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago-compra" onclick="limpiar_form_pago_compra();">
                                       <i class="fas fa-dollar-sign"></i> Agregar Pago
                                     </button>                                     
                                   </h3>
                                 </div>
                               </div>
                               <!-- Leyecnda pagos -->
-                              <!-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_pagos" style="background-color: aliceblue;">
+                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_pagos" style="background-color: aliceblue;">
                                 <div class="text-slid-box">
                                   <div id="offer-box" class="contenedor">
                                     <div> <b>Leyenda-pago</b> </div>
@@ -104,9 +107,9 @@
                                     </ul>
                                   </div>
                                 </div>
-                              </div> -->
+                              </div>
                               <!-- Leyecnda saldos -->
-                              <!-- <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_saldos" style="background-color: #f0f8ff7d;">
+                              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 hiddenn leyecnda_saldos" style="background-color: #f0f8ff7d;">
                                 <div class="text-slid-box">
                                   <div id="offer-box" class="contenedorr">
                                     <div> <b>Leyenda-saldos</b> </div>
@@ -123,7 +126,7 @@
                                     </ul>
                                   </div>
                                 </div>
-                              </div> -->
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -192,7 +195,7 @@
                             <table id="tabla-compra-grano" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="13" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="14" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -201,9 +204,10 @@
                                   <th>Cliente</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo de Persona">Tipo</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Comprobante</th>
-                                  <th>Total</th>
                                   <th>Metodo de Pago</th>
-                                  <th>Descripción</th>
+                                  <th>Total</th>                                  
+                                  <th>Pagos</th>
+                                  <th>Saldo</th>
 
                                   <th>Tipo Doc.</th>
                                   <th>Num. Doc.</th>
@@ -220,9 +224,10 @@
                                   <th>Cliente</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo de Persona">Tipo</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Comprobante</th>
-                                  <th>Total</th>
                                   <th>Metodo de Pago</th>
-                                  <th>Descripción</th> 
+                                  <th>Total</th>
+                                  <th>Pagos</th> 
+                                  <th>Saldo</th>
                                   
                                   <th>Tipo Doc.</th>
                                   <th>Num. Doc.</th>
@@ -270,7 +275,7 @@
                                   <th>Comprobante</th>
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
-                                  <th>Descripcion</th>
+                                  <th>descripcion_p</th>
                                   <th>Estado</th>
                                 </tr>
                               </thead>
@@ -331,16 +336,13 @@
                                     </div>
                                   </div>
 
-                                  <!-- metodo de pago -->
-                                  <div class="col-lg-3">
+                                  <!-- Establecimiento-->
+                                  <div class="col-lg-3" >
                                     <div class="form-group">
-                                      <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
-                                      <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa"> 
-                                        <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
-                                        <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
-                                      </select>
-                                    </div> 
-                                  </div>
+                                      <label for="establecimiento">Establecimiento </label> <br />
+                                      <textarea name="establecimiento" id="establecimiento" class="form-control" rows="1">JR. LOS MARINOS #453 - JAEN - CAJAMARCA</textarea>
+                                    </div>
+                                  </div>                                  
 
                                   <!-- Tipo de comprobante -->
                                   <div class="col-lg-4" id="content-tipo-comprobante">
@@ -371,23 +373,51 @@
                                     </div>
                                   </div>
 
-                                  <!-- Descripcion-->
+                                  <!-- descripcion-->
                                   <div class="col-lg-5" id="content-descripcion">
                                     <div class="form-group">
-                                      <label for="descripcion">Descripción </label> <br />
+                                      <label for="descripcion">Descripcion </label> <br />
                                       <textarea name="descripcion" id="descripcion" class="form-control" rows="1"></textarea>
                                     </div>
-                                  </div>                                  
+                                  </div>    
+                                  
+                                  <!-- metodo de pago -->
+                                  <div class="col-lg-3">
+                                    <div class="form-group">
+                                      <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
+                                      <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa" onchange="capturar_pago_compra();"> 
+                                        <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
+                                        <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
+                                      </select>
+                                    </div> 
+                                  </div>
+
+                                  <!-- Fecha pago -->
+                                  <div class="col-lg-3" >
+                                    <div class="form-group">
+                                      <label for="fecha_proximo_pago">Fecha proximo pago<sup class="text-danger">*</sup></label>
+                                      <input type="date" name="fecha_proximo_pago" id="fecha_proximo_pago" class="form-control" placeholder="Fecha" />
+                                    </div>
+                                  </div>
+
+                                  <!-- Pago a realizar -->
+                                  <div class="col-sm-6 col-lg-3 ">
+                                    <div class="form-group">
+                                      <label for="monto_pago_compra">Pago de compra <span class="span-pago-compra"></span> </label>
+                                      <input type="text" name="monto_pago_compra" id="monto_pago_compra" class="form-control" readonly onClick="this.select();" placeholder="Pago realizado" />
+                                    </div>
+                                  </div>
 
                                   <!--Boton agregar material-->
                                   <div class="row col-lg-12 justify-content-between">
-                                    <div class="col-lg-4 col-xs-12">
+                                    <!-- add detalle -->
+                                    <div class="col-sm-6 col-lg-4 ">
                                       <div class="row">
                                         <div class="col-lg-6">                                                                                      
                                           <button id="btn-agregar-detalle-form-compra" type="button" class="btn btn-primary btn-block"><span class="fa fa-plus"></span> Agregar Detalle</button>                                            
                                         </div>                                        
                                       </div>
-                                    </div>
+                                    </div>                                    
                                   </div>
 
                                   <!--tabla detalles compra-->
@@ -460,24 +490,21 @@
                           </div>                          
 
                           <!-- TABLA - PAGOS COMPRAS GRANO -->
-                          <div id="div_tabla_pago_compras_grano" style="display: none;">
-                            <h5>pago Compras</h5>
+                          <div id="div_tabla_pago_compras_grano" style="display: none;">                            
                             <div style="text-align: center;">
                               <div>
-                                <h4>Total a pagar: <b id="total_compra"></b></h4>
+                                <h4>Total a pagar: <b id="total_de_compra"></b></h4>
                               </div>
-                              <table id="tabla-pagos-proveedor" class="table table-bordered table-striped display" style="width: 100% !important;">
+                              <table id="tabla-pagos-compras" class="table table-bordered table-striped display" style="width: 100% !important;">
                                 <thead>
                                   <tr>
                                     <th>#</th>
                                     <th>Acciones</th>
-                                    <th data-toggle="tooltip" data-original-title="Forma Pago">Forma</th>
-                                    <th>Beneficiario</th>
-                                    <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
-                                    <th>Descripción</th>
-                                    <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
+                                    <th data-toggle="tooltip" data-original-title="Fecha de pago">Fecha</th>
+                                    <th>Forma de pago</th>
                                     <th>Monto</th>
-                                    <th>Vaucher</th>
+                                    <th>Descripción</th>
+                                    <th data-toggle="tooltip" data-original-title="Comprobante">Doc.</th>
                                     <th>Estado</th>
                                   </tr>
                                 </thead>
@@ -485,17 +512,12 @@
                                 <tfoot>
                                   <tr>
                                     <th>#</th>
-                                    <th>Aciones</th>
-                                    <th>Forma</th>
-                                    <th>Beneficiario</th>                                     
-                                    <th data-toggle="tooltip" data-original-title="Fecha Pago">Fecha P.</th>
+                                    <th>Acciones</th>
+                                    <th data-toggle="tooltip" data-original-title="Fecha de pago">Fecha</th>
+                                    <th>Forma de pago</th>
+                                    <th class="text-nowrap px-2"><div class="formato-numero-conta"><span>S/</span><span id="total_depositos">0.00</span></div></th>
                                     <th>Descripción</th>
-                                    <th data-toggle="tooltip" data-original-title="Número Operación">Número Op.</th>
-                                    <th style="color: #ff0000; background-color: #45c920;">
-                                      <b id="monto_total"></b> <br />
-                                      <b id="porcentaje" style="color: black;"></b>
-                                    </th>
-                                    <th>Vaucher</th>
+                                    <th data-toggle="tooltip" data-original-title="Comprobante">Doc.</th>
                                     <th>Estado</th>
                                   </tr>
                                 </tfoot>
@@ -714,6 +736,117 @@
                   </div>                  
                   
                   <!-- MODAL - agregar Pagos - charge -->
+                  <div class="modal fade" id="modal-agregar-pago-compra">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title"><b>Agregar: </b> pago compra</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text-danger" aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-body">
+                          <!-- form start -->
+                          <form id="form-pago-compras" name="form-pago-compras" method="POST">
+                            <div class="card-body">
+                              <div class="row" id="cargando-7-fomulario">
+                                <!-- idpago_compra_grano -->
+                                <input type="hidden" name="idpago_compra_grano_p" id="idpago_compra_grano_p" />
+                                <input type="hidden" name="idcompra_grano_p" id="idcompra_grano_p" />
+
+                                <!-- Fecha 1 onchange="calculando_cantidad(); restrigir_fecha_ant();" onkeyup="calculando_cantidad(); -->
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                    <label for="forma_pago_p">Forma Pago <sup class="text-danger">*</sup></label>
+                                    <select name="forma_pago_p" id="forma_pago_p" class="form-control select2" style="width: 100%;">
+                                      <option value="Transferencia">Transferencia</option>
+                                      <option value="Efectivo">Efectivo</option>
+                                    </select>
+                                  </div>
+                                </div>
+
+                                <!--Fecha-->
+                                <div class="col-lg-6">
+                                  <div class="form-group">
+                                    <label for="fecha_pago_p">Fecha <sup class="text-danger">*</sup></label>
+                                    <input type="date" name="fecha_pago_p" class="form-control" id="fecha_pago_p" />
+                                  </div>
+                                </div>
+
+                                <!--Precio Parcial-->
+                                <div class="col-lg-4">
+                                  <div class="form-group">
+                                    <label for="monto_p">Monto total </label>
+                                    <input type="number" class="form-control" name="monto_p" id="monto_p" onkeyup="delay(function(){calcular_deuda();}, 100 );" onchange="delay(function(){calcular_deuda();}, 100 );" placeholder="Precio Parcial" />
+                                  </div>
+                                </div>
+
+                                <!--Precio Parcial-->
+                                <div class="col-lg-4">
+                                  <div class="form-group">
+                                    <label for="monto_p">Deuda pendiente </label>
+                                    <span class="form-control-mejorado deuda-actual" placeholder="Deuda"> 0.00</span>
+                                  </div>
+                                </div>
+
+                                <!--Descripcion-->
+                                <div class="col-lg-12">
+                                  <div class="form-group">
+                                    <label for="descripcion_p">Descripción <sup class="text-danger">*</sup> <span style="font-size: 12px; font-weight: normal;">ej. Almuerzo, aniversario de la empresa</span> </label> <br />
+                                    <textarea name="descripcion_p" id="descripcion_p" class="form-control" rows="2"></textarea>
+                                  </div>
+                                </div>
+                                <!-- Factura -->
+                                <div class="col-md-6">
+                                  <div class="row text-center">
+                                    <div class="col-md-12" style="padding-top: 15px; padding-bottom: 5px;">
+                                      <label for="cip" class="control-label"> Comprobante </label>
+                                    </div>
+                                    <div class="col-6 col-md-6 text-center">
+                                      <button type="button" class="btn btn-success btn-block btn-xs" id="doc1_i"><i class="fas fa-upload"></i> Subir.</button>
+                                      <input type="hidden" id="doc_old_1" name="doc_old_1" />
+                                      <input style="display: none;" id="doc1" type="file" name="doc1" accept="application/pdf, image/*" class="docpdf" />
+                                    </div>
+                                    <div class="col-6 col-md-6 text-center">
+                                      <button type="button" class="btn btn-info btn-block btn-xs" onclick="re_visualizacion(1, 'comida_extra', 'comprobante');"><i class="fas fa-redo"></i> Recargar.</button>
+                                    </div>
+                                  </div>
+                                  <div id="doc1_ver" class="text-center mt-4">
+                                    <img src="../dist/svg/doc_uploads.svg" alt="" width="50%" />
+                                  </div>
+                                  <div class="text-center" id="doc1_nombre"><!-- aqui va el nombre del pdf --></div>
+                                </div>
+
+                                <!-- barprogress -->
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
+                                  <div class="progress" id="barra_progress_pago_compra_div">
+                                    <div id="barra_progress_pago_compra" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                                      0%
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row" id="cargando-8-fomulario" style="display: none;">
+                                <div class="col-lg-12 text-center">
+                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
+                                  <br />
+                                  <h4>Cargando...</h4>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <button type="submit" style="display: none;" id="submit-form-pago-compra">Submit</button>
+                          </form>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="limpiar_form_pago_compra();">Close</button>
+                          <button type="submit" class="btn btn-success" id="guardar_registro_pago_compra">Guardar Cambios</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <!-- MODAL - ver-vaucher-pagos -->                   
 
                 </div>

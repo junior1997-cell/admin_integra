@@ -27,10 +27,13 @@ if (!isset($_SESSION["nombre"])) {
     $idcliente          = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
     $ruc_dni_cliente    = isset($_POST["ruc_dni_cliente"]) ? limpiarCadena($_POST["ruc_dni_cliente"]) : "";
     $fecha_compra       = isset($_POST["fecha_compra"]) ? limpiarCadena($_POST["fecha_compra"]) : "";
-    $metodo_pago        = isset($_POST["metodo_pago"]) ? limpiarCadena($_POST["metodo_pago"]) : "";
+    $establecimiento    = isset($_POST["establecimiento"]) ? limpiarCadena($_POST["establecimiento"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
     $numero_comprobante = isset($_POST["numero_comprobante"]) ? limpiarCadena($_POST["numero_comprobante"]) : "";    
     $descripcion        = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : "";
+    $metodo_pago        = isset($_POST["metodo_pago"]) ? limpiarCadena($_POST["metodo_pago"]) : "";
+    $monto_pago_compra  = isset($_POST["monto_pago_compra"]) ? limpiarCadena($_POST["monto_pago_compra"]) : "";
+    $fecha_proximo_pago = isset($_POST["fecha_proximo_pago"]) ? limpiarCadena($_POST["fecha_proximo_pago"]) : "";
 
     $subtotal_compra    = isset($_POST["subtotal_compra"]) ? limpiarCadena($_POST["subtotal_compra"]) : "";
     $val_igv            = isset($_POST["val_igv"]) ? limpiarCadena($_POST["val_igv"]) : "";  
@@ -103,16 +106,16 @@ if (!isset($_SESSION["nombre"])) {
 
         if (empty($idcompra_grano)) {
 
-          $rspta = $compra_grano->insertar(  $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
-          $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
+          $rspta = $compra_grano->insertar( $idcliente, $ruc_dni_cliente, $fecha_compra,  $tipo_comprobante, $numero_comprobante, 
+          $descripcion, $metodo_pago, quitar_formato_miles($monto_pago_compra), $fecha_proximo_pago, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
           $_POST["dcto_humedad"], $_POST["porcentaje_cascara"], $_POST["dcto_embase"], $_POST["peso_neto"], $_POST["precio_sin_igv"],
           $_POST["precio_igv"], $_POST["precio_con_igv"], $_POST["descuento"], $_POST["subtotal_producto"] );
 
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $compra_grano->editar( $idcompra_grano, $idcliente, $ruc_dni_cliente, $fecha_compra, $metodo_pago, $tipo_comprobante, $numero_comprobante, 
-          $descripcion, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
+          $rspta = $compra_grano->editar( $idcompra_grano, $idcliente, $ruc_dni_cliente, $fecha_compra, $tipo_comprobante, $numero_comprobante, 
+          $descripcion, $metodo_pago, $fecha_proximo_pago, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $_POST["tipo_grano"], $_POST["unidad_medida"], $_POST["peso_bruto"], 
           $_POST["dcto_humedad"], $_POST["porcentaje_cascara"], $_POST["dcto_embase"], $_POST["peso_neto"], $_POST["precio_sin_igv"],
           $_POST["precio_igv"], $_POST["precio_con_igv"], $_POST["descuento"], $_POST["subtotal_producto"] );
     
@@ -151,7 +154,21 @@ if (!isset($_SESSION["nombre"])) {
         
         if ($rspta['status'] == true) {
           foreach ($rspta['data'] as $key => $reg) {                          
-      
+            $saldo = $reg['total_compra'] - $reg['total_pago'];
+            
+            if ($saldo == $reg['total_compra']) {
+              $estado = '<span class="text-center badge badge-danger">Sin pagar</span>';
+              $color_btn = "danger"; $nombre = "Pagar"; $icon = "dollar-sign";
+            } else if ($saldo < $reg['total_compra'] && $saldo > "0") {              
+              $estado = '<span class="text-center badge badge-warning">En proceso</span>';
+              $color_btn = "warning"; $nombre = "Pagar"; $icon = "dollar-sign";
+            } else if ($saldo <= "0" || $saldo == "0") {              
+              $estado = '<span class="text-center badge badge-success">Pagado</span>';
+              $color_btn = "success"; $nombre = "Ver"; $icon = "eye";
+            } else {
+              $estado = '<span class="text-center badge badge-success">Error</span>';               
+            }           
+
             $data[] = [
               "0" => $cont,
               "1" => ($reg['estado'] == '1' ? '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
@@ -163,14 +180,18 @@ if (!isset($_SESSION["nombre"])) {
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
               "4" => $reg['es_socio'],
               "5" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</span>',              
-              "6" => $reg['total_compra'],              
-              "7" => $reg['metodo_pago'],
-              "8" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg['descripcion'].'</textarea>',
+              "6" => $reg['metodo_pago'],              
+              "7" => $reg['total_compra'],
+              "8" => '<div class="text-center text-nowrap">'.
+                '<button class="btn btn-' . $color_btn . ' btn-xs m-t-2px" onclick="tbla_pago_compra(' . $reg['idcompra_grano'] . ', ' . $reg['total_compra'] . ', ' . floatval($reg['total_pago']) .', \''.encodeCadenaHtml($reg['cliente']) .'\')"> <i class="fas fa-' . $icon . ' nav-icon"></i> ' . $nombre . '</button>' . 
+                ' <button style="font-size: 14px;" class="btn btn-' . $color_btn . ' btn-sm">' . number_format(floatval($reg['total_pago']), 2, '.', ',') . '</button>'.
+              '</div>',
+              "9" => $saldo,
 
-              "9" => $reg['tipo_documento'],
-              "10" => $reg['numero_documento'],
-              "11" => $reg['tipo_comprobante'],
-              "12" => $reg['numero_comprobante'],
+              "10" => $reg['tipo_documento'],
+              "11" => $reg['numero_documento'],
+              "12" => $reg['tipo_comprobante'],
+              "13" => $reg['numero_comprobante'],
             ];
             $cont++;
           }
@@ -197,7 +218,7 @@ if (!isset($_SESSION["nombre"])) {
         $info = "info";
         $icon = "eye";
         
-        if ($rspta['status']) {
+        if ($rspta['status'] == true) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
@@ -227,7 +248,7 @@ if (!isset($_SESSION["nombre"])) {
         //Vamos a declarar un array
         $data = []; $cont = 1;
         
-        if ($rspta['status']) {
+        if ($rspta['status'] == true) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
@@ -409,8 +430,55 @@ if (!isset($_SESSION["nombre"])) {
 
 
       // :::::::::::::::::::::::::: S E C C I O N   P A G O  ::::::::::::::::::::::::::     
-
+      case 'tabla_pago_compras':
+        
+        $rspta = $compra_grano->tabla_pago_compras($_GET["idcompra_grano"]);
+        //Vamos a declarar un array
+        $data = []; $cont = 1;
+        
+        if ($rspta['status'] == true) {
+          while ($reg = $rspta['data']->fetch_object()) {
+            $doc = (empty($reg->comprobante) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento" onclick="ver_documento_pago('.$reg->idpago_compra_grano.')"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');
+            $data[] = [
+              "0" => $cont++,
+              "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras_activo_fijo(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
+              ' <button class="btn btn-sm btn-warning" onclick="mostrar_compra_general(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .
+              ' <button class="btn btn-sm btn-danger" onclick="eliminar_pago_compra(' . $reg->idpago_compra_grano .', \''.encodeCadenaHtml( number_format($reg->monto, 2, '.',',')).' - '.date("d/m/Y", strtotime($reg->fecha_pago)).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>',
+              "2" => $reg->fecha_pago,
+              "3" => $reg->forma_pago,
+              "4" => $reg->monto,
+              "5" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$reg->descripcion.'</textarea>',
+              "6" => $doc,
+              "7" => $reg->estado == '1' ? '<span class="badge bg-success">Aceptado</span>' : '<span class="badge bg-danger">Anulado</span>',
+            ];
+          }
+          $results = [
+            "sEcho" => 1, //Información para el datatables
+            "iTotalRecords" => count($data), //enviamos el total registros al datatable
+            "iTotalDisplayRecords" => count($data), //enviamos el total registros a visualizar
+            "aaData" => $data,
+          ];
+          echo json_encode($results, true);
+        } else {
+          echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
+        }
+    
+      break;
       
+      case 'papelera_pago_compra':
+        $rspta = $compra_grano->papelera_pago_compra($_GET["id_tabla"]);
+    
+        echo json_encode($rspta, true);
+    
+      break;    
+      
+      case 'eliminar_pago_compra':
+
+        $rspta = $compra_grano->eliminar_pago_compra($_GET["id_tabla"]);
+    
+        echo json_encode($rspta, true);
+    
+      break;
     
       // ::::::::::::::::::::::::::::::::::::::::: S I N C R O N I Z A R  :::::::::::::::::::::::::::::::::::::::::
       case 'sincronizar_comprobante':
