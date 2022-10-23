@@ -42,6 +42,12 @@ if (!isset($_SESSION["nombre"])) {
     $tipo_gravada       = isset($_POST["tipo_gravada"]) ? limpiarCadena($_POST["tipo_gravada"]) : "";    
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   P A G O   C O M P R A ::::::::::::::::::::::::::::::::::::::
+    $idpago_compra_grano_p  = isset($_POST["idpago_compra_grano_p"]) ? limpiarCadena($_POST["idpago_compra_grano_p"]) : "";
+    $idcompra_grano_p       = isset($_POST["idcompra_grano_p"]) ? limpiarCadena($_POST["idcompra_grano_p"]) : "";  
+    $forma_pago_p           = isset($_POST["forma_pago_p"]) ? limpiarCadena($_POST["forma_pago_p"]) : "";
+    $fecha_pago_p           = isset($_POST["fecha_pago_p"]) ? limpiarCadena($_POST["fecha_pago_p"]) : "";
+    $monto_p                = isset($_POST["monto_p"]) ? limpiarCadena($_POST["monto_p"]) : "";  
+    $descripcion_p          = isset($_POST["descripcion_p"]) ? limpiarCadena($_POST["descripcion_p"]) : "";     
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C L I E N T E ::::::::::::::::::::::::::::::::::::::
     $idpersona_cli	  	  = isset($_POST["idpersona_cli"])? limpiarCadena($_POST["idpersona_cli"]):"";
@@ -192,6 +198,7 @@ if (!isset($_SESSION["nombre"])) {
               "11" => $reg['numero_documento'],
               "12" => $reg['tipo_comprobante'],
               "13" => $reg['numero_comprobante'],
+              "14" => number_format($reg['total_pago'], 2, '.', ','),
             ];
             $cont++;
           }
@@ -430,6 +437,38 @@ if (!isset($_SESSION["nombre"])) {
 
 
       // :::::::::::::::::::::::::: S E C C I O N   P A G O  ::::::::::::::::::::::::::     
+      case 'guardar_y_editar_pago_compra':
+    
+        // imgen de perfil
+        if (!file_exists($_FILES['doc1']['tmp_name']) || !is_uploaded_file($_FILES['doc1']['tmp_name'])) {
+          $comprobante_pago = $_POST["doc_old_1"]; $flat_doc1 = false;
+        } else {
+          $ext1 = explode(".", $_FILES["doc1"]["name"]); $flat_doc1 = true;	
+          $comprobante_pago  = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+          move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/compra_grano/comprobante_pago/" . $comprobante_pago );          
+        }
+
+        if (empty($idpago_compra_grano_p)){
+          
+          $rspta=$compra_grano->crear_pago_compra(  $idcompra_grano_p, $forma_pago_p, $fecha_pago_p, $monto_p, $descripcion_p, $comprobante_pago);          
+          echo json_encode($rspta, true);
+
+        }else {
+
+          // validamos si existe LA IMG para eliminarlo
+          if ($flat_doc1 == true) {
+            $doc_pago = $compra_grano->obtener_doc_pago_compra($idpago_compra_grano_p);
+            $doc_pago_antiguo = $doc_pago['data']['comprobante'];
+            if ($doc_pago_antiguo != "") { unlink("../dist/docs/compra_grano/comprobante_pago/" . $doc_pago_antiguo);  }
+          }            
+
+          // editamos un persona existente
+          $rspta=$compra_grano->editar_pago_compra( $idpago_compra_grano_p, $idcompra_grano_p, $forma_pago_p, $fecha_pago_p, $monto_p, $descripcion_p, $comprobante_pago );          
+          echo json_encode($rspta, true);
+        }
+    
+      break;
+
       case 'tabla_pago_compras':
         
         $rspta = $compra_grano->tabla_pago_compras($_GET["idcompra_grano"]);
@@ -438,11 +477,11 @@ if (!isset($_SESSION["nombre"])) {
         
         if ($rspta['status'] == true) {
           while ($reg = $rspta['data']->fetch_object()) {
-            $doc = (empty($reg->comprobante) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento" onclick="ver_documento_pago('.$reg->idpago_compra_grano.')"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');
+            $doc = (empty($reg->comprobante) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento" onclick="ver_documento_pago(\''.$reg->comprobante. '\', \'' . removeSpecialChar($reg->cliente) . ' - ' .date("d/m/Y", strtotime($reg->fecha_pago)).'\')"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');
             $data[] = [
               "0" => $cont++,
               "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras_activo_fijo(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-              ' <button class="btn btn-sm btn-warning" onclick="mostrar_compra_general(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .
+              ' <button class="btn btn-sm btn-warning" id="btn_monto_pagado_' . $reg->idpago_compra_grano . '" monto_pagado="'.$reg->monto.'" onclick="mostrar_editar_pago(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .
               ' <button class="btn btn-sm btn-danger" onclick="eliminar_pago_compra(' . $reg->idpago_compra_grano .', \''.encodeCadenaHtml( number_format($reg->monto, 2, '.',',')).' - '.date("d/m/Y", strtotime($reg->fecha_pago)).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>',
               "2" => $reg->fecha_pago,
               "3" => $reg->forma_pago,
@@ -475,6 +514,14 @@ if (!isset($_SESSION["nombre"])) {
       case 'eliminar_pago_compra':
 
         $rspta = $compra_grano->eliminar_pago_compra($_GET["id_tabla"]);
+    
+        echo json_encode($rspta, true);
+    
+      break;
+
+      case 'mostrar_editar_pago':
+
+        $rspta = $compra_grano->mostrar_editar_pago($_POST["idpago_compra_grano"]);
     
         echo json_encode($rspta, true);
     

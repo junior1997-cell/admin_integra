@@ -36,7 +36,7 @@ class Compra_grano
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
       // creamos un pago de compra
-      $insert_pago = "INSERT INTO pago_compra_grano( idcompra_grano, forma_pago, fecha_pago, monto, descripcion, imagen, user_created) 
+      $insert_pago = "INSERT INTO pago_compra_grano( idcompra_grano, forma_pago, fecha_pago, monto, descripcion, comprobante, user_created) 
       VALUES ('$id','EFECTIVO','$fecha_compra','$monto_pago_compra', '', '', '".$_SESSION['idusuario']."')";
       $new_pago = ejecutarConsulta_retornarID($insert_pago); if ($new_pago['status'] == false) { return  $new_pago;}
 
@@ -340,10 +340,24 @@ class Compra_grano
 
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   P A G O S ::::::::::::::::::::::::::::::::::::::::: 
 
+  public function crear_pago_compra($idcompra_grano_p, $forma_pago_p, $fecha_pago_p, $monto_p, $descripcion_p, $comprobante_pago)  {
+    $sql_1 = "INSERT INTO pago_compra_grano(idcompra_grano, forma_pago, fecha_pago, monto, descripcion, comprobante)
+    VALUES ('$idcompra_grano_p', '$forma_pago_p', '$fecha_pago_p', '$monto_p', '$descripcion_p', '$comprobante_pago')";
+    return ejecutarConsulta($sql_1);
+  }
+
+  public function editar_pago_compra($idpago_compra_grano_p, $idcompra_grano_p, $forma_pago_p, $fecha_pago_p, $monto_p, $descripcion_p, $comprobante_pago)  {
+    $sql_1 = "UPDATE pago_compra_grano SET idcompra_grano='$idcompra_grano_p', forma_pago='$forma_pago_p',
+    fecha_pago='$fecha_pago_p', monto='$monto_p', descripcion='$descripcion_p', comprobante='$comprobante_pago' 
+    WHERE idpago_compra_grano ='$idpago_compra_grano_p'; ";
+    return ejecutarConsulta($sql_1);
+  }
+
   public function tabla_pago_compras($idcompra_grano)  {
-    $sql_1 = "SELECT idpago_compra_grano, idcompra_grano, forma_pago, fecha_pago, monto, descripcion, comprobante, estado
-    FROM pago_compra_grano
-    WHERE idcompra_grano = '$idcompra_grano' AND estado = '1' AND estado_delete = '1' ORDER BY fecha_pago DESC";
+    $sql_1 = "SELECT pcg.idpago_compra_grano, pcg.idcompra_grano, pcg.forma_pago, pcg.fecha_pago, pcg.monto, pcg.descripcion, pcg.comprobante, pcg.estado,
+    p.nombres as cliente, p.tipo_documento, p.numero_documento
+    FROM pago_compra_grano as pcg, compra_grano as cg, persona as p
+    WHERE pcg.idcompra_grano = cg.idcompra_grano AND cg.idpersona = p.idpersona and pcg.idcompra_grano = '$idcompra_grano' AND pcg.estado = '1' AND pcg.estado_delete = '1' ORDER BY pcg.fecha_pago DESC";
     return ejecutarConsulta($sql_1);
   }
 
@@ -369,6 +383,19 @@ class Compra_grano
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $eliminar;
+  }
+
+  //Implementamos un método para activar categorías
+  public function mostrar_editar_pago($idpago_compra_grano) {
+    $sql = "SELECT * FROM pago_compra_grano WHERE idpago_compra_grano = '$idpago_compra_grano';";
+		return ejecutarConsultaSimpleFila($sql);
+  }
+
+  //Implementamos un método para activar categorías
+  public function obtener_doc_pago_compra($idpago_compra_grano) {
+    $sql = "SELECT idpago_compra_grano, comprobante FROM  pago_compra_grano WHERE idpago_compra_grano ='$idpago_compra_grano'; ";
+		$doc =  ejecutarConsultaSimpleFila($sql);		
+		return $doc;
   }
 
   // :::::::::::::::::::::::::: S E C C I O N   C O M P R O B A N T E  :::::::::::::::::::::::::: 

@@ -1,19 +1,13 @@
 //Requejo99@
-var reload_detraccion = "";
 
-var tabla_compra_insumo;
-var tabla_comprobantes;
+var tabla_compra_grano;
+var tabla_pago_compra_grano;
 
 var tabla_compra_x_cliente;
 var tabla_detalle_compra_x_cliente;
 
-var tablamateriales;
+var pago_compra_total = 0;
 
-var tabla_pagos1;
-var tabla_pagos2;
-var tabla_pagos3;
-
-var array_doc = [];
 var host = window.location.host == 'localhost'? `http://localhost/admin_integra/dist/docs/compra_insumo/comprobante_compra/` : `${window.location.origin}/dist/docs/compra_insumo/comprobante_compra/` ;
 
 var array_class_trabajador = [];
@@ -39,9 +33,8 @@ function init() {
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
-
   $("#guardar_registro_cliente").on("click", function (e) { $("#submit-form-cliente").submit(); });
-  
+  $("#guardar_registro_pago_compra").on("click", function (e) { $("#submit-form-pago-compra").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
 
@@ -80,7 +73,7 @@ function init() {
 
   // Formato para telefono
   $("[data-mask]").inputmask();
-
+  $('.jq_image_zoom').zoom({ on:'grab' });
   //filtros();
 }
 
@@ -217,16 +210,16 @@ function show_hide_form(flag) {
 //TABLA - COMPRAS
 function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
   //console.log(idproyecto);
-  tabla_compra_insumo = $("#tabla-compra-grano").dataTable({
+  tabla_compra_grano = $("#tabla-compra-grano").dataTable({
     responsive: true, 
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } } ,        
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,10,11,4,12,13,6,7,14,9], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,10,11,4,12,13,6,7,14,9], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,10,11,4,12,13,6,7,14,9], } } ,        
     ],
     ajax: {
       url: `../ajax/compra_grano.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_cliente=${id_cliente}&comprobante=${comprobante}`,
@@ -241,7 +234,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
       if (data[5] != '') { $("td", row).eq(5).addClass('text-left'); }
       if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }    
-      if (data[9] != '' || data[9] == 0 ) { $("td", row).eq(9).addClass('text-right'); } 
+      if (data[9] != '' || data[9] == 0 ) { $("td", row).eq(9).addClass('text-right'); parseFloat(data[9])<0? $("td", row).eq(9).addClass('bg-red') : ""; } 
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -255,11 +248,11 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       { targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       { targets: [9], render: $.fn.dataTable.render.number( ',', '.', 2) },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
-      { targets: [10,11,12,13],  visible: false,  searchable: false,  },
+      { targets: [10,11,12,13,14],  visible: false,  searchable: false,  },
     ],
   }).DataTable();
 
-  $(tabla_compra_insumo).ready(function () {  $('.cargando').hide(); });
+  $(tabla_compra_grano).ready(function () {  $('.cargando').hide(); });
 
   //console.log(idproyecto);
   tabla_compra_x_cliente = $("#tabla-compra-cliente").dataTable({
@@ -363,7 +356,7 @@ function guardar_y_editar_compras(e) {
       if (result.value.status == true){        
         Swal.fire("Correcto!", "Compra guardada correctamente", "success");
 
-        tabla_compra_insumo.ajax.reload(null, false);
+        tabla_compra_grano.ajax.reload(null, false);
         tabla_compra_x_cliente.ajax.reload(null, false);
 
         limpiar_form_compra(); show_hide_form(1);
@@ -389,7 +382,7 @@ function eliminar_compra(idcompra_proyecto, nombre) {
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
-    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_cliente.ajax.reload(null, false); },
+    function(){ tabla_compra_grano.ajax.reload(null, false); tabla_compra_x_cliente.ajax.reload(null, false); },
     false, 
     false, 
     false,
@@ -748,22 +741,24 @@ function capturar_pago_compra() {
   $(".span-pago-compra").html('(Seleccione metodo pago)');
   $("#monto_pago_compra").prop("readonly", true).val(0);
   $("#fecha_proximo_pago").prop("readonly", true);
-   
+
+  var date_compra = $('#fecha_compra').val() == '' || $('#fecha_compra').val() == null ? "" : $('#fecha_compra').val();   
 
   if ($("#idcompra_grano").val() == "" || $("#idcompra_grano").val() == null) {
     if ($("#metodo_pago").select2("val") == "CONTADO") {      
       var total_compra = $("#total_compra").val();
       $("#monto_pago_compra").val(total_compra);   
       $(".span-pago-compra").html('(Contado)');  
-      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+      $("#fecha_proximo_pago").val(date_compra); 
     } else if ($("#metodo_pago").select2("val") == "CREDITO") {
+      date_compra == '' || date_compra == null ? "" : restrigir_fecha_ant('#fecha_proximo_pago', date_compra) ;
       $("#monto_pago_compra").prop("readonly", false).val(0);
       $("#fecha_proximo_pago").prop("readonly", false);
       $(".span-pago-compra").html('(Crédito)'); 
     }
   } else {
     if ($("#metodo_pago").select2("val") == "CONTADO") {      
-      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+      $("#fecha_proximo_pago").val(date_compra); 
     } else if ($("#metodo_pago").select2("val") == "CREDITO") {
       $("#fecha_proximo_pago").prop("readonly", false);
     }
@@ -947,7 +942,6 @@ function doc1_eliminar() {
 function limpiar_form_pago_compra() {  
 
   $("#idpago_compra_grano_p").val(""); 
-  $("#idcompra_grano_p").val("null");
   $("#forma_pago_p").val("null").trigger("change"); 
   $("#fecha_pago_p").val(""); 
   $("#monto_p").val(""); 
@@ -966,23 +960,24 @@ function limpiar_form_pago_compra() {
 }
 
 function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
+
   show_hide_form(4);
   $("#idcompra_grano_p").val(idcompra_grano);
   $("#total_de_compra").html(formato_miles(total_compra));
   $(".h1-nombre-cliente").html(` - <b>${cliente}</b>` );
 
-  var pago_compra_total = 0; $("#total_depositos").html('0.00')
+  pago_compra_total = 0; $("#total_depositos").html('0.00');
 
-  tabla_compra_insumo = $("#tabla-pagos-compras").dataTable({
+  tabla_pago_compra_grano = $("#tabla-pagos-compras").dataTable({
     responsive: true, 
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,9,10,4,11,12,6,7,8], } } ,        
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5], } } ,        
     ],
     ajax: {
       url: `../ajax/compra_grano.php?op=tabla_pago_compras&idcompra_grano=${idcompra_grano}`,
@@ -1006,7 +1001,7 @@ function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      //{ targets: [7], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [4], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       //{ targets: [9], render: $.fn.dataTable.render.number( ',', '.', 2) },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
       //{ targets: [10,11,12,13],  visible: false,  searchable: false,  },
@@ -1016,20 +1011,20 @@ function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
 }
 
 //Función para eliminar registros
-function eliminar_pago_compra(idcompra_proyecto, nombre) {
+function eliminar_pago_compra(idpago_compra_grano, nombre) {
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
     "../ajax/compra_grano.php?op=papelera_pago_compra",
     "../ajax/compra_grano.php?op=eliminar_pago_compra", 
-    idcompra_proyecto, 
+    idpago_compra_grano, 
     "!Elija una opción¡", 
-    `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
-    function(){ tabla_compra_insumo.ajax.reload(null, false); tabla_compra_x_cliente.ajax.reload(null, false); },
-    false, 
+    function(){ $("#total_depositos").html('0.00'); pago_compra_total = 0; tabla_pago_compra_grano.ajax.reload(null, false); },
+    function(){ tabla_compra_x_cliente.ajax.reload(null, false); },
     false, 
     false,
     false
@@ -1040,16 +1035,123 @@ function calcular_deuda() {
   var monto_actual = $('#monto_p').val() == '' || $('#monto_p').val() == null ? 0 : quitar_formato_miles($('#monto_p').val());
   var monto_pagados = $('#total_depositos').text() == '' || $('#total_depositos').text() == null ? 0 : quitar_formato_miles($('#total_depositos').text());
   var monto_de_compra = $('#total_de_compra').text() == '' || $('#total_de_compra').text() == null ? 0 : quitar_formato_miles($('#total_de_compra').text());
+  var idpago_compra_grano_p = $('#idpago_compra_grano_p').val();
 
-  var monto_deuda = parseFloat(monto_de_compra) - parseFloat(monto_pagados) - parseFloat(monto_actual);
+  var monto_deuda = 0;
+  if (idpago_compra_grano_p == ''  || idpago_compra_grano_p == null) {
+    monto_deuda = parseFloat(monto_de_compra) - parseFloat(monto_pagados) - parseFloat(monto_actual);
+  } else {
+    var btn_monto_pagados = $(`#btn_monto_pagado_${idpago_compra_grano_p}`).attr("monto_pagado");
+    monto_deuda = parseFloat(monto_de_compra) - (parseFloat(monto_pagados) - parseFloat(btn_monto_pagados)) - parseFloat(monto_actual) ;
+  }  
 
   if (monto_deuda < 0) {
-    $('.deuda-actual').html(monto_deuda).addClass('input-no-valido').removeClass('input-valido input-no-valido-warning');
+    $('.deuda-actual').html(formato_miles(monto_deuda)).addClass('input-no-valido').removeClass('input-valido input-no-valido-warning');
   } else if (monto_deuda == 0 ) {
-    $('.deuda-actual').html(monto_deuda).addClass('input-valido').removeClass('input-no-valido input-no-valido-warning');
+    $('.deuda-actual').html(formato_miles(monto_deuda)).addClass('input-valido').removeClass('input-no-valido input-no-valido-warning');
   }else if (monto_deuda > 0) {
-    $('.deuda-actual').html(monto_deuda).addClass('input-no-valido-warning').removeClass('input-no-valido input-valid');
+    $('.deuda-actual').html(formato_miles(monto_deuda)).addClass('input-no-valido-warning').removeClass('input-no-valido input-valid');
   }
+}
+
+//guardar cliente
+function guardar_y_editar_pago_compra(e) {
+  // e.preventDefault(); //No se activará la acción predeterminada del evento
+  var formData = new FormData($("#form-pago-compras")[0]);
+
+  $.ajax({
+    url: "../ajax/compra_grano.php?op=guardar_y_editar_pago_compra",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (e) {
+      e = JSON.parse(e);
+      try {
+        if (e.status == true) {
+          pago_compra_total = 0;
+          tabla_pago_compra_grano.ajax.reload(null, false);
+          Swal.fire("Correcto!", "cliente guardado correctamente.", "success");          
+          limpiar_form_pago_compra();
+          $("#modal-agregar-pago-compra").modal("hide");
+        } else {
+          ver_errores(e);
+        }
+      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }       
+      
+      $("#guardar_registro_pago_compra").html('Guardar Cambios').removeClass('disabled');
+    },
+    xhr: function () {
+      var xhr = new window.XMLHttpRequest();
+      xhr.upload.addEventListener("progress", function (evt) {
+        if (evt.lengthComputable) {
+          var percentComplete = (evt.loaded / evt.total)*100;
+          /*console.log(percentComplete + '%');*/
+          $("#barra_progress_pago_compra").css({"width": percentComplete+'%'});
+          $("#barra_progress_pago_compra").text(percentComplete.toFixed(2)+" %");
+        }
+      }, false);
+      return xhr;
+    },
+    beforeSend: function () {
+      $("#guardar_registro_pago_compra").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_pago_compra").css({ width: "0%",  });
+      $("#barra_progress_pago_compra").text("0%").addClass('progress-bar-striped progress-bar-animated');
+    },
+    complete: function () {
+      $("#barra_progress_pago_compra").css({ width: "0%", });
+      $("#barra_progress_pago_compra").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+    },
+    error: function (jqXhr) { ver_errores(jqXhr); },
+  });
+}
+
+function mostrar_editar_pago(idpago_compra_grano) {
+  $(".tooltip").removeClass("show").addClass("hidde");
+  $("#cargando-7-fomulario").hide();
+  $("#cargando-8-fomulario").show();
+  
+  limpiar_form_pago_compra();
+
+  $("#modal-agregar-pago-compra").modal("show")
+
+  $.post("../ajax/compra_grano.php?op=mostrar_editar_pago", { 'idpago_compra_grano': idpago_compra_grano }, function (e, status) {
+
+    e = JSON.parse(e);  console.log(e);  
+
+    if (e.status == true) {
+      $("#idpago_compra_grano_p").val(e.data.idpago_compra_grano);
+      $("#idcompra_grano_p").val(e.data.idcompra_grano); 
+      $("#forma_pago_p").val(e.data.forma_pago).trigger("change");
+      $("#fecha_pago_p").val(e.data.fecha_pago); 
+      $("#monto_p").val(e.data.monto).trigger("change");
+      $("#descripcion_p").val(e.data.descripcion); 
+
+      if (e.data.comprobante == "" || e.data.comprobante == null  ) {
+        $("#doc1_ver").html('<img src="../dist/svg/doc_uploads.svg" alt="" width="50%" >');
+        $("#doc1_nombre").html('');
+        $("#doc_old_1").val(""); $("#doc1").val("");
+      } else {
+        $("#doc_old_1").val(e.data.comprobante);
+        $("#doc1_nombre").html(`<div class="row"> <div class="col-md-12"><i>Baucher.${extrae_extencion(e.data.comprobante)}</i></div></div>`);
+        // cargamos la imagen adecuada par el archivo
+        $("#doc1_ver").html(doc_view_extencion(e.data.comprobante,'compra_grano', 'comprobante_pago', '100%', '210' ));            
+      }
+
+      $("#cargando-7-fomulario").show();
+      $("#cargando-8-fomulario").hide();
+    } else {
+      ver_errores(e);
+    }
+    
+  }).fail( function(e) { ver_errores(e); } );
+}
+
+function ver_documento_pago(doc, name_download) {
+  $('.tile-modal-comprobante').html(name_download);
+  $('#modal-ver-comprobante-pago').modal('show');
+  $('.div-view-comprobante-pago').html(doc_view_download_expand(doc, 'dist/docs/compra_grano/comprobante_pago',name_download,'100%', '410'));
+  $('.jq_image_zoom').zoom({ on:'grab' });
 }
 // :::::::::::::::::::::::::: - S E C C I O N   D E S C A R G A S -  ::::::::::::::::::::::::::
 
@@ -1438,21 +1540,22 @@ $(function () {
 
   $("#form-pago-compras").validate({
     rules: {
-      fecha_pago_p: { required: true },
+      forma_pago_p: { required: true },
+      fecha_pago_p: { required: true, },
       monto_p:      { required: true, },
-      descripcion_p:{ required: true, minlength: 4, maxlength: 200 },
+      descripcion_p:{ minlength: 4, maxlength: 200 },
     },
     messages: {
+      forma_pago_p: { required: "Campo requerido.", },
       fecha_pago_p: { required: "Campo requerido.", },
-      monto_p:      { required: "Campo requerido.",  },
-      descripcion_p:{ required: "Campo requerido.", minlength: "MÍNIMO 4 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
+      monto_p:      { required: "Campo requerido.", },
+      descripcion_p:{ minlength: "MÍNIMO 4 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
     },
 
     errorElement: "span",
 
     errorPlacement: function (error, element) {
       error.addClass("invalid-feedback");
-
       element.closest(".form-group").append(error);
     },
 
@@ -1465,7 +1568,7 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardar_y_editar_cliente(e);
+      guardar_y_editar_pago_compra(e);
     },
   });
 
@@ -1602,8 +1705,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
               // toastr.success("Usuario registrado correctamente");
               Swal.fire("Correcto!", "Compra guardada correctamente", "success");
 
-              tabla_compra_insumo.ajax.reload(null, false);
-              tabla_compra_x_cliente.ajax.reload(null, false);
+
 
               limpiar_form_compra(); show_hide_form();
               

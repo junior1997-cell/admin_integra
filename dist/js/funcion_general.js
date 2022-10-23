@@ -139,35 +139,14 @@ function format_m_a(fecha) {
 }
 
 // restringimos la fecha para no elegir mañana
-function no_select_tomorrow(nombre_input) {  
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; //January is 0!
-  var yyyy = today.getFullYear();
-  if(dd<10){ dd='0'+dd } 
-  if(mm<10){ mm='0'+mm } 
-
-  today = `${yyyy}-${mm}-${dd}`;
-  
-  $(nombre_input).attr('max',today);
-}
+function no_select_tomorrow(nombre_input) { $(nombre_input).attr('max',moment().format('YYYY-MM-DD')); }
 
 // restringimos la fecha para no elegir mañana
-function restrigir_fecha_ant(nombre_input,fecha_minima) {
-  console.log(nombre_input,fecha_minima);
-  var today2 = new Date(fecha_minima);
-  var dd2 = today2.getDate()+1;
-  var mm2 = today2.getMonth()+1; //January is 0!
-  var yyyy2 = today2.getFullYear();
-  
-  if(dd2<10){ dd2='0'+dd2  }
-  if(mm2<10){ mm2='0'+mm2 }
-  
-  today2 = yyyy2+'-'+mm2+'-'+dd2;
-  console.log(today2);
+function restrigir_fecha_ant(nombre_input, fecha_minima) {
+  console.log(nombre_input,fecha_minima);  
 
-  $(nombre_input).attr('min',today2);
-  $(nombre_input).rules("add", { min: today2, messages: { min: `Ingresa una fecha mayor a: ${format_d_m_a(today2)}` } });
+  $(nombre_input).attr('min',fecha_minima);
+  $(nombre_input).rules("add", { min: fecha_minima, messages: { min: `Ingresa una fecha mayor a: ${format_d_m_a(fecha_minima)}` } });
 }
 
 function cant_dias_mes(date_anio, date_mes) {
@@ -962,6 +941,117 @@ function doc_view_extencion(filename, carpeta='', sub_carpeta='', width='50%', h
   }
 
   return html;
+}
+
+function doc_view_download_expand(filename, ruta='', nombre_decarga='', width='50%', height='auto', return_error_img = false, error_img ='') {
+
+  var html = ''; var extencion = '';
+  var expand_disabled = '';
+
+  var ruta_file = window.location.host == 'localhost'? `http://localhost/admin_integra/${ruta}/${filename}` : `${window.location.origin}/${ruta}/${filename}` ;
+ 
+  // cargamos la imagen adecuada par el archivo
+  if ( UrlExists(ruta_file) != 200 ) { console.log('no existe');
+    if (return_error_img == true) {    
+      var html_img_error =  error_img == '' || error_img == null ? `<img src="../dist/svg/404-v2.svg" alt="" width="${width}" >` : `<img src="${error_img}" alt="" width="${width}" onerror="this.src='../dist/svg/404-v2.svg';"  >`;
+      return html_img_error;
+    } else {
+      html = `<div class="callout callout-danger">
+        <p class="text-danger font-size-12px text-left">404 Documento no encontrado!!</p>
+        <p class="font-size-10px text-left">Hubo un <b>error</b> al <b>encontrar este archivo</b> , los mas probable es que se haya eliminado, o se haya movido a otro lugar, se <b>recomienda editar</b> en su módulo correspodiente.</p>
+      </div>`;
+      extencion = extrae_extencion(filename);
+      return html
+    }
+  }else if ( extrae_extencion(filename) == "xls") {
+
+    html = `<img src="../dist/svg/xls.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  } else if ( extrae_extencion(filename) == "xlsx" ) {    
+
+    html = `<img src="../dist/svg/xlsx.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "csv" ) {
+
+    html = `<img src="../dist/svg/csv.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "xlsm" ) {
+
+    html = `<img src="../dist/svg/xlsm.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "xlsb" ) {
+
+    html = `<img src="../dist/svg/xlsb.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "docx" ||  extrae_extencion(filename) == "docm"  || extrae_extencion(filename) == "dot" ||  extrae_extencion(filename) == "dotx" ||  extrae_extencion(filename) == "dotm") {
+
+    html = `<img src="../dist/svg/docx.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "doc") {
+
+    html = `<img src="../dist/svg/doc.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "dwg") {
+
+    html = `<img src="../dist/svg/dwg.svg" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+    
+  }else if ( extrae_extencion(filename) == "zip" || extrae_extencion(filename) == "rar" || extrae_extencion(filename) == "iso") {
+
+    html = `<img src="../dist/img/default/zip.png" alt="" width="50%" height="50%" >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';
+
+  }else if ( extrae_extencion(filename) == "pdf" || extrae_extencion(filename) == "PDF" ) {
+    //recomendado - height="210" 
+    html = `<iframe src="${ruta_file}" onerror="this.src='../dist/svg/404-v2.svg';" frameborder="0" scrolling="no" width="${width}" height="${height}"> </iframe>`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = '';
+  
+  } else if (
+    extrae_extencion(filename) == "jpeg" || extrae_extencion(filename) == "jpg" || extrae_extencion(filename) == "jpe" ||
+    extrae_extencion(filename) == "jfif" || extrae_extencion(filename) == "gif" || extrae_extencion(filename) == "png" ||
+    extrae_extencion(filename) == "tiff" || extrae_extencion(filename) == "tif" || extrae_extencion(filename) == "webp" ||
+    extrae_extencion(filename) == "bmp" || extrae_extencion(filename) == "svg" ) {
+
+    html = `<center><span class="jq_image_zoom"><img id="_cargando_img_" src="${ruta_file}" alt="" width="${width}" onerror="this.src='../dist/svg/404-v2.svg';"  ></span></center>`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = '';
+    
+  }else{
+    html = `<img src="../dist/svg/doc_si_extencion.svg" alt="" width="50%" height="50%"  >`;
+    extencion = extrae_extencion(filename);
+    expand_disabled = 'disabled';    
+  }
+
+  var div_html = `<div class="row">
+    <div class="col-6 col-md-6">
+      <a class="btn btn-xs btn-block btn-warning" href="${ruta_file}" download="${nombre_decarga}" type="button"><i class="fas fa-download"></i> Descargar</a>
+    </div>
+    <div class="col-6 col-md-6">
+      <a class="btn btn-xs btn-block btn-info ${expand_disabled}" href="${ruta_file}" target="_blank" type="button"><i class="fas fa-expand"></i> Ver completo</a>
+    </div>
+    <div class="col-12 col-md-12 mt-2"  width="auto">   
+      ${html} 
+    </div>
+  </div>`;
+
+  return div_html;
 }
 
 function loading_img(attr_img, file_img, width_img) {

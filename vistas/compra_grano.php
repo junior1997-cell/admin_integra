@@ -83,7 +83,7 @@
                                     <button type="button" class="btn bg-gradient-warning" id="btn_regresar" style="display: none;" onclick="show_hide_form(1);">
                                       <i class="fas fa-arrow-left"></i> Regresar
                                     </button>
-                                    <button type="button" class="btn bg-gradient-success" id="btn_pagar" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago-compra" onclick="limpiar_form_pago_compra();">
+                                    <button type="button" class="btn bg-gradient-success" id="btn_pagar" style="display: none;" data-toggle="modal"  data-target="#modal-agregar-pago-compra" onclick="limpiar_form_pago_compra(); calcular_deuda();">
                                       <i class="fas fa-dollar-sign"></i> Agregar Pago
                                     </button>                                     
                                   </h3>
@@ -192,10 +192,11 @@
                             </div>
                             <!-- /.filtro -->
                             
+                            <!-- TABLA - principal -->
                             <table id="tabla-compra-grano" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="14" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="15" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -213,6 +214,7 @@
                                   <th>Num. Doc.</th>
                                   <th>Tipo Comprobante</th>
                                   <th>Num. Comprobante</th>
+                                  <th>Pagos</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -233,6 +235,7 @@
                                   <th>Num. Doc.</th>
                                   <th>Tipo Comprobante</th>
                                   <th>Num. Comprobante</th>
+                                  <th>Pagos</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -275,7 +278,7 @@
                                   <th>Comprobante</th>
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
-                                  <th>descripcion_p</th>
+                                  <th>descripcion</th>
                                   <th>Estado</th>
                                 </tr>
                               </thead>
@@ -332,7 +335,7 @@
                                   <div class="col-lg-3" >
                                     <div class="form-group">
                                       <label for="fecha_compra">Fecha <sup class="text-danger">*</sup></label>
-                                      <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" />
+                                      <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" onchange="capturar_pago_compra();" />
                                     </div>
                                   </div>
 
@@ -775,7 +778,7 @@
                                 </div>
 
                                 <!--Precio Parcial-->
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                   <div class="form-group">
                                     <label for="monto_p">Monto total </label>
                                     <input type="number" class="form-control" name="monto_p" id="monto_p" onkeyup="delay(function(){calcular_deuda();}, 100 );" onchange="delay(function(){calcular_deuda();}, 100 );" placeholder="Precio Parcial" />
@@ -783,9 +786,9 @@
                                 </div>
 
                                 <!--Precio Parcial-->
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                   <div class="form-group">
-                                    <label for="monto_p">Deuda pendiente </label>
+                                    <label for="Deuda">Deuda pendiente </label>
                                     <span class="form-control-mejorado deuda-actual" placeholder="Deuda"> 0.00</span>
                                   </div>
                                 </div>
@@ -793,7 +796,7 @@
                                 <!--Descripcion-->
                                 <div class="col-lg-12">
                                   <div class="form-group">
-                                    <label for="descripcion_p">Descripción <sup class="text-danger">*</sup> <span style="font-size: 12px; font-weight: normal;">ej. Almuerzo, aniversario de la empresa</span> </label> <br />
+                                    <label for="descripcion_p">Descripción <sup class="text-danger">*</sup> </label> <br />
                                     <textarea name="descripcion_p" id="descripcion_p" class="form-control" rows="2"></textarea>
                                   </div>
                                 </div>
@@ -847,7 +850,23 @@
                       </div>
                     </div>
                   </div>
-                  <!-- MODAL - ver-vaucher-pagos -->                   
+                  
+                  <!-- MODAL - VER CMPROBANTE -->
+                  <div class="modal fade" id="modal-ver-comprobante-pago">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header" style="background-color: #0811190a;">
+                          <h4 class="modal-title">Comprobante: <span class="text-bold tile-modal-comprobante"></span> </h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span class="text-danger" aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body div-view-comprobante-pago">
+                          <!-- aqui se visualizara el comprobante -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>          
 
                 </div>
               </section>
