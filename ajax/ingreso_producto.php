@@ -125,10 +125,10 @@ if (!isset($_SESSION["nombre"])) {
           
         }else{
           
-            // editamos un persona existente
-            $rspta=$proveedor->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
+          // editamos un persona existente
+          $rspta=$proveedor->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
             
-            echo json_encode($rspta, true);
+          echo json_encode($rspta, true);
         }
     
       break;

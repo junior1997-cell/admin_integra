@@ -102,8 +102,8 @@
 
     /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 
-    public function select2_proveedor_cliente($id) {
-      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='$id' AND estado='1' AND estado_delete ='1'";
+    public function select2_proveedor_cliente($tipo) {
+      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='$tipo' AND estado='1' AND estado_delete ='1'";
 
       return ejecutarConsulta($sql);
       // var_dump($return);die();

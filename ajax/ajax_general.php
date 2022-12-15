@@ -386,31 +386,6 @@
         }
       break;
 
-      /* ══════════════════════════════════════ T I P O   T I E R R A   C O N C R E T O ══════════════════════════════════════ */
-      case 'select2TierraConcreto': 
-    
-        $rspta = $ajax_general->select2_tierra_concreto(); $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {  
-
-            $data .= '<option value=' . $value['id'] . '>' . $value['nombre'] .'</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => '<option value="1" title="insumo" >Insumo</option>'.$data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
 
       /* ══════════════════════════════════════ P R O D U C T O ══════════════════════════════════════ */
 
@@ -468,58 +443,6 @@
     
       break;
       
-      /* ══════════════════════════════════════ S E R V i C I O S  M A Q U I N A R I A ════════════════════════════ */
-
-      case 'select2_servicio_maquina':
-        $tipo ='1';
-        $rspta = $ajax_general->select2_servicio($tipo);
-        $data = "";
-
-        if ($rspta['status'] == true) {
-
-           foreach ($rspta['data'] as $key => $reg) { 
-            $data .= '<option value=' . $reg['idmaquinaria'] . '>' . $reg['nombre'] . ' : ' . $reg['codigo_maquina'] . ' -> ' . $reg['nombre_proveedor'] . '</option>';
-          }
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-
-      break;
-
-      /* ══════════════════════════════════════ S E R V i C I O S  E Q U I P O S ════════════════════════════ */
-
-      case 'select2_servicio_equipo':
-        $tipo ='2';
-        $rspta = $ajax_general->select2_servicio($tipo);
-        $data = "";
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $reg) { 
-           $data .= '<option value=' . $reg['idmaquinaria'] . '>' . $reg['nombre'] . ' : ' . $reg['codigo_maquina'] . ' -> ' . $reg['nombre_proveedor'] . '</option>';
-          }
-          $retorno = array(
-           'status' => true, 
-           'message' => 'Salió todo ok', 
-           'data' => $data, 
-          );
- 
-         echo json_encode($retorno, true);
-
-        } else {
-
-         echo json_encode($rspta, true); 
-        }
-      break;
-
       /* ══════════════════════════════════════ C O M P R A   D E   I N S U M O ════════════════════════════ */
 
       // case 'detalle_compra_de_insumo':
@@ -664,56 +587,6 @@
       //   echo json_encode( $retorno, true );
 
       // break;
-
-      /* ══════════════════════════════════════ E M P R E S A   A   C A R G O ══════════════════════════════════════ */
-      case 'select2EmpresaACargo': 
-    
-        $rspta = $ajax_general->select2_empresa_a_cargo(); $cont = 1; $data = "";
-        
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) { 
-            $data .= '<option value="' . $value['id'] . '" title="'.$value['logo'].'" >' . $value['nombre'] . ' - ' . $value['numero_documento'].'</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => '<option value="1" title="emogi-carita-feliz.svg" >NINGUNO</option>'.$data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
-
-      /* ══════════════════════════════════════ M A R C A S   D E   A C T I V O S ════════════════════════════ */
-      case 'select2marcas_activos': 
-    
-        $rspta = $ajax_general->marcas_activos(); $cont = 1; $data = "";
-        
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) { 
-            $data .= '<option value="' . $value['idmarca'] . '" title="'.$value['nombre_marca'].'" >' . $value['nombre_marca'] .'</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
 
       default: 
         $rspta = ['status'=>'error_code', 'message'=>'Te has confundido en escribir en el <b>swich.</b>', 'data'=>[]]; echo json_encode($rspta, true); 

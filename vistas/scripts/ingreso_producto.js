@@ -1121,7 +1121,7 @@ function guardar_proveedor(e) {
           limpiar_form_proveedor();
           $("#modal-agregar-proveedor").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#idproveedor', e.data);
         } else {
           ver_errores(e);
         }
@@ -1142,11 +1142,13 @@ function guardar_proveedor(e) {
       return xhr;
     },
     beforeSend: function () {
+      $("#barra_progress_proveedor_div").show();
       $("#guardar_registro_proveedor").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
       $("#barra_progress_proveedor").css({ width: "0%",  });
       $("#barra_progress_proveedor").text("0%").addClass('progress-bar-striped progress-bar-animated');
     },
     complete: function () {
+      $("#barra_progress_proveedor_div").hide();
       $("#barra_progress_proveedor").css({ width: "0%", });
       $("#barra_progress_proveedor").text("0%").removeClass('progress-bar-striped progress-bar-animated');
     },
@@ -1275,9 +1277,7 @@ function mostrar_productos(idproducto, cont) {
 }
 
 //Función limpiar
-function limpiar_producto() {
-
-  
+function limpiar_producto() {  
   //Mostramos los Materiales
   $("#idproducto_compra").val("");  
   $("#nombre_producto").val("");
@@ -1360,7 +1360,7 @@ init();
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
 $(function () {
-    // Aplicando la validacion del select cada vez que cambie
+  // Aplicando la validacion del select cada vez que cambie
 
   $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
   $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
@@ -1506,17 +1506,6 @@ $(function () {
 
 });
 
-function l_m() {
-  // limpiar_form_compra();
-  $("#barra_progress").css({ width: "0%" });
-
-  $("#barra_progress").text("0%");
-
-  $("#barra_progress2").css({ width: "0%" });
-
-  $("#barra_progress2").text("0%");
-}
-
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
 
 function cargando_search() {
@@ -1567,92 +1556,6 @@ function export_excel_detalle_factura() {
   let preferenciasDocumento = datos.tabla_detalle_factura.xlsx;
   tableExport.export2file(preferenciasDocumento.data, preferenciasDocumento.mimeType, preferenciasDocumento.filename, preferenciasDocumento.fileExtension, preferenciasDocumento.merges, preferenciasDocumento.RTL, preferenciasDocumento.sheetname);
 
-}
-
-//Función para guardar o editar - COMPRAS
-function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
-  // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-compras")[0]);
-
-  var swal2_header = `<img class="swal2-image bg-color-252e38 b-radio-7px p-15px m-10px" src="../dist/gif/cargando.gif">`;
-
-  var swal2_content = `<div class="row sweet_loader" >    
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-      <div class="progress" id="barra_progress_compra_div">
-        <div id="barra_progress_compra" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
-          0%
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-  Swal.fire({
-    title: "¿Está seguro que deseas guardar esta compra?",
-    html: "Verifica que todos lo <b>campos</b>  esten <b>conformes</b>!!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#28a745",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Si, Guardar!",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        url: "../ajax/ingreso_producto.php?op=guardaryeditarcompra",
-        type: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-        beforeSend: function() {
-          Swal.fire({
-            title: "Guardando...",
-            html: 'Tu <b>información</b> se esta guradando en la <b>base de datos</b>.',
-            showConfirmButton: false,
-            didRender: function() { 
-              /* solo habrá un swal2 abierta.*/               
-              $('.swal2-header').prepend(swal2_header); 
-              $('.swal2-content').prepend(swal2_content);
-            }
-          });
-          $("#barra_progress_compra").addClass('progress-bar-striped progress-bar-animated');
-        },
-        success: function (e) {
-          try {
-            e = JSON.parse(e);
-            if (e.status == true ) {
-              // toastr.success("Usuario registrado correctamente");
-              Swal.fire("Correcto!", "Compra guardada correctamente", "success");
-
-              tabla_compra_insumo.ajax.reload(null, false);
-              tabla_compra_x_proveedor.ajax.reload(null, false);
-
-              limpiar_form_compra(); regresar();
-              
-              $("#modal-agregar-usuario").modal("hide");
-              l_m();
-              
-            } else {
-              // toastr.error(datos);
-              Swal.fire("Error!", datos, "error");
-              l_m();
-            }
-          } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); } 
-
-        },
-        xhr: function () {
-          var xhr = new window.XMLHttpRequest();    
-          xhr.upload.addEventListener("progress", function (evt) {    
-            if (evt.lengthComputable) {    
-              var percentComplete = (evt.loaded / evt.total)*100;
-              /*console.log(percentComplete + '%');*/
-              $("#barra_progress_compra").css({"width": percentComplete+'%'});    
-              $("#barra_progress_compra").text(percentComplete.toFixed(2)+" %");
-            }
-          }, false);
-          return xhr;
-        }
-      });
-    }
-  });  
 }
 
 // damos formato a: Cta, CCI

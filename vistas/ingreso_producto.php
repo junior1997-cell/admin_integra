@@ -176,6 +176,7 @@
                                 </tr>
                               </tfoot>
                             </table>
+                            <!-- /. table-compra -->
                             <br />
                             <h4><b>Lista de Compras Por Proveedor</b></h4>
                             <table id="tabla-compra-proveedor" class="table table-bordered table-striped display" style="width: 100% !important;">
@@ -201,6 +202,7 @@
                                 </tr>
                               </tfoot>
                             </table>
+                            <!-- /.table-compras-por-proveedor -->
                           </div>
 
                           <!-- TABLA - COMPRAS POR PROVEEDOR -->
@@ -722,10 +724,10 @@
                                 </div>
 
                                 <!-- Progress -->
-                                <div class="col-md-12">
+                                <div class="col-md-12" style="display: none !important;" id="barra_progress_proveedor_div">
                                   <div class="form-group">
-                                    <div class="progress" id="div_barra_progress" style="display: none !important;">
-                                      <div id="barra_progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress"  >
+                                      <div id="barra_progress_proveedor" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                   </div>
                                 </div>
