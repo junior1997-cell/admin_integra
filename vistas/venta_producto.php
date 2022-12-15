@@ -14,9 +14,9 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Compras | Admin Integra </title>
+        <title> ventas | Admin Integra </title>
 
-        <?php $title = "Compras"; require 'head.php'; ?>
+        <?php $title = "ventas"; require 'head.php'; ?>
 
         <!--CSS  switch_MATERIALES-->
         <link rel="stylesheet" href="../dist/css/switch_materiales.css" />
@@ -39,13 +39,13 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0">Compras</h1>
+                      <h1 class="m-0">Ventas de abonos</h1>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="compra_insumos.php">Home</a></li>
-                        <li class="breadcrumb-item active">Compras</li>
+                        <li class="breadcrumb-item active">Ventas</li>
                       </ol>
                     </div>
                     <!-- /.col -->
@@ -90,7 +90,7 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                          <!-- TABLA - COMPRAS -->
+                          <!-- TABLA - ventas -->
                           <div id="div_tabla_compra">
                             <h5><b>Lista de ingresos</b></h5>
                             <!-- filtros -->
@@ -177,7 +177,7 @@
                               </tfoot>
                             </table>
                             <br />
-                            <h4><b>Lista de Compras Por Proveedor</b></h4>
+                            <h4><b>Lista de ventas Por Proveedor</b></h4>
                             <table id="tabla-compra-proveedor" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
@@ -203,9 +203,9 @@
                             </table>
                           </div>
 
-                          <!-- TABLA - COMPRAS POR PROVEEDOR -->
+                          <!-- TABLA - ventas POR PROVEEDOR -->
                           <div id="div_tabla_compra_proveedor" style="display: none;">
-                            <h5><b>Lista de compras Por Facturas</b></h5>
+                            <h5><b>Lista de ventas Por Facturas</b></h5>
                             <table id="detalles-tabla-compra-prov" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
@@ -234,20 +234,20 @@
                           </div>
 
                           <!-- TABLA - AGREGAR COMPRA-->
-                          <div id="agregar_compras" style="display: none;">
+                          <div id="agregar_ventas" style="display: none;">
                             <div class="modal-body p-0px mb-2">
                               <!-- form start -->
-                              <form id="form-compras" name="form-compras" method="POST">
+                              <form id="form-ventas" name="form-ventas" method="POST">
                                  
                                 <div class="row" id="cargando-1-fomulario">
                                   <!-- id compra_producto  -->
-                                  <input type="hidden" name="idcompra_producto" id="idcompra_producto" /> 
+                                  <input type="hidden" name="idventa_producto" id="idventa_producto" /> 
 
                                   <!-- Tipo de Empresa -->
-                                  <div class="col-lg-7">
+                                  <div class="col-lg-5">
                                     <div class="form-group">
-                                      <label for="idproveedor">Proveedor <sup class="text-danger">(único*)</sup></label>
-                                      <select id="idproveedor" name="idproveedor" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                      <label for="idcliente">Proveedor <sup class="text-danger">(único*)</sup></label>
+                                      <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
                                     </div>
                                   </div>
 
@@ -267,12 +267,19 @@
                                   </div>
 
                                   <!-- fecha -->
-                                  <div class="col-lg-4" >
+                                  <div class="col-lg-3" >
                                     <div class="form-group">
                                       <label for="fecha_compra">Fecha <sup class="text-danger">*</sup></label>
                                       <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" />
                                     </div>
                                   </div>
+                                  <!-- Establecimiento-->
+                                  <div class="col-lg-3" >
+                                    <div class="form-group">
+                                      <label for="establecimiento">Establecimiento </label> <br />
+                                      <textarea name="establecimiento" id="establecimiento" class="form-control" rows="1">JR. LOS MARINOS #453 - JAEN - CAJAMARCA</textarea>
+                                    </div>
+                                  </div>  
 
                                   <!-- Tipo de comprobante -->
                                   <div class="col-lg-4" id="content-tipo-comprobante">
@@ -302,14 +309,40 @@
                                       <input type="text" name="val_igv" id="val_igv" class="form-control" value="0.18" onkeyup="modificarSubtotales();" />
                                     </div>
                                   </div>
-
                                   <!-- Descripcion-->
                                   <div class="col-lg-5" id="content-descripcion">
                                     <div class="form-group">
                                       <label for="descripcion">Descripción </label> <br />
                                       <textarea name="descripcion" id="descripcion" class="form-control" rows="1"></textarea>
                                     </div>
-                                  </div>                                  
+                                  </div>  
+
+                                  <!-- metodo de pago -->
+                                  <div class="col-lg-3">
+                                    <div class="form-group">
+                                      <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
+                                      <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa" onchange="capturar_pago_compra();"> 
+                                        <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
+                                        <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
+                                      </select>
+                                    </div> 
+                                  </div>
+
+                                  <!-- Fecha pago -->
+                                  <div class="col-lg-3" >
+                                    <div class="form-group">
+                                      <label for="fecha_proximo_pago">Fecha proximo pago<sup class="text-danger">*</sup></label>
+                                      <input type="date" name="fecha_proximo_pago" id="fecha_proximo_pago" class="form-control" placeholder="Fecha" />
+                                    </div>
+                                  </div>
+
+                                  <!-- Pago a realizar -->
+                                  <div class="col-sm-6 col-lg-3 ">
+                                    <div class="form-group">
+                                      <label for="monto_pago_compra">Pago de compra <span class="span-pago-compra"></span> </label>
+                                      <input type="text" name="monto_pago_compra" id="monto_pago_compra" class="form-control" readonly onClick="this.select();" placeholder="Pago realizado" />
+                                    </div>
+                                  </div>                              
 
                                   <!--Boton agregar material-->
                                   <div class="row col-lg-12 justify-content-between">
@@ -375,19 +408,19 @@
                                   </div>
                                 </div>                                 
                                  
-                                <button type="submit" style="display: none;" id="submit-form-compras">Submit</button>
+                                <button type="submit" style="display: none;" id="submit-form-ventas">Submit</button>
                               </form>
                             </div>
 
                             <div class="modal-footer justify-content-between pl-0 pb-0 ">
                               <button type="button" class="btn btn-danger" onclick="regresar();" data-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-success" style="display: none;" id="guardar_registro_compras">Guardar Cambios</button>
+                              <button type="submit" class="btn btn-success" style="display: none;" id="guardar_registro_ventas">Guardar Cambios</button>
                             </div>
                           </div>
 
-                          <!-- TABLA - FACTURAS COMPRAS-->
-                          <div id="factura_compras" style="display: none;">
-                            <h5><b>Lista de compras Por Facturas</b></h5>
+                          <!-- TABLA - FACTURAS ventas-->
+                          <div id="factura_ventas" style="display: none;">
+                            <h5><b>Lista de ventas Por Facturas</b></h5>
 
                             <!--<div style="text-align:center;"> <h4 style="background: aliceblue;">Costo parcial: <b id="total_costo" style="color: #e52929;"></b> </h5> </div>-->
                             <table id="tabla_facturas" class="table table-bordered table-striped display" style="width: 100% !important;">
@@ -422,8 +455,8 @@
                           </div>
 
                           <!-- TABLA - PAGOS SIN DETRACCION -->
-                          <div id="pago_compras" style="display: none;">
-                            <h5>pago Compras</h5>
+                          <div id="pago_ventas" style="display: none;">
+                            <h5>pago ventas</h5>
                             <div style="text-align: center;">
                               <div>
                                 <h4>Total a pagar: <b id="total_compra"></b></h4>
@@ -803,11 +836,11 @@
                              
                             <div class="row" id="cargando-3-fomulario">
                               <!-- id proveedor -->
-                              <input type="hidden" name="idproveedor_pago" id="idproveedor_pago" />
-                              <!-- idcompras_proyecto -->
+                              <input type="hidden" name="idcliente_pago" id="idcliente_pago" />
+                              <!-- idventas_proyecto -->
                               <input type="hidden" name="idcompra_proyecto_p" id="idcompra_proyecto_p" />
-                              <!-- id compras -->
-                              <input type="hidden" name="idpago_compras" id="idpago_compras" />
+                              <!-- id ventas -->
+                              <input type="hidden" name="idpago_ventas" id="idpago_ventas" />
                               <!-- Beneficiario -->
                               <div class="col-lg-12">
                                 <div class="form-group">
@@ -937,8 +970,8 @@
                     </div>
                   </div>
 
-                  <!-- MODAL - DETALLE compras - charge -->
-                  <div class="modal fade" id="modal-ver-compras">
+                  <!-- MODAL - DETALLE ventas - charge -->
+                  <div class="modal fade" id="modal-ver-ventas">
                     <div class="modal-dialog modal-dialog-scrollable modal-xl">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -1137,7 +1170,7 @@
                             <div class="card-body">
                               <div class="row" id="cargando-9-fomulario">
                                 <!-- id proveedores -->
-                                <input type="hidden" name="idproducto_compra" id="idproducto_compra" />
+                                <input type="hidden" name="idproducto" id="idproducto" />
                                 
                                 <!-- cont registro -->
                                 <input type="hidden" name="cont" id="cont" />   
@@ -1169,8 +1202,8 @@
                                 <!-- Unnidad de medida-->
                                 <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
                                   <div class="form-group">
-                                    <label for="unidad_medida_compra">Unidad medida <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="unidad_medida_compra" id="unidad_medida_compra" class="form-control select2" style="width: 100%;"> </select>
+                                    <label for="Unidad_medida">Unidad medida <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="unidad_medida" id="unidad_medida" class="form-control select2" style="width: 100%;"> </select>
                                   </div>
                                 </div>
 
@@ -1265,7 +1298,7 @@
         <script src="../plugins/jszip/dist/jszip-utils.js"></script>
         <script src="../plugins/FileSaver/dist/FileSaver.js"></script>
         
-        <script type="text/javascript" src="scripts/ingreso_producto.js"></script>         
+        <script type="text/javascript" src="scripts/venta_producto.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

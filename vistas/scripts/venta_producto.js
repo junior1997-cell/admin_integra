@@ -23,27 +23,27 @@ function init() {
 
   $("#bloc_LogisticaAdquisiciones").addClass("menu-open");
 
-  $("#bloc_Compras").addClass("menu-open bg-color-191f24");
+  $("#bloc_Ventas").addClass("menu-open bg-color-191f24");
 
   $("#mLogisticaAdquisiciones").addClass("active");
 
-  $("#mCompra").addClass("active bg-green");
+  $("#mVentas").addClass("active bg-green");
 
-  $("#lCompras").addClass("active");
+  $("#lVentas").addClass("active");
 
   $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#idproveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#filtro_proveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#idcliente', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#filtro_proveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
-  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_compra', null);
+  lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
   lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
 
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
-  $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
+  $("#guardar_registro_ventas").on("click", function (e) {  $("#submit-form-ventas").submit(); });
 
   $("#guardar_registro_proveedor").on("click", function (e) { $("#submit-form-proveedor").submit(); });
 
@@ -55,15 +55,15 @@ function init() {
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - FILTROS ══════════════════════════════════════
   $("#filtro_tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione comprobante", allowClear: true, });
-  $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true, });
+  $("#filtro_proveedor").select2({ theme: "bootstrap4", placeholder: "Selecione cliente", allowClear: true, });
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
+  // ══════════════════════════════════════ INITIALIZE SELECT2 - ventas ══════════════════════════════════════
 
-  $("#idproveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true, });
+  $("#idcliente").select2({ theme: "bootstrap4", placeholder: "Selecione cliente", allowClear: true, });
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione Comprobante", allowClear: true, });
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO COMPRAS ══════════════════════════════════════
+  // ══════════════════════════════════════ INITIALIZE SELECT2 - PAGO ventas ══════════════════════════════════════
 
   $("#forma_pago").select2({ theme: "bootstrap4", placeholder: "Selecione una forma de pago", allowClear: true, });
 
@@ -77,8 +77,11 @@ function init() {
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
-  $("#unidad_medida_compra").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
+  $("#unidad_medida").select2({ theme: "bootstrap4", placeholder: "Seleccinar una unidad", allowClear: true, });
   $("#categoria_producto").select2({ theme: "bootstrap4", placeholder: "Seleccinar una categoria", allowClear: true, });
+
+  $("#metodo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
+
 
   no_select_tomorrow("#fecha_compra");
 
@@ -119,8 +122,8 @@ function templateBanco (state) {
 function limpiar_form_compra() {
   $(".tooltip").removeClass("show").addClass("hidde");
 
-  $("#idcompra_producto").val("");
-  $("#idproveedor").val("null").trigger("change");
+  $("#idventa_producto").val("");
+  $("#idcliente").val("null").trigger("change");
   $("#tipo_comprobante").val("Ninguno").trigger("change");
 
   $("#serie_comprobante").val("");
@@ -156,15 +159,13 @@ function ver_form_add() {
   array_class_trabajador = [];
   $("#tabla-compra").hide();
   $("#tabla-compra-proveedor").hide();
-  $("#agregar_compras").show();
+  $("#agregar_ventas").show();
   $("#regresar").show();
   $("#btn_agregar").hide();
-  $("#guardar_registro_compras").hide();
+  $("#guardar_registro_ventas").hide();
   $("#div_tabla_compra").hide();
-  $("#factura_compras").hide();
+  $("#factura_ventas").hide();
 
-  // $(".leyecnda_pagos").hide();
-  // $(".leyecnda_saldos").hide();
   listarmateriales();
 }
 
@@ -172,19 +173,16 @@ function regresar() {
   $("#regresar").hide();
   $("#tabla-compra").show();
   $("#tabla-compra-proveedor").show();
-  $("#agregar_compras").hide();
+  $("#agregar_ventas").hide();
   $("#btn_agregar").show();
   $("#div_tabla_compra").show();
   $("#div_tabla_compra_proveedor").hide();
   //----
-  $("#factura_compras").hide();
+  $("#factura_ventas").hide();
   $("#btn-factura").hide();
   //-----
-  $("#pago_compras").hide();
+  $("#pago_ventas").hide();
   $("#btn-pagar").hide();
-
-  // $(".leyecnda_pagos").show();
-  // $(".leyecnda_saldos").show();
 
   $("#monto_total").html("");
   $("#ttl_monto_pgs_detracc").html("");
@@ -193,7 +191,35 @@ function regresar() {
   limpiar_form_proveedor();
 }
 
-//TABLA - COMPRAS
+
+function capturar_pago_compra() {
+
+  $(".span-pago-compra").html('(Seleccione metodo pago)');
+  $("#monto_pago_compra").prop("readonly", true).val(0);
+  $("#fecha_proximo_pago").prop("readonly", true);
+   
+
+  if ($("#idcompra_grano").val() == "" || $("#idcompra_grano").val() == null) {
+    if ($("#metodo_pago").select2("val") == "CONTADO") {      
+      var total_compra = $("#total_compra").val();
+      $("#monto_pago_compra").val(total_compra);   
+      $(".span-pago-compra").html('(Contado)');  
+      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+    } else if ($("#metodo_pago").select2("val") == "CREDITO") {
+      $("#monto_pago_compra").prop("readonly", false).val(0);
+      $("#fecha_proximo_pago").prop("readonly", false);
+      $(".span-pago-compra").html('(Crédito)'); 
+    }
+  } else {
+    if ($("#metodo_pago").select2("val") == "CONTADO") {      
+      $("#fecha_proximo_pago").val(moment().format('YYYY-MM-DD')); 
+    } else if ($("#metodo_pago").select2("val") == "CREDITO") {
+      $("#fecha_proximo_pago").prop("readonly", false);
+    }
+  }  
+}
+
+//TABLA - ventas
 function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
   //console.log(idproyecto);
   tabla_compra_insumo = $("#tabla-compra").dataTable({
@@ -208,7 +234,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } }, {extend: "colvis"} ,        
     ],
     ajax: {
-      url: `../ajax/ingreso_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/venta_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -248,7 +274,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_compraxporvee",
+      url: "../ajax/venta_producto.php?op=listar_compraxporvee",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -273,10 +299,10 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
 }
 
 //facturas agrupadas por proveedor.
-function listar_facuras_proveedor(idproveedor) {
-  //console.log('idproyecto '+idproyecto, 'idproveedor '+idproveedor);
+function listar_facuras_proveedor(idcliente) {
+  //console.log('idproyecto '+idproyecto, 'idcliente '+idcliente);
   $("#div_tabla_compra").hide();
-  $("#agregar_compras").hide();
+  $("#agregar_ventas").hide();
   $("#btn_agregar").hide();
   $("#regresar").show();
   $("#div_tabla_compra_proveedor").show();
@@ -289,7 +315,7 @@ function listar_facuras_proveedor(idproveedor) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_detalle_compraxporvee&idproveedor=" + idproveedor,
+      url: "../ajax/venta_producto.php?op=listar_detalle_compraxporvee&idcliente=" + idcliente,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -307,10 +333,10 @@ function listar_facuras_proveedor(idproveedor) {
   }).DataTable();
 }
 
-//Función para guardar o editar - COMPRAS
-function guardar_y_editar_compras(e) {
+//Función para guardar o editar - ventas
+function guardar_y_editar_ventas(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-compras")[0]);  
+  var formData = new FormData($("#form-ventas")[0]);  
 
   Swal.fire({
     title: "¿Está seguro que deseas guardar esta compra?",
@@ -321,7 +347,7 @@ function guardar_y_editar_compras(e) {
     cancelButtonColor: "#d33",
     confirmButtonText: "Si, Guardar!",
     preConfirm: (input) => {
-      return fetch("../ajax/ingreso_producto.php?op=guardaryeditarcompra", {
+      return fetch("../ajax/venta_producto.php?op=guardaryeditarcompra", {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!        
       }).then(response => {
@@ -350,14 +376,14 @@ function guardar_y_editar_compras(e) {
 }
 
 //Función para eliminar registros
-function eliminar_compra(idcompra_producto, nombre) {
+function eliminar_compra(idventa_producto, nombre) {
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/ingreso_producto.php?op=anular",
-    "../ajax/ingreso_producto.php?op=eliminar_compra", 
-    idcompra_producto, 
+    "../ajax/venta_producto.php?op=anular",
+    "../ajax/venta_producto.php?op=eliminar_compra", 
+    idventa_producto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
@@ -372,14 +398,15 @@ function eliminar_compra(idcompra_producto, nombre) {
 }
 
 // .......::::::::::::::::::::::::::::::::::::::::: AGREGAR FACURAS, BOLETAS, NOTA DE VENTA, ETC :::::::::::::::::::::::::::::::::::.......
-//Declaración de variables necesarias para trabajar con las compras y sus detalles
+//Declaración de variables necesarias para trabajar con las ventas y sus detalles
 var impuesto = 18;
 var cont = 0;
 var detalles = 0;
 
 function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,precio_total,img,stock) {
-  // console.log(idproducto,nombre,unidad_medida, categoria,precio_total,img,stock);
-  var stock = 5;
+  console.log(idproducto);
+  var stock = stock;
+  console.log('stock _ '+stock);
   var precio_venta = 0;
   var precio_sin_igv =0;
   var cantidad = 1;
@@ -461,9 +488,9 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
 
 function evaluar() {
   if (detalles > 0) {
-    $("#guardar_registro_compras").show();
+    $("#guardar_registro_ventas").show();
   } else {
-    $("#guardar_registro_compras").hide();
+    $("#guardar_registro_ventas").hide();
     cont = 0;
     $(".subtotal_compra").html("S/ 0.00");
     $("#subtotal_compra").val(0);
@@ -742,8 +769,8 @@ function eliminarDetalle(indice) {
   toastr_warning("Removido!!","Producto removido", 700);
 }
 
-//mostramos para editar el datalle del comprobante de la compras
-function mostrar_compra(idcompra_producto) {
+//mostramos para editar el datalle del comprobante de la ventas
+function mostrar_compra(idventa_producto) {
 
   $("#cargando-1-fomulario").hide();
   $("#cargando-2-fomulario").show();
@@ -755,7 +782,7 @@ function mostrar_compra(idcompra_producto) {
   detalles = 0;
   ver_form_add();
 
-  $.post("../ajax/ingreso_producto.php?op=ver_compra_editar", { idcompra_producto: idcompra_producto }, function (e, status) {
+  $.post("../ajax/venta_producto.php?op=ver_compra_editar", { idventa_producto: idventa_producto }, function (e, status) {
     
     e = JSON.parse(e); //console.log(e);
 
@@ -783,8 +810,8 @@ function mostrar_compra(idcompra_producto) {
         //$(".content-descripcion").removeClass("col-lg-7").addClass("col-lg-4");
       }
 
-      $("#idcompra_producto").val(e.data.compra.idcompra_producto);
-      $("#idproveedor").val(e.data.compra.idpersona).trigger("change");
+      $("#idventa_producto").val(e.data.compra.idventa_producto);
+      $("#idcliente").val(e.data.compra.idpersona).trigger("change");
       $("#fecha_compra").val(e.data.compra.fecha_compra);
       $("#tipo_comprobante").val(e.data.compra.tipo_comprobante).trigger("change");
       $("#serie_comprobante").val(e.data.compra.serie_comprobante).trigger("change");
@@ -853,8 +880,8 @@ function mostrar_compra(idcompra_producto) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
-//mostramos el detalle del comprobante de la compras
-function ver_detalle_compras(idcompra_producto) {
+//mostramos el detalle del comprobante de la ventas
+function ver_detalle_ventas(idventa_producto) {
 
   $("#cargando-5-fomulario").hide();
   $("#cargando-6-fomulario").show();
@@ -862,9 +889,9 @@ function ver_detalle_compras(idcompra_producto) {
   $("#print_pdf_compra").addClass('disabled');
   $("#excel_compra").addClass('disabled');
 
-  $("#modal-ver-compras").modal("show");
+  $("#modal-ver-ventas").modal("show");
 
-  $.post("../ajax/ingreso_producto.php?op=ver_detalle_compras&id_compra=" + idcompra_producto, function (r) {
+  $.post("../ajax/venta_producto.php?op=ver_detalle_ventas&id_compra=" + idventa_producto, function (r) {
     r = JSON.parse(r);
     if (r.status == true) {
       $(".detalle_de_compra").html(r.data); 
@@ -872,7 +899,7 @@ function ver_detalle_compras(idcompra_producto) {
       $("#cargando-6-fomulario").hide();
 
       $("#print_pdf_compra").removeClass('disabled');
-      $("#print_pdf_compra").attr('href', `../reportes/pdf_ingreso_productos.php?id=${idcompra_producto}` );
+      $("#print_pdf_compra").attr('href', `../reportes/pdf_venta_productos.php?id=${idventa_producto}` );
       $("#excel_compra").removeClass('disabled');
     } else {
       ver_errores(e);
@@ -887,7 +914,7 @@ function download_no_multimple(id_compra, cont, nombre_doc) {
   $(`.descarga_compra_${id_compra}`).html('<i class="fas fa-spinner fa-pulse"></i>');
   //console.log(id_compra, nombre_doc);
   var cant_download_ok = 0; var cant_download_error = 0;
-  $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+  $.post("../ajax/venta_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
     e = JSON.parse(e); console.log(e);
     if (e.status == true) {
       e.data.forEach((val, index) => {
@@ -918,7 +945,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
   $('.cargando_check').removeClass('hidden');
 
   if ($(`#check_descarga_${id_compra}`).is(':checked')) {
-    $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/venta_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_docs_ok = 0; var cont_docs_error = 0;
@@ -955,7 +982,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
     }).fail( function(e) { ver_errores(e); } );
     
   } else {
-    $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/venta_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_doc = 0;
@@ -1107,7 +1134,7 @@ function guardar_proveedor(e) {
   var formData = new FormData($("#form-proveedor")[0]);
 
   $.ajax({
-    url: "../ajax/ingreso_producto.php?op=guardar_proveedor",
+    url: "../ajax/venta_producto.php?op=guardar_proveedor",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1121,7 +1148,7 @@ function guardar_proveedor(e) {
           limpiar_form_proveedor();
           $("#modal-agregar-proveedor").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idcliente', e.data);
         } else {
           ver_errores(e);
         }
@@ -1161,7 +1188,7 @@ function mostrar_para_editar_proveedor() {
   $('#modal-agregar-proveedor').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/ingreso_producto.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
+  $.post("../ajax/venta_producto.php?op=mostrar_editar_proveedor", { 'idcliente': $('#idcliente').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
@@ -1192,13 +1219,13 @@ function mostrar_para_editar_proveedor() {
 }
 
 function extrae_ruc() {
-  if ($('#idproveedor').select2("val") == null || $('#idproveedor').select2("val") == '') { 
+  if ($('#idcliente').select2("val") == null || $('#idcliente').select2("val") == '') { 
     $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','Seleciona un proveedor');
   } else { 
-    if ($('#idproveedor').select2("val") == 1) {
+    if ($('#idcliente').select2("val") == 1) {
       $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','No editable');      
     } else{
-      var name_proveedor = $('#idproveedor').select2('data')[0].text;
+      var name_proveedor = $('#idcliente').select2('data')[0].text;
       $('.btn-editar-proveedor').removeClass('disabled').attr('data-original-title',`Editar: ${recorte_text(name_proveedor, 15)}`);      
     }
   }
@@ -1247,12 +1274,12 @@ function mostrar_productos(idproducto, cont) {
 
   $("#modal-agregar-productos").modal("show");
 
-  $.post("../ajax/ingreso_producto.php?op=mostrar_productos", { 'idproducto': idproducto }, function (e, status) {
+  $.post("../ajax/venta_producto.php?op=mostrar_productos", { 'idproducto': idproducto }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);    
 
     if (e.status == true) {
-      $("#idproducto_compra").val(e.data.idproducto);
+      $("#idproducto").val(e.data.idproducto);
       $("#cont").val(cont);
       $('#nombre_producto').val(e.data.nombre);
       $("#marca").val(e.data.marca).trigger("change");  
@@ -1261,7 +1288,7 @@ function mostrar_productos(idproducto, cont) {
       $("#contenido_neto").val(e.data.contenido_neto);  
       $('#precio_unitario').val(parseFloat(e.data.precio_unitario));
       
-      $("#unidad_medida_compra").val(e.data.idunidad_medida).trigger("change");
+      $("#unidad_medida").val(e.data.idunidad_medida).trigger("change");
       
       $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
 
@@ -1279,11 +1306,11 @@ function limpiar_producto() {
 
   
   //Mostramos los Materiales
-  $("#idproducto_compra").val("");  
+  $("#idproducto").val("");  
   $("#nombre_producto").val("");
   $("#descripcion").val("");
 
-  $("#unidad_medida_compra").val("null").trigger("change");
+  $("#unidad_medida").val("null").trigger("change");
   $("#contenido_neto").val(1);
   $("#stock").val('0:00').trigger("change");
   $("#marca").val("");
@@ -1301,7 +1328,7 @@ function guardar_y_editar_productos(e) {
   var formData = new FormData($("#form-producto")[0]);
 
   $.ajax({
-    url: "../ajax/ingreso_producto.php?op=guardar_y_editar_productos",
+    url: "../ajax/venta_producto.php?op=guardar_y_editar_productos",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1337,6 +1364,12 @@ function actualizar_producto() {
   var unidad_medida_p = $("#unidad_medida").find(':selected').text();
   var categoria_p = $("#categoria_producto").find(':selected').text();
 
+  console.log(cont);
+
+  var unidad_medida_ = $(`.categoria_${cont}`).val();
+
+  console.log('unidad_medida_ : '+ unidad_medida_);
+
   if (idproducto == "" || idproducto == null) {
      
   } else {
@@ -1362,18 +1395,18 @@ init();
 $(function () {
     // Aplicando la validacion del select cada vez que cambie
 
-  $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
+  $("#idcliente").on('change', function() { $(this).trigger('blur'); });
   $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
   $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
   $("#banco").on('change', function() { $(this).trigger('blur'); });
   
-  $('#unidad_medida_compra').on('change', function() { $(this).trigger('blur'); });
+  $('#unidad_medida').on('change', function() { $(this).trigger('blur'); });
   $('#categoria_producto').on('change', function() { $(this).trigger('blur'); });
 
-  $("#form-compras").validate({
+  $("#form-ventas").validate({
     ignore: '.select2-input, .select2-focusser',
     rules: {
-      idproveedor:        { required: true },
+      idcliente:        { required: true },
       tipo_comprobante:   { required: true },
       serie_comprobante:  { minlength: 2 },
       descripcion:        { minlength: 4 },
@@ -1381,7 +1414,7 @@ $(function () {
       val_igv:            { required: true, number: true, min:0, max:1 },
     },
     messages: {
-      idproveedor:        { required: "Campo requerido", },
+      idcliente:        { required: "Campo requerido", },
       tipo_comprobante:   { required: "Campo requerido", },
       serie_comprobante:  { minlength: "Minimo 2 caracteres", },
       descripcion:        { minlength: "Minimo 4 caracteres", },
@@ -1407,7 +1440,7 @@ $(function () {
     },
 
     submitHandler: function (form) {
-      guardar_y_editar_compras(form);
+      guardar_y_editar_ventas(form);
     },
   });  
 
@@ -1461,7 +1494,7 @@ $(function () {
       nombre_producto:    { required: true, minlength:3, maxlength:200},
       categoria_producto: { required: true },
       marca:              { required: true },
-      unidad_medida_compra: { required: true },
+      unidad_medida:      { required: true },
       contenido_neto:     {  min: 1, number: true },
       descripcion:        { minlength: 4 },
       
@@ -1470,7 +1503,7 @@ $(function () {
       nombre_producto:    { required: "Por favor ingrese nombre", minlength:"Minimo 3 caracteres", maxlength:"Maximo 200 caracteres" },
       categoria_producto: { required: "Campo requerido", },
       marca:              { required: "Campo requerido" },
-      unidad_medida_compra: { required: "Campo requerido" },
+      unidad_medida:      { required: "Campo requerido" },
       contenido_neto:     { minlength: "Minimo 3 caracteres", number:"Tipo nùmerico" },    
       descripcion:        { minlength: "Minimo 4 caracteres" },
     },
@@ -1496,12 +1529,12 @@ $(function () {
 
   });
 
-  $("#idproveedor").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#idcliente").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
-  $('#unidad_medida_compra').rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $('#unidad_medida').rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $('#categoria_producto').rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
 });
@@ -1569,10 +1602,10 @@ function export_excel_detalle_factura() {
 
 }
 
-//Función para guardar o editar - COMPRAS
-function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
+//Función para guardar o editar - ventas
+function guardar_y_editar_ventas____________plantilla_cargando_POST(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-compras")[0]);
+  var formData = new FormData($("#form-ventas")[0]);
 
   var swal2_header = `<img class="swal2-image bg-color-252e38 b-radio-7px p-15px m-10px" src="../dist/gif/cargando.gif">`;
 
@@ -1597,7 +1630,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: "../ajax/ingreso_producto.php?op=guardaryeditarcompra",
+        url: "../ajax/venta_producto.php?op=guardaryeditarcompra",
         type: "POST",
         data: formData,
         contentType: false,

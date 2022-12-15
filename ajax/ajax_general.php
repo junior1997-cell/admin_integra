@@ -223,10 +223,10 @@
         } 
       break;
 
-      /* ══════════════════════════════════════ P R O V E E D O R  ══════════════════════════════════════ */
-      case 'select2Proveedor': 
+      /* ══════════════════════════════════════ P R O V E E D O R E S --- C L I E N T E S  ══════════════════════════════════════ */
+      case 'select2Proveedor_cliente': 
     
-        $rspta=$ajax_general->select2_proveedor();  $cont = 1; $data = "";
+        $rspta=$ajax_general->select2_proveedor_cliente($_GET['id']);  $cont = 1; $data = "";
 
         if ($rspta['status'] == true) {
 
@@ -247,32 +247,7 @@
 
           echo json_encode($rspta, true); 
         }
-      break;
-
-      case 'select2ProveedorFiltro': 
-    
-        $rspta=$ajax_general->select2_proveedor_filtro();  $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {  
-
-            $data .= '<option value="' .  $value['idproveedor'] . '" ruc="'.$value['ruc'].'">' .$cont++.'. '.  $value['razon_social'] .' - '.  $value['ruc'] . '</option>';      
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => '<option value="1" ruc="">Anónimo - 00000000000</option>' . $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
+      break;    
       
       /* ══════════════════════════════════════ B A N C O  ══════════════════════════════════════ */
       case 'select2Banco': 
@@ -466,7 +441,7 @@
             }
 
             $datas[] = [
-              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\',\'' . $reg->categoria . '\',\'' . $reg->precio_unitario . '\',\'' . $img_parametro . '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
+              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\',\'' . $reg->categoria . '\',\'' . $reg->precio_unitario . '\',\'' . $img_parametro . '\',\'' .$reg->stock. '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
               "1" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle" ' .  $img . ' alt="user image" onerror="' . $imagen_error .  '">'.
                 '<span class="username"><p class="mb-0" >' . $reg->nombre . '</p></span>

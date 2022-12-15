@@ -177,6 +177,36 @@
                   </li> 
                 </ul>
               </li>
+            <?php  }  ?>  
+            <?php if ($_SESSION['compra_insumos']==1) {  ?>   
+              <!-- Ventas -->      
+              <li class="nav-item  b-radio-3px" id="bloc_Ventas">
+                <a href="#" class="nav-link pl-2" id="mVentas">
+                <i class="fa-solid fa-comments-dollar"></i>
+                  <p>Venta Abonos <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <!-- Ventas del proyecto -->
+                  <li class="nav-item ">
+                    <a href="venta_producto.php" class="nav-link" id="lVentas">
+                      <i class="nav-icon fas fa-cart-plus"></i> <p>Ventas</p>
+                    </a>
+                  </li>
+                  <!-- Resumend de Insumos -->
+                  <li class="nav-item ">
+                    <a href="resumen_insumos.php" class="nav-link" id="lResumenInsumos">
+                      <i class="nav-icon fas fa-tasks"></i> <p>Resumen Ventas</p>
+                    </a>
+                  </li> 
+                  
+                  <!-- graficos insumos -->
+                  <!-- <li class="nav-item ">
+                    <a href="chart_compra_insumo.php" class="nav-link" id="lChartCompraInsumo">
+                      <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
+                    </a>
+                  </li>  -->
+                </ul>
+              </li>
             <?php  }  ?>      
             
             <?php if ($_SESSION['compra_insumos']==1) {  ?>   

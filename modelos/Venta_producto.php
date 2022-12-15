@@ -2,7 +2,7 @@
 //Incluímos inicialmente la conexión a la base de datos
 require "../config/Conexion_v2.php";
 
-class Ingreso_producto
+class Venta_producto
 {
   //Implementamos nuestro constructor
   public function __construct()
@@ -11,16 +11,16 @@ class Ingreso_producto
 
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::::::::::::::::: 
   //Implementamos un método para insertar registros
-  public function insertar( $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+  public function insertar( $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
   $total_compra, $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv, 
   $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
 
-    $sql_1 = "SELECT numero_documento FROM persona WHERE idpersona ='$idproveedor';";
+    $sql_1 = "SELECT numero_documento FROM persona WHERE idpersona ='$idcliente';";
     $proveedor = ejecutarConsultaSimpleFila($sql_1);  if ($proveedor['status'] == false) { return  $proveedor;}
 
     $ruc = $proveedor['data']['numero_documento'];
 
-    $sql_2 = "SELECT  cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.igv, cp.total, p.numero_documento, p.tipo_documento,p.nombres
+    $sql_2 = "SELECT  cp.fecha_venta, cp.tipo_comprobante, cp.serie_comprobante, cp.igv, cp.total, p.numero_documento, p.tipo_documento,p.nombres
     FROM compra_producto as cp, persona as p 
     WHERE cp.tipo_comprobante ='$tipo_comprobante' AND cp.serie_comprobante = '$serie_comprobante' AND p.numero_documento='$ruc'";
     $compra_existe = ejecutarConsultaArray($sql_2); if ($compra_existe['status'] == false) { return  $compra_existe;}
@@ -28,8 +28,8 @@ class Ingreso_producto
     if (empty($compra_existe['data']) || $tipo_comprobante == 'Ninguno') {
 
      
-      $sql_3 = "INSERT INTO compra_producto(idpersona, fecha_compra, tipo_comprobante, serie_comprobante, val_igv, subtotal, igv, total,tipo_gravada, descripcion) 
-      VALUES ('$idproveedor','$fecha_compra','$tipo_comprobante','$serie_comprobante','$val_igv','$subtotal_compra','$igv_compra','$total_compra','$tipo_gravada','$descripcion')";
+      $sql_3 = "INSERT INTO compra_producto(idpersona, fecha_venta, tipo_comprobante, serie_comprobante, val_igv, subtotal, igv, total,tipo_gravada, descripcion) 
+      VALUES ('$idcliente','$fecha_venta','$tipo_comprobante','$serie_comprobante','$val_igv','$subtotal_compra','$igv_compra','$total_compra','$tipo_gravada','$descripcion')";
       $idventanew = ejecutarConsulta_retornarID($sql_3); if ($idventanew['status'] == false) { return  $idventanew;}
 
       //add registro en nuestra bitacora
@@ -55,8 +55,9 @@ class Ingreso_producto
           $compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($compra_new['status'] == false) { return  $compra_new;}
 
           //add update table producto el stock
-          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]', precio_unitario='$precio_venta[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
+          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
           $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
+
 
           //add registro en nuestra bitacora.
           $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_producto','".$compra_new['data']."','Detalle compra','" . $_SESSION['idusuario'] . "')";
@@ -76,7 +77,7 @@ class Ingreso_producto
           <b class="font-size-18px text-danger">'.$value['tipo_comprobante'].': </b> <span class="font-size-18px text-danger">'.$value['serie_comprobante'].'</span><br>
           <b>Razón Social: </b>'.$value['razon_social'].'<br>
           <b>'.$value['tipo_documento'].': </b>'.$value['ruc'].'<br>          
-          <b>Fecha: </b>'.format_d_m_a($value['fecha_compra']).'<br>
+          <b>Fecha: </b>'.format_d_m_a($value['fecha_venta']).'<br>
           <b>Total: </b>'.number_format($value['total'], 2, '.', ',').'<br>
           <b>Glosa: </b>'.$value['glosa'].'<br>
           <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .' <b>|</b> 
@@ -89,7 +90,7 @@ class Ingreso_producto
   }
 
   //Implementamos un método para editar registros
-  public function editar( $idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
+  public function editar( $idcompra_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
   $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv,  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
 
     if ( !empty($idcompra_producto) ) {
@@ -98,7 +99,7 @@ class Ingreso_producto
       $delete_compra = ejecutarConsulta($sqldel);
       if ($delete_compra['status'] == false) { return $delete_compra; }
 
-      $sql = "UPDATE compra_producto SET idpersona='$idproveedor',fecha_compra='$fecha_compra',tipo_comprobante='$tipo_comprobante',
+      $sql = "UPDATE compra_producto SET idpersona='$idcliente',fecha_venta='$fecha_venta',tipo_comprobante='$tipo_comprobante',
       serie_comprobante='$serie_comprobante',val_igv='$val_igv',subtotal='$subtotal_compra',igv='$igv_compra',
       total='$total_venta',tipo_gravada='$tipo_gravada',descripcion='$descripcion' 
       WHERE idcompra_producto = '$idcompra_producto'";
@@ -123,10 +124,6 @@ class Ingreso_producto
 
           $detalle_compra =  ejecutarConsulta_retornarID($sql_detalle); if ($detalle_compra['status'] == false) { return  $detalle_compra;}
 
-          //add update table producto el stock
-          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]', precio_unitario='$precio_venta[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
-          $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
-
         //add registro en nuestra bitacora.
         $sql_bit_d = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('detalle_compra_producto','".$detalle_compra['data']."','Detalle editado compra','" . $_SESSION['idusuario'] . "')";
         $bitacora = ejecutarConsulta($sql_bit_d); if ( $bitacora['status'] == false) {return $bitacora; } 
@@ -141,7 +138,7 @@ class Ingreso_producto
 
   public function mostrar_compra_para_editar($idcompra_producto) {
 
-    $sql = "SELECT  cp.idcompra_producto,cp.fecha_compra,cp.idpersona, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
+    $sql = "SELECT  cp.idcompra_producto,cp.fecha_venta,cp.idpersona, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
     cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, p.direccion,p.correo
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";
@@ -200,11 +197,11 @@ class Ingreso_producto
     $filtro_proveedor = ""; $filtro_fecha = ""; $filtro_comprobante = ""; 
 
     if ( !empty($fecha_1) && !empty($fecha_2) ) {
-      $filtro_fecha = "AND cp.fecha_compra BETWEEN '$fecha_1' AND '$fecha_2'";
+      $filtro_fecha = "AND cp.fecha_venta BETWEEN '$fecha_1' AND '$fecha_2'";
     } else if (!empty($fecha_1)) {      
-      $filtro_fecha = "AND cp.fecha_compra = '$fecha_1'";
+      $filtro_fecha = "AND cp.fecha_venta = '$fecha_1'";
     }else if (!empty($fecha_2)) {        
-      $filtro_fecha = "AND cp.fecha_compra = '$fecha_2'";
+      $filtro_fecha = "AND cp.fecha_venta = '$fecha_2'";
     }    
 
     if (empty($id_proveedor) ) {  $filtro_proveedor = ""; } else { $filtro_proveedor = "AND cp.idpersona = '$id_proveedor'"; }
@@ -214,10 +211,10 @@ class Ingreso_producto
     $data = Array();
     $scheme_host=  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
-    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante,cp.total, cp.tipo_gravada,cp.descripcion, p.nombres
+    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_venta, cp.tipo_comprobante, cp.serie_comprobante,cp.total, cp.tipo_gravada,cp.descripcion, p.nombres
     FROM compra_producto as cp, persona as p  
     WHERE cp.idpersona = p.idpersona AND cp.estado= '1' AND cp.estado_delete = '1' $filtro_proveedor $filtro_comprobante $filtro_fecha
-		ORDER BY cp.fecha_compra DESC ";
+		ORDER BY cp.fecha_venta DESC ";
 
     return ejecutarConsultaArray($sql);
 
@@ -235,10 +232,10 @@ class Ingreso_producto
   }
 
   //Implementar un método para listar los registros x proveedor
-  public function listar_detalle_comprax_provee($idproveedor) {
+  public function listar_detalle_comprax_provee($idcliente) {
 
-    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante,cp.total,cp.descripcion
-    FROM compra_producto as cp WHERE cp.idpersona = '$idproveedor' AND cp.estado= '1' AND cp.estado_delete = '1'";
+    $sql = "SELECT cp.idcompra_producto, cp.idpersona,cp.fecha_venta, cp.tipo_comprobante, cp.serie_comprobante,cp.total,cp.descripcion
+    FROM compra_producto as cp WHERE cp.idpersona = '$idcliente' AND cp.estado= '1' AND cp.estado_delete = '1'";
 
     return ejecutarConsulta($sql);
   }
@@ -246,7 +243,7 @@ class Ingreso_producto
   //mostrar detalles uno a uno de la factura
   public function ver_compra($idcompra_producto) {
 
-    $sql = "SELECT cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
+    $sql = "SELECT cp.fecha_venta, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
     cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";

@@ -100,16 +100,13 @@
       return ejecutarConsulta($sql);
     }
 
-    /* ══════════════════════════════════════ P R O V E E D O R  ══════════════════════════════════════ */
+    /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 
-    public function select2_proveedor() {
-      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='3' AND estado='1' AND estado_delete ='1'";
-      return ejecutarConsulta($sql);
-    }
+    public function select2_proveedor_cliente($id) {
+      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='$id' AND estado='1' AND estado_delete ='1'";
 
-    public function select2_proveedor_filtro() {
-      $sql = "SELECT idproveedor, razon_social, ruc FROM proveedor WHERE idproveedor > 1 ORDER BY razon_social ASC;";
       return ejecutarConsulta($sql);
+      // var_dump($return);die();
     }
 
     /* ══════════════════════════════════════ B A N C O ══════════════════════════════════════ */

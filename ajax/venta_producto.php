@@ -11,11 +11,11 @@ if (!isset($_SESSION["nombre"])) {
 
   if ($_SESSION['compra_insumos'] == 1) {
     
-    require_once "../modelos/Ingreso_producto.php";
+    require_once "../modelos/Venta_producto.php";
     require_once "../modelos/Persona.php";
     require_once "../modelos/Producto.php";
 
-    $compra_producto = new Ingreso_producto();
+    $venta_producto = new Venta_producto();
     $proveedor = new Persona();
     $productos = new Producto();      
     
@@ -27,8 +27,8 @@ if (!isset($_SESSION["nombre"])) {
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R A ::::::::::::::::::::::::::::::::::::::
     $idcompra_producto  = isset($_POST["idcompra_producto"]) ? limpiarCadena($_POST["idcompra_producto"]) : "";
-    $idproveedor        = isset($_POST["idproveedor"]) ? limpiarCadena($_POST["idproveedor"]) : "";
-    $fecha_compra       = isset($_POST["fecha_compra"]) ? limpiarCadena($_POST["fecha_compra"]) : "";
+    $idcliente        = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
+    $fecha_venta       = isset($_POST["fecha_venta"]) ? limpiarCadena($_POST["fecha_venta"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
     $serie_comprobante  = isset($_POST["serie_comprobante"]) ? limpiarCadena($_POST["serie_comprobante"]) : "";
     $val_igv            = isset($_POST["val_igv"]) ? limpiarCadena($_POST["val_igv"]) : "";
@@ -51,7 +51,7 @@ if (!isset($_SESSION["nombre"])) {
     $descripcion_pago   = isset($_POST["descripcion_pago"]) ? limpiarCadena($_POST["descripcion_pago"]) : "";
     $idcompra_producto_p = isset($_POST["idcompra_producto_p"]) ? limpiarCadena($_POST["idcompra_producto_p"]) : "";
     $idpago_compras     = isset($_POST["idpago_compras"]) ? limpiarCadena($_POST["idpago_compras"]) : ""; 
-    $idproveedor_pago   = isset($_POST["idproveedor_pago"]) ? limpiarCadena($_POST["idproveedor_pago"]) : "";
+    $idcliente_pago   = isset($_POST["idcliente_pago"]) ? limpiarCadena($_POST["idcliente_pago"]) : "";
     $imagen1            = isset($_POST["doc3"]) ? limpiarCadena($_POST["doc3"]) : "";
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R O B A N T E ::::::::::::::::::::::::::::::::::::::
@@ -61,9 +61,9 @@ if (!isset($_SESSION["nombre"])) {
     $doc_old_1          = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   M A T E R I A L E S ::::::::::::::::::::::::::::::::::::::
-    $idproducto_compra     = isset($_POST["idproducto_compra"]) ? limpiarCadena($_POST["idproducto_compra"]) : "" ;
+    $idproducto            = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
     $idcategoria_producto  = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
-    $unidad_medida_compra  = isset($_POST["unidad_medida_compra"]) ? limpiarCadena($_POST["unidad_medida_compra"]) : "" ;
+    $unidad_medida         = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "" ;
     $nombre_producto       = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
     $marca                 = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
     $contenido_neto        = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
@@ -93,14 +93,14 @@ if (!isset($_SESSION["nombre"])) {
       // :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S ::::::::::::::::::::::::::
       case 'guardar_y_editar_productos':
     
-        if (empty($idproducto_compra)) {
-          $rspta = $productos->insertar($idcategoria_producto, $unidad_medida_compra, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
+        if (empty($idproducto)) {
+          $rspta = $productos->insertar($idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
             
           echo json_encode( $rspta, true);
     
         } else {
             
-          $rspta = $productos->editar($idproducto_compra, $idcategoria_producto, $unidad_medida_compra, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
+          $rspta = $productos->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
             
           echo json_encode( $rspta, true) ;
         }
@@ -109,7 +109,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'mostrar_productos':
     
-        $rspta = $productos->mostrar($idproducto_compra);
+        $rspta = $productos->mostrar($idproducto);
         echo json_encode($rspta, true);
     
       break;
@@ -134,7 +134,7 @@ if (!isset($_SESSION["nombre"])) {
       break;
 
       case 'mostrar_editar_proveedor':
-        $rspta = $proveedor->mostrar($_POST["idproveedor"]);
+        $rspta = $proveedor->mostrar($_POST["idcliente"]);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
       break;
@@ -143,8 +143,8 @@ if (!isset($_SESSION["nombre"])) {
       case 'guardaryeditarcompra':
 
         if (empty($idcompra_producto)) {
-          // $idcompra_producto,$idproveedor,$fecha_compra,$tipo_comprobante,$serie_comprobante,$val_igv,$descripcion,$subtotal_compra,$tipo_gravada,$igv_compra,$total_venta
-          $rspta = $compra_producto->insertar($idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          // $idcompra_producto,$idcliente,$fecha_venta,$tipo_comprobante,$serie_comprobante,$val_igv,$descripcion,$subtotal_compra,$tipo_gravada,$igv_compra,$total_venta
+          $rspta = $venta_producto->insertar($idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $total_venta, $subtotal_compra, $igv_compra,  $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST['precio_venta'], $_POST["descuento"], 
           $tipo_gravada);
@@ -152,7 +152,7 @@ if (!isset($_SESSION["nombre"])) {
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $compra_producto->editar( $idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $venta_producto->editar( $idcompra_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $total_venta, $subtotal_compra, $igv_compra,  $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST['precio_venta'], $_POST["descuento"], 
           $tipo_gravada);
@@ -163,7 +163,7 @@ if (!isset($_SESSION["nombre"])) {
       break;      
       
       case 'anular':
-        $rspta = $compra_producto->desactivar($_GET["id_tabla"]);
+        $rspta = $venta_producto->desactivar($_GET["id_tabla"]);
     
         echo json_encode($rspta, true);
     
@@ -171,14 +171,14 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'eliminar_compra':
 
-        $rspta = $compra_producto->eliminar($_GET["id_tabla"]);
+        $rspta = $venta_producto->eliminar($_GET["id_tabla"]);
     
         echo json_encode($rspta, true);
     
       break;
     
       case 'tbla_principal':
-        $rspta = $compra_producto->tbla_principal($_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
+        $rspta = $venta_producto->tbla_principal($_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
         
         //Vamos a declarar un array
         $data = []; $cont = 1;
@@ -192,7 +192,7 @@ if (!isset($_SESSION["nombre"])) {
                     ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
                     ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['nombres'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
                  
-              "2" => $reg['fecha_compra'],
+              "2" => $reg['fecha_venta'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['nombres'] . '</span>',
               "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>',
               "5" => $reg['total'],
@@ -215,7 +215,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'listar_compraxporvee':
         
-        $rspta = $compra_producto->listar_compraxporvee();
+        $rspta = $venta_producto->listar_compraxporvee();
         //Vamos a declarar un array
         $data = []; $cont = 1;
         $c = "info";
@@ -249,7 +249,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'listar_detalle_compraxporvee':
         
-        $rspta = $compra_producto->listar_detalle_comprax_provee($_GET["idproveedor"]);
+        $rspta = $venta_producto->listar_detalle_comprax_provee($_GET["idcliente"]);
         //Vamos a declarar un array
         $data = []; $cont = 1;
         
@@ -258,7 +258,7 @@ if (!isset($_SESSION["nombre"])) {
             $data[] = [
               "0" => $cont++,
               "1" => '<center><button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg->idcompra_producto . ')" data-toggle="tooltip" data-original-title="Ver detalle">Ver detalle <i class="fa fa-eye"></i></button></center>',
-              "2" => $reg->fecha_compra,
+              "2" => $reg->fecha_venta,
               "3" => $reg->tipo_comprobante,
               "4" => $reg->serie_comprobante,
               "5" => number_format($reg->total, 2, '.', ','),
@@ -280,21 +280,21 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'ver_detalle_compras':
         
-        $rspta = $compra_producto->ver_compra($_GET['id_compra']);
+        $rspta = $venta_producto->ver_compra($_GET['id_compra']);
         $subtotal = 0;    $ficha = '';
 
           $inputs = '<!-- Tipo de Empresa -->
             <div class="col-lg-8">
               <div class="form-group">
-                <label class="font-size-15px" for="idproveedor">Proveedor</label>
+                <label class="font-size-15px" for="idcliente">Proveedor</label>
                 <h5 class="form-control form-control-sm" >'.$rspta['data']['compra']['nombres'].'</h5>
               </div>
             </div>
             <!-- fecha -->
             <div class="col-lg-4">
               <div class="form-group">
-                <label class="font-size-15px" for="fecha_compra">Fecha </label>
-                <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['compra']['fecha_compra']).' </span>
+                <label class="font-size-15px" for="fecha_venta">Fecha </label>
+                <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['compra']['fecha_venta']).' </span>
               </div>
             </div>
             <!-- Tipo de comprobante -->
@@ -362,7 +362,7 @@ if (!isset($_SESSION["nombre"])) {
                 <tr class="text-center hidden">                
                   <th class="text-center p-10px" colspan="2" >'.((empty($rspta['data']['compra']['tipo_comprobante'])) ? '' :  $rspta['data']['compra']['tipo_comprobante']). ' ─ ' . ((empty($rspta['data']['compra']['serie_comprobante'])) ? '' :  $rspta['data']['compra']['serie_comprobante']) .'</th>
                   <th class="p-10px">Fecha:</th>
-                  <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['compra']['fecha_compra']).'</th>
+                  <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['compra']['fecha_venta']).'</th>
                 </tr>
                 <tr class="text-center">
                   <th class="text-center p-10px" >#</th>
@@ -413,7 +413,7 @@ if (!isset($_SESSION["nombre"])) {
     
       case 'ver_compra_editar':
 
-        $rspta = $compra_producto->mostrar_compra_para_editar($idcompra_producto);
+        $rspta = $venta_producto->mostrar_compra_para_editar($idcompra_producto);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
