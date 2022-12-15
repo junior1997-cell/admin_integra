@@ -189,7 +189,7 @@ if (!isset($_SESSION["nombre"])) {
               "6" => $reg['metodo_pago'],              
               "7" => $reg['total_compra'],
               "8" => '<div class="text-center text-nowrap">'.
-                '<button class="btn btn-' . $color_btn . ' btn-xs m-t-2px" onclick="tbla_pago_compra(' . $reg['idcompra_grano'] . ', ' . $reg['total_compra'] . ', ' . floatval($reg['total_pago']) .', \''.encodeCadenaHtml($reg['cliente']) .'\')"> <i class="fas fa-' . $icon . ' nav-icon"></i> ' . $nombre . '</button>' . 
+                '<button class="btn btn-' . $color_btn . ' btn-xs m-t-2px" onclick="tbla_pago_compra(' . $reg['idcompra_grano'] . ', ' . $reg['total_compra'] . ', ' . floatval($reg['total_pago']) .', \''.encodeCadenaHtml($reg['cliente']) .'\')" data-toggle="tooltip" data-original-title="Ingresar a pagos"> <i class="fas fa-' . $icon . ' nav-icon"></i> ' . $nombre . '</button>' . 
                 ' <button style="font-size: 14px;" class="btn btn-' . $color_btn . ' btn-sm">' . number_format(floatval($reg['total_pago']), 2, '.', ',') . '</button>'.
               '</div>',
               "9" => $saldo,
@@ -198,7 +198,7 @@ if (!isset($_SESSION["nombre"])) {
               "11" => $reg['numero_documento'],
               "12" => $reg['tipo_comprobante'],
               "13" => $reg['numero_comprobante'],
-              "14" => number_format($reg['total_pago'], 2, '.', ','),
+              "14" => $reg['total_pago'],
             ];
             $cont++;
           }

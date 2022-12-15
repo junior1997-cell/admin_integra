@@ -241,6 +241,17 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api = this.api(); var total = api.column( 7 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api.column( 7 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );
+      
+      var api2 = this.api(); var total2 = api2.column( 14 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api2.column( 8 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+      $( api2.column( 14 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+
+      var api3 = this.api(); var total3 = api3.column( 9 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api3.column( 9 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total3)}</span>` );
+    },
     bDestroy: true,
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
@@ -273,6 +284,11 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     createdRow: function (row, data, ixdex) {
       //console.log(data);
       if (data[5] != '') { $("td", row).eq(5).addClass('text-right'); }
+    },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api = this.api(); 
+      var total = api.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api.column( 5 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );      
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -966,8 +982,6 @@ function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
   $("#total_de_compra").html(formato_miles(total_compra));
   $(".h1-nombre-cliente").html(` - <b>${cliente}</b>` );
 
-  pago_compra_total = 0; $("#total_depositos").html('0.00');
-
   tabla_pago_compra_grano = $("#tabla-pagos-compras").dataTable({
     responsive: true, 
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
@@ -990,7 +1004,11 @@ function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
     createdRow: function (row, data, ixdex) {
       //console.log(data);
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
-      if (data[4] != '') { $("#total_depositos").html(formato_miles( pago_compra_total += parseFloat(data[4]) )); }  
+    },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api = this.api(); 
+      var total = api.column( 4 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api.column( 4 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right" id="total_depositos">${formato_miles(total)}</span>` );      
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",

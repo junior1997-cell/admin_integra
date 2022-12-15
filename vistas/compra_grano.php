@@ -227,7 +227,7 @@
                                   <th data-toggle="tooltip" data-original-title="Tipo de Persona">Tipo</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Comprobante</th>
                                   <th>Metodo de Pago</th>
-                                  <th>Total</th>
+                                  <th><span>S/</span><span>0.00</span></th>
                                   <th>Pagos</th> 
                                   <th>Saldo</th>
                                   
@@ -518,7 +518,7 @@
                                     <th>Acciones</th>
                                     <th data-toggle="tooltip" data-original-title="Fecha de pago">Fecha</th>
                                     <th>Forma de pago</th>
-                                    <th class="text-nowrap px-2"><div class="formato-numero-conta"><span>S/</span><span id="total_depositos">0.00</span></div></th>
+                                    <th class="text-nowrap px-2"><span>S/</span><span>0.00</span></th>
                                     <th>Descripción</th>
                                     <th data-toggle="tooltip" data-original-title="Comprobante">Doc.</th>
                                     <th>Estado</th>
