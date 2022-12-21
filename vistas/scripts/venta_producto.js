@@ -451,7 +451,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
         <td class="">         
           <input type="hidden" name="idproducto[]" value="${idproducto}">
           <div class="user-block text-nowrap">
-            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img_p}', '${encodeHtml(nombre)}')">
+            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img_p}', '${encodeHtml(nombre)}')">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
             <span class="description categoria_${cont}"><b>Categoría: </b>${categoria}</span>
           </div>
@@ -839,7 +839,7 @@ function mostrar_compra(idventa_producto) {
             <td>
               <input type="hidden" name="idproducto[]" value="${element.idproducto}">
               <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img}', '${encodeHtml(element.nombre)}')">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img}', '${encodeHtml(element.nombre)}')">
                 <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre}</p></span>
                 <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
               </div>
@@ -1583,7 +1583,7 @@ function filtros() {
 }
 
 // ver imagen grande del producto agregado a la compra
-function ver_img_material(img, nombre) {
+function ver_img_producto(img, nombre) {
   $("#ver_img_material").attr("src", `${img}`);
   $(".nombre-img-material").html(nombre);
   $("#modal-ver-img-material").modal("show");

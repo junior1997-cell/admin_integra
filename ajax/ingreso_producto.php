@@ -231,7 +231,7 @@ if (!isset($_SESSION["nombre"])) {
               "2" => $reg->razon_social,
               "3" => "<center>$reg->cantidad</center>",
               "4" => $reg->celular,
-              "5" => number_format($reg->total, 2, '.', ','),
+              "5" => $reg->total, 
             ];
           }
           $results = [
@@ -276,140 +276,7 @@ if (!isset($_SESSION["nombre"])) {
           echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
         }
     
-      break;
-    
-      case 'ver_detalle_compras':
-        
-        $rspta = $compra_producto->ver_compra($_GET['id_compra']);
-        $subtotal = 0;    $ficha = '';
-
-          $inputs = '<!-- Tipo de Empresa -->
-            <div class="col-lg-8">
-              <div class="form-group">
-                <label class="font-size-15px" for="idproveedor">Proveedor</label>
-                <h5 class="form-control form-control-sm" >'.$rspta['data']['compra']['nombres'].'</h5>
-              </div>
-            </div>
-            <!-- fecha -->
-            <div class="col-lg-4">
-              <div class="form-group">
-                <label class="font-size-15px" for="fecha_compra">Fecha </label>
-                <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['compra']['fecha_compra']).' </span>
-              </div>
-            </div>
-            <!-- Tipo de comprobante -->
-            <div class="col-lg-3">
-              <div class="form-group">
-                <label class="font-size-15px" for="tipo_comprovante">Tipo Comprobante</label>
-                <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['compra']['tipo_comprobante'])) ? '- - -' :  $rspta['data']['compra']['tipo_comprobante'])  .' </span>
-              </div>
-            </div>
-            <!-- serie_comprovante-->
-            <div class="col-lg-2">
-              <div class="form-group">
-                <label class="font-size-15px" for="serie_comprovante">N° de Comprobante</label>
-                <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['compra']['serie_comprobante'])) ? '- - -' :  $rspta['data']['compra']['serie_comprobante']).' </span>
-              </div>
-            </div>
-            <!-- IGV-->
-            <div class="col-lg-1 " >
-              <div class="form-group">
-                <label class="font-size-15px" for="igv">IGV</label>
-                <span class="form-control form-control-sm"> '.$rspta['data']['compra']['val_igv'].' </span>                                 
-              </div>
-            </div>
-            <!-- Descripcion-->
-            <div class="col-lg-6">
-              <div class="form-group">
-                <label class="font-size-15px" for="descripcion">Descripción </label> <br />
-                <textarea class="form-control form-control-sm" readonly rows="1">'.((empty($rspta['data']['compra']['descripcion'])) ? '- - -' :$rspta['data']['compra']['descripcion']).'</textarea>
-              </div>
-          </div>';
-
-
-        $tbody = ""; $cont = 1;
-
-        foreach ($rspta['data']['detalle'] as $key => $reg) {
-
-          $img_product = '../dist/docs/material/img_perfil/'. (empty($reg['imagen']) ? 'producto-sin-foto.svg' : $reg['imagen'] );
-          $tbody .= '<tr class="filas">
-            <td class="text-center p-6px">' . $cont++ . '</td>
-            <td class="text-left p-6px">
-              <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'.$img_product.'" alt="user image" onclick="ver_img_material(\''.$img_product.'\', \'' . encodeCadenaHtml( $reg['nombre']) . '\', null)" onerror="this.src=\'../dist/svg/404-v2.svg\';" >
-                <span class="username"><p class="mb-0 ">' . $reg['nombre'] . '</p></span>
-                <span class="description"><b>Categoría: </b>' . $reg['categoria'] . '</span>
-              </div>
-            </td>
-            <td class="text-left p-6px">' . $reg['unidad_medida'] . '</td>
-            <td class="text-center p-6px">' . $reg['cantidad'] . '</td>		
-            <td class="text-right p-6px">' . number_format($reg['precio_sin_igv'], 2, '.',',') . '</td>
-            <td class="text-right p-6px">' . number_format($reg['igv'], 2, '.',',') . '</td>
-            <td class="text-right p-6px">' . number_format($reg['precio_con_igv'], 2, '.',',') . '</td>
-            <td class="text-right p-6px">' . number_format($reg['precio_venta'], 2, '.',',') . '</td>
-            <td class="text-right p-6px">' . number_format($reg['descuento'], 2, '.',',') . '</td>
-            <td class="text-right p-6px">' . number_format($reg['subtotal'], 2, '.',',') .'</td>
-          </tr>';
-        }   
-
-          $tabla_detalle = '<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive">
-            <table class="table table-striped table-bordered table-condensed table-hover" id="tabla_detalle_factura">
-              <thead style="background-color:#ff6c046b">
-                <tr class="text-center hidden">
-                  <th class="p-10px">Proveedor:</th>
-                  <th class="text-center p-10px" colspan="9" >'.$rspta['data']['compra']['nombres'].'</th>
-                </tr>
-                <tr class="text-center hidden">                
-                  <th class="text-center p-10px" colspan="2" >'.((empty($rspta['data']['compra']['tipo_comprobante'])) ? '' :  $rspta['data']['compra']['tipo_comprobante']). ' ─ ' . ((empty($rspta['data']['compra']['serie_comprobante'])) ? '' :  $rspta['data']['compra']['serie_comprobante']) .'</th>
-                  <th class="p-10px">Fecha:</th>
-                  <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['compra']['fecha_compra']).'</th>
-                </tr>
-                <tr class="text-center">
-                  <th class="text-center p-10px" >#</th>
-                  <th class="p-10px">Producto</th>
-                  <th class="p-10px">U.M.</th>
-                  <th class="p-10px">Cant.</th>
-                  <th class="p-10px">V/U</th>
-                  <th class="p-10px">IGV</th>
-                  <th class="p-10px">P/U</th>
-                  <th class="p-10px">P/V</th>
-                  <th class="p-10px">Desct.</th>
-                  <th class="p-10px">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>'.$tbody.'</tbody>          
-              <tfoot>
-                <tr>
-                    <td class="p-0" colspan="8"></td>
-                    <td class="p-0 text-right"> <h6 class="mt-1 mb-1 mr-1">'.$rspta['data']['compra']['tipo_gravada'].'</h6> </td>
-                    <td class="p-0 text-right">
-                      <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['subtotal'], 2, '.',',') . '</h6>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="p-0" colspan="8"></td>
-                    <td class="p-0 text-right">
-                      <h6 class="mt-1 mb-1 mr-1">IGV('.( ( empty($rspta['data']['compra']['val_igv']) ? 0 : floatval($rspta['data']['compra']['val_igv']) )  * 100 ).'%)</h6>
-                    </td>
-                    <td class="p-0 text-right">
-                      <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['igv'], 2, '.',',') . '</h6>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="p-0" colspan="8"></td>
-                    <td class="p-0 text-right"> <h5 class="mt-1 mb-1 mr-1 font-weight-bold">TOTAL</h5> </td>
-                    <td class="p-0 text-right">
-                      <h5 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['compra']['total'], 2, '.',',') . '</h5>
-                    </td>
-                  </tr>
-              </tfoot>
-            </table>
-          </div> ';
-
-        $retorno = ['status' => true, 'message' => 'todo oka', 'data' => $inputs . $tabla_detalle ,];
-        echo json_encode( $retorno, true );
-
-      break;
+      break;      
     
       case 'ver_compra_editar':
 

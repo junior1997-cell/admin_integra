@@ -336,7 +336,7 @@ if (!isset($_SESSION["nombre"])) {
             <td class="text-center p-6px">' . $cont++ . '</td>
             <td class="text-left p-6px">
               <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'.$img_product.'" alt="user image" onclick="ver_img_material(\''.$img_product.'\', \'' . encodeCadenaHtml( $reg['nombre']) . '\', null)" onerror="this.src=\'../dist/svg/404-v2.svg\';" >
+                <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'.$img_product.'" alt="user image" onclick="ver_img_producto(\''.$img_product.'\', \'' . encodeCadenaHtml( $reg['nombre']) . '\', null)" onerror="this.src=\'../dist/svg/404-v2.svg\';" >
                 <span class="username"><p class="mb-0 ">' . $reg['nombre'] . '</p></span>
                 <span class="description"><b>Categoría: </b>' . $reg['categoria'] . '</span>
               </div>

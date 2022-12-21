@@ -1,2 +1,0 @@
-../dist/docs/servicio_equipo/comprobante_pago/
-../dist/docs/servicio_equipo/comprobante_servicio/

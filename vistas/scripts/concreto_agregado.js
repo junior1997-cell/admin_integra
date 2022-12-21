@@ -683,7 +683,7 @@ function ver_detalle_compras(idcompra_proyecto) {
 }
 
 // ver imagen grande del producto agregado a la compra
-function ver_img_material(img, nombre) {
+function ver_img_producto(img, nombre) {
   $("#ver_img_insumo_o_activo_fijo").html(doc_view_extencion(img, '', '', '100%'));
   $(".nombre-img-material").html(nombre);
   $('.jq_image_zoom').zoom({ on:'grab' });

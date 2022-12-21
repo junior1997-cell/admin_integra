@@ -250,7 +250,7 @@ function mostrar(idproducto) {
       $("#categoria_producto").val(e.data.idcategoria_producto).trigger("change");
 
       if (e.data.imagen != "") {        
-        $("#foto1_i").attr("src", "../dist/docs/material/img_perfil/" + e.data.imagen);  
+        $("#foto1_i").attr("src", "../dist/docs/producto/img_perfil/" + e.data.imagen);  
         $("#foto1_actual").val(e.data.imagen);
       }
 
@@ -266,7 +266,7 @@ function mostrar(idproducto) {
 // ver detallles del registro
 function verdatos(idproducto){
 
-  $(".tooltip").removeClass("show").addClass("hidde");
+  $(".tooltip").remove("show");
 
   $('#datosinsumo').html(`<div class="row"><div class="col-lg-12 text-center"><i class="fas fa-spinner fa-pulse fa-6x"></i><br/><br/><h4>Cargando...</h4></div></div>`);
 
@@ -284,27 +284,24 @@ function verdatos(idproducto){
     
       if (e.data.imagen != '') {
 
-        imagen_perfil=`<img src="../dist/docs/material/img_perfil/${e.data.imagen}" onerror="this.src='../dist/svg/404-v2.svg';" alt="" class="img-thumbnail w-150px">`
+        imagen_perfil=`<img src="../dist/docs/producto/img_perfil/${e.data.imagen}" onerror="this.src='../dist/svg/404-v2.svg';" alt="" class="img-thumbnail w-150px">`
         
         btn_imagen_perfil=`
-        <div class="row">
+        <div class="row mt-1">
           <div class="col-6"">
-            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/material/img_perfil/${e.data.imagen}"> <i class="fas fa-expand"></i></a>
+            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/producto/img_perfil/${e.data.imagen}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/material/img_perfil/${e.data.imagen}" download="PERFIL - ${removeCaracterEspecial(e.data.nombre_producto)}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/producto/img_perfil/${e.data.imagen}" download="PERFIL - ${removeCaracterEspecial(e.data.nombre_producto)}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
       } else {
 
-        imagen_perfil=`<img src="../dist/docs/material/img_perfil/producto-sin-foto.svg" onerror="this.src='../dist/svg/404-v2.svg';" alt="" class="img-thumbnail w-150px">`;
+        imagen_perfil=`<img src="../dist/docs/producto/img_perfil/producto-sin-foto.svg" onerror="this.src='../dist/svg/404-v2.svg';" alt="" class="img-thumbnail w-150px">`;
         btn_imagen_perfil='';
 
-      }     
- 
-
-
+      } 
       var retorno_html=`  
       <div class="col-12">
         <div class="card">
@@ -335,7 +332,7 @@ function verdatos(idproducto){
                     <td>${e.data.stock}</td>
                 </tr> 
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th> <b>Contenido Neto: </b> </th>
+                  <th>Contenido Neto:</th>
                   <td>${e.data.contenido_neto}</td>
                 </tr>   
                 <tr data-widget="expandable-table" aria-expanded="false">

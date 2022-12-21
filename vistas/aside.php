@@ -164,7 +164,7 @@
                   </li>
                   <!-- Resumend de Insumos -->
                   <li class="nav-item ">
-                    <a href="resumen_insumos.php" class="nav-link" id="lResumenInsumos">
+                    <a href="resumen_producto.php" class="nav-link" id="lResumenProducto">
                       <i class="nav-icon fas fa-tasks"></i> <p>Resumen de Productos</p>
                     </a>
                   </li> 

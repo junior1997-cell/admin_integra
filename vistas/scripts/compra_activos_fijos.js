@@ -503,7 +503,7 @@ function agregarDetalleComprobante(idproducto, nombre, unidad_medida, nombre_col
           <input type="hidden" name="idproducto[]" value="${idproducto}">
           <input type="hidden" name="ficha_tecnica_producto[]" value="${ficha_tecnica_producto}">
           <div class="user-block text-nowrap">
-            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img_p}', '${encodeHtml(nombre)}', ${cont} )" data-toggle="tooltip" data-original-title="Ver imagen">
+            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img_p}', '${encodeHtml(nombre)}', ${cont} )" data-toggle="tooltip" data-original-title="Ver imagen">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
             <span class="description color_${cont}"><b>Color: </b>${nombre_color}</span>
           </div>
@@ -898,7 +898,7 @@ function mostrar_compra_general(idcompra_af_general) {
               <input type="hidden" name="idproducto[]" value="${element.idproducto}">
               <input type="hidden" name="ficha_tecnica_producto[]" value="${element.ficha_tecnica_producto}">
               <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img}', '${encodeHtml(element.nombre_producto)}', ${cont})" data-toggle="tooltip" data-original-title="Ver imagen">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img}', '${encodeHtml(element.nombre_producto)}', ${cont})" data-toggle="tooltip" data-original-title="Ver imagen">
                 <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre_producto}</p></span>
                 <span class="description color_${cont}"><b>Color: </b>${element.color}</span>
               </div>
@@ -2050,20 +2050,6 @@ $(function () {
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
 
-function l_m() {
-  // limpiar_form_compra();
-  $("#barra_progress").css({ width: "0%" });
-
-  $("#barra_progress").text("0%");
-
-  $("#barra_progress2").css({ width: "0%" });
-
-  $("#barra_progress2").text("0%");
-}
-
-function dowload_pdf() {
-  toastr.success("El documento se descargara en breve!!");
-}
 
 //validando excedentes
 function validando_excedentes() {
@@ -2104,7 +2090,7 @@ function validando_excedentes() {
 }
 
 // ver imagen grande del producto agregado a la compra
-function ver_img_material(img_url, nombre, cont=null) {
+function ver_img_producto(img_url, nombre, cont=null) {
   $(".tooltip").remove();
   if (cont == null || cont == "") {
     $("#ver_img_material").attr("src", img_url);

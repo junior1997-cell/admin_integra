@@ -118,8 +118,7 @@ class Producto
   }
 
   //Implementar un método para mostrar los datos de un registro a modificar
-  public function mostrar($idproducto)
-  {
+  public function mostrar($idproducto) {
     $data = Array();
 
     $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, p.descripcion, p.imagen, p.estado, p.created_at,

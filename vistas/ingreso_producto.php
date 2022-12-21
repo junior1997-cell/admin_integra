@@ -39,7 +39,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0">Compras</h1>
+                      <h1 class="m-0"><i class="nav-icon fas fa-cart-plus"></i> Compras - Aumenta el stock de tú almacén</h1>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-6">
@@ -171,7 +171,7 @@
                                   <th>Fecha</th>
                                   <th>Proveedor</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
-                                  <th>Total</th>
+                                  <th class="px-2">S/. 0.00</th>
                                   <th>Descripción</th>
                                 </tr>
                               </tfoot>
@@ -198,7 +198,7 @@
                                   <th>Proveedor</th>
                                   <th>Cant</th>
                                   <th>Cel.</th>
-                                  <th>Total</th>
+                                  <th class="px-2">Total</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -235,7 +235,7 @@
                             </table>
                           </div>
 
-                          <!-- TABLA - AGREGAR COMPRA-->
+                          <!-- FORM - AGREGAR COMPRA-->
                           <div id="agregar_compras" style="display: none;">
                             <div class="modal-body p-0px mb-2">
                               <!-- form start -->
@@ -332,7 +332,7 @@
                                   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
                                     <br />
                                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                                      <thead style="background-color: #ff6c046b;">
+                                      <thead style="background-color: #28a745b5;">
                                         <th data-toggle="tooltip" data-original-title="Opciones">Op.</th>
                                         <th>Producto</th>
                                         <th>Unidad</th>
@@ -1101,26 +1101,24 @@
                     </div>
                   </div> 
 
-                  <!-- Modal ver grande img producto -->
-                  <div class="modal fade" id="modal-ver-img-material">
-                    <div class="modal-dialog modal-dialog-scrollable modal-md shadow-0px1rem3rem-rgb-0-0-0-50 rounded">
-                      <div class="modal-content bg-color-0202022e shadow-none border-0" >
+                  <!-- MODAL - VER PERFIL INSUMO-->
+                  <div class="modal fade bg-color-02020280" id="modal-ver-perfil-insumo">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                      <div class="modal-content bg-color-0202022e shadow-none border-0">
                         <div class="modal-header">
-                          <h4 class="modal-title text-white nombre-img-material">Img producto</h4>
+                          <h4 class="modal-title text-white foto-insumo">Foto Insumo</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-white" aria-hidden="true">&times;</span>
+                            <span class="text-white cursor-pointer" aria-hidden="true">&times;</span>
                           </button>
                         </div>
-                        <div class="modal-body">
-                          <div class="class-style" style="text-align: center;">
-                            
-                            <img onerror="this.src='../dist/svg/404-v2.svg';" src="" class="img-thumbnail " id="ver_img_material" style="cursor: pointer !important;" width="auto" />
-                            
+                        <div class="modal-body"> 
+                          <div id="perfil-insumo" class="text-center">
+                            <!-- vemos los datos del trabajador -->
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div>   
 
                   <!-- Modal agregar Productos - charge -->                 
                   <div class="modal fade bg-color-02020263" id="modal-agregar-productos">

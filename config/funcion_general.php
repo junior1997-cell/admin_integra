@@ -134,6 +134,8 @@ if (!function_exists('ejecutarConsulta')) {
     return $sin_format;
   }
 
+  function zero_fill ($valor, $long = 0) { return str_pad($valor, $long, '0', STR_PAD_LEFT); }
+
   /*  ══════════════════════════════════════════ - S T R I N G - ══════════════════════════════════════════ */
   
   function quitar_guion($numero) { return str_replace("-", "", $numero); }

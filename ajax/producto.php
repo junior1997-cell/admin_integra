@@ -13,7 +13,7 @@
       
       require_once "../modelos/Producto.php";
 
-      $materiales = new Producto();
+      $producto = new Producto();
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
       $imagen_error = "this.src='../dist/svg/404-v2.svg'";
@@ -49,12 +49,12 @@
 
             $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
-            move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/material/img_perfil/" . $imagen1);
+            move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/producto/img_perfil/" . $imagen1);
           }
 
           if (empty($idproducto)) {
            
-            $rspta = $materiales->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
+            $rspta = $producto->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true);
 
@@ -64,16 +64,16 @@
           
             if ($flat_img1 == true) {
 
-              $datos_f1 = $materiales->obtenerImg($idproducto);
+              $datos_f1 = $producto->obtenerImg($idproducto);
 
               $img1_ant = $datos_f1['data']->fetch_object()->imagen;
 
-              if ( validar_url_completo($scheme_host. "dist/docs/material/img_perfil/" . $img1_ant)  == 200) {
-                unlink("../dist/docs/material/img_perfil/" . $img1_ant);
+              if ( validar_url_completo($scheme_host. "dist/docs/producto/img_perfil/" . $img1_ant)  == 200) {
+                unlink("../dist/docs/producto/img_perfil/" . $img1_ant);
               }
             }
             
-            $rspta = $materiales->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
+            $rspta = $producto->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
             
             echo json_encode( $rspta, true) ;
           }
@@ -81,7 +81,7 @@
     
         case 'desactivar':
 
-          $rspta = $materiales->desactivar( $_GET["id_tabla"] );
+          $rspta = $producto->desactivar( $_GET["id_tabla"] );
 
           echo json_encode( $rspta, true) ;
 
@@ -89,7 +89,7 @@
 
         case 'eliminar':
 
-          $rspta = $materiales->eliminar( $_GET["id_tabla"] );
+          $rspta = $producto->eliminar( $_GET["id_tabla"] );
 
           echo json_encode( $rspta, true) ;
 
@@ -97,19 +97,16 @@
     
         case 'mostrar':
 
-          $rspta = $materiales->mostrar($idproducto);
+          $rspta = $producto->mostrar($idproducto);
           //Codificar el resultado utilizando json
           echo json_encode( $rspta, true) ;
 
         break;
     
         case 'tbla_principal':
-          $rspta = $materiales->tbla_principal();
+          $rspta = $producto->tbla_principal();
           //Vamos a declarar un array
-          $data = [];
-          $imagen_error = "this.src='../dist/svg/404-v2.svg'";
-          $cont=1;
-          $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+          $data = []; $cont=1;
 
           if ($rspta['status'] == true) {
             while ($reg = $rspta['data']->fetch_object()) {
@@ -131,9 +128,9 @@
                 ' <button class="btn btn-danger btn-sm" onclick="eliminar(' . $reg->idproducto .', \''.encodeCadenaHtml($reg->nombre).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>'. 
                 ' <button class="btn btn-info btn-sm" onclick="verdatos('.$reg->idproducto.')" data-toggle="tooltip" data-original-title="Ver datos"><i class="far fa-eye"></i></button>' : 
                 '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idproducto . ')"><i class="fa fa-pencil-alt"></i></button>',
-                "2" => $reg->idproducto,
+                "2" => zero_fill($reg->idproducto, 6),
                 "3" => '<div class="user-block">'.
-                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/material/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/material/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
+                  '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
                   <span class="username"><p class="mb-0">' . $reg->nombre . '</p></span>
                   <span class="description"><b>Marca: </b>' . $reg->marca . '</span>
                 </div>',

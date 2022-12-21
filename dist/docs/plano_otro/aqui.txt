@@ -1,1 +1,0 @@
-../dist/docs/plano_otro/archivos/

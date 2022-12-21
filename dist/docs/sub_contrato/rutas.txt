@@ -1,2 +1,0 @@
-../docs/sub_contrato/comprobante_pago/
-../dist/docs/sub_contrato/comprobante_subcontrato/

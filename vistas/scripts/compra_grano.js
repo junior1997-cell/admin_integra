@@ -1651,7 +1651,7 @@ function validando_excedentes() {
 }
 
 // ver imagen grande del producto agregado a la compra
-function ver_img_material(img, nombre) {
+function ver_img_producto(img, nombre) {
   $("#ver_img_material").attr("src", `${img}`);
   $(".nombre-img-material").html(nombre);
   $("#modal-ver-img-material").modal("show");

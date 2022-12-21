@@ -205,7 +205,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     buttons: [
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
       { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } }, {extend: "colvis"} ,        
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } },              
     ],
     ajax: {
       url: `../ajax/ingreso_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
@@ -225,14 +225,15 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api = this.api(); var total = api.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api.column( 5 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );
+    },
     bDestroy: true,
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
-      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); 
-      if (type === 'display') { let color = 'numero_positivos'; 
-      if (data < 0) {color = 'numero_negativos'; } 
-      return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
     ],
   }).DataTable();
@@ -246,7 +247,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
+    buttons: ["copyHtml5", "excelHtml5",  "pdf"],
     ajax: {
       url: "../ajax/ingreso_producto.php?op=listar_compraxporvee",
       type: "get",
@@ -266,9 +267,16 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api = this.api(); var total = api.column( 5 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api.column( 5 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );
+    },
     bDestroy: true,
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
+    ],
   }).DataTable();
 }
 
@@ -379,12 +387,13 @@ var detalles = 0;
 
 function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,precio_total,img,stock) {
   // console.log(idproducto,nombre,unidad_medida, categoria,precio_total,img,stock);
-  var stock = 5;
+  var stock = $(`#table_stock_${idproducto}`).text() == 0  ||  $(`#table_stock_${idproducto}`).text() == ''? 0 : parseFloat($(`#table_stock_${idproducto}`).text()) ;
   var precio_venta = 0;
   var precio_sin_igv =0;
   var cantidad = 1;
   var descuento = 0;
   var precio_igv = 0;
+  // console.log( stock );
 
   if (idproducto != "") {
 
@@ -410,34 +419,42 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
       var img_p = "";
 
       if (img == "" || img == null) {
-        img_p = `../dist/docs/material/img_perfil/producto-sin-foto.svg`;
+        img_p = `../dist/docs/producto/img_perfil/producto-sin-foto.svg`;
       } else {
-        img_p = `../dist/docs/material/img_perfil/${img}`;
+        img_p = `../dist/docs/producto/img_perfil/${img}`;
       }
 
       var fila = `
       <tr class="filas" id="fila${cont}">         
-        <td class="">
+        <td class="py-1">
           <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
           <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
         </td>
-        <td class="">         
+        <td class="py-1">         
           <input type="hidden" name="idproducto[]" value="${idproducto}">
           <div class="user-block text-nowrap">
-            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img_p}', '${encodeHtml(nombre)}')">
+            <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img_p}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img_p}', '${encodeHtml(nombre)}')">
             <span class="username"><p class="mb-0 nombre_producto_${cont}">${nombre}</p></span>
             <span class="description categoria_${cont}"><b>Categoría: </b>${categoria}</span>
           </div>
         </td>
-        <td class=""><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
-        <td class=" form-group"><input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-        <td class=" hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
-        <td class=" hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
-        <td class="form-group"><input class="w-135px precio_con_igv_${cont} form-control" type="number" name="precio_con_igv[]" id="precio_con_igv[]" value="${parseFloat(precio_total).toFixed(2)}" min="0.01" required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
-        <td class="form-group"><input type="number" class="w-135px form-control precio_venta_${cont}" name="precio_venta[]" id="precio_venta[]" value="${parseFloat(precio_venta).toFixed(2)}" min="0" ></td>
-        <td class=""><input type="number" class="w-135px descuento_${cont}" name="descuento[]" value="${descuento}" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-        <td class=" text-right"><span class="text-right subtotal_producto_${cont}" name="subtotal_producto" id="subtotal_producto">${subtotal}</span></td>
-        <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
+        <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
+        <td class="py-1 form-group"><input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+        <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
+        <td class="py-1 hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
+        <td class="py-1 form-group">
+          <input type="number" class="w-135px form-control valid_precio_con_igv "  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_total).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+          <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_total).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
+        </td>
+        <td class="py-1 form-group">
+          <input type="number" class="w-135px form-control valid_precio_venta" name="valid_precio_venta[${cont}]" id="valid_precio_venta_${cont}" value="${parseFloat(precio_venta).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_venta_${cont}', this);" >
+          <input type="hidden" class="precio_venta_${cont}" name="precio_venta[]" id="precio_venta_${cont}" value="${parseFloat(precio_venta).toFixed(2)}"  >
+        </td>
+        <td class="py-1 form-group">
+          <input type="number" class="w-135px form-control descuento_${cont}" name="descuento[]" value="${descuento}" min="0.00" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()">
+        </td>
+        <td class="py-1 text-right"><span class="text-right subtotal_producto_${cont}" name="subtotal_producto" id="subtotal_producto">${subtotal}</span></td>
+        <td class="py-1"><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
       </tr>`;
 
       detalles = detalles + 1;
@@ -450,8 +467,19 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
       
       toastr_success("Agregado!!",`Producto: ${nombre} agregado !!`, 700);
 
+      // reglas de validación
+      $('.valid_precio_venta').each(function(e) { 
+        $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
+        $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
+      });
+
+      $('.valid_precio_con_igv').each(function(e) { 
+        $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
+        $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
+      });
+
       cont++;
-      evaluar();
+      evaluar();      
     }
   } else {
     // alert("Error al ingresar el detalle, revisar los datos del artículo");
@@ -798,9 +826,9 @@ function mostrar_compra(idcompra_producto) {
           var img = "";
 
           if (element.imagen == "" || element.imagen == null) {
-            img = `../dist/docs/material/img_perfil/producto-sin-foto.svg`;
+            img = `../dist/docs/producto/img_perfil/producto-sin-foto.svg`;
           } else {
-            img = `../dist/docs/material/img_perfil/${element.imagen}`;
+            img = `../dist/docs/producto/img_perfil/${element.imagen}`;
           }
 
           var fila = `
@@ -812,7 +840,7 @@ function mostrar_compra(idcompra_producto) {
             <td>
               <input type="hidden" name="idproducto[]" value="${element.idproducto}">
               <div class="user-block text-nowrap">
-                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_material('${img}', '${encodeHtml(element.nombre)}')">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img}', '${encodeHtml(element.nombre)}')">
                 <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre}</p></span>
                 <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
               </div>
@@ -864,7 +892,7 @@ function ver_detalle_compras(idcompra_producto) {
 
   $("#modal-ver-compras").modal("show");
 
-  $.post("../ajax/ingreso_producto.php?op=ver_detalle_compras&id_compra=" + idcompra_producto, function (r) {
+  $.post("../ajax/ajax_general.php?op=ver_detalle_compras&id_compra=" + idcompra_producto, function (r) {
     r = JSON.parse(r);
     if (r.status == true) {
       $(".detalle_de_compra").html(r.data); 
@@ -1388,7 +1416,10 @@ $(function () {
       fecha_compra:       { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
-      'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"}
+      'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
+      'descuento[]':      { min: "Mínimo 0.00", required: "Campo requerido"},
+      // 'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
+      // 'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
     },
 
     errorElement: "span",
@@ -1539,10 +1570,12 @@ function filtros() {
 }
 
 // ver imagen grande del producto agregado a la compra
-function ver_img_material(img, nombre) {
-  $("#ver_img_material").attr("src", `${img}`);
-  $(".nombre-img-material").html(nombre);
-  $("#modal-ver-img-material").modal("show");
+function ver_img_producto(file, nombre) {
+  $('.foto-insumo').html(nombre);
+  $(".tooltip").removeClass("show").addClass("hidde");
+  $("#modal-ver-perfil-insumo").modal("show");
+  $('#perfil-insumo').html(`<span class="jq_image_zoom"><img class="img-thumbnail" src="${file}" onerror="this.src='../dist/svg/404-v2.svg';" alt="Perfil" width="100%"></span>`);
+  $('.jq_image_zoom').zoom({ on:'grab' });
 }
 
 function export_excel_detalle_factura() {
@@ -1588,4 +1621,9 @@ function formato_banco() {
 
     }).fail( function(e) { ver_errores(e); } );   
   }  
+}
+
+function replicar_precio_venta(id, name_input, valor) {
+  var value = $(valor).val(); console.log(value);
+  $(`${name_input}`).val(value).trigger("change");
 }
