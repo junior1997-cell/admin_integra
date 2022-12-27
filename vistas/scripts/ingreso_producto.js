@@ -682,61 +682,6 @@ function calcularTotalesConIgv() {
   total = 0.0;
 }
 
-function quitar_igv_del_precio(precio , igv, tipo ) {
-  
-  var precio_sin_igv = 0;
-
-  switch (tipo) {
-    case 'decimal':
-
-      // validamos el valor del igv ingresado
-      if (igv > 0 && igv <= 1) { 
-        $("#tipo_gravada").val('GRAVADA');
-        $(".tipo_gravada").html('GRAVADA');
-        $(".val_igv").html(`IGV (${(parseFloat(igv) * 100).toFixed(2)}%)`); 
-      } else { 
-        igv = 0; 
-        $(".val_igv").html('IGV (0%)'); 
-        $("#tipo_gravada").val('NO GRAVADA');
-        $(".tipo_gravada").html('NO GRAVADA');
-      }
-
-      if (parseFloat(precio) != NaN && igv > 0 ) {
-        precio_sin_igv = ( parseFloat(precio) * 100 ) / ( ( parseFloat(igv) * 100 ) + 100 )
-      }else{
-        precio_sin_igv = precio;
-      }
-    break;
-
-    case 'entero':
-      
-      // validamos el valor del igv ingresado
-      if (igv > 0 && igv <= 100) { 
-        $("#tipo_gravada").val('GRAVADA');
-        $(".tipo_gravada").html('GRAVADA');
-        $(".val_igv").html(`IGV (${parseFloat(igv)}%)`); 
-      } else { 
-        igv = 0; 
-        $(".val_igv").html('IGV (0%)'); 
-        $("#tipo_gravada").val('NO GRAVADA');
-        $(".tipo_gravada").html('NO GRAVADA');
-      }
-
-      if (parseFloat(precio) != NaN && igv > 0 ) {
-        precio_sin_igv = ( parseFloat(precio) * 100 ) / ( parseFloat(igv)  + 100 )
-      }else{
-        precio_sin_igv = precio;
-      }
-    break;
-  
-    default:
-      $(".val_igv").html('IGV (0%)');
-      toastr_error("Vacio!!","No has difinido un tipo de calculo de IGV", 700);
-    break;
-  } 
-  
-  return precio_sin_igv; 
-}
 
 function ocultar_comprob() {
   if ($("#tipo_comprobante").select2("val") == "Ninguno") {
@@ -1576,19 +1521,6 @@ function ver_img_producto(file, nombre) {
   $("#modal-ver-perfil-insumo").modal("show");
   $('#perfil-insumo').html(`<span class="jq_image_zoom"><img class="img-thumbnail" src="${file}" onerror="this.src='../dist/svg/404-v2.svg';" alt="Perfil" width="100%"></span>`);
   $('.jq_image_zoom').zoom({ on:'grab' });
-}
-
-function export_excel_detalle_factura() {
-  $tabla = document.querySelector("#tabla_detalle_factura");
-  let tableExport = new TableExport($tabla, {
-    exportButtons: false, // No queremos botones
-    filename: "Detalle comprobante", //Nombre del archivo de Excel
-    sheetname: "detalle factura", //Título de la hoja
-  });
-  let datos = tableExport.getExportData(); console.log(datos);
-  let preferenciasDocumento = datos.tabla_detalle_factura.xlsx;
-  tableExport.export2file(preferenciasDocumento.data, preferenciasDocumento.mimeType, preferenciasDocumento.filename, preferenciasDocumento.fileExtension, preferenciasDocumento.merges, preferenciasDocumento.RTL, preferenciasDocumento.sheetname);
-
 }
 
 // damos formato a: Cta, CCI

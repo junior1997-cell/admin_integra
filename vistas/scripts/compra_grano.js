@@ -234,7 +234,11 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       if (data[1] != '') { $("td", row).eq(1).addClass('text-nowrap'); }
       if (data[5] != '') { $("td", row).eq(5).addClass('text-left'); }
       if (data[6] != '') { $("td", row).eq(6).addClass('text-nowrap'); }    
-      if (data[9] != '' || data[9] == 0 ) { $("td", row).eq(9).addClass('text-right'); parseFloat(data[9])<0? $("td", row).eq(9).addClass('bg-red') : ""; } 
+      if (data[9] != '' || data[9] == 0 ) { 
+        $("td", row).eq(9).addClass('text-right'); 
+        parseFloat(data[9])<0? $("td", row).eq(9).addClass('bg-red') : ""; 
+        parseFloat(data[9]) == 0 ? $("td", row).eq(9).addClass('bg-success') : ""; 
+      } 
     },
     language: {
       lengthMenu: "Mostrar: _MENU_ registros",
@@ -1171,6 +1175,7 @@ function ver_documento_pago(doc, name_download) {
   $('.div-view-comprobante-pago').html(doc_view_download_expand(doc, 'dist/docs/compra_grano/comprobante_pago',name_download,'100%', '410'));
   $('.jq_image_zoom').zoom({ on:'grab' });
 }
+
 // :::::::::::::::::::::::::: - S E C C I O N   D E S C A R G A S -  ::::::::::::::::::::::::::
 
 

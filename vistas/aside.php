@@ -153,7 +153,7 @@
               <li class="nav-item  b-radio-3px" id="bloc_Compras">
                 <a href="#" class="nav-link pl-2" id="mCompra">
                   <i class="fas fa-shopping-cart nav-icon"></i>
-                  <p>Compras Abono <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
+                  <p>Almacén Abono <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->

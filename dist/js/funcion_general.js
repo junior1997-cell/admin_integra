@@ -1546,3 +1546,59 @@ function abrir_calculadora() {
 function dowload_pdf() {
   toastr.success("El documento se descargara en breve!!");
 }
+
+function quitar_igv_del_precio(precio , igv, tipo ) {
+  
+  var precio_sin_igv = 0;
+
+  switch (tipo) {
+    case 'decimal':
+
+      // validamos el valor del igv ingresado
+      if (igv > 0 && igv <= 1) { 
+        $("#tipo_gravada").val('GRAVADA');
+        $(".tipo_gravada").html('GRAVADA');
+        $(".val_igv").html(`IGV (${(parseFloat(igv) * 100).toFixed(2)}%)`); 
+      } else { 
+        igv = 0; 
+        $(".val_igv").html('IGV (0%)'); 
+        $("#tipo_gravada").val('NO GRAVADA');
+        $(".tipo_gravada").html('NO GRAVADA');
+      }
+
+      if (parseFloat(precio) != NaN && igv > 0 ) {
+        precio_sin_igv = ( parseFloat(precio) * 100 ) / ( ( parseFloat(igv) * 100 ) + 100 )
+      }else{
+        precio_sin_igv = precio;
+      }
+    break;
+
+    case 'entero':
+      
+      // validamos el valor del igv ingresado
+      if (igv > 0 && igv <= 100) { 
+        $("#tipo_gravada").val('GRAVADA');
+        $(".tipo_gravada").html('GRAVADA');
+        $(".val_igv").html(`IGV (${parseFloat(igv)}%)`); 
+      } else { 
+        igv = 0; 
+        $(".val_igv").html('IGV (0%)'); 
+        $("#tipo_gravada").val('NO GRAVADA');
+        $(".tipo_gravada").html('NO GRAVADA');
+      }
+
+      if (parseFloat(precio) != NaN && igv > 0 ) {
+        precio_sin_igv = ( parseFloat(precio) * 100 ) / ( parseFloat(igv)  + 100 )
+      }else{
+        precio_sin_igv = precio;
+      }
+    break;
+  
+    default:
+      $(".val_igv").html('IGV (0%)');
+      toastr_error("Vacio!!","No has difinido un tipo de calculo de IGV", 700);
+    break;
+  } 
+  
+  return precio_sin_igv; 
+}
