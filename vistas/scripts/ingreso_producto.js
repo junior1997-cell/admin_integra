@@ -844,9 +844,8 @@ function ver_detalle_compras(idcompra_producto) {
       $("#cargando-5-fomulario").show();
       $("#cargando-6-fomulario").hide();
 
-      $("#print_pdf_compra").removeClass('disabled');
-      $("#print_pdf_compra").attr('href', `../reportes/pdf_ingreso_productos.php?id=${idcompra_producto}` );
-      $("#excel_compra").removeClass('disabled');
+      $("#excel_compra").removeClass('disabled').attr('href', `../reportes/export_xlsx_compra_producto.php?id=${idcompra_producto}`);
+      $("#print_pdf_compra").removeClass('disabled').attr('href', `../reportes/pdf_ingreso_productos.php?id=${idcompra_producto}` );
     } else {
       ver_errores(e);
     }    

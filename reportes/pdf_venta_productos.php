@@ -15,13 +15,13 @@ if (!isset($_SESSION["nombre"])) {
   //Establecemos la configuración de la factura
   $pdf = new PDF_Invoice('P', 'mm', 'A4');
   
-  $compra_producto = new Venta_producto();
+  $venta_producto = new Venta_producto();
 
   if (empty($_GET)) {
     header("Location: ../vistas/login.html"); //Validamos el acceso solo a los usuarios logueados al sistema.
   } else if ($_GET['id'] != '') {
     $id = $_GET['id'];
-    $rspta = $compra_producto->mostrar_compra_para_editar($id);
+    $rspta = $venta_producto->mostrar_venta_para_editar($id);
   } else {    
   }
 

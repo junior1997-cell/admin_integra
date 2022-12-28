@@ -182,19 +182,19 @@
               <!-- Ventas -->      
               <li class="nav-item  b-radio-3px" id="bloc_Ventas">
                 <a href="#" class="nav-link pl-2" id="mVentas">
-                <i class="fa-solid fa-comments-dollar"></i>
+                  <i class="fa-solid fa-comments-dollar"></i>
                   <p>Venta Abonos <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Ventas del proyecto -->
                   <li class="nav-item ">
-                    <a href="venta_producto.php" class="nav-link" id="lVentas">
+                    <a href="venta_producto.php" class="nav-link" id="lVentasProductos">
                       <i class="nav-icon fas fa-cart-plus"></i> <p>Ventas</p>
                     </a>
                   </li>
                   <!-- Resumend de Insumos -->
                   <li class="nav-item ">
-                    <a href="resumen_insumos.php" class="nav-link" id="lResumenInsumos">
+                    <a href="resumen_venta_producto.php" class="nav-link" id="lResumenVentasProductos">
                       <i class="nav-icon fas fa-tasks"></i> <p>Resumen Ventas</p>
                     </a>
                   </li> 

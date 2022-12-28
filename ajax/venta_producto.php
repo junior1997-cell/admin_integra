@@ -26,7 +26,7 @@ if (!isset($_SESSION["nombre"])) {
 
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   V E N T A ::::::::::::::::::::::::::::::::::::::
-    $idcompra_producto  = isset($_POST["idcompra_producto"]) ? limpiarCadena($_POST["idcompra_producto"]) : "";
+    $idventa_producto  = isset($_POST["idventa_producto"]) ? limpiarCadena($_POST["idventa_producto"]) : "";
     $idcliente          = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
     $fecha_venta        = isset($_POST["fecha_venta"]) ? limpiarCadena($_POST["fecha_venta"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
@@ -138,21 +138,21 @@ if (!isset($_SESSION["nombre"])) {
       // :::::::::::::::::::::::::: S E C C I O N   V E N T A  ::::::::::::::::::::::::::
       case 'guardaryeditarcompra':
 
-        if (empty($idcompra_producto)) {
-          // $idcompra_producto,$idcliente,$fecha_venta,$tipo_comprobante,$serie_comprobante,$val_igv,$descripcion,$subtotal_compra,$tipo_gravada,$igv_venta,$total_venta
+        if (empty($idventa_producto)) {
+          
           $rspta = $venta_producto->insertar($idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
           $total_venta, $subtotal_compra, $igv_venta,  $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["categoria"], $_POST["cantidad"], $_POST["stock_actual"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
+          $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
           $tipo_gravada);
 
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $venta_producto->editar( $idcompra_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $venta_producto->editar( $idventa_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
           $total_venta, $subtotal_compra, $igv_venta,  $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
+          $_POST["categoria"], $_POST["cantidad"], $_POST["cantidad_old"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
           $tipo_gravada);
     
           echo json_encode($rspta, true);
@@ -201,7 +201,7 @@ if (!isset($_SESSION["nombre"])) {
             $data[] = [
               "0" => $cont,
               "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_ventas(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
+                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_venta(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
                     ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idventa_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
                  
               "2" => $reg['fecha_venta'],
@@ -304,9 +304,9 @@ if (!isset($_SESSION["nombre"])) {
       break;  
       
     
-      case 'ver_compra_editar':
+      case 'ver_venta_editar':
 
-        $rspta = $venta_producto->mostrar_compra_para_editar($idcompra_producto);
+        $rspta = $venta_producto->mostrar_venta_para_editar($_POST["idventa_producto"]);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
     
