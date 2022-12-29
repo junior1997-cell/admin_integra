@@ -420,20 +420,20 @@ function guardar_y_editar_ventas(e) {
 }
 
 //Función para eliminar registros
-function eliminar_compra(idventa_producto, nombre) {
+function eliminar_venta(idventa_producto, nombre) {
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/venta_producto.php?op=anular",
-    "../ajax/venta_producto.php?op=eliminar_compra", 
+    "../ajax/venta_producto.php?op=papelera_venta",
+    "../ajax/venta_producto.php?op=eliminar_venta", 
     idventa_producto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu compra ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu compra ha sido Eliminado.' ) }, 
     function(){ tabla_venta_producto.ajax.reload(null, false); tabla_venta_x_proveedor.ajax.reload(null, false); },
-    false, 
+    function(){ tablamateriales.ajax.reload(null, false); },
     false, 
     false,
     false
@@ -471,7 +471,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
 
         var sub_total = parseInt(cant_producto, 10) + 1;
 
-        $(".producto_" + idproducto).val(sub_total);
+        $(".producto_" + idproducto).val(sub_total).trigger('change');
 
         modificarSubtotales();
       }
@@ -502,7 +502,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
         <tr class="filas" id="fila${cont}">         
           <td class="py-1">
             <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
-            <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
+            <button type="button" class="btn btn-danger btn-sm btn-file-delete-${cont}" onclick="recover_stock(${idproducto}, ${cont}, 0, 'recover_remove_new');"><i class="fas fa-times"></i></button>
           </td>
           <td class="py-1">         
             <input type="hidden" name="idproducto[]" value="${idproducto}">
@@ -512,14 +512,15 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
               <span class="description categoria_${cont}"><b>Categoría: </b>${categoria}</span>
             </div>
           </td>
-          <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
+          <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input type="hidden" class="unidad_medida_${cont}" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
           <td class="py-1 form-group">
-            <input class="producto_${idproducto} producto_selecionado w-100px cantidad_${cont} valid_cantidad form-control" type="number" name="cantidad[]" id="cantidad[]" value="${cantidad}" min="0.01" required onkeyup="update_stock(${idproducto},${cont});" onchange="update_stock(${idproducto},${cont});">            
+            <input type="number" class="w-100px valid_cantidad form-control producto_${idproducto} producto_selecionado" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+            <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${cantidad}" min="0.01" required onkeyup="update_stock(${idproducto},${cont});" onchange="update_stock(${idproducto},${cont});">            
           </td>
           <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
-          <td class="py-1 hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
+          <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_igv_${cont}" name="precio_igv[]" id="precio_igv[]" value="${parseFloat(precio_igv).toFixed(2)}" readonly  ></td>
           <td class="py-1 form-group">
-            <input type="number" class="w-135px form-control valid_precio_con_igv"  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_total).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+            <input type="number" class="w-135px form-control valid_precio_con_igv" name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(precio_total).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
             <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(precio_total).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
           </td>        
           <td class="py-1 form-group">
@@ -701,6 +702,7 @@ function modificarSubtotales() {
     }
   }
   toastr_success("Actualizado!!",`Precio Actualizado.`, 700);
+  capturar_pago_compra();
 }
 
 function calcularTotalesSinIgv() {
@@ -768,14 +770,14 @@ function ocultar_comprob() {
   }
 }
 
-function eliminarDetalle(indice) {
+function eliminarDetalle(idproducto, indice) {
   $("#fila" + indice).remove();
 
   array_class_trabajador.forEach(function (car, index, object) {
     if (car.id_cont === indice) {
       object.splice(index, 1);
     }
-  });
+  });  
 
   modificarSubtotales();
 
@@ -855,7 +857,7 @@ function mostrar_venta(idventa_producto) {
           <tr class="filas" id="fila${cont}">
             <td>
               <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${val.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
-              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button></td>
+              <button type="button" class="btn btn-danger btn-sm btn-file-delete-${cont}" onclick="recover_stock(${val.idproducto}, ${cont}, 0, 'recover_remove_edit');"><i class="fas fa-times"></i></button></td>
             </td>
             <td>
               <input type="hidden" name="idproducto[]" value="${val.idproducto}">
@@ -867,14 +869,14 @@ function mostrar_venta(idventa_producto) {
             </td>
             <td> <span class="unidad_medida_${cont}">${val.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${val.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${val.categoria}"></td>            
             <td class="py-1 form-group">
-              <input class="w-100px valid_cantidad form-control" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
-              <input class="producto_${val.idproducto} producto_selecionado cantidad_${cont}" type="hidden" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
-              <input class="" type="hidden" name="cantidad_old[]" id="cantidad_old[]" value="${val.cantidad}">
+              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
+              <input type="hidden" class="" name="cantidad_old[]" id="cantidad_old_${cont}" value="${val.cantidad}">
             </td>
-            <td class="hidden"><input class="w-135px input-no-border precio_sin_igv_${cont}" type="number" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${val.precio_sin_igv}" readonly ></td>
-            <td class="hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number"  name="precio_igv[]" id="precio_igv[]" value="${val.igv}" readonly ></td>             
+            <td class="hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${val.precio_sin_igv}" readonly ></td>
+            <td class="hidden"><input type="number" class="w-135px input-no-border precio_igv_${cont}" name="precio_igv[]" id="precio_igv[]" value="${val.igv}" readonly ></td>             
             <td class="py-1 form-group">
-              <input type="number" class="w-135px form-control valid_precio_con_igv"  name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(val.precio_con_igv).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+              <input type="number" class="w-135px form-control valid_precio_con_igv" name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(val.precio_con_igv).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
               <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(val.precio_con_igv).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
             </td>
             <td class="py-1 form-group">
@@ -1537,7 +1539,7 @@ function listarmateriales() {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     bDestroy: true,
-    iDisplayLength: 5, //Paginación
+    iDisplayLength: 10, //Paginación
     // order: [[0, "desc"]], //Ordenar (columna,orden)
   }).DataTable();
 }
@@ -1940,7 +1942,7 @@ function update_stock(id, count) {
   var stock = $(`#table_stock_${id}`).attr('stock') == 0  ||  $(`#table_stock_${id}`).attr('stock') == ''? 0 : parseFloat($(`#table_stock_${id}`).attr('stock')) ;
   var cant  = $(`.cantidad_${count}`).val() == 0  ||  $(`.cantidad_${count}`).val() == ''? 0 : parseFloat($(`.cantidad_${count}`).val()) ;
   var dif   = stock - cant;
-  console.log('stock =' + stock, 'cant =' + cant, 'dif =' + dif);
+  // console.log('stock =' + stock, 'cant =' + cant, 'dif =' + dif);
   if (stock >= cant) {    
     $(`#table_stock_${id}`).html(formato_miles(dif));    
     modificarSubtotales();    
@@ -1949,8 +1951,33 @@ function update_stock(id, count) {
   }  
 }
 
-function recover_stock(id, count, cantidad_entrante) {
+function recover_stock(id, count, cantidad_entrante, type_recover = false) {
   var stock_actual = $(`#table_stock_${id}`).attr('stock') == 0  ||  $(`#table_stock_${id}`).attr('stock') == ''? 0 : parseFloat($(`#table_stock_${id}`).attr('stock')) ;
-  var diferencia = stock_actual + parseFloat(cantidad_entrante);
-  $(`#table_stock_${id}`).attr('stock', diferencia);
+  var cant  = $(`.cantidad_${count}`).val() == 0  ||  $(`.cantidad_${count}`).val() == ''? 0 : parseFloat($(`.cantidad_${count}`).val()) ;
+  var cant_old  = $(`#cantidad_old_${count}`).val() == 0  ||  $(`#cantidad_old_${count}`).val() == ''? 0 : parseFloat($(`#cantidad_old_${count}`).val()) ;
+  
+  if (type_recover == null || type_recover == '' || type_recover == false) {
+
+    var diferencia = stock_actual + parseFloat(cantidad_entrante);
+    $(`#table_stock_${id}`).attr('stock', diferencia);
+
+  } else if(type_recover == 'recover_remove_new') { /* -- recuperamos cuando CREAMOS una nueva venta -- */ 
+    
+    $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');    
+    $(`#table_stock_${id}`).html( formato_miles(stock_actual) );
+    eliminarDetalle(id, count);
+
+  } else if(type_recover == 'recover_remove_edit') { /* -- recuperamos cuando EDITAMOS una nueva venta -- */ 
+    
+    $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');    
+    $.post(`../ajax/venta_producto.php?op=recover_stock_producto`, {'idproducto': id, 'stock': cant_old },function (e, textStatus, jqXHR) {
+      e = JSON.parse(e);  console.log(e);  
+      if (e.status == true) {        
+        $(`#table_stock_${id}`).html( formato_miles(stock_actual) );        
+        eliminarDetalle(id, count);
+      } else {
+        ver_errores(e);
+      }
+    }).fail( function(e) { ver_errores(e); } );    
+  }
 }

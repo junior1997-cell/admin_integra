@@ -1,6 +1,7 @@
 <?php
-//Activamos el almacenamiento en el buffer
-ob_start();
+require '../vendor/autoload.php';
+use Luecano\NumeroALetras\NumeroALetras;
+
 if (strlen(session_id()) < 1) {
   session_start();
 }
@@ -16,6 +17,8 @@ if (!isset($_SESSION["nombre"])) {
   $pdf = new PDF_Invoice('P', 'mm', 'A4');
   
   $venta_producto = new Venta_producto();
+  $numero_a_letra = new NumeroALetras();
+
 
   if (empty($_GET)) {
     header("Location: ../vistas/login.html"); //Validamos el acceso solo a los usuarios logueados al sistema.
@@ -80,11 +83,13 @@ if (!isset($_SESSION["nombre"])) {
   }
 
   //Convertimos el total en letras
-  require_once "Letras.php";
-  $V = new EnLetras();
-  $num_total = floatval($rspta['data']['venta']['total']);
-  $con_letra = strtoupper($V->ValorEnLetras(503, "SOLES"));
-  $pdf->addCadreTVAs("---" . $con_letra);
+
+  $num_total = $numero_a_letra->toMoney( $rspta['data']['venta']['total'], 2, 'soles' );  #echo $num_total; die;
+  $decimales_mun = explode('.', $rspta['data']['venta']['total']); #echo $decimales_mun[1]; die;
+  $centimos = (isset($decimales_mun[1])? $decimales_mun[1] : '00' ) . '/100 CÉNTIMOS';
+  $con_letra = strtoupper( utf8_decode($num_total .' '. $centimos) );
+  $pdf->addCadreTVAs("- " . $con_letra);
+
 
   //Mostramos el impuesto
   $pdf->addTVAs(number_format($rspta['data']['venta']['subtotal'], 2, '.',','), number_format($rspta['data']['venta']['igv'], 2, '.',','), number_format($rspta['data']['venta']['total'], 2, '.',','), "S/ ");
@@ -97,5 +102,5 @@ function number_words($valor,$desc_moneda, $sep, $desc_decimal) {
   $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
   return $f->format(1432);
 }
-ob_end_flush();
+
 ?>

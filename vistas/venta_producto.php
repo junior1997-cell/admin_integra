@@ -261,7 +261,9 @@
                                  
                                 <div class="row" id="cargando-1-fomulario">
                                   <!-- id compra_producto  -->
-                                  <input type="hidden" name="idventa_producto" id="idventa_producto" /> 
+                                  <input type="hidden" name="idventa_producto" id="idventa_producto" />
+                                  <!-- Grupos de -->
+                                  <div style="display: none !important;" id="add-productos-eliminados"> </div>
 
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-5">

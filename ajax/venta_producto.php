@@ -15,7 +15,7 @@ if (!isset($_SESSION["nombre"])) {
     require_once "../modelos/Persona.php";
     require_once "../modelos/Producto.php";
 
-    $venta_producto = new Venta_producto();
+    $venta_producto = new Venta_producto($_SESSION['idusuario']);
     $proveedor = new Persona();
     $productos = new Producto();      
     
@@ -160,19 +160,19 @@ if (!isset($_SESSION["nombre"])) {
     
       break;      
       
-      case 'anular':
-        $rspta = $venta_producto->desactivar($_GET["id_tabla"]);
-    
-        echo json_encode($rspta, true);
-    
+      case 'papelera_venta':
+        $rspta = $venta_producto->desactivar($_GET["id_tabla"]);    
+        echo json_encode($rspta, true);    
       break;
     
-      case 'eliminar_compra':
+      case 'eliminar_venta':
+        $rspta = $venta_producto->eliminar($_GET["id_tabla"]);    
+        echo json_encode($rspta, true);    
+      break;
 
-        $rspta = $venta_producto->eliminar($_GET["id_tabla"]);
-    
-        echo json_encode($rspta, true);
-    
+      case 'recover_stock_producto':
+        $rspta = $venta_producto->recover_stock_producto($_POST["idproducto"], $_POST["stock"]);    
+        echo json_encode($rspta, true);    
       break;
     
       case 'tbla_principal':
@@ -202,7 +202,7 @@ if (!isset($_SESSION["nombre"])) {
               "0" => $cont,
               "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_ventas(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
                     ' <button class="btn btn-warning btn-sm" onclick="mostrar_venta(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idventa_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
+                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_venta(' . $reg['idventa_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
                  
               "2" => $reg['fecha_venta'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
