@@ -10,34 +10,31 @@ class Otro_ingreso
   }
   //$idotro_ingreso,$idproyecto,$fecha_viaje,$tipo_viajero,$tipo_ruta,$cantidad,$precio_unitario,$precio_parcial,$ruta,$descripcion,$foto2
   //Implementamos un método para insertar registros
-  public function insertar($idproyecto, $idproveedor, $fecha_i, $precio_parcial, $subtotal, $igv,$val_igv,$tipo_gravada, $descripcion, $forma_pago, $tipo_comprobante, $nro_comprobante, $comprobante, $ruc, $razon_social, $direccion, $glosa)
+  public function insertar($idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $comprobante)
   {
-    $sql = "INSERT INTO otro_ingreso (idproyecto, idproveedor, tipo_comprobante, numero_comprobante, forma_de_pago, fecha_i, costo_parcial,subtotal,igv,val_igv,tipo_gravada,descripcion, comprobante,ruc,razon_social,direccion,glosa) 
-		VALUES ('$idproyecto', '$idproveedor', '$tipo_comprobante', '$nro_comprobante', '$forma_pago', '$fecha_i', '$precio_parcial', '$subtotal', '$igv', '$val_igv', '$tipo_gravada', '$descripcion', '$comprobante', '$ruc', '$razon_social', '$direccion', '$glosa')";
+
+    $sql = "INSERT INTO otro_ingreso( idpersona, fecha_ingreso, tipo_comprobante, numero_comprobante, forma_de_pago, precio_sin_igv, precio_igv, precio_con_igv, tipo_gravada, descripcion, comprobante) 
+    VALUES ('$idpersona', '$fecha_i', '$tipo_comprobante', '$nro_comprobante', '$forma_pago', '$subtotal', '$igv', '$precio_parcial', '$tipo_gravada', '$descripcion', '$comprobante')";
     return ejecutarConsulta($sql);
+
   }
 
   //Implementamos un método para editar registros
-  public function editar($idotro_ingreso, $idproyecto, $idproveedor, $fecha_i, $precio_parcial, $subtotal, $igv,$val_igv,$tipo_gravada, $descripcion, $forma_pago, $tipo_comprobante, $nro_comprobante, $comprobante, $ruc, $razon_social, $direccion, $glosa)
+  public function editar($idotro_ingreso,$idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion,$comprobante)
   {
-    $sql = "UPDATE otro_ingreso SET 
-		idproyecto='$idproyecto',
-    idproveedor='$idproveedor',
-		fecha_i='$fecha_i',
-		costo_parcial='$precio_parcial',
-		subtotal='$subtotal',
-		igv='$igv',
-		val_igv='$val_igv',
-		tipo_gravada='$tipo_gravada',
-		descripcion='$descripcion',
-		forma_de_pago='$forma_pago',
-		tipo_comprobante='$tipo_comprobante',
-		numero_comprobante='$nro_comprobante',
-		comprobante='$comprobante',
-    ruc='$ruc',
-    razon_social='$razon_social',
-    direccion='$direccion',
-    glosa='$glosa'
+
+    $sql = "UPDATE otro_ingreso SET
+    idpersona='$idpersona',
+    fecha_ingreso='$fecha_i',
+    tipo_comprobante='$tipo_comprobante',
+    numero_comprobante='$nro_comprobante',
+    forma_de_pago='$forma_pago',
+    precio_sin_igv='$subtotal',
+    precio_igv='$igv',
+    precio_con_igv='$precio_parcial',
+    tipo_gravada='$tipo_gravada',
+    descripcion='$descripcion',
+    comprobante='$comprobante'
 
 		WHERE idotro_ingreso='$idotro_ingreso'";
     return ejecutarConsulta($sql);
@@ -46,12 +43,6 @@ class Otro_ingreso
   //Implementamos un método para desactivar categorías
   public function desactivar($idotro_ingreso) {
     $sql = "UPDATE otro_ingreso SET estado='0' WHERE idotro_ingreso ='$idotro_ingreso'";
-    return ejecutarConsulta($sql);
-  }
-
-  //Implementamos un método para activar categorías
-  public function activar($idotro_ingreso) {
-    $sql = "UPDATE otro_ingreso SET estado='1' WHERE idotro_ingreso ='$idotro_ingreso'";
     return ejecutarConsulta($sql);
   }
 
@@ -72,14 +63,21 @@ class Otro_ingreso
   }
 
   //Implementar un método para listar los registros
-  public function tbla_principal($idproyecto) {
-    $sql = "SELECT*FROM otro_ingreso WHERE idproyecto='$idproyecto' AND estado_delete='1' AND estado='1' ORDER BY idotro_ingreso DESC";
+  public function tbla_principal() {
+    $sql = "SELECT oi.idotro_ingreso, oi.idpersona, oi.fecha_ingreso, oi.tipo_comprobante, oi.numero_comprobante, oi.forma_de_pago, oi.precio_sin_igv, 
+    oi.precio_igv, oi.precio_con_igv, oi.tipo_gravada, oi.descripcion, oi.comprobante, p.nombres,p.numero_documento,p.tipo_documento, p.direccion
+    FROM otro_ingreso as oi, persona as p 
+    WHERE oi.estado=1 AND oi.estado_delete=1 AND oi.idpersona=p.idpersona";
     return ejecutarConsulta($sql);
+
   }
 
+
+
+
   //total
-  public function total($idproyecto) {
-    $sql = "SELECT SUM(costo_parcial) as precio_parcial FROM otro_ingreso WHERE idproyecto='$idproyecto' AND estado='1' AND estado_delete='1'";
+  public function total() {
+    $sql = "SELECT SUM(precio_con_igv) as precio_parcial FROM otro_ingreso WHERE estado='1' AND estado_delete='1'";
     return ejecutarConsultaSimpleFila($sql);
   }
 
@@ -87,6 +85,13 @@ class Otro_ingreso
   public function ficha_tec($idotro_ingreso) {
     $sql = "SELECT comprobante FROM otro_ingreso WHERE idotro_ingreso='$idotro_ingreso'";
     return ejecutarConsulta($sql);
+  }
+
+  public function selecct_produc_o_provee()
+  {
+    $sql = "SELECT p.idpersona, p.idtipo_persona, p.nombres, p.numero_documento, tp.nombre as tipo FROM persona as p, tipo_persona as tp 
+    WHERE p.idtipo_persona = tp.idtipo_persona AND p.idtipo_persona BETWEEN '2' and '3'  AND p.estado_delete =1 AND p.estado=1;";
+    return ejecutarConsultaArray($sql);
   }
 
 }

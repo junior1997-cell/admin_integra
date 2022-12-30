@@ -9,24 +9,17 @@ function init() {
 
   $("#lOtroIngreso").addClass("active bg-green");
 
-  $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
-
   tbla_principal();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor", '#idproveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_prov', null);
+  lista_select2("../ajax/otro_ingreso.php?op=selecct_produc_o_provee", '#idpersona', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════ 
 
   $("#guardar_registro_proveedor").on("click", function (e) { $("#submit-form-proveedor").submit(); });
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - PROVERDOR  ══════════════════════════════════════
-
-  $("#banco_prov").select2({ templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
-
   // ══════════════════════════════════════ INITIALIZE SELECT2 - OTRO INGRESO  ══════════════════════════════════════
-  $("#idproveedor").select2({ theme: "bootstrap4", placeholder: "Selecione proveedor", allowClear: true,   });
+  $("#idpersona").select2({ theme: "bootstrap4", placeholder: "Selecione un proveedor o productor", allowClear: true,   });
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Seleccinar tipo comprobante", allowClear: true, });
 
@@ -38,14 +31,7 @@ function init() {
   $("[data-mask]").inputmask();
 }
 
-function templateBanco (state) {
-  //console.log(state);
-  if (!state.id) { return state.text; }
-  var baseUrl = state.title != '' ? `../dist/docs/banco/logo/${state.title}`: '../dist/docs/banco/logo/logo-sin-banco.svg'; 
-  var onerror = `onerror="this.src='../dist/docs/banco/logo/logo-sin-banco.svg';"`;
-  var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
-  return $state;
-};
+
 
 // abrimos el navegador de archivos
 $("#doc1_i").click(function() {  $('#doc1').trigger('click'); });
@@ -79,10 +65,9 @@ function limpiar_form() {
   $('#doc1_ver').html(`<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >`);
   $('#doc1_nombre').html("");
 
-  $("#idproveedor").val("null").trigger("change");
+  $("#idpersona").val("null").trigger("change");
   $("#tipo_comprobante").val("null").trigger("change");
   $("#forma_pago").val("null").trigger("change");
-  $("#glosa").val("null").trigger("change");
 
   $("#val_igv").val(""); 
   $("#tipo_gravada").val(""); 
@@ -109,7 +94,6 @@ function show_hide_form(flag) {
 
 //Función Listar
 function tbla_principal() {
-  var idproyecto = localStorage.getItem("nube_idproyecto");
   tabla = $("#tabla-otro-ingreso").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
@@ -118,7 +102,7 @@ function tbla_principal() {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/otro_ingreso.php?op=tbla_principal&idproyecto=" + idproyecto,
+      url: "../ajax/otro_ingreso.php?op=listar",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -146,19 +130,17 @@ function tbla_principal() {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
   }).DataTable();
+  total();
 
-  total(idproyecto);
 }
 
-function total(idproyecto) {
-   
+function total() {
   $("#total_monto").html(`<i class="fas fa-spinner fa-pulse"></i>`);
 
-  $.post("../ajax/otro_ingreso.php?op=total", { idproyecto: idproyecto }, function (data, status) {
+  $.post("../ajax/otro_ingreso.php?op=total",function (e, status) {
 
-    data = JSON.parse(data);  console.log(data);
-
-    $("#total_monto").html("S/ " + formato_miles(data.precio_parcial));
+    e = JSON.parse(e); console.log(e);
+    $("#total_monto").html("S/ " + formato_miles(e.data.precio_parcial));
   }).fail( function(e) { ver_errores(e); } );
 }
 
@@ -171,10 +153,6 @@ function comprob_factura() {
   if ($("#tipo_comprobante").select2("val") == "" || $("#tipo_comprobante").select2("val") == null) {
 
     $(".nro_comprobante").html("Núm. Comprobante");
-
-    //$(".div_ruc").hide(); $(".div_razon_social").hide();
-
-    //$("#ruc").val(""); $("#razon_social").val("");
 
     $("#val_igv").val(""); $("#tipo_gravada").val(""); 
 
@@ -192,9 +170,6 @@ function comprob_factura() {
 
       $(".nro_comprobante").html("Núm. de Operación");
 
-      //$(".div_ruc").hide(); $(".div_razon_social").hide();
-
-      //$("#ruc").val(""); $("#razon_social").val("");
 
       $("#val_igv").prop("readonly",true);
 
@@ -450,7 +425,7 @@ function guardar_y_editar_otros_ingresos(e) {
 
           Swal.fire("Correcto!", "El registro se guardo correctamente.", "success");
 
-          tabla.ajax.reload(null, false); total(localStorage.getItem("nube_idproyecto"));
+          tabla.ajax.reload(null, false); total();
 
           limpiar_form();    
           show_hide_form(1);
@@ -481,7 +456,7 @@ function mostrar(idotro_ingreso) {
     
     e = JSON.parse(e); console.log(e);    
 
-    $("#idproveedor").val(e.data.idproveedor).trigger("change");
+    $("#idpersona").val(e.data.idpersona).trigger("change");
     $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
     $("#forma_pago").val(e.data.forma_de_pago).trigger("change");
     $("#glosa").val(e.data.glosa).trigger("change");
@@ -629,48 +604,23 @@ function ver_datos(idotro_ingreso) {
 }
 
 //Función para desactivar registros
-function eliminar(idotro_ingreso) {
-  
-  Swal.fire({
+function eliminar(idotro_ingreso, nombre,numero_comprobante) {
 
-    title: "!Elija una opción¡",
-    html: "En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!",
-    icon: "warning",
-    showCancelButton: true,
-    showDenyButton: true,
-    confirmButtonColor: "#17a2b8",
-    denyButtonColor: "#d33",
-    cancelButtonColor: "#6c757d",    
-    confirmButtonText: `<i class="fas fa-times"></i> Papelera`,
-    denyButtonText: `<i class="fas fa-skull-crossbones"></i> Eliminar`,
-
-  }).then((result) => {
-
-    if (result.isConfirmed) {
-
-      //Desactivar
-      $.post("../ajax/otro_ingreso.php?op=desactivar", { idotro_ingreso: idotro_ingreso }, function (e) {
-        Swal.fire("♻️ Papelera! ♻️", "Tu registro ha sido reciclado.", "success");
-
-        tabla.ajax.reload(null, false);
-        total(localStorage.getItem("nube_idproyecto"));
-      }).fail( function(e) { ver_errores(e); } );
-
-    }else if (result.isDenied) {
-
-      // Eliminar
-      $.post("../ajax/otro_ingreso.php?op=eliminar", { idotro_ingreso: idotro_ingreso }, function (e) {
-        Swal.fire("Eliminado!", "Tu registro ha sido Eliminado.", "success");
-
-        tabla.ajax.reload(null, false);
-        total( localStorage.getItem("nube_idproyecto"));
-      }).fail( function(e) { ver_errores(e); } );
-
-    }
-
-  });
+  crud_eliminar_papelera(
+    "../ajax/otro_ingreso.php?op=desactivar",
+    "../ajax/otro_ingreso.php?op=eliminar", 
+    idotro_ingreso, 
+    "!Elija una opción¡", 
+    `<b class="text-danger"><del>${nombre} : ${numero_comprobante}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
+    function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
+    function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
+    function(){ tabla.ajax.reload(null, false),total(); },
+    false, 
+    false, 
+    false,
+    false
+  );
 }
-
 // :::::::::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::::::::::::::::::::::::::::
 //Función limpiar
 function limpiar_form_proveedor() {
@@ -683,7 +633,6 @@ function limpiar_form_proveedor() {
   $("#c_bancaria_prov").val("");
   $("#cci_prov").val("");
   $("#c_detracciones_prov").val("");
-  $("#banco_prov").val("").trigger("change");
   $("#titular_cuenta_prov").val("");
 
   // Limpiamos las validaciones
@@ -692,45 +641,6 @@ function limpiar_form_proveedor() {
   $(".error.invalid-feedback").remove();
 
   $(".tooltip").removeClass("show").addClass("hidde");
-}
-
-// damos formato a: Cta, CCI
-function formato_banco() {
-
-  if ($("#banco_prov").select2("val") == null || $("#banco_prov").select2("val") == "" || $("#banco_prov").select2("val") == "1" ) {
-
-    $("#c_bancaria_prov").prop("readonly", true);
-    $("#cci_prov").prop("readonly", true);
-    $("#c_detracciones_prov").prop("readonly", true);
-
-  } else {
-    
-    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-3").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');    
-
-    $.post("../ajax/ajax_general.php?op=formato_banco", { 'idbanco': $("#banco_prov").select2("val") }, function (e, status) {
-      
-      e = JSON.parse(e);  // console.log(e);
-
-      $(".chargue-format-1").html("Cuenta Bancaria");
-      $(".chargue-format-2").html("CCI");
-      $(".chargue-format-3").html("Cuenta Detracciones");
-
-      $("#c_bancaria_prov").prop("readonly", false);
-      $("#cci_prov").prop("readonly", false);
-      $("#c_detracciones_prov").prop("readonly", false);
-
-      var format_cta = decifrar_format_banco(e.data.formato_cta);
-      var format_cci = decifrar_format_banco(e.data.formato_cci);
-      var formato_detracciones = decifrar_format_banco(e.data.formato_detracciones);
-      // console.log(format_cta, formato_detracciones);
-
-      $("#c_bancaria_prov").inputmask(`${format_cta}`);
-      $("#cci_prov").inputmask(`${format_cci}`);
-      $("#c_detracciones_prov").inputmask(`${formato_detracciones}`);
-    }).fail( function(e) { ver_errores(e); } );
-  }
 }
 
 //guardar proveedor
@@ -758,7 +668,7 @@ function guardar_proveedor(e) {
           // toastr.success("proveedor registrado correctamente");
           Swal.fire("Correcto!", "Proveedor guardado correctamente.", "success");        
   
-          limpiar_form_proveedor();
+          limpiar_form_proveedor(); 
   
           $("#modal-agregar-proveedor").modal("hide");
   
@@ -792,13 +702,12 @@ $(function () {
   $("#forma_pago").on("change", function () { $(this).trigger("blur"); });
   $("#tipo_comprobante").on("change", function () { $(this).trigger("blur"); });
   $("#glosa").on("change", function () { $(this).trigger("blur"); });
-  $("#banco_prov").on('change', function() { $(this).trigger('blur'); });
-  $("#idproveedor").on('change', function() { $(this).trigger('blur'); });
+  $("#idpersona").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-otro-ingreso").validate({
     ignore: '.select2-input, .select2-focusser',
     rules: {
-      idproveedor:{ required: true },
+      idpersona:{ required: true },
       forma_pago: { required: true },
       tipo_comprobante: { required: true },
       fecha_i: { required: true },
@@ -808,7 +717,7 @@ $(function () {
       // terms: { required: true },
     },
     messages: {
-      idproveedor:{ required: "Campo requerido", },
+      idpersona:{ required: "Campo requerido", },
       forma_pago: { required: "Campo requerido", },
       tipo_comprobante: { required: "Campo requerido", },
       fecha_i: { required: "Campo requerido", },
@@ -849,8 +758,7 @@ $(function () {
       telefono_prov:        { minlength: 8 },
       c_bancaria_prov:      { minlength: 6,  },
       cci_prov:             { minlength: 6,  },
-      c_detracciones_prov:  { minlength: 6,  },      
-      banco_prov:           { required: true },
+      c_detracciones_prov:  { minlength: 6,  },  
       titular_cuenta_prov:  { minlength: 4 },
     },
     messages: {
@@ -861,8 +769,7 @@ $(function () {
       telefono_prov:      { minlength: "MÍNIMO 9 caracteres.", },
       c_bancaria_prov:    { minlength: "MÍNIMO 6 caracteres.", },
       cci_prov:           { minlength: "MÍNIMO 6 caracteres.",  },
-      c_detracciones_prov:{ minlength: "MÍNIMO 6 caracteres.", },      
-      banco_prov:         { required: "Campo requerido",  },
+      c_detracciones_prov:{ minlength: "MÍNIMO 6 caracteres.", },  
       titular_cuenta_prov:{ minlength: 'MÍNIMO 4 caracteres.' },
     },
 
@@ -891,8 +798,7 @@ $(function () {
   $("#forma_pago").rules("add", { required: true, messages: { required: "Campo requerido" } });
   $("#tipo_comprobante").rules("add", { required: true, messages: { required: "Campo requerido" } });
   $("#glosa").rules("add", { required: true, messages: { required: "Campo requerido" } });
-  $("#banco_prov").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#idproveedor").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#idpersona").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
 });
 
