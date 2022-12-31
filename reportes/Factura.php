@@ -136,12 +136,16 @@ class PDF_Invoice extends FPDF
     $y1 = 8;
     //Positionnement en bas
     $this->Image($logo, 5, 3, 25, 25, $ext_logo);
+
     $this->SetXY($x1, $y1);
-    $this->SetFont('Arial', 'B', 12);
+    $this->SetFont('Arial', 'B', 14);
+    $this->SetTextColor(0, 100, 0);
     $length = $this->GetStringWidth($nom);
     $this->Cell($length, 2, $nom);
+
     $this->SetXY($x1, $y1 + 4);
     $this->SetFont('Arial', '', 10);
+    $this->SetTextColor(0, 0, 0);
     $length = $this->GetStringWidth($adresse);
     //Coordonn�es de la soci�t�
     $lignes = $this->sizeOfText($adresse, $length);
@@ -172,7 +176,7 @@ class PDF_Invoice extends FPDF
     }
 
     $this->SetLineWidth(0.1);
-    $this->SetFillColor(249, 129, 88);
+    $this->SetFillColor(0, 128, 0);
     $this->RoundedRect($r1, $y1, $r2 - $r1, $y2, 2.5, 'DF');
     $this->SetXY($r1 + 1, $y1 + 2);
     $this->Cell($r2 - $r1 - 1, 5, $texte, 0, 0, "C");
@@ -203,32 +207,15 @@ class PDF_Invoice extends FPDF
     $this->Line($r1, $mid, $r2, $mid);
     $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 3);
     $this->SetFont("Arial", "B", 10);
-    $this->Cell(10, 5, "Fecha", 0, 0, "C");
+    $this->Cell(10, 3, "FECHA", 0, 0, "C");
     $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 9);
     $this->SetFont("Arial", "B", 15);
-    $this->Cell(10, 5, $date, 0, 0, "C");
+    $this->Cell(10, 8, $date, 0, 0, "C");
   }
 
-  function addClient($ref)
+  function addPageNumber($ref)
   {
     $r1 = $this->w - 31;
-    $r2 = $r1 + 19;
-    $y1 = 17;
-    $y2 = $y1;
-    $mid = $y1 + $y2 / 2;
-    $this->RoundedRect($r1, $y1, $r2 - $r1, $y2, 3.5, 'D');
-    $this->Line($r1, $mid, $r2, $mid);
-    $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 3);
-    $this->SetFont("Arial", "B", 10);
-    $this->Cell(10, 5, "CLIENT", 0, 0, "C");
-    $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 9);
-    $this->SetFont("Arial", "", 10);
-    $this->Cell(10, 5, $ref, 0, 0, "C");
-  }
-
-  function addPageNumber($page)
-  {
-    $r1 = $this->w - 80;
     $r2 = $r1 + 19;
     $y1 = 17;
     $y2 = $y1;
@@ -240,29 +227,76 @@ class PDF_Invoice extends FPDF
     $this->Cell(10, 5, "PAGE", 0, 0, "C");
     $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 9);
     $this->SetFont("Arial", "", 10);
-    $this->Cell(10, 5, $page, 0, 0, "C");
+    $this->Cell(10, 5, $ref, 0, 0, "C");
+  }
+
+  function addClient($page)
+  {
+    $r1 = $this->w - 80;
+    $r2 = $r1 + 19;
+    $y1 = 17;
+    $y2 = $y1;
+    $mid = $y1 + $y2 / 2;
+    $this->RoundedRect($r1, $y1, $r2 - $r1, $y2, 3.5, 'D');
+    $this->Line($r1, $mid, $r2, $mid);
+    $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 3);
+    $this->SetFont("Arial", "B", 10);
+    $this->Cell(10, 3, "CLIENT", 0, 0, "C");
+    $this->SetXY($r1 + ($r2 - $r1) / 2 - 5, $y1 + 9);
+    $this->SetFont("Arial", "", 10);
+    $this->Cell(10, 8, $page, 0, 0, "C");
   }
 
   // Client address
-  function addClientAdresse($cliente, $domicilio, $num_documento, $email, $telefono)
+  function addClientAdresse($cliente, $domicilio, $tipo_doc, $num_doc, $email, $telefono)
   {
     $r1 = $this->w - 180;
     $r2 = $r1 + 68;
     $y1 = 40;
+
     $this->SetXY($r1, $y1);
     $this->SetFont("Arial", "B", 10);
     $this->MultiCell(60, 4, "CLIENTE");
+
     $this->SetXY($r1, $y1 + 5);
-    $this->SetFont("Arial", "", 10);
+    $this->SetFont("Arial", "", 11);
     $this->MultiCell(150, 4, $cliente);
+
+    // Tipo y num doc.
     $this->SetXY($r1, $y1 + 10);
-    $this->MultiCell(150, 4, $domicilio);
+    $this->SetFont("Arial", "B", 10);
+    $this->MultiCell(150, 4, $tipo_doc . ': ' );
+
+    $this->SetXY($r1 + 8, $y1 + 10);
+    $this->SetFont("Arial", "", 10);
+    $this->MultiCell(150, 4, $num_doc );
+
+    // Celular
     $this->SetXY($r1, $y1 + 15);
-    $this->MultiCell(150, 4, $num_documento);
-    $this->SetXY($r1, $y1 + 20);
-    $this->MultiCell(150, 4, $email);
-    $this->SetXY($r1, $y1 + 25);
-    $this->MultiCell(150, 4, $telefono);
+    $this->SetFont("Arial", "B", 10);
+    $this->MultiCell(150, 4,  'Celular: ' );
+
+    $this->SetXY($r1 + 14, $y1 + 15);
+    $this->SetFont("Arial", "", 10);
+    $this->MultiCell(150, 4, $telefono );
+    
+    // Email
+    $this->SetXY($r1 + 67, $y1 + 10);
+    $this->SetFont("Arial", "B", 10);
+    $this->MultiCell(150, 4,  utf8_decode('E-mail: ') );
+
+    $this->SetXY($r1 + 80, $y1 + 10);
+    $this->SetFont("Arial", "", 10);
+    $this->MultiCell(150, 4,  $email );
+    
+    // Direccion
+    $this->SetXY($r1 + 67, $y1 + 15);
+    $this->SetFont("Arial", "B", 10);
+    $this->MultiCell(150, 4,  utf8_decode('Dir.: ') );
+
+    $this->SetXY($r1 + 80 , $y1 + 15);
+    $this->SetFont("Arial", "", 10);
+    $this->MultiCell(150, 4, $domicilio  );
   }
 
   // Mode of payment
@@ -325,10 +359,15 @@ class PDF_Invoice extends FPDF
     $length = $this->GetStringWidth(utf8_decode("Descripción: ") . $ref);
     $r1 = 10;
     $r2 = $r1 + $length;
-    $y1 = 72;
-    $y2 = $y1 + 5;
+    $y1 = 67;
+    $y2 = $y1 + 1;
+    $this->SetFont("Arial", "B", 10);
     $this->SetXY($r1, $y1);
-    $this->Cell($length, 4, utf8_decode("Descripción: ") . $ref);
+    $this->Cell($length, 4, utf8_decode("Descripción: ") );
+
+    $this->SetFont("Arial", "", 10);
+    $this->SetXY($r1 + 23, $y1);
+    $this->Cell($length, 4, $ref);
   }
 
   function addCols($tab)
@@ -337,7 +376,7 @@ class PDF_Invoice extends FPDF
 
     $r1 = 10;
     $r2 = $this->w - $r1 * 2;
-    $y1 = 79;
+    $y1 = 75;
     $y2 = $this->h - 50 - $y1;
     $this->SetXY($r1, $y1);
     $this->Rect($r1, $y1, $r2, $y2, "D");
@@ -347,7 +386,7 @@ class PDF_Invoice extends FPDF
     foreach ($tab as $key => $value) {
       $this->SetFont("Arial", "B", 9);
       $this->SetXY($colX, $y1 + 2);
-      $this->Cell($value, 1, $key, 0, 0, "C");
+      $this->Cell($value, 3, $key, 0, 0, "C");
       $colX += $value;
       $this->Line($colX, $y1, $colX, $y1 + $y2);      
     }
@@ -560,8 +599,9 @@ class PDF_Invoice extends FPDF
   // call this method first
   function temporaire($texte)
   {
-    $this->SetFont('Arial', 'B', 50);
-    $this->SetTextColor(203, 203, 203);
+    $this->SetFont('Arial', 'B', 70);
+    // $this->SetTextColor(203, 203, 203);
+    $this->SetTextColor(190, 238, 193);
     $this->Rotate(45, 55, 190);
     $this->Text(55, 190, $texte);
     $this->Rotate(0);

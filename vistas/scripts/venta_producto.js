@@ -30,13 +30,14 @@ function init() {
 
   $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
+  listarmateriales();
+
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#idcliente', null);
   lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#filtro_proveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
   lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
-
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
@@ -171,6 +172,7 @@ function table_show_hide(flag) {
 
     limpiar_form_compra();
     limpiar_form_proveedor();
+    listarmateriales();
   //formulario venta 
   } else if ( flag == 2 ) {
     $("#btn-regresar").show();
@@ -181,10 +183,8 @@ function table_show_hide(flag) {
     $("#div-tabla-venta").hide();
     $("#div-tabla-factura-por-proveedor").hide();
     $("#div-form-agregar-ventas").show();  
-    $("#div-tabla-pago-ventas").hide();
-  
-    array_class_trabajador = [];
-    listarmateriales();
+    $("#div-tabla-pago-ventas").hide();  
+    array_class_trabajador = [];   
   
   // tabla facturas por proveedor
   } else if ( flag == 3 ) {
@@ -901,6 +901,139 @@ function mostrar_venta(idventa_producto) {
             $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
             $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
           });
+
+          cont++;
+          evaluar();
+        });
+
+        modificarSubtotales();
+      } else {  
+        toastr_error("Sin productos!!","Este registro no tiene productos para mostrar", 700);     
+      }
+
+      $("#cargando-1-fomulario").show();
+      $("#cargando-2-fomulario").hide();
+      
+    } else {
+      ver_errores(e);
+    }
+    
+  }).fail( function(e) { ver_errores(e); } );
+}
+
+//mostramos para editar el datalle del comprobante de la ventas
+function copiar_venta(idventa_producto) {
+
+  $("#cargando-1-fomulario").hide();
+  $("#cargando-2-fomulario").show();
+
+  limpiar_form_compra();
+  array_class_trabajador = [];
+
+  cont = 0;
+  detalles = 0;
+  table_show_hide(2);
+
+  $.post("../ajax/venta_producto.php?op=ver_venta_editar", { idventa_producto: idventa_producto }, function (e, status) {
+    
+    e = JSON.parse(e); //console.log(e);
+
+    if (e.status == true) {
+      
+      if (e.data.venta.tipo_comprobante == "Factura") {
+        $(".content-igv").show();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass("col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+        $(".content-serie-comprobante").show();
+      } else if (e.data.venta.tipo_comprobante == "Boleta" || e.data.venta.tipo_comprobante == "Nota de venta") {
+        $(".content-serie-comprobante").show();
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-4 col-lg-5").addClass("col-lg-5");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+      } else if (e.data.venta.tipo_comprobante == "Ninguno") {
+        $(".content-serie-comprobante").hide();
+        $(".content-serie-comprobante").val("");
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7").addClass("col-lg-8");
+      } else {
+        $(".content-serie-comprobante").show();
+        //$(".content-descripcion").removeClass("col-lg-7").addClass("col-lg-4");
+      }
+
+      // $("#idventa_producto").val(e.data.venta.idventa_producto); // esto no se usa cuando duplicams la factura
+      $("#idcliente").val(e.data.venta.idpersona).trigger("change");
+      $("#fecha_venta").val(e.data.venta.fecha_venta);
+      $("#tipo_comprobante").val(e.data.venta.tipo_comprobante).trigger("change");
+      $("#serie_comprobante").val(e.data.venta.serie_comprobante).trigger("change");
+      $("#val_igv").val(e.data.venta.val_igv);
+      $("#descripcion").val(e.data.venta.descripcion);
+
+      $("#metodo_pago").val(e.data.venta.metodo_pago).trigger("change");
+      $("#fecha_proximo_pago").val(e.data.venta.fecha_proximo_pago);
+
+      if (e.data.detalle) {
+
+        e.data.detalle.forEach((val, index) => {
+
+          var img = "";
+
+          if (val.imagen == "" || val.imagen == null) {
+            img = `../dist/docs/producto/img_perfil/producto-sin-foto.svg`;
+          } else {
+            img = `../dist/docs/producto/img_perfil/${val.imagen}`;
+          }    
+
+          var fila = `
+          <tr class="filas" id="fila${cont}">
+            <td>
+              <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${val.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
+              <button type="button" class="btn btn-danger btn-sm btn-file-delete-${cont}" onclick="recover_stock(${val.idproducto}, ${cont}, 0, 'recover_remove_new');"><i class="fas fa-times"></i></button></td>
+            </td>
+            <td>
+              <input type="hidden" name="idproducto[]" value="${val.idproducto}">
+              <div class="user-block text-nowrap">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img}', '${encodeHtml(val.nombre)}')">
+                <span class="username"><p class="mb-0 nombre_producto_${cont}" >${val.nombre}</p></span>
+                <span class="description categoria_${cont}"><b>Categoría: </b>${val.categoria}</span>
+              </div>
+            </td>
+            <td> <span class="unidad_medida_${cont}">${val.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${val.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${val.categoria}"></td>            
+            <td class="py-1 form-group">
+              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
+              <input type="hidden" class="" name="cantidad_old[]" id="cantidad_old_${cont}" value="${val.cantidad}">
+            </td>
+            <td class="hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${val.precio_sin_igv}" readonly ></td>
+            <td class="hidden"><input type="number" class="w-135px input-no-border precio_igv_${cont}" name="precio_igv[]" id="precio_igv[]" value="${val.igv}" readonly ></td>             
+            <td class="py-1 form-group">
+              <input type="number" class="w-135px form-control valid_precio_con_igv" name="valid_precio_con_igv[${cont}]" id="valid_precio_con_igv_${cont}" value="${parseFloat(val.precio_con_igv).toFixed(2)}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#precio_con_igv_${cont}', this);">
+              <input type="hidden" class="precio_con_igv_${cont}" name="precio_con_igv[]" id="precio_con_igv_${cont}" value="${parseFloat(val.precio_con_igv).toFixed(2)}" onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
+            </td>
+            <td class="py-1 form-group">
+              <input type="number" class="w-135px form-control descuento_${cont}" name="descuento[]" value="${val.descuento}" min="0.00" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()">
+            </td>
+            <td class="text-right"><span class="text-right subtotal_producto_${cont}" name="subtotal_producto" id="subtotal_producto">0.00</span></td>
+            <td><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
+          </tr>`;
+
+          detalles = detalles + 1;
+
+          $("#detalles").append(fila);
+
+          array_class_trabajador.push({ id_cont: cont });
+
+          // reglas de validación     
+          $('.valid_precio_con_igv').each(function(e) { 
+            $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
+            $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
+          });
+          $('.valid_cantidad').each(function(e) { 
+            $(this).rules('add', { required: true, messages: { required: 'Campo requerido' } }); 
+            $(this).rules('add', { min:0.01, messages: { min:"Mínimo 0.01" } }); 
+          });
+
+          update_stock(val.idproducto, cont);
 
           cont++;
           evaluar();
@@ -1968,16 +2101,34 @@ function recover_stock(id, count, cantidad_entrante, type_recover = false) {
     eliminarDetalle(id, count);
 
   } else if(type_recover == 'recover_remove_edit') { /* -- recuperamos cuando EDITAMOS una nueva venta -- */ 
+    //  esta funcioalidad queda pendiente ---------
     
-    $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');    
-    $.post(`../ajax/venta_producto.php?op=recover_stock_producto`, {'idproducto': id, 'stock': cant_old },function (e, textStatus, jqXHR) {
-      e = JSON.parse(e);  console.log(e);  
-      if (e.status == true) {        
-        $(`#table_stock_${id}`).html( formato_miles(stock_actual) );        
-        eliminarDetalle(id, count);
-      } else {
-        ver_errores(e);
+    $(`.btn-file-delete-${count}`).html(`<i class="fas fa-spinner fa-pulse"></i>`).addClass('disabled');     
+    $(`#table_stock_${id}`).html( formato_miles(stock_actual) );    
+    $(`#add-productos-eliminados`).append(`<input name="idproducto_recover[] value="" /><input name="stock_recover[] value="" />`);    
+    eliminarDetalle(id, count);
+     
+  }
+}
+
+function autoincrement_comprobante(data) {
+  var comprobante = $(data).select2('val');  
+
+  if (comprobante == null || comprobante == '' ) {
+    $('#serie_comprobante').val("");
+  } else {
+    
+    $.post(`../ajax/venta_producto.php?op=autoincrement_comprobante`, function (e, textStatus, jqXHR) {
+      e = JSON.parse(e); //console.log(e);
+
+      if (comprobante == 'Boleta') {
+        $('#serie_comprobante').val(`B-${e.data.venta_producto_b}`);
+      } else if (comprobante == 'Factura'){
+        $('#serie_comprobante').val(`F-${e.data.venta_producto_f}`);
+      } else if (comprobante == 'Nota de venta'){
+        $('#serie_comprobante').val(`NV-${e.data.venta_producto_nv}`);
       }
-    }).fail( function(e) { ver_errores(e); } );    
+      
+    },);
   }
 }
