@@ -72,6 +72,7 @@
                                 <tr>
                                   <th class="text-center">#</th>
                                   <th class="">Acciones</th>
+                                  <th class="">Persona</th>
                                   <th data-toggle="tooltip" data-original-title="Forma Pago">Forma P.</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comprob</th>
                                   <th>Fecha</th>
@@ -80,7 +81,6 @@
                                   <th>Monto Total</th>
                                   <th>Descripción</th>
                                   <th data-toggle="tooltip" data-original-title="Comprobante">Comprob</th>
-                                  <th>Estado</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -88,6 +88,7 @@
                                 <tr>
                                   <th class="text-center">#</th>
                                   <th class="">Acciones</th>
+                                  <th class="">Persona</th>
                                   <th data-toggle="tooltip" data-original-title="Forma Pago">Forma P.</th>
                                   <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comprob</th>
                                   <th>Fecha</th>
@@ -96,7 +97,6 @@
                                   <th class="text-nowrap text-right" id="total_monto"><i class="fas fa-spinner fa-pulse"></i></th>
                                   <th>Descripción</th>
                                   <th data-toggle="tooltip" data-original-title="Comprobante">Comprob</th>
-                                  <th>Estado</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -108,25 +108,16 @@
                             <form id="form-otro-ingreso" name="form-otro-ingreso" method="POST">
                               <div class="card-body">
                                 <div class="row" id="cargando-1-fomulario">
-                                  <!-- id proyecto -->
-                                  <input type="hidden" name="idproyecto" id="idproyecto" />
                                   <!-- id hospedaje -->
                                   <input type="hidden" name="idotro_ingreso" id="idotro_ingreso" />
 
                                   <!--Proveedor-->
                                    
-
                                   <div class="col-sm-12 col-md-9 col-lg-7 col-xl-7">
                                     <div class="form-group">
-                                      <label for="idproveedor">Proveedor <sup class="text-danger">*</sup></label>
+                                      <label for="idpersona">Proveedor <sup class="text-danger">*</sup></label>
                                       <!-- <div class="input-group"> -->
-                                        <select name="idproveedor" id="idproveedor" class="form-control select2" placeholder="Seleccinar un proveedor"> </select>
-                                        <!-- <div class="input-group-append " data-toggle="modal" href="#modal-agregar-proveedor"  onclick="limpiar_form_proveedor();">
-                                          <span class="input-group-text bg-success" data-toggle="tooltip" data-original-title="Agregar nuevo proveedor" style="cursor: pointer;">
-                                            <i class="fas fa-user-plus"></i>
-                                          </span>
-                                        </div>
-                                      </div> -->
+                                        <select name="idpersona" id="idpersona" class="form-control select2" placeholder="Seleccinar un proveedor"> </select>
                                     </div>
                                   </div>  
 

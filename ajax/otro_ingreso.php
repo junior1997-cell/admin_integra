@@ -11,17 +11,17 @@
 
     if ($_SESSION['otro_gasto'] == 1) {
 
-      require_once "../modelos/Otro_gasto.php";
+      require_once "../modelos/Otro_ingreso.php";
 
-      $otro_gasto = new Otro_gasto();
+      $otro_ingreso = new Otro_ingreso();
 
             
       date_default_timezone_set('America/Lima');
       $date_now = date("d-m-Y h.i.s A");   
       
-      $idproyecto = isset($_POST["idproyecto"]) ? limpiarCadena($_POST["idproyecto"]) : "";
-      $idotro_gasto = isset($_POST["idotro_gasto"]) ? limpiarCadena($_POST["idotro_gasto"]) : "";      
-      $fecha_g = isset($_POST["fecha_g"]) ? limpiarCadena($_POST["fecha_g"]) : "";
+      $idotro_ingreso = isset($_POST["idotro_ingreso"]) ? limpiarCadena($_POST["idotro_ingreso"]) : "";      
+      $idpersona = isset($_POST["idpersona"]) ? limpiarCadena($_POST["idpersona"]) : "";  
+      $fecha_i = isset($_POST["fecha_i"]) ? limpiarCadena($_POST["fecha_i"]) : "";
       $forma_pago = isset($_POST["forma_pago"]) ? limpiarCadena($_POST["forma_pago"]) : "";
       $tipo_comprobante = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";
       $nro_comprobante = isset($_POST["nro_comprobante"]) ? limpiarCadena($_POST["nro_comprobante"]) : "";
@@ -39,9 +39,9 @@
       $glosa = isset($_POST["glosa"]) ? limpiarCadena($_POST["glosa"]) : "";
 
       $foto2 = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
-      
+      //$idotro_ingreso, $idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $ruc, $razon_social, $direccion, $glosa, $foto2
       switch ($_GET["op"]) {
-        case 'guardaryeditar':
+        case 'guardar_y_editar_otros_ingresos':
           // Comprobante
           if (!file_exists($_FILES['doc1']['tmp_name']) || !is_uploaded_file($_FILES['doc1']['tmp_name'])) {
       
@@ -60,9 +60,9 @@
             move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/otro_gasto/comprobante/" . $comprobante);
           }
       
-          if (empty($idotro_gasto)) {
+          if (empty($idotro_ingreso)) {
             //var_dump($idproyecto,$idproveedor);
-            $rspta = $otro_gasto->insertar($idproyecto, $fecha_g, $precio_parcial, $subtotal, $igv,$val_igv,$tipo_gravada, $descripcion, $forma_pago, $tipo_comprobante, $nro_comprobante, $comprobante, $ruc, $razon_social, $direccion, $glosa);
+            $rspta = $otro_ingreso->insertar($idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $comprobante);
             
             echo json_encode($rspta,true);
       
@@ -70,7 +70,7 @@
             //validamos si existe comprobante para eliminarlo
             if ($flat_ficha1 == true) {
       
-              $datos_ficha1 = $otro_gasto->ficha_tec($idotro_gasto);
+              $datos_ficha1 = $otro_ingreso->ficha_tec($idotro_ingreso);
       
               $ficha1_ant = $datos_ficha1['data']->fetch_object()->comprobante;
       
@@ -80,15 +80,15 @@
               }
             }
       
-            $rspta = $otro_gasto->editar($idotro_gasto, $idproyecto, $fecha_g, $precio_parcial, $subtotal, $igv,$val_igv,$tipo_gravada, $descripcion, $forma_pago, $tipo_comprobante, $nro_comprobante, $comprobante, $ruc, $razon_social, $direccion,$glosa);
-            //var_dump($idotro_gasto,$idproveedor);
+            $rspta = $otro_ingreso->editar($idotro_ingreso,$idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $comprobante);
+            //var_dump($idotro_ingreso,$idproveedor);
             echo json_encode($rspta,true);
           }
         break;
       
         case 'desactivar':
       
-          $rspta = $otro_gasto->desactivar($_GET['id_tabla']);
+          $rspta = $otro_ingreso->desactivar($_GET['id_tabla']);
       
           echo json_encode($rspta,true);
       
@@ -96,7 +96,7 @@
 
         case 'eliminar':
       
-          $rspta = $otro_gasto->eliminar($_GET['id_tabla']);
+          $rspta = $otro_ingreso->eliminar($_GET['id_tabla']);
       
           echo json_encode($rspta,true);
       
@@ -104,7 +104,7 @@
       
         case 'mostrar':
       
-          $rspta = $otro_gasto->mostrar($idotro_gasto);
+          $rspta = $otro_ingreso->mostrar($idotro_ingreso);
           //Codificar el resultado utilizando json
           echo json_encode($rspta,true);
       
@@ -112,14 +112,14 @@
       
         case 'verdatos':
       
-          $rspta = $otro_gasto->mostrar($idotro_gasto);
+          $rspta = $otro_ingreso->mostrar($idotro_ingreso);
           //Codificar el resultado utilizando json
           echo json_encode($rspta,true);
       
         break;
       
         case 'listar':
-          $rspta = $otro_gasto->listar($_GET["idproyecto"],$_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
+          $rspta = $otro_ingreso->tbla_principal();
           //Vamos a declarar un array
           $data = [];
           $comprobante = '';
@@ -139,15 +139,15 @@
               $toltip = "<script> $(function () { $('[data-toggle=$tool]').tooltip(); }); </script>";
               $data[] = [
                 "0" => $cont++,
-                "1" => '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idotro_gasto . ')"><i class="fas fa-pencil-alt"></i></button>' .
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar(' . $reg->idotro_gasto . ',' . "'" . $reg->tipo_comprobante . "'" . ',' . "'" . (empty($reg->numero_comprobante) ? " - " : $reg->numero_comprobante). "'". ')"><i class="fas fa-skull-crossbones"></i> </button>'.
-                    ' <button class="btn btn-info btn-sm" onclick="ver_datos(' . $reg->idotro_gasto . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
+                "1" => '<button class="btn btn-warning btn-sm" onclick="mostrar(' . $reg->idotro_ingreso . ')"><i class="fas fa-pencil-alt"></i></button>' .
+                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar(' . $reg->idotro_ingreso . ',' . "'" . $reg->tipo_comprobante . "'" . ',' . "'" . (empty($reg->numero_comprobante) ? " - " : $reg->numero_comprobante). "'". ')"><i class="fas fa-skull-crossbones"></i> </button>'.
+                    ' <button class="btn btn-info btn-sm" onclick="ver_datos(' . $reg->idotro_ingreso . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
                 "2" =>'<div class="user-block">
                   <span class="username" style="margin-left: 0px !important;"> <p class="text-primary" style="margin-bottom: 0.2rem !important";>' .
-                  ((empty($reg->razon_social)) ? 'Sin Razón social' : $reg->razon_social ) .
+                  ((empty($reg->nombres)) ? 'Sin Razón social' : $reg->nombres ) .
                   '</p> </span>
                     <span class="description" style="margin-left: 0px !important;">N° ' .
-                  (empty($reg->ruc) ? "Sin Ruc" : $reg->ruc) .
+                  (empty($reg->numero_documento) ? "Sin Ruc" : $reg->numero_documento) .
                   '</span>         
                   </div>',
                 "3" => $reg->forma_de_pago,
@@ -159,19 +159,18 @@
                   (empty($reg->numero_comprobante) ? " - " : $reg->numero_comprobante) .
                   '</span>         
                   </div>',
-                "5" => $reg->fecha_g,
-                "6" =>'S/ '. number_format($reg->subtotal, 2, '.', ','),
-                "7" =>'S/ '. number_format($reg->igv, 2, '.', ','),
-                "8" =>'S/ '. number_format($reg->costo_parcial, 2, '.', ','),
+                "5" => $reg->fecha_ingreso,
+                "6" =>'S/ '. number_format($reg->precio_sin_igv, 2, '.', ','),
+                "7" =>'S/ '. number_format($reg->precio_igv, 2, '.', ','),
+                "8" =>'S/ '. number_format($reg->precio_con_igv, 2, '.', ','),
                 "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
                 "10" => $comprobante. $toltip,
-                "11"=>$reg->ruc,
-                "12"=>$reg->razon_social,
+                "11"=>$reg->numero_documento,
+                "12"=>$reg->nombres,
                 "13"=>$reg->direccion,
                 "14"=>$reg->tipo_comprobante,
                 "15"=>$reg->numero_comprobante,
-                "16"=>$reg->tipo_gravada,
-                "17"=>$reg->glosa,
+                "16"=>$reg->tipo_gravada
               ];
             }
             $results = [
@@ -189,21 +188,21 @@
       
         case 'total':
           // $idproyecto,$fecha_1,$fecha_2,$id_proveedor,$comprobante
-          $rspta = $otro_gasto->total($_POST['idproyecto'], $_POST['fecha_1'], $_POST['fecha_2'], $_POST['id_proveedor'], $_POST['comprobante']);
+          $rspta = $otro_ingreso->total();
           //Codificar el resultado utilizando json
           echo json_encode($rspta,true);
       
         break;
       
-        case 'selecct_provedor_og':
+        case 'selecct_produc_o_provee':
 
-          $rspta = $otro_gasto->selecct_provedor_og($_GET['idproyecto']); $cont = 1; $data = "";
+          $rspta = $otro_ingreso->selecct_produc_o_provee(); $cont = 1; $data = "";
 
           if ($rspta['status']) {
   
             foreach ($rspta['data'] as $key => $value) {  
 
-                $data .= '<option value=' .$value['ruc']. '>'.( !empty($value['razon_social']) ? $value['razon_social'].' - ' : '') .$value['ruc'].'</option>';
+                $data .= '<option value=' .$value['idpersona']. '>'.( !empty($value['nombres']) ?  $value['tipo'].' : '.$value['nombres'].' - ' : '') .$value['numero_documento'].'</option>';
     
             }
   
