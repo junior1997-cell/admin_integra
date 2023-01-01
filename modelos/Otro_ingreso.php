@@ -54,11 +54,10 @@ class Otro_ingreso
 
   //Implementar un método para mostrar los datos de un registro a modificar
   public function mostrar($idotro_ingreso) {
-    $sql = "SELECT oi.idotro_ingreso, oi.idproyecto, oi.idproveedor, oi.ruc, oi.razon_social, oi.direccion, oi.tipo_comprobante, 
-    oi.numero_comprobante, oi.forma_de_pago, oi.fecha_i, oi.subtotal, oi.igv, oi.costo_parcial, oi.descripcion, oi.glosa, oi.comprobante, 
-    oi.val_igv, oi.tipo_gravada, oi.estado, oi.estado_delete, oi.created_at, oi.updated_at, p.razon_social, p.tipo_documento, p.ruc
-    FROM otro_ingreso as oi, proveedor as p
-    WHERE oi.idproveedor = p.idproveedor and  oi.idotro_ingreso ='$idotro_ingreso'";
+    $sql = "SELECT oi.idotro_ingreso, oi.idpersona, oi.fecha_ingreso, oi.tipo_comprobante, oi.numero_comprobante, oi.forma_de_pago, oi.precio_sin_igv, 
+    oi.precio_igv, oi.precio_con_igv, oi.tipo_gravada, oi.descripcion, oi.comprobante, p.nombres,p.numero_documento,p.tipo_documento, p.direccion
+    FROM otro_ingreso as oi, persona as p 
+    WHERE oi.idpersona=p.idpersona AND oi.idotro_ingreso ='$idotro_ingreso'";
     return ejecutarConsultaSimpleFila($sql);
   }
 

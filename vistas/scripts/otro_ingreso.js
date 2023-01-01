@@ -347,64 +347,23 @@ function quitar_igv_del_precio(precio , igv, tipo ) {
 }
 
 //ver ficha tecnica
-function modal_comprobante(comprobante, fecha, tipo_comprobante, serie_comprobante, ruta) {
+function modal_comprobante(comprobante,tipo,numero_comprobante) {
 
-  var data_comprobante = ""; var url = ""; var nombre_download = "Comprobante"; 
-  
-  $("#modal-ver-comprobante").modal("show");
+  var dia_actual = moment().format('DD-MM-YYYY');
+  $(".nombre_comprobante").html(`${tipo}-${numero_comprobante}`);
+  $('#modal-ver-comprobante').modal("show");
+  $('#ver_fact_pdf').html(doc_view_extencion(comprobante, 'otro_ingreso', 'comprobante', '100%', '550'));
 
-  if (comprobante == '' || comprobante == null) {
+  if (DocExist(`dist/docs/otro_ingreso/comprobante/${comprobante}`) == 200) {
+    $("#iddescargar").attr("href","../dist/docs/otro_ingreso/comprobante/"+comprobante).attr("download", `${tipo}-${numero_comprobante}  - ${dia_actual}`).removeClass("disabled");
+    $("#ver_completo").attr("href","../dist/docs/otro_ingreso/comprobante/"+comprobante).removeClass("disabled");
+  } else {
+    $("#iddescargar").addClass("disabled");
+    $("#ver_completo").addClass("disabled");
+  }
 
-    data_comprobante = `<div class="alert alert-warning alert-dismissible"><button type="button" class="close" data-dismiss="Alerta" aria-hidden="true">&times;</button><h5><i class="icon fas fa-exclamation-triangle"></i> Alerta!</h5>No hay un documento para ver. Edite este registro en su modulo correspondiente.</div>`;
+  $('.jq_image_zoom').zoom({ on:'grab' }); 
 
-  }else{
-
-    if ( extrae_extencion(comprobante) == "jpeg" || extrae_extencion(comprobante) == "jpg" || extrae_extencion(comprobante) == "jpe" ||
-      extrae_extencion(comprobante) == "jfif" || extrae_extencion(comprobante) == "gif" || extrae_extencion(comprobante) == "png" ||
-      extrae_extencion(comprobante) == "tiff" || extrae_extencion(comprobante) == "tif" || extrae_extencion(comprobante) == "webp" ||
-      extrae_extencion(comprobante) == "bmp" || extrae_extencion(comprobante) == "svg" ) {
-      
-      url = `../${ruta}${comprobante}`;
-
-      nombre_download = `${extraer_dia_semana_completo(fecha)}, ${format_d_m_a(fecha)} ─ ${tipo_comprobante} - ${serie_comprobante}`;
-
-      data_comprobante = `<div class="col-md-12 mt-2 text-center"><i>${nombre_download}.${extrae_extencion(comprobante)}</i></div> <div class="col-md-12 mt-2"><img src="${url}" alt="img" class="img-thumbnail" width="100%" onerror="this.src='../dist/svg/error-404-x.svg';" ></div>`;         
-      
-    } else { 
-
-      if (extrae_extencion(comprobante) == "pdf") {
-
-        url = `../${ruta}${comprobante}`;
-
-        nombre_download = `${extraer_dia_semana_completo(fecha)}, ${format_d_m_a(fecha)} ─ ${tipo_comprobante} - ${serie_comprobante}`;
-
-        data_comprobante = `<div class="col-md-12 mt-2 text-center"><i>${nombre_download}.${extrae_extencion(comprobante)}</i></div> <div class="col-md-12 mt-2"><iframe src="${url}" frameborder="0" scrolling="no" width="100%" height="410"> </iframe></div>`;      
-
-      } else {
-        
-        url = `${ruta}${comprobante}`;
-
-        nombre_download = `${extraer_dia_semana_completo(fecha)}, ${format_d_m_a(fecha)} ─ ${tipo_comprobante} - ${serie_comprobante}`;
-
-        data_comprobante = `<div class="col-md-12 mt-2 text-center"><i>${nombre_download}.${extrae_extencion(comprobante)}</i></div> <div class="col-md-12 mt-2"><img src="../dist/svg/doc_si_extencion.svg" alt="" width="50%" ></div>`;
-        
-      }      
-    }
-  } 
-  
-  $(".ver-comprobante").html(`<div class="row" >
-    <div class="col-md-6 text-center">
-      <a type="button" class="btn btn-warning btn-block btn-xs" href="${url}" download="${nombre_download}"> <i class="fas fa-download"></i> Descargar. </a>
-    </div>
-    <div class="col-md-6 text-center">
-      <a type="button" class="btn btn-info btn-block btn-xs" href="${url}" target="_blank" <i class="fas fa-expand"></i> Ver completo. </a>
-    </div>
-    <div class="col-md-12 mt-3">     
-      ${data_comprobante}
-    </div>
-  </div>`);
-
-  $(".tooltip").removeClass("show").addClass("hidde");
 }
 
 //Función para guardar o editar
@@ -454,58 +413,32 @@ function mostrar(idotro_ingreso) {
 
   $.post("../ajax/otro_ingreso.php?op=mostrar", { idotro_ingreso: idotro_ingreso }, function (e, status) {
     
-    e = JSON.parse(e); console.log(e);    
+    e = JSON.parse(e); console.log('jolll'); console.log(e);    
 
     $("#idpersona").val(e.data.idpersona).trigger("change");
     $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
     $("#forma_pago").val(e.data.forma_de_pago).trigger("change");
     $("#glosa").val(e.data.glosa).trigger("change");
     $("#idotro_ingreso").val(e.data.idotro_ingreso);
-    $("#fecha_i").val(e.data.fecha_i);
+    $("#fecha_i").val(e.data.fecha_ingreso);
     $("#nro_comprobante").val(e.data.numero_comprobante);  
-    $("#ruc").val(e.data.ruc);
-    $("#razon_social").val(e.data.razon_social);
-    $("#direccion").val(e.data.direccion);
 
-    $("#subtotal").val(e.data.subtotal);
-    $("#igv").val(e.data.igv);
-    $("#val_igv").val(e.data.val_igv);
+    $("#subtotal").val(e.data.precio_sin_igv);
+    $("#igv").val(e.data.precio_igv);
+    $("#val_igv").val('0');
     $("#tipo_gravada").val(e.data.tipo_gravada);
-    $("#precio_parcial").val(e.data.costo_parcial);
+    $("#precio_parcial").val(e.data.precio_con_igv);
     $("#descripcion").val(e.data.descripcion);    
 
     if (e.data.comprobante == "" || e.data.comprobante == null  ) {
-
       $("#doc1_ver").html('<img src="../dist/svg/doc_uploads.svg" alt="" width="50%" >');
-
       $("#doc1_nombre").html('');
-
       $("#doc_old_1").val(""); $("#doc1").val("");
-
     } else {
-
-      $("#doc_old_1").val(e.data.comprobante); 
-
+      $("#doc_old_1").val(e.data.comprobante);
       $("#doc1_nombre").html(`<div class="row"> <div class="col-md-12"><i>Baucher.${extrae_extencion(e.data.comprobante)}</i></div></div>`);
-      
       // cargamos la imagen adecuada par el archivo
-      if ( extrae_extencion(e.data.comprobante) == "pdf" ) {
-
-        $("#doc1_ver").html('<iframe src="../dist/docs/otro_ingreso/comprobante/'+e.data.comprobante+'" frameborder="0" scrolling="no" width="100%" height="210"> </iframe>');
-
-      }else{
-        if (
-          extrae_extencion(e.data.comprobante) == "jpeg" || extrae_extencion(e.data.comprobante) == "jpg" || extrae_extencion(e.data.comprobante) == "jpe" ||
-          extrae_extencion(e.data.comprobante) == "jfif" || extrae_extencion(e.data.comprobante) == "gif" || extrae_extencion(e.data.comprobante) == "png" ||
-          extrae_extencion(e.data.comprobante) == "tiff" || extrae_extencion(e.data.comprobante) == "tif" || extrae_extencion(e.data.comprobante) == "webp" ||
-          extrae_extencion(e.data.comprobante) == "bmp" || extrae_extencion(e.data.comprobante) == "svg" ) {
-
-          $("#doc1_ver").html(`<img src="../dist/docs/otro_ingreso/comprobante/${e.data.comprobante}" alt="" width="100%" onerror="this.src='../dist/svg/error-404-x.svg';" >`); 
-          
-        } else {
-          $("#doc1_ver").html('<img src="../dist/svg/doc_si_extencion.svg" alt="" width="50%" >');
-        }        
-      }      
+      $("#doc1_ver").html(doc_view_extencion(e.data.comprobante,'otro_ingreso', 'comprobante', '100%', '210' ));            
     }
 
     $("#cargando-1-fomulario").show();
@@ -514,8 +447,8 @@ function mostrar(idotro_ingreso) {
 }
 
 function ver_datos(idotro_ingreso) {
-  $("#modal-ver-otro-gasto").modal("show");
-  $('#datos_otro_gasto').html(`<div class="row"><div class="col-lg-12 text-center"><i class="fas fa-spinner fa-pulse fa-6x"></i><br/><br/><h4>Cargando...</h4></div></div>`);
+  $("#modal-ver-otro-ingreso").modal("show");
+  $('#datos_otro_ingreso').html(`<div class="row"><div class="col-lg-12 text-center"><i class="fas fa-spinner fa-pulse fa-6x"></i><br/><br/><h4>Cargando...</h4></div></div>`);
 
   var comprobante=''; var btn_comprobante = '';
 
@@ -550,8 +483,8 @@ function ver_datos(idotro_ingreso) {
           <table class="table table-hover table-bordered">        
             <tbody>
               <tr data-widget="expandable-table" aria-expanded="false">
-                <th>Proveedor </th>
-                <td>${e.data.razon_social} <br> <b>${e.data.tipo_documento}:</b> ${e.data.ruc} </td>
+                <th>Nombres </th>
+                <td>${e.data.nombres} <br> <b>${e.data.tipo_documento}:</b> ${e.data.numero_documento} </td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
                 <th>Forma Pago</th>
@@ -566,28 +499,20 @@ function ver_datos(idotro_ingreso) {
                   <td>${e.data.numero_comprobante}</td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
-                <th>Glosa</th>
-                <td>${e.data.glosa}</td>
-              </tr>
-              <tr data-widget="expandable-table" aria-expanded="false">
                 <th>Fecha Emisión</th>
-                <td>${e.data.fecha_i}</td>
+                <td>${e.data.fecha_ingreso}</td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
                 <th>Sub total</th>
-                <td>${e.data.subtotal}</td>
+                <td>${e.data.precio_sin_igv}</td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
                 <th>IGV</th>
-                <td>${e.data.igv}</td>
-              </tr>
-              <tr data-widget="expandable-table" aria-expanded="false">
-                <th>Valor - IGV</th>
-                <td>${parseFloat(e.data.val_igv).toFixed(2)}</td>
+                <td>${e.data.precio_igv}</td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
                 <th>Monto total</th>
-                <td>${parseFloat(e.data.costo_parcial).toFixed(2)}</td>
+                <td>${parseFloat(e.data.precio_con_igv).toFixed(2)}</td>
               </tr>
               <tr data-widget="expandable-table" aria-expanded="false">
                 <th>Comprobante</th>
@@ -599,7 +524,7 @@ function ver_datos(idotro_ingreso) {
       </div>
     </div>`;
 
-    $("#datos_otro_gasto").html(ver_datos_html);
+    $("#datos_otro_ingreso").html(ver_datos_html);
   }).fail( function(e) { ver_errores(e); } );
 }
 

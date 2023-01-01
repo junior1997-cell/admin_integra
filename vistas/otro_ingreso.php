@@ -399,38 +399,46 @@
                   </div>
                 </div> 
 
-                <!-- MODAL - AGREGAR COMPROBANTE -->
+                <!--===============Modal-ver-comprobante =========-->
                 <div class="modal fade" id="modal-ver-comprobante">
                   <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Comprobante otros gastos</h4>
+                        <h4 class="modal-title">Otros Ingresos: <span class="nombre_comprobante text-bold"></span> </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body ver-comprobante">
-                                                 
-                        
-                         
-                      </div>
+                      <div class="modal-body">
+                          <div class="row">
+                            <div class="col-6 col-md-6">
+                              <a class="btn btn-xs btn-block btn-warning" href="#" id="iddescargar" download="" type="button"><i class="fas fa-download"></i> Descargar</a>
+                            </div>
+                            <div class="col-6 col-md-6">
+                              <a class="btn btn-xs btn-block btn-info" href="#" id="ver_completo"  target="_blank" type="button"><i class="fas fa-expand"></i> Ver completo.</a>
+                            </div>
+                            <div class="col-12 col-md-12 mt-2">
+                              <div id="ver_fact_pdf" width="auto"></div>
+                            </div>
+                          </div>                          
+                        </div>
                     </div>
                   </div>
                 </div>
 
                 <!--MODAL - VER DETALLE DE OTRO INGRESO -->
-                <div class="modal fade" id="modal-ver-otro-gasto">
+                <div class="modal fade" id="modal-ver-otro-ingreso">
                   <div class="modal-dialog modal-dialog-scrollable modal-xm">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Datos otros gastos</h4>
+                        <h4 class="modal-title">Datos otros Ingresos</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span class="text-danger" aria-hidden="true">&times;</span>
                         </button>
                       </div>
 
                       <div class="modal-body"> 
-                        <div id="datos_otro_gasto" class="class-style">
+                        <div id="datos_otro_ingreso" class="class-style">
                           <!-- vemos los datos del trabajador -->
                         </div>
                       </div>

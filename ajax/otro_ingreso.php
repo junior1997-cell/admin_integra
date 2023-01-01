@@ -57,7 +57,7 @@
       
             $comprobante = $date_now .' '.rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
       
-            move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/otro_gasto/comprobante/" . $comprobante);
+            move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/otro_ingreso/comprobante/" . $comprobante);
           }
       
           if (empty($idotro_ingreso)) {
@@ -76,7 +76,7 @@
       
               if ($ficha1_ant != "") {
       
-                unlink("../dist/docs/otro_gasto/comprobante/" . $ficha1_ant);
+                unlink("../dist/docs/otro_ingreso/comprobante/" . $ficha1_ant);
               }
             }
       
