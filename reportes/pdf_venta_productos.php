@@ -14,8 +14,7 @@ if (!isset($_SESSION["nombre"])) {
   require_once "../modelos/Venta_producto.php";
 
   //Establecemos la configuración de la factura
-  $pdf = new PDF_Invoice('P', 'mm', 'A4');
-  
+  $pdf = new PDF_Invoice('P', 'mm', 'A4');  
   $venta_producto = new Venta_producto();
   $numero_a_letra = new NumeroALetras();
 
@@ -43,10 +42,9 @@ if (!isset($_SESSION["nombre"])) {
   $logo, $ext_logo);
   $pdf->fact_dev($rspta['data']['venta']['tipo_comprobante'], $rspta['data']['venta']['serie_comprobante']); #comprobante y numero
   $pdf->addClient( zero_fill($rspta['data']['venta']['idpersona'], 6) ); #codigo de Persona
-  $pdf->addDate(format_d_m_a($rspta['data']['venta']['fecha_venta']));
-  
+  $pdf->addDate(format_d_m_a($rspta['data']['venta']['fecha_venta']));  
 
-  $pdf->temporaire( utf8_decode("Integra Peru") ); #marca de agua
+  $pdf->temporaire( utf8_decode("Integra Perú") ); #marca de agua
 
   //Enviamos los datos del cliente al método addClientAdresse de la clase Factura
   $pdf->addClientAdresse(utf8_decode($rspta['data']['venta']['nombres']), 
@@ -86,7 +84,6 @@ if (!isset($_SESSION["nombre"])) {
   }
 
   //Convertimos el total en letras
-
   $num_total = $numero_a_letra->toMoney( $rspta['data']['venta']['total'], 2, 'soles' );  #echo $num_total; die;
   $decimales_mun = explode('.', $rspta['data']['venta']['total']); #echo $decimales_mun[1]; die;
   $centimos = (isset($decimales_mun[1])? $decimales_mun[1] : '00' ) . '/100 CÉNTIMOS';

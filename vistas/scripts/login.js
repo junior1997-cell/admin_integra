@@ -87,8 +87,14 @@ var cont =1;
 let conteo = setInterval(()=> {    
     $('.login-page').css({'background-image':`url('../dist/img/${cont}fondo-login.jpg')`});
     cont++;
-    if (cont == 5){
-        cont =0;
-    }
+    if (cont == 5){ cont =0; }
+}, 8000);
 
-}, 8000)
+function ver_password() {
+    var x = document.getElementById("clavea");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+}

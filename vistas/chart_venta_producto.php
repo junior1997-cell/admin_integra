@@ -13,9 +13,9 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Graficos | Admin Sevens</title>
+        <title>Graficos venta | Admin Integra</title>
 
-        <?php $title = "Compras  de Insumos"; require 'head.php'; ?>
+        <?php $title = "Graficos venta"; require 'head.php'; ?>
 
       </head>
       <!--
@@ -62,11 +62,11 @@
                     <div class="row">
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box">
-                          <span class="info-box-icon bg-info elevation-1"><i class="fas fa-people-arrows"></i></span>
+                          <span class="info-box-icon bg-info elevation-1"><i class="fas fa-people-arrows text-dark-0"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Proveedores</span>
-                            <span class="info-box-number cant_proveedores_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-text">Clientes</span>
+                            <span class="info-box-number cant_cliente_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -75,7 +75,7 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3  col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-layer-group"></i></span>
+                        <span class="info-box-icon bg-danger elevation-1"><img src="../dist/svg/blanco-abono-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
 
                           <div class="info-box-content">
                             <span class="info-box-text">Productos</span>
@@ -92,11 +92,11 @@
 
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-success elevation-1"><img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 31px !important;" ></span>
+                          <span class="info-box-icon bg-success elevation-1"><i class="nav-icon fa-solid fa-sack-dollar text-dark-0"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Insumos</span>
-                            <span class="info-box-number cant_insumos_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-text">Total venta</span>
+                            <span class="info-box-number cant_total_venta_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -105,11 +105,11 @@
                       <!-- /.col -->
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fas fa-truck-pickup"></i></span>
+                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fa-solid fa-hand-holding-dollar"></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Activos Fijos</span>
-                            <span class="info-box-number cant_activo_fijo_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-text">Total pago</span>
+                            <span class="info-box-number cant_total_pago_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -123,7 +123,7 @@
                       <div class="col-6 col-lg-6">
                         <div class="form-group">
                           <!-- <label for="year_filtro">Año </label> -->
-                          <select name="year_filtro" id="year_filtro" class="form-control select2" style="width: 100%;" onchange="chart_linea_barra();"> </select>
+                          <select name="year_filtro" id="year_filtro" class="form-control select2" style="width: 100%;" onchange="chart_linea_barra(); export_productos_mas_usados();"> </select>
                         </div>
                       </div>
 
@@ -131,7 +131,7 @@
                       <div class="col-6 col-lg-6">
                         <div class="form-group">
                           <!-- <label for="month_filtro">Mes </label> -->
-                          <select name="month_filtro" id="month_filtro" class="form-control select2" style="width: 100%;" onchange="chart_linea_barra();">
+                          <select name="month_filtro" id="month_filtro" class="form-control select2" style="width: 100%;" onchange="chart_linea_barra(); export_productos_mas_usados();">
                             <option value="1">Enero</option> 
                             <option value="2">Febrero</option> 
                             <option value="3">Marzo</option> 
@@ -270,7 +270,7 @@
                                   <span class="progress-text text--danger">Facturas rechazada y eliminadas</span>
                                   <span class="float-right cant_ft_rechazadas_eliminadas"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                                   <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger progress_ft_rechazadas_eliminadas" style="width: 0%"></div>
+                                    <div class="progress-bar bg-black progress_ft_rechazadas_eliminadas" style="width: 0%"></div>
                                   </div>
                                 </div>
                                 <!-- /.progress-group -->
@@ -308,11 +308,11 @@
                       <div class="col-lg-6">
                         <div class="card">
                           <div class="card-header border-0">
-                            <h3 class="card-title text-center">Productos mas usados</h3>
+                            <h2 class="card-title text-center">Productos mas usados</h2>
                             <div class="card-tools">
-                              <button class="btn btn-tool btn-sm" onclick="export_excel('#tbla_productos_mas_vendidos','Productos mas usados');">
-                                <i class="fas fa-download"></i>
-                              </button>
+                              <a class="btn btn-tool btn-sm btn-export-productos-mas-usados" target="_blank" data-toggle="tooltip" data-original-title="Descargar Excel">
+                                <i class="fas fa-download fa-lg"></i>
+                              </a>
                               <!-- <a href="#" class="btn btn-tool btn-sm"> <i class="fas fa-bars"></i> </a> -->
                             </div> 
                           </div>
@@ -322,8 +322,8 @@
                               <tr>
                                 <th>Producto</th>
                                 <th>Precio referencial</th>
-                                <th>Cantidad</th>
-                                <th>Mas</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-center">Mas</th>
                               </tr>
                               </thead>
                               <tbody id="body_productos_mas_vendidos">
@@ -426,7 +426,7 @@
                   <!-- /.container-fluid -->
 
                   <!-- MODAL - VER PERFIL INSUMO-->
-                  <div class="modal fade" id="modal-ver-perfil-insumo">
+                  <div class="modal fade bg-color-02020280" id="modal-ver-perfil-insumo">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                       <div class="modal-content bg-color-0202022e shadow-none border-0">
                         <div class="modal-header">
@@ -436,13 +436,13 @@
                           </button>
                         </div>
                         <div class="modal-body"> 
-                          <div id="perfil-insumo" class="class-style">
+                          <div id="perfil-insumo" class="text-center">
                             <!-- vemos los datos del trabajador -->
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div>   
 
                 </div>
                 <!-- /.content -->
@@ -475,13 +475,8 @@
         
         <!-- html2canvas -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-
-        <!-- table export EXCEL -->
-        <script src="../plugins/export-xlsx/xlsx.full.min.js"></script>
-        <script src="../plugins/export-xlsx/FileSaver.min.js"></script>
-        <script src="../plugins/export-xlsx/tableexport.min.js"></script> 
         
-        <script type="text/javascript" src="scripts/chart_compra_insumo.js"></script>         
+        <script type="text/javascript" src="scripts/chart_venta_producto.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

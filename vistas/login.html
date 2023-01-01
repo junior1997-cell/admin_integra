@@ -47,6 +47,7 @@
           <p class="login-box-msg">Ingrese sus credenciales para ingresar al sistema.</p>
 
           <form method="post" id="frmAcceso" autocomplet="off">
+            <!-- User -->
             <div class="input-group mb-3">
               <input type="text" id="logina" name="logina" class="form-control" placeholder="Usuario" required />
               <div class="input-group-append">
@@ -55,6 +56,7 @@
                 </div>
               </div>
             </div>
+            <!-- Passsword -->
             <div class="input-group mb-3 ">
               <input type="password" id="clavea" name="clavea" class="form-control" placeholder="Password" required />
               <div class="input-group-append">
@@ -63,6 +65,15 @@
                 </div>
               </div>
             </div>
+
+            <!-- ver contraseña -->
+            <div class="input-group mb-3 text-right">
+              <div class="custom-control custom-checkbox m-t-5px ">                                   
+                <input class="custom-control-input" type="checkbox" id="ver_password_check" onclick="ver_password();">
+                <label for="ver_password_check" class="custom-control-label">ver password</label>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-12">
                 <button type="submit" class="btn btn-outline-success btn-block login-btn">Ingresar</button>

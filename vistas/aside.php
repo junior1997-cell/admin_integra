@@ -200,11 +200,11 @@
                   </li> 
                   
                   <!-- graficos insumos -->
-                  <!-- <li class="nav-item ">
-                    <a href="chart_compra_insumo.php" class="nav-link" id="lChartCompraInsumo">
+                  <li class="nav-item ">
+                    <a href="chart_venta_producto.php" class="nav-link" id="lChartVentaProducto">
                       <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
                     </a>
-                  </li>  -->
+                  </li> 
                 </ul>
               </li>
             <?php  }  ?>      
