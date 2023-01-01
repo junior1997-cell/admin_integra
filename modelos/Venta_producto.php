@@ -40,6 +40,18 @@ class Venta_producto
       $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','".$idventanew['data']."','Nueva venta','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
+      //add update table autoincrement_comprobante - numero de comprobante de pago
+      if ($tipo_comprobante == 'Boleta') {
+        $sql_nro = "UPDATE autoincrement_comprobante SET venta_producto_b = venta_producto_b + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      } else if ($tipo_comprobante == 'Factura'){
+        $sql_nro = "UPDATE autoincrement_comprobante SET venta_producto_f = venta_producto_f + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      } else if ($tipo_comprobante == 'Nota de venta'){
+        $sql_nro = "UPDATE autoincrement_comprobante SET venta_producto_nv = venta_producto_nv + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      }       
+
       // creamos un pago de compra
       $insert_pago = "INSERT INTO pago_venta_producto( 	idventa_producto, forma_pago, fecha_pago, monto, descripcion, comprobante, user_created) 
       VALUES ('$id','EFECTIVO','$fecha_venta','$monto_pago_compra', '', '', '$this->id_usr_sesion')";
@@ -151,7 +163,7 @@ class Venta_producto
 
   public function mostrar_venta_para_editar($idventa_producto) {
 
-    $sql = "SELECT  vp.idventa_producto,vp.fecha_venta,vp.idpersona, vp.tipo_comprobante, vp.serie_comprobante, vp.val_igv, vp.subtotal, vp.igv, vp.total, vp.tipo_gravada, 
+    $sql = "SELECT  vp.idventa_producto,vp.fecha_venta, vp.idpersona, vp.tipo_comprobante, vp.serie_comprobante, vp.val_igv, vp.subtotal, vp.igv, vp.total, vp.tipo_gravada, 
     vp.descripcion, vp.metodo_pago, vp.fecha_proximo_pago,
     p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, p.direccion,p.correo
     FROM venta_producto as vp, persona as p 
@@ -176,6 +188,10 @@ class Venta_producto
     $sql = "UPDATE venta_producto SET estado='0', user_trash= '$this->id_usr_sesion' WHERE idventa_producto='$idventa_producto'";
 		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 
+    //add registro en nuestra bitacora
+    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','".$idventa_producto."','Se envio a papelera.','$this->id_usr_sesion')";
+    $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
+
     // buscamos las cantidades
     $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_venta_producto WHERE idventa_producto = '$idventa_producto';";
     $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
@@ -183,12 +199,8 @@ class Venta_producto
     foreach ($restaurar_stok['data'] as $key => $value) {      
       $update_producto = "UPDATE producto SET stock = stock + '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
       $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }
-		
-		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','".$idventa_producto."','Se envio a papelera.','$this->id_usr_sesion')";
-		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
-		
+    }	
+
 		return $desactivar;
   }
 
@@ -196,7 +208,10 @@ class Venta_producto
   public function eliminar($idventa_producto) {
     $sql = "UPDATE venta_producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idventa_producto='$idventa_producto'";
 		$eliminar =  ejecutarConsulta($sql); if ( $eliminar['status'] == false) {return $eliminar; }  
-		
+		//add registro en nuestra bitacora
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','$idventa_producto','Se elimino este registro.','$this->id_usr_sesion')";
+		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
+
     // buscamos las cantidades
     $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_venta_producto WHERE idventa_producto = '$idventa_producto';";
     $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
@@ -204,12 +219,8 @@ class Venta_producto
     foreach ($restaurar_stok['data'] as $key => $value) {      
       $update_producto = "UPDATE producto SET stock = stock + '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
       $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }
-
-		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','$idventa_producto','Se elimino este registro.','$this->id_usr_sesion')";
-		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-		
+    }	
+    		
 		return $eliminar;
   }
 
@@ -223,6 +234,49 @@ class Venta_producto
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
 		
 		return $recover;
+  }
+
+  //Implementamos un método para activar categorías
+  public function autoincrement_comprobante() {
+    $update_producto = "SELECT * FROM autoincrement_comprobante WHERE idautoincrement_comprobante = '1'";
+		$val =  ejecutarConsultaSimpleFila($update_producto); if ( $val['status'] == false) {return $val; }   
+
+		$compra_producto_f = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_f']) ? 1 : (intval($val['data']['compra_producto_f']) +1)); 
+    $compra_producto_b = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_b']) ? 1 : (intval($val['data']['compra_producto_b']) +1));
+    $compra_producto_nv = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_nv']) ? 1 : (intval($val['data']['compra_producto_nv']) +1));
+
+    $venta_producto_f =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_f']) ? 1 : (intval($val['data']['venta_producto_f']) +1)); 
+    $venta_producto_b =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_b']) ? 1 : (intval($val['data']['venta_producto_b']) +1)); 
+    $venta_producto_nv =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_nv']) ? 1 : (intval($val['data']['venta_producto_nv']) +1)); 
+
+    $compra_cafe_f = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_f']) ? 1 : (intval($val['data']['compra_cafe_f']) +1));
+    $compra_cafe_b = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_b']) ? 1 : (intval($val['data']['compra_cafe_b']) +1));
+    $compra_cafe_nv = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_nv']) ? 1 : (intval($val['data']['compra_cafe_nv']) +1));
+
+    $venta_cafe_f = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_f']) ? 1 : (intval($val['data']['venta_cafe_f']) +1));
+    $venta_cafe_n = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_n']) ? 1 : (intval($val['data']['venta_cafe_n']) +1));
+    $venta_cafe_nv = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_nv']) ? 1 : (intval($val['data']['venta_cafe_nv']) +1));
+
+    return $sw = array( 'status' => true, 'message' => 'todo okey bro', 
+      'data' => [
+        'compra_producto_f'=> zero_fill($compra_producto_f, 6), 
+        'compra_producto_b'=> zero_fill($compra_producto_b, 6), 
+        'compra_producto_nv'=> zero_fill($compra_producto_nv, 6),
+
+        'venta_producto_f'=> zero_fill($venta_producto_f, 6), 
+        'venta_producto_b'=> zero_fill($venta_producto_b, 6), 
+        'venta_producto_nv'=> zero_fill($venta_producto_nv, 6), 
+
+        'compra_cafe_f'=> zero_fill($compra_cafe_f, 6), 
+        'compra_cafe_b'=> zero_fill($compra_cafe_b, 6), 
+        'compra_cafe_nv'=> zero_fill($compra_cafe_nv, 6), 
+
+        'venta_cafe_f'=> zero_fill($venta_cafe_f, 6),
+        'venta_cafe_n'=> zero_fill($venta_cafe_n, 6),
+        'venta_cafe_nv'=> zero_fill($venta_cafe_nv, 6),
+        
+      ] 
+    );      
   }
 
   //Implementar un método para mostrar los datos de un registro a modificar

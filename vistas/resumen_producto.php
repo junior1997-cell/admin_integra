@@ -34,7 +34,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0 nombre-insumo"><img src="../dist/svg/negro-abono-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Resumen de Producto</h1>
+                      <h1 class="m-0 nombre-insumo"><img src="../dist/svg/negro-abono-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Almacén - Resumen de Producto</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">

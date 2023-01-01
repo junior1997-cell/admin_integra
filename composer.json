@@ -1,6 +1,7 @@
 {
     "require": {
         "phpoffice/phpspreadsheet": "^1.25",
-        "luecano/numero-a-letras": "^3.0"
+        "luecano/numero-a-letras": "^3.0",
+        "ext-zip": "^1.19"
     }
 }

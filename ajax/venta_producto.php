@@ -174,6 +174,11 @@ if (!isset($_SESSION["nombre"])) {
         $rspta = $venta_producto->recover_stock_producto($_POST["idproducto"], $_POST["stock"]);    
         echo json_encode($rspta, true);    
       break;
+
+      case 'autoincrement_comprobante':
+        $rspta = $venta_producto->autoincrement_comprobante();    
+        echo json_encode($rspta, true);    
+      break;
     
       case 'tbla_principal':
         $rspta = $venta_producto->tbla_principal($_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);
@@ -201,8 +206,9 @@ if (!isset($_SESSION["nombre"])) {
             $data[] = [
               "0" => $cont,
               "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_ventas(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_venta(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_venta(' . $reg['idventa_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
+                ' <button class="btn bg-purple btn-sm" onclick="copiar_venta(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="copiar"><i class="fa-regular fa-copy"></i></button>' . 
+                '<!-- <button class="btn btn-warning btn-sm" onclick="mostrar_venta(' . $reg['idventa_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button> -->' . 
+                ' <button class="btn btn-danger  btn-sm" onclick="eliminar_venta(' . $reg['idventa_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>',
                  
               "2" => $reg['fecha_venta'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
@@ -213,7 +219,7 @@ if (!isset($_SESSION["nombre"])) {
               "8" => '<div class="text-center text-nowrap">'.
                 '<button class="btn btn-' . $color_btn . ' btn-xs m-t-2px" onclick="tbla_pago_venta(' . $reg['idventa_producto'] . ', ' . $reg['total'] . ', ' . floatval($reg['total_pago']) .', \''.encodeCadenaHtml($reg['cliente']) .'\')" data-toggle="tooltip" data-original-title="Ingresar a pagos"> <i class="fas fa-' . $icon . ' nav-icon"></i> ' . $nombre . '</button>' . 
                 ' <button style="font-size: 14px;" class="btn btn-' . $color_btn . ' btn-sm">' . number_format(floatval($reg['total_pago']), 2, '.', ',') . '</button>'.
-              '</div>',
+              '</div>'. $toltip,
               "9" => $saldo,
 
               "10" => $reg['tipo_documento'],
@@ -251,7 +257,9 @@ if (!isset($_SESSION["nombre"])) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_proveedor(' . $reg->idpersona . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>',
+              "1" => '<button class="btn btn-info btn-sm" onclick="listar_facuras_proveedor(' . $reg->idpersona . ')" data-toggle="tooltip" data-original-title="Ver Compras">
+                <i class="fa fa-eye"></i>
+              </button>'. $toltip ,
               "2" => $reg->razon_social,
               "3" => $reg->numero_documento,
               "4" => $reg->cantidad,
@@ -282,7 +290,7 @@ if (!isset($_SESSION["nombre"])) {
           while ($reg = $rspta['data']->fetch_object()) {
             $data[] = [
               "0" => $cont++,
-              "1" => '<center><button class="btn btn-info btn-sm" onclick="ver_detalle_ventas(' . $reg->idventa_producto . ')" data-toggle="tooltip" data-original-title="Ver detalle">Ver detalle <i class="fa fa-eye"></i></button></center>',
+              "1" => '<center><button class="btn btn-info btn-sm" onclick="ver_detalle_ventas(' . $reg->idventa_producto . ')" data-toggle="tooltip" data-original-title="Ver detalle venta">Ver detalle <i class="fa fa-eye"></i></button></center>' . $toltip,
               "2" => $reg->fecha_venta,
               "3" => $reg->tipo_comprobante,
               "4" => $reg->serie_comprobante,
@@ -301,8 +309,7 @@ if (!isset($_SESSION["nombre"])) {
           echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
         }
     
-      break;  
-      
+      break;        
     
       case 'ver_venta_editar':
 

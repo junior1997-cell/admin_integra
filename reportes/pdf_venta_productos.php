@@ -14,8 +14,7 @@ if (!isset($_SESSION["nombre"])) {
   require_once "../modelos/Venta_producto.php";
 
   //Establecemos la configuración de la factura
-  $pdf = new PDF_Invoice('P', 'mm', 'A4');
-  
+  $pdf = new PDF_Invoice('P', 'mm', 'A4');  
   $venta_producto = new Venta_producto();
   $numero_a_letra = new NumeroALetras();
 
@@ -31,7 +30,7 @@ if (!isset($_SESSION["nombre"])) {
   //Establecemos los datos de la empresa
   $logo     = "../dist/img/default/empresa-logo.jpg";
   $ext_logo = "jpg";
-  $empresa  = 'INTEGRA PERU SAC';
+  $empresa  = 'INTEGRA PERÚ S.A.C';
   $documento= 'RUC: 3532432423' ;
   $direccion= 'JR. LAS ROSASA / JAEN / PERU';
   $telefono = '938-724-523' ;
@@ -41,17 +40,19 @@ if (!isset($_SESSION["nombre"])) {
   $pdf->addSociete(utf8_decode($empresa), 
   $documento . "\n" . utf8_decode("Dirección: ") . utf8_decode($direccion) . "\n" . utf8_decode("Teléfono: ") . $telefono , 
   $logo, $ext_logo);
-  $pdf->fact_dev($rspta['data']['venta']['tipo_comprobante'], $rspta['data']['venta']['serie_comprobante']);
-  $pdf->addDate(format_d_m_a($rspta['data']['venta']['fecha_venta']));
+  $pdf->fact_dev($rspta['data']['venta']['tipo_comprobante'], $rspta['data']['venta']['serie_comprobante']); #comprobante y numero
+  $pdf->addClient( zero_fill($rspta['data']['venta']['idpersona'], 6) ); #codigo de Persona
+  $pdf->addDate(format_d_m_a($rspta['data']['venta']['fecha_venta']));  
 
-  $pdf->temporaire( utf8_decode("Integra Peru") );
+  $pdf->temporaire( utf8_decode("Integra Perú") ); #marca de agua
 
   //Enviamos los datos del cliente al método addClientAdresse de la clase Factura
   $pdf->addClientAdresse(utf8_decode($rspta['data']['venta']['nombres']), 
-    utf8_decode("Dirección: "). utf8_decode($rspta['data']['venta']['direccion']), 
-    $rspta['data']['venta']['tipo_documento'] . ": " .$rspta['data']['venta']['numero_documento'], 
-    "Email: " . $rspta['data']['venta']['correo'], 
-    "Telefono: " . $rspta['data']['venta']['celular']
+    utf8_decode($rspta['data']['venta']['direccion']), 
+    utf8_decode($rspta['data']['venta']['tipo_documento']) , 
+    utf8_decode($rspta['data']['venta']['numero_documento']), 
+    utf8_decode($rspta['data']['venta']['correo']), 
+    utf8_decode($rspta['data']['venta']['celular'])
   );
   $pdf->addReference( utf8_decode( decodeCadenaHtml((empty($rspta['data']['venta']['descripcion'])) ? '- - -' :$rspta['data']['venta']['descripcion']) ));
 
@@ -62,7 +63,7 @@ if (!isset($_SESSION["nombre"])) {
   $pdf->addLineFormat($cols);
   $pdf->addLineFormat($cols);
   //Actualizamos el valor de la coordenada "y", que será la ubicación desde donde empezaremos a mostrar los datos
-  $y = 89;
+  $y = 85;
 
   $cont = 1;
   //Obtenemos todos los detalles de la venta actual
@@ -83,7 +84,6 @@ if (!isset($_SESSION["nombre"])) {
   }
 
   //Convertimos el total en letras
-
   $num_total = $numero_a_letra->toMoney( $rspta['data']['venta']['total'], 2, 'soles' );  #echo $num_total; die;
   $decimales_mun = explode('.', $rspta['data']['venta']['total']); #echo $decimales_mun[1]; die;
   $centimos = (isset($decimales_mun[1])? $decimales_mun[1] : '00' ) . '/100 CÉNTIMOS';
@@ -98,9 +98,6 @@ if (!isset($_SESSION["nombre"])) {
    
 }
 
-function number_words($valor,$desc_moneda, $sep, $desc_decimal) {
-  $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-  return $f->format(1432);
-}
+
 
 ?>

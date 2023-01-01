@@ -14,9 +14,9 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Compras | Admin Integra </title>
+        <title> Compras Producto | Admin Integra </title>
 
-        <?php $title = "Compras"; require 'head.php'; ?>
+        <?php $title = "Compras Producto"; require 'head.php'; ?>
 
         <!--CSS  switch_MATERIALES-->
         <link rel="stylesheet" href="../dist/css/switch_materiales.css" />
@@ -39,7 +39,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1 class="m-0"><i class="nav-icon fas fa-cart-plus"></i> Compras - Aumenta el stock de tú almacén</h1>
+                      <h1 class="m-0"><i class="nav-icon fas fa-cart-plus"></i> Almacén - Aumenta tu stock</h1>
                     </div>
                     <!-- /.col -->
                     <div class="col-sm-6">
@@ -1255,17 +1255,12 @@
         
         <?php require 'script.php'; ?>
 
-        <!-- table export EXCEL -->
-        <script src="../plugins/export-xlsx/xlsx.full.min.js"></script>
-        <script src="../plugins/export-xlsx/FileSaver.min.js"></script>
-        <script src="../plugins/export-xlsx/tableexport.min.js"></script>
-
         <!-- ZIP -->
         <script src="../plugins/jszip/jszip.js"></script>
         <script src="../plugins/jszip/dist/jszip-utils.js"></script>
         <script src="../plugins/FileSaver/dist/FileSaver.js"></script>
         
-        <script type="text/javascript" src="scripts/ingreso_producto.js"></script>         
+        <script type="text/javascript" src="scripts/compra_producto.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

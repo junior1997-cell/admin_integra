@@ -15,12 +15,12 @@
     
     require_once "../modelos/Ajax_general.php";
     require_once "../modelos/Producto.php";
-    require_once "../modelos/Ingreso_producto.php";
+    require_once "../modelos/Compra_producto.php";
     require_once "../modelos/Venta_producto.php";
     
     $ajax_general = new Ajax_general();
     $compra_insumos = new Producto();
-    $compra_producto = new Ingreso_producto();
+    $compra_producto = new Compra_producto();
     $venta_producto = new Venta_producto();
 
     $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
@@ -398,12 +398,13 @@
         $rspta = $ajax_general->tblaProductos(); 
 
         $datas = []; 
+        
 
         if ($rspta['status'] == true) {
 
           while ($reg = $rspta['data']->fetch_object()) {
 
-            $img_parametro = ""; $img = ""; 
+            $img_parametro = ""; $img = "";  $clas_stok = "";
   
             if (empty($reg->imagen)) {
               $img = '../dist/docs/producto/img_perfil/producto-sin-foto.svg';
