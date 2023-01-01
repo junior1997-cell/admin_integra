@@ -2,7 +2,7 @@
 //Incluímos inicialmente la conexión a la base de datos
 require "../config/Conexion_v2.php";
 
-class Ingreso_producto
+class Compra_producto
 {
   //Implementamos nuestro constructor
   public function __construct()
@@ -163,13 +163,20 @@ class Ingreso_producto
   public function desactivar($idcompra_producto) {
     // var_dump($idcompra_producto);die();
     $sql = "UPDATE compra_producto SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idcompra_producto='$idcompra_producto'";
-		$desactivar= ejecutarConsulta($sql);
-
-		if ($desactivar['status'] == false) {  return $desactivar; }
+		$desactivar= ejecutarConsulta($sql);if ($desactivar['status'] == false) {  return $desactivar; }
 		
 		//add registro en nuestra bitacora
 		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_producto','".$idcompra_producto."','Compra desactivada','" . $_SESSION['idusuario'] . "')";
-		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
+		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
+    
+    // buscamos las cantidades
+    $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_compra_producto WHERE idcompra_producto = '$idcompra_producto';";
+    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
+    // actualizamos el stock
+    foreach ($restaurar_stok['data'] as $key => $value) {      
+      $update_producto = "UPDATE producto SET stock = stock - '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
+      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
+    }	
 		
 		return $desactivar;
   }
@@ -177,13 +184,20 @@ class Ingreso_producto
   //Implementamos un método para activar categorías
   public function eliminar($idcompra_producto) {
     $sql = "UPDATE compra_producto SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idcompra_producto='$idcompra_producto'";
-
-		$eliminar =  ejecutarConsulta($sql);
-		if ( $eliminar['status'] == false) {return $eliminar; }  
+		$eliminar =  ejecutarConsulta($sql);if ( $eliminar['status'] == false) {return $eliminar; }  
 		
 		//add registro en nuestra bitacora
 		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_producto','$idcompra_producto','Compra Eliminada','" . $_SESSION['idusuario'] . "')";
 		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
+
+    // buscamos las cantidades
+    $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_compra_producto WHERE idcompra_producto = '$idcompra_producto';";
+    $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
+    // actualizamos el stock
+    foreach ($restaurar_stok['data'] as $key => $value) {      
+      $update_producto = "UPDATE producto SET stock = stock - '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
+      $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
+    }	
 		
 		return $eliminar;
   }
@@ -246,7 +260,7 @@ class Ingreso_producto
   //mostrar detalles uno a uno de la factura
   public function ver_compra($idcompra_producto) {
 
-    $sql = "SELECT cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
+    $sql = "SELECT cp.idpersona, cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.val_igv, cp.subtotal, cp.igv, cp.total, cp.tipo_gravada, 
     cp.descripcion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo 
     FROM compra_producto as cp, persona as p 
     WHERE cp.idpersona = p.idpersona AND cp.idcompra_producto ='$idcompra_producto';";

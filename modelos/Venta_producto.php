@@ -188,6 +188,10 @@ class Venta_producto
     $sql = "UPDATE venta_producto SET estado='0', user_trash= '$this->id_usr_sesion' WHERE idventa_producto='$idventa_producto'";
 		$desactivar= ejecutarConsulta($sql); if ($desactivar['status'] == false) {  return $desactivar; }
 
+    //add registro en nuestra bitacora
+    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','".$idventa_producto."','Se envio a papelera.','$this->id_usr_sesion')";
+    $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
+
     // buscamos las cantidades
     $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_venta_producto WHERE idventa_producto = '$idventa_producto';";
     $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
@@ -195,12 +199,8 @@ class Venta_producto
     foreach ($restaurar_stok['data'] as $key => $value) {      
       $update_producto = "UPDATE producto SET stock = stock + '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
       $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }
-		
-		//add registro en nuestra bitacora
-		$sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','".$idventa_producto."','Se envio a papelera.','$this->id_usr_sesion')";
-		$bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
-		
+    }	
+
 		return $desactivar;
   }
 
@@ -208,7 +208,10 @@ class Venta_producto
   public function eliminar($idventa_producto) {
     $sql = "UPDATE venta_producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idventa_producto='$idventa_producto'";
 		$eliminar =  ejecutarConsulta($sql); if ( $eliminar['status'] == false) {return $eliminar; }  
-		
+		//add registro en nuestra bitacora
+		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','$idventa_producto','Se elimino este registro.','$this->id_usr_sesion')";
+		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
+
     // buscamos las cantidades
     $sql_restaurar = "SELECT idproducto, cantidad FROM detalle_venta_producto WHERE idventa_producto = '$idventa_producto';";
     $restaurar_stok =  ejecutarConsultaArray($sql_restaurar); if ( $restaurar_stok['status'] == false) {return $restaurar_stok; }
@@ -216,12 +219,8 @@ class Venta_producto
     foreach ($restaurar_stok['data'] as $key => $value) {      
       $update_producto = "UPDATE producto SET stock = stock + '".$value['cantidad']."' WHERE idproducto = '".$value['idproducto']."';";
       $producto = ejecutarConsulta($update_producto); if ($producto['status'] == false) { return  $producto;}
-    }
-
-		//add registro en nuestra bitacora
-		$sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('venta_producto','$idventa_producto','Se elimino este registro.','$this->id_usr_sesion')";
-		$bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
-		
+    }	
+    		
 		return $eliminar;
   }
 

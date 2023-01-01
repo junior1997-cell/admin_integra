@@ -40,7 +40,6 @@ function init() {
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_compra', null);
   lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
 
-
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
@@ -208,7 +207,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } },              
     ],
     ajax: {
-      url: `../ajax/ingreso_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
+      url: `../ajax/compra_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -249,7 +248,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5",  "pdf"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_compraxporvee",
+      url: "../ajax/compra_producto.php?op=listar_compraxporvee",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -297,7 +296,7 @@ function listar_facuras_proveedor(idproveedor) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdf", "colvis"],
     ajax: {
-      url: "../ajax/ingreso_producto.php?op=listar_detalle_compraxporvee&idproveedor=" + idproveedor,
+      url: "../ajax/compra_producto.php?op=listar_detalle_compraxporvee&idproveedor=" + idproveedor,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -329,7 +328,7 @@ function guardar_y_editar_compras(e) {
     cancelButtonColor: "#d33",
     confirmButtonText: "Si, Guardar!",
     preConfirm: (input) => {
-      return fetch("../ajax/ingreso_producto.php?op=guardaryeditarcompra", {
+      return fetch("../ajax/compra_producto.php?op=guardaryeditarcompra", {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!        
       }).then(response => {
@@ -363,8 +362,8 @@ function eliminar_compra(idcompra_producto, nombre) {
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/ingreso_producto.php?op=anular",
-    "../ajax/ingreso_producto.php?op=eliminar_compra", 
+    "../ajax/compra_producto.php?op=anular",
+    "../ajax/compra_producto.php?op=eliminar_compra", 
     idcompra_producto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -728,7 +727,7 @@ function mostrar_compra(idcompra_producto) {
   detalles = 0;
   ver_form_add();
 
-  $.post("../ajax/ingreso_producto.php?op=ver_compra_editar", { idcompra_producto: idcompra_producto }, function (e, status) {
+  $.post("../ajax/compra_producto.php?op=ver_compra_editar", { idcompra_producto: idcompra_producto }, function (e, status) {
     
     e = JSON.parse(e); //console.log(e);
 
@@ -826,6 +825,117 @@ function mostrar_compra(idcompra_producto) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
+//mostramos para editar el datalle del comprobante de la compras
+function copiar_venta(idcompra_producto) {
+
+  $("#cargando-1-fomulario").hide();
+  $("#cargando-2-fomulario").show();
+
+  limpiar_form_compra();
+  array_class_trabajador = [];
+
+  cont = 0;
+  detalles = 0;
+  ver_form_add();
+
+  $.post("../ajax/compra_producto.php?op=ver_compra_editar", { idcompra_producto: idcompra_producto }, function (e, status) {
+    
+    e = JSON.parse(e); //console.log(e);
+
+    if (e.status == true) {
+
+      console.log(e.data.compra.tipo_comprobante);
+      if (e.data.compra.tipo_comprobante == "Factura") {
+        $(".content-igv").show();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass("col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+        $(".content-serie-comprobante").show();
+      } else if (e.data.compra.tipo_comprobante == "Boleta" || e.data.compra.tipo_comprobante == "Nota de venta") {
+        $(".content-serie-comprobante").show();
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-4 col-lg-5").addClass("col-lg-5");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+      } else if (e.data.compra.tipo_comprobante == "Ninguno") {
+        $(".content-serie-comprobante").hide();
+        $(".content-serie-comprobante").val("");
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7").addClass("col-lg-8");
+      } else {
+        $(".content-serie-comprobante").show();
+        //$(".content-descripcion").removeClass("col-lg-7").addClass("col-lg-4");
+      }
+
+      // $("#idcompra_producto").val(e.data.compra.idcompra_producto); #no se usa cuando se copia
+      $("#idproveedor").val(e.data.compra.idpersona).trigger("change");
+      $("#fecha_compra").val(e.data.compra.fecha_compra);
+      $("#tipo_comprobante").val(e.data.compra.tipo_comprobante).trigger("change");
+      $("#serie_comprobante").val(e.data.compra.serie_comprobante).trigger("change");
+      $("#val_igv").val(e.data.compra.val_igv);
+      $("#descripcion").val(e.data.compra.descripcion);
+
+      if (e.data.detalle) {
+
+        e.data.detalle.forEach((element, index) => {
+
+          var img = "";
+
+          if (element.imagen == "" || element.imagen == null) {
+            img = `../dist/docs/producto/img_perfil/producto-sin-foto.svg`;
+          } else {
+            img = `../dist/docs/producto/img_perfil/${element.imagen}`;
+          }
+
+          var fila = `
+          <tr class="filas" id="fila${cont}">
+            <td>
+              <button type="button" class="btn btn-warning btn-sm" onclick="mostrar_productos(${element.idproducto}, ${cont})"><i class="fas fa-pencil-alt"></i></button>
+              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button></td>
+            </td>
+            <td>
+              <input type="hidden" name="idproducto[]" value="${element.idproducto}">
+              <div class="user-block text-nowrap">
+                <img class="profile-user-img img-responsive img-circle cursor-pointer img_perfil_${cont}" src="${img}" alt="user image" onerror="this.src='../dist/svg/404-v2.svg';" onclick="ver_img_producto('${img}', '${encodeHtml(element.nombre)}')">
+                <span class="username"><p class="mb-0 nombre_producto_${cont}" >${element.nombre}</p></span>
+                <span class="description categoria_${cont}"><b>Categoría: </b>${element.categoria}</span>
+              </div>
+            </td>
+            <td> <span class="unidad_medida_${cont}">${element.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${element.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${element.categoria}"></td>
+            <td class="form-group"><input class="producto_${element.idproducto} producto_selecionado w-100px cantidad_${cont} form-control" type="number" name="cantidad[]" id="cantidad[]" value="${element.cantidad}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="hidden"><input class="w-135px input-no-border precio_sin_igv_${cont}" type="number" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${element.precio_sin_igv}" readonly ></td>
+            <td class="hidden"><input class="w-135px input-no-border precio_igv_${cont}" type="number"  name="precio_igv[]" id="precio_igv[]" value="${element.igv}" readonly ></td>
+            <td class="form-group"><input type="number" class="w-135px precio_con_igv_${cont} form-control" type="number"  name="precio_con_igv[]" id="precio_con_igv[]" value="${parseFloat(element.precio_con_igv).toFixed(2)}" min="0.01" required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            <td class="form-group"><input type="number" class="w-135px form-control precio_venta_${cont}" name="precio_venta[]" id="precio_venta[]" value="${parseFloat(element.precio_venta).toFixed(2)}" min="0" ></td>
+            <td class="form-group"><input type="number" class="w-135px form-control descuento_${cont}" name="descuento[]" value="${element.descuento}" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="text-right"><span class="text-right subtotal_producto_${cont}" name="subtotal_producto" id="subtotal_producto">0.00</span></td>
+            <td><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
+          </tr>`;
+
+          detalles = detalles + 1;
+
+          $("#detalles").append(fila);
+
+          array_class_trabajador.push({ id_cont: cont });
+
+          cont++;
+          evaluar();
+        });
+
+        modificarSubtotales();
+      } else {  
+        toastr_error("Sin productos!!","Este registro no tiene productos para mostrar", 700);     
+      }
+
+      $("#cargando-1-fomulario").show();
+      $("#cargando-2-fomulario").hide();
+      
+    } else {
+      ver_errores(e);
+    }
+    
+  }).fail( function(e) { ver_errores(e); } );
+}
+
 //mostramos el detalle del comprobante de la compras
 function ver_detalle_compras(idcompra_producto) {
 
@@ -845,7 +955,7 @@ function ver_detalle_compras(idcompra_producto) {
       $("#cargando-6-fomulario").hide();
 
       $("#excel_compra").removeClass('disabled').attr('href', `../reportes/export_xlsx_compra_producto.php?id=${idcompra_producto}`);
-      $("#print_pdf_compra").removeClass('disabled').attr('href', `../reportes/pdf_ingreso_productos.php?id=${idcompra_producto}` );
+      $("#print_pdf_compra").removeClass('disabled').attr('href', `../reportes/pdf_compra_productos.php?id=${idcompra_producto}` );
     } else {
       ver_errores(e);
     }    
@@ -859,7 +969,7 @@ function download_no_multimple(id_compra, cont, nombre_doc) {
   $(`.descarga_compra_${id_compra}`).html('<i class="fas fa-spinner fa-pulse"></i>');
   //console.log(id_compra, nombre_doc);
   var cant_download_ok = 0; var cant_download_error = 0;
-  $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+  $.post("../ajax/compra_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
     e = JSON.parse(e); console.log(e);
     if (e.status == true) {
       e.data.forEach((val, index) => {
@@ -890,7 +1000,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
   $('.cargando_check').removeClass('hidden');
 
   if ($(`#check_descarga_${id_compra}`).is(':checked')) {
-    $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/compra_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_docs_ok = 0; var cont_docs_error = 0;
@@ -927,7 +1037,7 @@ function add_remove_comprobante(id_compra, doc, factura_name) {
     }).fail( function(e) { ver_errores(e); } );
     
   } else {
-    $.post("../ajax/ingreso_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
+    $.post("../ajax/compra_producto.php?op=ver_comprobante_compra", { 'id_compra': id_compra }, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); console.log(e);
       if (e.status == true) {
         var cont_doc = 0;
@@ -1079,7 +1189,7 @@ function guardar_proveedor(e) {
   var formData = new FormData($("#form-proveedor")[0]);
 
   $.ajax({
-    url: "../ajax/ingreso_producto.php?op=guardar_proveedor",
+    url: "../ajax/compra_producto.php?op=guardar_proveedor",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1135,7 +1245,7 @@ function mostrar_para_editar_proveedor() {
   $('#modal-agregar-proveedor').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/ingreso_producto.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
+  $.post("../ajax/compra_producto.php?op=mostrar_editar_proveedor", { 'idproveedor': $('#idproveedor').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
@@ -1221,7 +1331,7 @@ function mostrar_productos(idproducto, cont) {
 
   $("#modal-agregar-productos").modal("show");
 
-  $.post("../ajax/ingreso_producto.php?op=mostrar_productos", { 'idproducto': idproducto }, function (e, status) {
+  $.post("../ajax/compra_producto.php?op=mostrar_productos", { 'idproducto': idproducto }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);    
 
@@ -1273,7 +1383,7 @@ function guardar_y_editar_productos(e) {
   var formData = new FormData($("#form-producto")[0]);
 
   $.ajax({
-    url: "../ajax/ingreso_producto.php?op=guardar_y_editar_productos",
+    url: "../ajax/compra_producto.php?op=guardar_y_editar_productos",
     type: "POST",
     data: formData,
     contentType: false,

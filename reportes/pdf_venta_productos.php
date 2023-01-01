@@ -49,10 +49,10 @@ if (!isset($_SESSION["nombre"])) {
   //Enviamos los datos del cliente al método addClientAdresse de la clase Factura
   $pdf->addClientAdresse(utf8_decode($rspta['data']['venta']['nombres']), 
     utf8_decode($rspta['data']['venta']['direccion']), 
-    $rspta['data']['venta']['tipo_documento'] , 
-    $rspta['data']['venta']['numero_documento'], 
-    $rspta['data']['venta']['correo'], 
-    $rspta['data']['venta']['celular']
+    utf8_decode($rspta['data']['venta']['tipo_documento']) , 
+    utf8_decode($rspta['data']['venta']['numero_documento']), 
+    utf8_decode($rspta['data']['venta']['correo']), 
+    utf8_decode($rspta['data']['venta']['celular'])
   );
   $pdf->addReference( utf8_decode( decodeCadenaHtml((empty($rspta['data']['venta']['descripcion'])) ? '- - -' :$rspta['data']['venta']['descripcion']) ));
 

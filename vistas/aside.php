@@ -158,8 +158,8 @@
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->
                   <li class="nav-item ">
-                    <a href="ingreso_producto.php" class="nav-link" id="lCompras">
-                      <i class="nav-icon fas fa-cart-plus"></i> <p>Compras</p>
+                    <a href="compra_producto.php" class="nav-link" id="lCompras">
+                      <i class="nav-icon fas fa-cart-plus"></i> <p>Compras Producto</p>
                     </a>
                   </li>
                   <!-- Resumend de Insumos -->
@@ -171,7 +171,7 @@
                   
                   <!-- graficos insumos -->
                   <li class="nav-item ">
-                    <a href="chart_compra_insumo.php" class="nav-link" id="lChartCompraInsumo">
+                    <a href="chart_compra_producto.php" class="nav-link" id="lChartCompraProducto">
                       <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
                     </a>
                   </li> 

@@ -70,8 +70,8 @@
   $hojaActiva->setCellValue('J4', 'Desct.');
   $hojaActiva->setCellValue('K4', 'Subtotal');
 
-  require_once "../modelos/Ingreso_producto.php";
-  $compra_producto = new Ingreso_producto();
+  require_once "../modelos/Compra_producto.php";
+  $compra_producto = new Compra_producto();
 
   $rspta      = $compra_producto->ver_compra($_GET['id']);
   // echo json_encode($rspta, true);

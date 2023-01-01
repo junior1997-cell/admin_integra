@@ -52,7 +52,7 @@ function table_show_hide(flag) {
     $("#btn-regresar-bloque").hide();
     $("#guardar_registro_compras").hide();    
 
-    $(".nombre-insumo").html(`<img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Resumen de Insumos`);
+    $(".nombre-insumo").html(`<img src="../dist/svg/negro-palana-ico.svg" class="nav-icon" alt="" style="width: 21px !important;"> Almacén - Resumen de Producto`);
 
     $("#tabla-principal").show();
     $("#tabla-factura").hide();

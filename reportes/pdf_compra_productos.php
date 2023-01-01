@@ -1,6 +1,7 @@
 <?php
-//Activamos el almacenamiento en el buffer
-ob_start();
+require '../vendor/autoload.php';
+use Luecano\NumeroALetras\NumeroALetras;
+
 if (strlen(session_id()) < 1) {
   session_start();
 }
@@ -10,12 +11,12 @@ if (!isset($_SESSION["nombre"])) {
 } else {
       
   require 'Factura.php';
-  require_once "../modelos/Ingreso_producto.php";
+  require_once "../modelos/Compra_producto.php";
 
   //Establecemos la configuración de la factura
-  $pdf = new PDF_Invoice('P', 'mm', 'A4');
-  
-  $compra_producto = new Ingreso_producto();
+  $pdf = new PDF_Invoice('P', 'mm', 'A4');  
+  $compra_producto = new Compra_producto();
+  $numero_a_letra = new NumeroALetras();
 
   if (empty($_GET)) {
     header("Location: ../vistas/login.html"); //Validamos el acceso solo a los usuarios logueados al sistema.
@@ -39,16 +40,18 @@ if (!isset($_SESSION["nombre"])) {
   $documento . "\n" . utf8_decode("Dirección: ") . utf8_decode($direccion) . "\n" . utf8_decode("Teléfono: ") . $telefono , 
   $logo, $ext_logo);
   $pdf->fact_dev($rspta['data']['compra']['tipo_comprobante'], $rspta['data']['compra']['serie_comprobante']);
+  $pdf->addClient( zero_fill($rspta['data']['compra']['idpersona'], 6) ); #codigo de Persona
   $pdf->addDate(format_d_m_a($rspta['data']['compra']['fecha_compra']));
 
   $pdf->temporaire( utf8_decode("Integra Peru") );
 
   //Enviamos los datos del cliente al método addClientAdresse de la clase Factura
   $pdf->addClientAdresse(utf8_decode($rspta['data']['compra']['nombres']), 
-    utf8_decode("Dirección: "). utf8_decode($rspta['data']['compra']['direccion']), 
-    $rspta['data']['compra']['tipo_documento'] . ": " .$rspta['data']['compra']['numero_documento'], 
-    "Email: " . $rspta['data']['compra']['correo'], 
-    "Telefono: " . $rspta['data']['compra']['celular']
+    utf8_decode($rspta['data']['compra']['direccion']), 
+    utf8_decode($rspta['data']['compra']['tipo_documento']),
+    utf8_decode($rspta['data']['compra']['numero_documento']), 
+    utf8_decode($rspta['data']['compra']['correo']), 
+    utf8_decode($rspta['data']['compra']['celular'])
   );
   $pdf->addReference( utf8_decode( decodeCadenaHtml((empty($rspta['data']['compra']['descripcion'])) ? '- - -' :$rspta['data']['compra']['descripcion']) ));
 
@@ -79,12 +82,12 @@ if (!isset($_SESSION["nombre"])) {
     $y += $size + 2;
   }
 
-  //Convertimos el total en letras
-  require_once "Letras.php";
-  $V = new EnLetras();
-  $num_total = floatval($rspta['data']['compra']['total']);
-  $con_letra = strtoupper($V->ValorEnLetras(503, "SOLES"));
-  $pdf->addCadreTVAs("---" . $con_letra);
+  //Convertimos el total en letras  
+  $num_total = $numero_a_letra->toMoney( $rspta['data']['compra']['total'], 2, 'soles' );  #echo $num_total; die;
+  $decimales_mun = explode('.', $rspta['data']['compra']['total']); #echo $decimales_mun[1]; die;
+  $centimos = (isset($decimales_mun[1])? $decimales_mun[1] : '00' ) . '/100 CÉNTIMOS';
+  $con_letra = strtoupper( utf8_decode($num_total .' '. $centimos) );
+  $pdf->addCadreTVAs("- " . $con_letra);
 
   //Mostramos el impuesto
   $pdf->addTVAs(number_format($rspta['data']['compra']['subtotal'], 2, '.',','), number_format($rspta['data']['compra']['igv'], 2, '.',','), number_format($rspta['data']['compra']['total'], 2, '.',','), "S/ ");
@@ -93,9 +96,4 @@ if (!isset($_SESSION["nombre"])) {
    
 }
 
-function number_words($valor,$desc_moneda, $sep, $desc_decimal) {
-  $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
-  return $f->format(1432);
-}
-ob_end_flush();
 ?>

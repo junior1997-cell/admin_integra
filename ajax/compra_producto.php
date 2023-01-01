@@ -11,11 +11,11 @@ if (!isset($_SESSION["nombre"])) {
 
   if ($_SESSION['compra_insumos'] == 1) {
     
-    require_once "../modelos/Ingreso_producto.php";
+    require_once "../modelos/Compra_producto.php";
     require_once "../modelos/Persona.php";
     require_once "../modelos/Producto.php";
 
-    $compra_producto = new Ingreso_producto();
+    $compra_producto = new Compra_producto();
     $proveedor = new Persona();
     $productos = new Producto();      
     
@@ -189,14 +189,14 @@ if (!isset($_SESSION["nombre"])) {
             $data[] = [
               "0" => $cont,
               "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_producto'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['nombres'].'</del>'). '\')"><i class="fas fa-skull-crossbones"></i> </button>',
-                 
+                ' <button class="btn bg-purple btn-sm" onclick="copiar_venta(' . $reg['idcompra_producto'] . ')" data-toggle="tooltip" data-original-title="Copiar"><i class="fa-regular fa-copy"></i></button>' . 
+                '<!-- <button class="btn btn-warning btn-sm" onclick="mostrar_compra(' . $reg['idcompra_producto'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button> -->' .                  
+                ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_producto'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</del> <del>'.$reg['nombres'].'</del>'). '\')" data-toggle="tooltip" data-original-title="Eliminar o Papelera"><i class="fas fa-skull-crossbones"></i> </button>',                 
               "2" => $reg['fecha_compra'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['nombres'] . '</span>',
-              "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>',
+              "4" =>'<span class="" ><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['serie_comprobante']) ?  "" :  '- '.$reg['serie_comprobante']).'</span>' . $toltip ,
               "5" => $reg['total'],
-              "6" => $reg['descripcion'],
+              "6" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg['descripcion'] . '</textarea>',
             ];
             $cont++;
           }
