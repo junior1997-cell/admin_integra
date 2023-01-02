@@ -56,16 +56,16 @@
           in_array(1, $valores) ? ($_SESSION['escritorio'] = 1)     : ($_SESSION['escritorio'] = 0);
           in_array(2, $valores) ? ($_SESSION['acceso'] = 1)         : ($_SESSION['acceso'] = 0);
           in_array(3, $valores) ? ($_SESSION['recurso'] = 1)        : ($_SESSION['recurso'] = 0);   
-          in_array(9, $valores) ? ($_SESSION['papelera'] = 1)       : ($_SESSION['papelera'] = 0);
+          in_array(4, $valores) ? ($_SESSION['papelera'] = 1)       : ($_SESSION['papelera'] = 0);
           
           // LOGISTICA Y ADQUISICIONES
-          in_array(15, $valores) ? ($_SESSION['almacen_abono'] = 1) : ($_SESSION['almacen_abono'] = 0);
-          in_array(16, $valores) ? ($_SESSION['venta_abono'] = 1)   : ($_SESSION['venta_abono'] = 0);
-          in_array(17, $valores) ? ($_SESSION['compra_grano'] = 1)  : ($_SESSION['compra_grano'] = 0);
+          in_array(5, $valores) ? ($_SESSION['almacen_abono'] = 1) : ($_SESSION['almacen_abono'] = 0);
+          in_array(6, $valores) ? ($_SESSION['venta_abono'] = 1)   : ($_SESSION['venta_abono'] = 0);
+          in_array(7, $valores) ? ($_SESSION['compra_grano'] = 1)  : ($_SESSION['compra_grano'] = 0);
           
           // CONTABLE Y FINANCIERO
-          in_array(27, $valores) ? ($_SESSION['pago_trabajador'] = 1): ($_SESSION['pago_trabajador'] = 0);         
-          in_array(28, $valores) ? ($_SESSION['otro_ingreso'] = 1)   : ($_SESSION['otro_ingreso'] = 0);
+          in_array(8, $valores) ? ($_SESSION['pago_trabajador'] = 1): ($_SESSION['pago_trabajador'] = 0);         
+          in_array(9, $valores) ? ($_SESSION['otro_ingreso'] = 1)   : ($_SESSION['otro_ingreso'] = 0);
 
         } else {
           echo json_encode($rspta, true);
