@@ -19,17 +19,17 @@ function init() {
 
 function tablero() {   
 
-  $.post("../ajax/proyecto.php?op=tablero",  function (data, status) {
+  $.post("../ajax/escritorio.php?op=tablero",  function (e, status) {
 
-    data = JSON.parse(data);  //console.log(data);
+    e = JSON.parse(e);  //console.log(e);
 
-    if (data.status) {
-      $("#cantidad_proyectos").html(data.data.proyecto);
-      $("#cantidad_proveedores").html(data.data.proveedor);
-      $("#cantidad_trabajadores").html(data.data.trabajador);
-      $("#cantidad_compra").html(data.data.servicio);
+    if (e.status) {
+      $("#cantidad_box_producto").html(formato_miles(e.data.cant_producto));
+      $("#cantidad_box_agricultor").html(formato_miles(e.data.cant_agricultor));
+      $("#cantidad_box_trabajador").html(formato_miles(e.data.cant_trabajador));
+      $("#cantidad_box_venta").html(formato_miles(e.data.cant_venta_producto));
     } else {
-      ver_errores(data);
+      ver_errores(e);
     } 
 
   }).fail( function(e) { ver_errores(e); } );
@@ -57,14 +57,16 @@ $(function () {
       labels: [ 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
       datasets: [
         {
-          backgroundColor: '#007bff',
-          borderColor: '#007bff',
-          data: [700, 100, 600, 800, 1000, 2000, 3000, 5000, 2500, 9700, 2500, 3000]
+          backgroundColor: '#28a745',
+          borderColor: '#28a745',
+          data: [700, 100, 600, 800, 1000, 2000, 3000, 5000, 2500, 9700, 2500, 3000],
+          label: 'Subcontrato'
         },
         {
           backgroundColor: '#ced4da',
           borderColor: '#ced4da',
-          data: [700, 800, 200, 1700, 2700, 2000, 1800, 1500, 2000, 600, 800, 1000,]
+          data: [700, 800, 200, 1700, 2700, 2000, 1800, 1500, 2000, 600, 800, 1000,],
+          label: 'Gastos'
         }
       ]
     },
@@ -79,7 +81,7 @@ $(function () {
         intersect: intersect
       },
       legend: {
-        display: false
+        display: true
       },
       scales: {
         yAxes: [{
@@ -125,12 +127,13 @@ $(function () {
           type: 'line',
           data: [700, 100, 600, 800, 1000, 2000, 3000, 5000, 2500, 9700, 2500, 3000],
           backgroundColor: 'transparent',
-          borderColor: '#007bff',
-          pointBorderColor: '#007bff',
-          pointBackgroundColor: '#007bff',
-          fill: false
-          // pointHoverBackgroundColor: '#007bff',
-          // pointHoverBorderColor    : '#007bff'
+          borderColor: '#28a745',
+          pointBorderColor: '#28a745',
+          pointBackgroundColor: '#28a745',
+          fill: false,
+          label: 'Subcontrato'
+          // pointHoverBackgroundColor: '#28a745',
+          // pointHoverBorderColor    : '#28a745'
         },
         {
           type: 'line',
@@ -139,7 +142,8 @@ $(function () {
           borderColor: '#ced4da',
           pointBorderColor: '#ced4da',
           pointBackgroundColor: '#ced4da',
-          fill: false
+          fill: false,
+          label: 'Utilidad'
           // pointHoverBackgroundColor: '#ced4da',
           // pointHoverBorderColor    : '#ced4da'
         }
@@ -156,7 +160,7 @@ $(function () {
         intersect: intersect
       },
       legend: {
-        display: false
+        display: true
       },
       scales: {
         yAxes: [{
