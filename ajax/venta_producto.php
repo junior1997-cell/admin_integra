@@ -9,7 +9,7 @@ if (!isset($_SESSION["nombre"])) {
   echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
 } else {
 
-  if ($_SESSION['compra_insumos'] == 1) {
+  if ($_SESSION['venta_abono'] == 1) {
     
     require_once "../modelos/Venta_producto.php";
     require_once "../modelos/Persona.php";
@@ -173,12 +173,7 @@ if (!isset($_SESSION["nombre"])) {
       case 'recover_stock_producto':
         $rspta = $venta_producto->recover_stock_producto($_POST["idproducto"], $_POST["stock"]);    
         echo json_encode($rspta, true);    
-      break;
-
-      case 'autoincrement_comprobante':
-        $rspta = $venta_producto->autoincrement_comprobante();    
-        echo json_encode($rspta, true);    
-      break;
+      break;      
     
       case 'tbla_principal':
         $rspta = $venta_producto->tbla_principal($_GET["fecha_1"], $_GET["fecha_2"], $_GET["id_proveedor"], $_GET["comprobante"]);

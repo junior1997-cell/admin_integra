@@ -62,7 +62,7 @@ if (!isset($_SESSION["nombre"])) {
   $pdf->addLineFormat($cols);
   $pdf->addLineFormat($cols);
   //Actualizamos el valor de la coordenada "y", que será la ubicación desde donde empezaremos a mostrar los datos
-  $y = 89;
+  $y = 85;
 
   $cont = 1;
   //Obtenemos todos los detalles de la venta actual

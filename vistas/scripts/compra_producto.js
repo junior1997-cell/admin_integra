@@ -202,9 +202,9 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,4,5,6], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5,6], } },              
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,2,3,7,8,5,6], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,2,3,7,8,5,6], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,7,8,5,6], } },              
     ],
     ajax: {
       url: `../ajax/compra_producto.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_proveedor=${id_proveedor}&comprobante=${comprobante}`,
@@ -232,6 +232,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
     columnDefs: [
+      { targets: [7,8],  visible: false,  searchable: false,  },
       { targets: [5], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
       { targets: [2], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
     ],
@@ -1668,3 +1669,4 @@ function replicar_precio_venta(id, name_input, valor) {
   var value = $(valor).val(); console.log(value);
   $(`${name_input}`).val(value).trigger("change");
 }
+

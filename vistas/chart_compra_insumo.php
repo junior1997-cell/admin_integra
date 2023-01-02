@@ -278,7 +278,7 @@
                                 <p class="text-center mt-4">
                                   <strong class="mt-2">Pagos de Factura</strong>
                                 </p>
-                                 <!-- /.seccion -->
+                                <!-- /.seccion -->
 
                                 <div class="progress-group">
                                   <span class="progress-text font-weight-bold text--success">Montos Pagadas</span>

@@ -10,7 +10,7 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
     //Validamos el acceso solo al usuario logueado y autorizado.
-    if ($_SESSION['compra_insumos'] == 1) {
+    if ($_SESSION['venta_abono'] == 1) {
 
       require_once "../modelos/Resumen_venta_producto.php";
       require_once "../modelos/Producto.php";
@@ -38,10 +38,10 @@
 
           if ($rspta['status']) {
             while ($reg = $rspta['data']->fetch_object()) {
-
+              $clas_stok = "";
               $imagen = (empty($reg->imagen) ? '../dist/docs/producto/img_perfil/producto-sin-foto.svg' : '../dist/docs/producto/img_perfil/'.$reg->imagen) ;
 
-              if ($reg->stock == 0 && $reg->stock <= 0) {
+              if ( $reg->stock <= 0) {
                 $clas_stok = 'badge-danger';
               }else if ($reg->stock > 0 && $reg->stock <= 10) {
                 $clas_stok = 'badge-warning';
@@ -65,8 +65,10 @@
                 "8" => '<button class="btn btn-info btn-sm mb-2" onclick="tbla_facuras( ' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre_producto, ENT_QUOTES) . '\')" data-toggle="tooltip" data-original-title="Ver compras"><i class="fa-solid fa-file-invoice-dollar"></i></button>'. $toltip,
                 "9" => $reg->precio_venta,
                 "10" => $reg->descuento,
-                "11" => $reg->subtotal,             
-         
+                "11" => $reg->subtotal,     
+                
+                "12" => $reg->nombre_producto,     
+                "13" => $reg->categoria_producto,     
               ];
             }
 

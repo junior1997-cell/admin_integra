@@ -108,15 +108,15 @@ class ChartCompraProducto
       FROM compra_producto  WHERE  YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
-      $sql_9 = "SELECT SUM(pg.monto) as factura_total_pago  
-      FROM pago_compra_producto as pg, compra_producto as cpp 
-      WHERE pg.idcompra_producto = cpp.idcompra_producto  AND  YEAR(pg.fecha_pago) = '$year_filtro' AND cpp.estado='1' AND cpp.estado_delete='1';";
+      $sql_9 = "SELECT SUM(pcp.monto) as factura_total_pago  
+      FROM pago_compra_producto as pcp, compra_producto as cp 
+      WHERE pcp.idcompra_producto = cp.idcompra_producto  AND  YEAR(pcp.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcp.estado='1' AND pcp.estado_delete='1';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
       $sql_10 = "SELECT dt.idproducto, p.nombre as producto, p.imagen, p.precio_unitario as precio_referencial, SUM(dt.cantidad) AS cantidad_vendida, p.descripcion
-      FROM compra_producto as cpp, detalle_compra_producto as dt, producto as p
-      WHERE cpp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND  YEAR(cpp.fecha_compra) = '$year_filtro'
+      FROM compra_producto as cp, detalle_compra_producto as dt, producto as p
+      WHERE cp.idcompra_producto = dt.idcompra_producto AND dt.idproducto = p.idproducto AND  YEAR(cp.fecha_compra) = '$year_filtro'
       GROUP BY dt.idproducto
       ORDER BY SUM(dt.cantidad) DESC
       LIMIT 0 , 6;";
@@ -164,9 +164,9 @@ class ChartCompraProducto
       FROM compra_producto  WHERE  MONTH(fecha_compra)='$mes_filtro' AND YEAR(fecha_compra) = '$year_filtro' AND estado='1' AND estado_delete='1';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
-      $sql_9 = "SELECT SUM(pg.monto) as factura_total_pago  
-      FROM pago_compra_producto as pg, compra_producto as cpp 
-      WHERE pg.idcompra_producto = cpp.idcompra_producto  AND MONTH(pg.fecha_pago)='$mes_filtro' AND YEAR(pg.fecha_pago) = '$year_filtro' AND cpp.estado='1' AND cpp.estado_delete='1';";
+      $sql_9 = "SELECT SUM(pcg.monto) as factura_total_pago  
+      FROM pago_compra_producto as pcg, compra_producto as cp 
+      WHERE pcg.idcompra_producto = cp.idcompra_producto  AND MONTH(pcg.fecha_pago)='$mes_filtro' AND YEAR(pcg.fecha_pago) = '$year_filtro' AND cp.estado='1' AND cp.estado_delete='1' AND pcg.estado='1' AND pcg.estado_delete='1';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------

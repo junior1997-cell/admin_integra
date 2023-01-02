@@ -92,12 +92,12 @@ function tbla_principal(id_proyecto) {
 	  aServerSide: true,//Paginación y filtrado realizados por el servidor
 	  dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
 	  buttons: [ 
-      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], }  }, 
-      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], } }, 
-      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], }, orientation: 'landscape', pageSize: 'LEGAL', },
+      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }  }, 
+      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], } }, 
+      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }, orientation: 'landscape', pageSize: 'LEGAL', },
     ],
 		ajax:	{
-      url: '../ajax/resumen_producto.php?op=tbla_principal',
+      url: '../ajax/resumen_compra_producto.php?op=tbla_principal',
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -129,14 +129,17 @@ function tbla_principal(id_proyecto) {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     footerCallback: function( tfoot, data, start, end, display ) {
-      var api = this.api(); var total = api.column( 11 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api.column( 11 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );
+      var api1 = this.api(); var total1 = api1.column( 10 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 10 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );
+
+      var api2 = this.api(); var total2 = api2.column( 11 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api2.column( 11 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
     },
 		bDestroy: true,
 		iDisplayLength: 10,//Paginación
 	  //order: [[ 0, "desc" ]]//Ordenar (columna,orden)
     columnDefs:[ 
-      // { "targets": [ 3 ], "visible": false, "searchable": false }, 
+      { "targets": [ 12,13 ], "visible": false, "searchable": false }, 
       { targets: [7], render: $.fn.dataTable.render.number(',', '.', 2) },
       { targets: [9,10,11], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ]
@@ -172,7 +175,7 @@ function tbla_facuras( idproducto, nombre_producto ) {
       { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,10,11,4,5,6,8]}, orientation: 'landscape', pageSize: 'LEGAL', }
     ],
 		ajax:	{
-      url: `../ajax/resumen_producto.php?op=tbla_facturas&idproducto=${idproducto}`,
+      url: `../ajax/resumen_compra_producto.php?op=tbla_facturas&idproducto=${idproducto}`,
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -233,7 +236,7 @@ function ver_detalle_compras(idcompra_producto, id_producto) {
 
     $("#print_pdf_compra").removeClass('disabled');    
     $("#excel_compra").removeClass('disabled').attr('href', `../reportes/export_xlsx_compra_producto.php?id=${idcompra_producto}`);
-    $("#print_pdf_compra").attr('href', `../reportes/pdf_ingreso_productos.php?id=${idcompra_producto}` );
+    $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_productos.php?id=${idcompra_producto}` );
   }).fail( function(e) { ver_errores(e); } ); 
 }
 
@@ -250,7 +253,7 @@ function mostrar_detalle_material(idproducto) {
 
   $("#modal-ver-detalle-material-activo-fijo").modal("show")
 
-  $.post("../ajax/resumen_producto.php?op=mostrar_materiales", { 'idproducto': idproducto }, function (e, status) {
+  $.post("../ajax/resumen_compra_producto.php?op=mostrar_materiales", { 'idproducto': idproducto }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e); 
     if (e.status) {     

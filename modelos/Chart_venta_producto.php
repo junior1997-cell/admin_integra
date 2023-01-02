@@ -108,9 +108,9 @@ class ChartVentaProducto
       FROM venta_producto  WHERE  YEAR(fecha_venta) = '$year_filtro' AND estado='1' AND estado_delete='1';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
-      $sql_9 = "SELECT SUM(pg.monto) as factura_total_pago  
-      FROM pago_venta_producto as pg, venta_producto as cpp 
-      WHERE pg.idventa_producto = cpp.idventa_producto  AND  YEAR(pg.fecha_pago) = '$year_filtro' AND cpp.estado='1' AND cpp.estado_delete='1';";
+      $sql_9 = "SELECT SUM(pvp.monto) as factura_total_pago  
+      FROM pago_venta_producto as pvp, venta_producto as vp 
+      WHERE pvp.idventa_producto = vp.idventa_producto  AND  YEAR(pvp.fecha_pago) = '$year_filtro' AND vp.estado='1' AND vp.estado_delete='1' AND pvp.estado='1' AND pvp.estado_delete='1';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
@@ -164,9 +164,9 @@ class ChartVentaProducto
       FROM venta_producto  WHERE  MONTH(fecha_venta)='$mes_filtro' AND YEAR(fecha_venta) = '$year_filtro' AND estado='1' AND estado_delete='1';";
       $factura_total_gasto = ejecutarConsultaSimpleFila($sql_8); if ($factura_total_gasto['status'] == false) { return $factura_total_gasto; }
 
-      $sql_9 = "SELECT SUM(pg.monto) as factura_total_pago  
-      FROM pago_venta_producto as pg, venta_producto as cpp 
-      WHERE pg.idventa_producto = cpp.idventa_producto  AND MONTH(pg.fecha_pago)='$mes_filtro' AND YEAR(pg.fecha_pago) = '$year_filtro' AND cpp.estado='1' AND cpp.estado_delete='1';";
+      $sql_9 = "SELECT SUM(pvp.monto) as factura_total_pago  
+      FROM pago_venta_producto as pvp, venta_producto as vp 
+      WHERE pvp.idventa_producto = vp.idventa_producto  AND MONTH(pvp.fecha_pago)='$mes_filtro' AND YEAR(pvp.fecha_pago) = '$year_filtro' AND vp.estado='1' AND vp.estado_delete='1' AND pvp.estado='1' AND pvp.estado_delete='1';";
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9); if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------

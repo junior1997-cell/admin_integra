@@ -23,7 +23,7 @@
           <?php
           require 'nav.php';
           require 'aside.php';
-          if ($_SESSION['compra_insumos']==1){
+          if ($_SESSION['venta_abono']==1){
             //require 'enmantenimiento.php';
             ?>   
           
@@ -93,6 +93,9 @@
                                   <th>Precio venta</th> 
                                   <th>Descuento</th>    
                                   <th>Suma Total</th> 
+
+                                  <th>Producto</th> 
+                                  <th>Categoría</th> 
                                 </tr>
                               </thead>
                               <tbody>                         
@@ -110,8 +113,11 @@
                                   <th class="text-center">Cantidad</th> 
                                   <th>Compra</th>
                                   <th>Precio venta</th>
-                                  <th>Descuento</th>   
-                                  <th class="text-nowrap px-2"><i class="fas fa-spinner fa-pulse fa-sm"></i></th>                               
+                                  <th class="text-nowrap px-2">0.00</th>   
+                                  <th class="text-nowrap px-2"><i class="fas fa-spinner fa-pulse fa-sm"></i></th>       
+                                  
+                                  <th>Producto</th> 
+                                  <th>Categoría</th> 
                                 </tr>
                               </tfoot>
                             </table>

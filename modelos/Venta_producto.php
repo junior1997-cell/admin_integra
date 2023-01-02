@@ -236,49 +236,6 @@ class Venta_producto
 		return $recover;
   }
 
-  //Implementamos un método para activar categorías
-  public function autoincrement_comprobante() {
-    $update_producto = "SELECT * FROM autoincrement_comprobante WHERE idautoincrement_comprobante = '1'";
-		$val =  ejecutarConsultaSimpleFila($update_producto); if ( $val['status'] == false) {return $val; }   
-
-		$compra_producto_f = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_f']) ? 1 : (intval($val['data']['compra_producto_f']) +1)); 
-    $compra_producto_b = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_b']) ? 1 : (intval($val['data']['compra_producto_b']) +1));
-    $compra_producto_nv = empty($val['data']) ? 1 : (empty($val['data']['compra_producto_nv']) ? 1 : (intval($val['data']['compra_producto_nv']) +1));
-
-    $venta_producto_f =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_f']) ? 1 : (intval($val['data']['venta_producto_f']) +1)); 
-    $venta_producto_b =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_b']) ? 1 : (intval($val['data']['venta_producto_b']) +1)); 
-    $venta_producto_nv =  empty($val['data']) ? 1 : (empty($val['data']['venta_producto_nv']) ? 1 : (intval($val['data']['venta_producto_nv']) +1)); 
-
-    $compra_cafe_f = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_f']) ? 1 : (intval($val['data']['compra_cafe_f']) +1));
-    $compra_cafe_b = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_b']) ? 1 : (intval($val['data']['compra_cafe_b']) +1));
-    $compra_cafe_nv = empty($val['data']) ? 1 : (empty($val['data']['compra_cafe_nv']) ? 1 : (intval($val['data']['compra_cafe_nv']) +1));
-
-    $venta_cafe_f = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_f']) ? 1 : (intval($val['data']['venta_cafe_f']) +1));
-    $venta_cafe_n = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_n']) ? 1 : (intval($val['data']['venta_cafe_n']) +1));
-    $venta_cafe_nv = empty($val['data']) ? 1 : (empty($val['data']['venta_cafe_nv']) ? 1 : (intval($val['data']['venta_cafe_nv']) +1));
-
-    return $sw = array( 'status' => true, 'message' => 'todo okey bro', 
-      'data' => [
-        'compra_producto_f'=> zero_fill($compra_producto_f, 6), 
-        'compra_producto_b'=> zero_fill($compra_producto_b, 6), 
-        'compra_producto_nv'=> zero_fill($compra_producto_nv, 6),
-
-        'venta_producto_f'=> zero_fill($venta_producto_f, 6), 
-        'venta_producto_b'=> zero_fill($venta_producto_b, 6), 
-        'venta_producto_nv'=> zero_fill($venta_producto_nv, 6), 
-
-        'compra_cafe_f'=> zero_fill($compra_cafe_f, 6), 
-        'compra_cafe_b'=> zero_fill($compra_cafe_b, 6), 
-        'compra_cafe_nv'=> zero_fill($compra_cafe_nv, 6), 
-
-        'venta_cafe_f'=> zero_fill($venta_cafe_f, 6),
-        'venta_cafe_n'=> zero_fill($venta_cafe_n, 6),
-        'venta_cafe_nv'=> zero_fill($venta_cafe_nv, 6),
-        
-      ] 
-    );      
-  }
-
   //Implementar un método para mostrar los datos de un registro a modificar
   public function mostrar($idventa_producto) {
     $sql = "SELECT * FROM venta_producto WHERE idventa_producto='$idventa_producto'";

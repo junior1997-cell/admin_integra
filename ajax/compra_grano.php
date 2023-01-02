@@ -9,7 +9,7 @@ if (!isset($_SESSION["nombre"])) {
   echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
 } else {
 
-  if ($_SESSION['compra_insumos'] == 1) {
+  if ($_SESSION['compra_grano'] == 1) {
     
     require_once "../modelos/Compra_grano.php";
     require_once "../modelos/Persona.php";
@@ -177,11 +177,10 @@ if (!isset($_SESSION["nombre"])) {
 
             $data[] = [
               "0" => $cont,
-              "1" => ($reg['estado'] == '1' ? '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-warning btn-sm" onclick="ver_compra_editar(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .                  
-                    ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_grano'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')" data-toggle="tooltip" data-original-title="Papelera o Eliminar"><i class="fas fa-skull-crossbones"></i> </button>'
-                  : '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' .  $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>' .
-                    ' <button class="btn btn-success btn-sm" onclick="des_anular(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Recuperar Compra"><i class="fas fa-check"></i></button>') . $toltip ,
+              "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
+                ' <button class="btn bg-purple btn-sm" onclick="copiar_venta(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="copiar"><i class="fa-regular fa-copy"></i></button>' . 
+                '<!-- <button class="btn btn-warning btn-sm" onclick="ver_compra_editar(' . $reg['idcompra_grano'] . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button> -->' .                  
+                ' <button class="btn btn-danger  btn-sm" onclick="eliminar_compra(' . $reg['idcompra_grano'] .', \''.encodeCadenaHtml('<del><b>' . $reg['tipo_comprobante'] .  '</b> '.(empty($reg['numero_comprobante']) ?  "" :  '- '.$reg['numero_comprobante']).'</del> <del>'.$reg['cliente'].'</del>'). '\')" data-toggle="tooltip" data-original-title="Papelera o Eliminar"><i class="fas fa-skull-crossbones"></i> </button>' . $toltip ,
               "2" => $reg['fecha_compra'],
               "3" => '<span class="text-primary font-weight-bold" >' . $reg['cliente'] . '</span>',
               "4" => $reg['es_socio'],

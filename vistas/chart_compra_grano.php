@@ -32,7 +32,7 @@
           <?php
             require 'nav.php';
             require 'aside.php';
-            if ($_SESSION['compra_insumos']==1){
+            if ($_SESSION['compra_grano']==1){
               //require 'enmantenimiento.php';
               ?>
 
@@ -102,14 +102,14 @@
                         </div>
                         <!-- /.info-box -->
                       </div>
-                      <!-- /.col -->
+                      <!-- /.col --> 
                       <div class="col-6 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="info-box mb-3">
-                          <span class="info-box-icon bg-warning elevation-1"><i class="nav-icon fa-solid fa-sack-dollar"></i></span>
+                          <span class="info-box-icon bg-black elevation-1"><i class="nav-icon fa-solid fa-sack-dollar "></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Total Compra</span>
-                            <span class="info-box-number cant_activo_fijo_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-text">Total Compra/Pago S/.</span>
+                            <span class="info-box-number cant_compra_pago_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -132,6 +132,7 @@
                         <div class="form-group">
                           <!-- <label for="month_filtro">Mes </label> -->
                           <select name="month_filtro" id="month_filtro" class="form-control select2" style="width: 100%;" onchange="chart_linea_barra();">
+                            <option ></option> 
                             <option value="1">Enero</option> 
                             <option value="2">Febrero</option> 
                             <option value="3">Marzo</option> 
@@ -157,7 +158,10 @@
                             <div class=" d-flex justify-content-center ">
                               <h3 class="card-title font-weight-bold">Compras y Kilos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
-                            </div>
+                              <a class="btn btn-tool btn-sm float-right" id="btn-download-chart-linea" data-toggle="tooltip" data-original-title="Descargar gráfico">
+                                <i class="fas fa-download fa-xl"></i>
+                              </a>
+                            </div>                            
                           </div>
                           <div class="card-body">
                             <!-- <div class="d-flex">
@@ -181,8 +185,10 @@
                             </div>
 
                             <div class="d-flex flex-row justify-content-end">
-                              <span class="mr-2"><i class="fas fa-square text-primary"></i>Total Compra </span>
-                              <span> <i class="fas fa-square " style="color: #6b3109;"></i> Total Kilos</span>
+                              <span class="mr-2"><i class="fas fa-square" style="color: #dc3545;"></i> Kilos Coco </span>
+                              <span class="mr-2"><i class="fas fa-square" style="color: #28a745;"></i> Kilos Pergamo </span>
+                              <span class="mr-2"><i class="fas fa-square" style="color: #000;"></i> Compra </span>
+                              <span class="mr-2"><i class="fas fa-square" style="color: #03a9f4;"></i> Pagos </span>
                             </div>
                           </div>
                         </div>
@@ -219,8 +225,10 @@
                                 </div>
 
                                 <div class="d-flex flex-row justify-content-end">
-                                  <span class="mr-2"> <i class="fas fa-square text-primary"></i> Total Compra </span>
-                                  <span> <i class="fas fa-square" style="color: #6b3109;"></i> Total Kilos </span>
+                                  <span class="mr-2"><i class="fas fa-square" style="color: #dc3545;"></i> Kilos Coco </span>
+                                  <span class="mr-2"><i class="fas fa-square" style="color: #28a745;"></i> Kilos Pergamo </span>
+                                  <span class="mr-2"><i class="fas fa-square" style="color: #000;"></i> Compra </span>
+                                  <span class="mr-2"><i class="fas fa-square" style="color: #03a9f4;"></i> Pagos </span>
                                 </div>
                               </div>
                               <div class="col-md-4">
@@ -259,10 +267,33 @@
                                   <span class="progress-text text--danger">Facturas rechazada y eliminadas</span>
                                   <span class="float-right cant_ft_rechazadas_eliminadas"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                                   <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger progress_ft_rechazadas_eliminadas" style="width: 0%"></div>
+                                    <div class="progress-bar bg-dark progress_ft_rechazadas_eliminadas" style="width: 0%"></div>
                                   </div>
                                 </div>
-                                <!-- /.progress-group -->                                
+                                <!-- /.progress-group -->         
+                                
+                                <p class="text-center mt-4">
+                                  <strong class="mt-2">Pagos de Factura S/.</strong>
+                                </p>
+                                <!-- /.seccion -->
+
+                                <div class="progress-group">
+                                  <span class="progress-text font-weight-bold text--success">Montos Pagadas</span>
+                                  <span class="float-right monto_pagado"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                                  <div class="progress progress-sm">
+                                    <div class="progress-bar bg-success progress_monto_pagado" style="width: 0%"></div>
+                                  </div>
+                                </div>
+                                <!-- /.progress-group -->
+                                
+                                <div class="progress-group">
+                                  <span class="progress-text font-weight-bold text-danger">Montos NO Pagadas</span>
+                                  <span class="float-right monto_no_pagado"><i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                                  <div class="progress progress-sm">
+                                    <div class="progress-bar bg-danger progress_monto_no_pagado" style="width: 0%"></div>
+                                  </div>
+                                </div>
+                                <!-- /.progress-group -->
                                 
                               </div>
                             </div>
@@ -272,7 +303,7 @@
                         <!-- /.card -->
                       </div>
 
-                      <div class="col-lg-6">
+                      <div class="col-lg-8">
                         <div class="card">
                           <div class="card-header border-0">
                             <h3 class="card-title text-center">Sumas por Tipos de Café</h3>
@@ -304,7 +335,7 @@
                         <!-- /.card -->
                       </div>
                       
-                      <div class="col-lg-6">
+                      <div class="col-lg-4">
                         <div class="card">
                           <div class="card-header border-0">
                             <h3 class="card-title text-center">Sumas por Tipos de Café</h3>
@@ -317,15 +348,15 @@
                           </div>
                           <div class="card-body bg-white" id="div-download-chart-pie-productos-mas-usados">
                             <div class="row">
-                              <div class="col-md-8">
+                              <div class="col-md-12">
                                 <div class="chart-responsive">
                                   <canvas id="chart_pie_productos_mas_usados" height="250"></canvas>
                                 </div>
                               </div>
-                              <div class="col-md-4">
+                              <!-- <div class="col-md-4">
                                 <ul class="chart-legend clearfix leyenda-pai-productos-mas-usados" >
                                 </ul>
-                              </div>
+                              </div> -->
                             </div>                            
                           </div>
                         </div>

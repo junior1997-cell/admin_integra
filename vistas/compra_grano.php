@@ -33,7 +33,7 @@
           <?php
           require 'nav.php';
           require 'aside.php';
-          if ($_SESSION['compra_insumos']==1){
+          if ($_SESSION['compra_grano']==1){
             //require 'enmantenimiento.php';
             ?>
             <!--Contenido-->
@@ -351,7 +351,7 @@
                                   <div class="col-lg-4" id="content-tipo-comprobante">
                                     <div class="form-group">
                                       <label for="tipo_comprobante">Tipo Comprobante <sup class="text-danger">(único*)</sup></label>
-                                      <select name="tipo_comprobante" id="tipo_comprobante" class="form-control select2"  onchange="default_val_igv(); modificarSubtotales(); ocultar_comprob();" placeholder="Seleccinar un tipo de comprobante">
+                                      <select name="tipo_comprobante" id="tipo_comprobante" class="form-control select2"  onchange="default_val_igv(); modificarSubtotales(); ocultar_comprob(); autoincrement_comprobante(this);" placeholder="Seleccinar un tipo de comprobante">
                                         <option value="Ninguno">Ninguno</option>
                                         <option value="Boleta">Boleta</option>
                                         <option value="Factura">Factura</option>
@@ -364,7 +364,7 @@
                                   <div class="col-lg-2" id="content-serie-comprobante">
                                     <div class="form-group">
                                       <label for="numero_comprobante">N° de Comprobante <sup class="text-danger">(único*)</sup></label>
-                                      <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" placeholder="N° de Comprobante" />
+                                      <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" placeholder="N° de Comprobante" readonly />
                                     </div>
                                   </div>
 

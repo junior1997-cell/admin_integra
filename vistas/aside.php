@@ -148,28 +148,28 @@
           </a>
           <ul class="nav nav-treeview">
 
-            <?php if ($_SESSION['compra_insumos']==1) {  ?>   
+            <?php if ($_SESSION['almacen_abono']==1) {  ?>   
               <!-- COMPRAS -->      
               <li class="nav-item  b-radio-3px" id="bloc_Compras">
                 <a href="#" class="nav-link pl-2" id="mCompra">
-                  <i class="fas fa-shopping-cart nav-icon"></i>
+                <i class="fa-solid fa-boxes-stacked"></i>
                   <p>Almacén Abono <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <!-- Compras del proyecto -->
+                  <!-- Compras producto -->
                   <li class="nav-item ">
                     <a href="compra_producto.php" class="nav-link" id="lCompras">
                       <i class="nav-icon fas fa-cart-plus"></i> <p>Compras Producto</p>
                     </a>
                   </li>
-                  <!-- Resumend de Insumos -->
+                  <!-- Resumend de Productos -->
                   <li class="nav-item ">
-                    <a href="resumen_producto.php" class="nav-link" id="lResumenProducto">
+                    <a href="resumen_compra_producto.php" class="nav-link" id="lResumenProducto">
                       <i class="nav-icon fas fa-tasks"></i> <p>Resumen de Productos</p>
                     </a>
                   </li> 
                   
-                  <!-- graficos insumos -->
+                  <!-- Graficos Productos -->
                   <li class="nav-item ">
                     <a href="chart_compra_producto.php" class="nav-link" id="lChartCompraProducto">
                       <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
@@ -178,28 +178,29 @@
                 </ul>
               </li>
             <?php  }  ?>  
-            <?php if ($_SESSION['compra_insumos']==1) {  ?>   
+
+            <?php if ($_SESSION['venta_abono']==1) {  ?>   
               <!-- Ventas -->      
               <li class="nav-item  b-radio-3px" id="bloc_Ventas">
                 <a href="#" class="nav-link pl-2" id="mVentas">
-                  <i class="fa-solid fa-comments-dollar"></i>
+                  <i class="fas fa-shopping-cart nav-icon"></i>
                   <p>Venta Abonos <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">3</span></p>
                 </a>
                 <ul class="nav nav-treeview">
-                  <!-- Ventas del proyecto -->
+                  <!-- Ventas Producto -->
                   <li class="nav-item ">
                     <a href="venta_producto.php" class="nav-link" id="lVentasProductos">
-                      <i class="nav-icon fas fa-cart-plus"></i> <p>Ventas</p>
+                      <i class="nav-icon fas fa-cart-plus"></i> <p>Ventas Producto</p>
                     </a>
                   </li>
-                  <!-- Resumend de Insumos -->
+                  <!-- Resumend de Producto -->
                   <li class="nav-item ">
                     <a href="resumen_venta_producto.php" class="nav-link" id="lResumenVentasProductos">
-                      <i class="nav-icon fas fa-tasks"></i> <p>Resumen Ventas</p>
+                      <i class="nav-icon fas fa-tasks"></i> <p>Resumen de Productos</p>
                     </a>
                   </li> 
                   
-                  <!-- graficos insumos -->
+                  <!-- Graficos Producto -->
                   <li class="nav-item ">
                     <a href="chart_venta_producto.php" class="nav-link" id="lChartVentaProducto">
                       <i class="nav-icon fas fa-chart-line"></i> <p>Gráficos</p>
@@ -209,12 +210,12 @@
               </li>
             <?php  }  ?>      
             
-            <?php if ($_SESSION['compra_insumos']==1) {  ?>   
+            <?php if ($_SESSION['compra_grano']==1) {  ?>   
               <!-- COMPRAS -->      
               <li class="nav-item  b-radio-3px" id="bloc_ComprasGrano">
                 <a href="#" class="nav-link pl-2" id="mCompraGrano">
-                  <img src="../dist/svg/plomo-grano-cafe-ico.svg" class="nav-icon" alt="" style="width: 21px !important;" >
-                  <p>Compras Grano <i class="fas fa-angle-left right"></i> <span class="badge badge-danger right">2</span></p>
+                  <img src="../dist/svg/plomo-grano-cafe-ico.svg" class="nav-icon lComprasGrano-img" alt="" style="width: 21px !important;" >
+                  <p>Compras Grano <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">2</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->
@@ -235,15 +236,15 @@
               </li>
             <?php  }  ?>             
 
-            <?php if ($_SESSION['otro_gasto']==1) {  ?>
+            <?php /* if ($_SESSION['otro_gasto']==1) { */ ?>
               <!-- OTROS GASTOS -->       
-              <li class="nav-item ">
+              <!-- <li class="nav-item ">
                 <a href="otro_gasto.php" class="nav-link pl-2" id="lOtroGasto">
                   <i class="nav-icon fas fa-network-wired"></i>
                   <p>Otros Gastos </p>
                 </a>
-              </li>
-            <?php  }  ?>            
+              </li> -->
+            <?php /* } */ ?>            
             
           </ul>
         </li> 

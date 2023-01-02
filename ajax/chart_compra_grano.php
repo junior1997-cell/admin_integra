@@ -9,7 +9,7 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
 
-    if ($_SESSION['recurso'] == 1) {
+    if ($_SESSION['compra_grano'] == 1) {
       
       require_once "../modelos/Chart_compra_grano.php";
 
@@ -35,7 +35,7 @@
         break;
 
         case 'anios_select2':
-          $rspta = $chart_compra_grano->anios_select2($_GET["nube_idproyecto"]);
+          $rspta = $chart_compra_grano->anios_select2();
 
           $data ="";
          

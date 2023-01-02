@@ -29,7 +29,7 @@
           <?php
           require 'nav.php';
           require 'aside.php';
-          if ($_SESSION['compra_insumos']==1){
+          if ($_SESSION['almacen_abono']==1){
             //require 'enmantenimiento.php';
             ?>
             <!--Contenido-->
@@ -151,7 +151,7 @@
                             <table id="tabla-compra" class="table table-bordered table-striped display" style="width: 100% !important;">
                               <thead>
                                 <tr>
-                                  <th colspan="7" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
+                                  <th colspan="9" class="cargando text-center bg-danger"><i class="fas fa-spinner fa-pulse fa-sm"></i> Buscando... </th>
                                 </tr>
                                 <tr>
                                   <th class="">#</th>
@@ -161,6 +161,9 @@
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
                                   <th>Total</th>
                                   <th>Descripción</th>
+
+                                  <th>Tipo comprobante</th>
+                                  <th>Num. Comprobante</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -173,6 +176,9 @@
                                   <th data-toggle="tooltip" data-original-title="Tipo y Número Comprobante">Tipo</th>
                                   <th class="px-2">S/. 0.00</th>
                                   <th>Descripción</th>
+
+                                  <th>Tipo comprobante</th>
+                                  <th>Num. Comprobante</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -217,7 +223,7 @@
                                   <th>Comprobante</th>
                                   <th data-toggle="tooltip" data-original-title="Número Comprobante">Num. Comprobante</th>
                                   <th>Total</th>
-                                  <th>Descripcion</th>
+                                  <th>Descripcion</th>                                  
                                 </tr>
                               </thead>
                               <tbody></tbody>

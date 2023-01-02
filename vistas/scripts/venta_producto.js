@@ -286,6 +286,7 @@ function tbla_principal(fecha_1, fecha_2, id_proveedor, comprobante) {
       
       var api2 = this.api(); var total2 = api2.column( 14 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
       $( api2.column( 8 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+      $( api2.column( 14 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
 
       var api3 = this.api(); var total3 = api3.column( 9 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
       $( api3.column( 9 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total3)}</span>` );
@@ -477,8 +478,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
       }
       
     } else {
-
-      if (stock == 0) {
+      if (stock <= 0) {        
         toastr_error('No hay Stock!!', 'El producto se quedo sin stock, recarga en el modulo de <a href="ingreso_producto.php">compras</a>', 700);
       } else {
 
@@ -514,7 +514,7 @@ function agregarDetalleComprobante(idproducto,nombre,unidad_medida, categoria,pr
           </td>
           <td class="py-1"><span class="unidad_medida_${cont}">${unidad_medida}</span> <input type="hidden" class="unidad_medida_${cont}" name="unidad_medida[]" id="unidad_medida[]" value="${unidad_medida}"><input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${categoria}"></td>
           <td class="py-1 form-group">
-            <input type="number" class="w-100px valid_cantidad form-control producto_${idproducto} producto_selecionado" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+            <input type="number" class="w-100px valid_cantidad form-control producto_${idproducto} producto_selecionado" name="valid_cantidad[${cont}]" id="valid_cantidad_${cont}" value="${cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
             <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${cantidad}" min="0.01" required onkeyup="update_stock(${idproducto},${cont});" onchange="update_stock(${idproducto},${cont});">            
           </td>
           <td class="py-1 hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${parseFloat(precio_sin_igv).toFixed(2)}" readonly min="0" ></td>
@@ -869,8 +869,8 @@ function mostrar_venta(idventa_producto) {
             </td>
             <td> <span class="unidad_medida_${cont}">${val.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${val.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${val.categoria}"></td>            
             <td class="py-1 form-group">
-              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
-              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
+              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
               <input type="hidden" class="" name="cantidad_old[]" id="cantidad_old_${cont}" value="${val.cantidad}">
             </td>
             <td class="hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${val.precio_sin_igv}" readonly ></td>
@@ -1000,8 +1000,8 @@ function copiar_venta(idventa_producto) {
             </td>
             <td> <span class="unidad_medida_${cont}">${val.unidad_medida}</span> <input class="unidad_medida_${cont}" type="hidden" name="unidad_medida[]" id="unidad_medida[]" value="${val.unidad_medida}"> <input class="categoria_${cont}" type="hidden" name="categoria[]" id="categoria[]" value="${val.categoria}"></td>            
             <td class="py-1 form-group">
-              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad[]" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
-              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
+              <input class="w-100px valid_cantidad form-control producto_${val.idproducto} producto_selecionado" type="number" name="valid_cantidad[${cont}]" id="valid_cantidad_${cont}" value="${val.cantidad}" min="0.01" required onkeyup="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);" onchange="replicar_precio_venta(${cont}, '#cantidad_${cont}', this);">
+              <input type="hidden" class="cantidad_${cont}" name="cantidad[]" id="cantidad_${cont}" value="${val.cantidad}" onkeyup="update_stock(${val.idproducto},${cont});" onchange="update_stock(${val.idproducto},${cont});">              
               <input type="hidden" class="" name="cantidad_old[]" id="cantidad_old_${cont}" value="${val.cantidad}">
             </td>
             <td class="hidden"><input type="number" class="w-135px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" id="precio_sin_igv[]" value="${val.precio_sin_igv}" readonly ></td>
@@ -1834,7 +1834,7 @@ $(function () {
       descripcion:        { minlength: "Minimo 4 caracteres", },
       fecha_venta:       { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
-      'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
+      // 'cantidad[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
       'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
       'descuento[]':      { min: "Mínimo 0.00", required: "Campo requerido"},
     },
@@ -2075,11 +2075,12 @@ function update_stock(id, count) {
   var stock = $(`#table_stock_${id}`).attr('stock') == 0  ||  $(`#table_stock_${id}`).attr('stock') == ''? 0 : parseFloat($(`#table_stock_${id}`).attr('stock')) ;
   var cant  = $(`.cantidad_${count}`).val() == 0  ||  $(`.cantidad_${count}`).val() == ''? 0 : parseFloat($(`.cantidad_${count}`).val()) ;
   var dif   = stock - cant;
-  // console.log('stock =' + stock, 'cant =' + cant, 'dif =' + dif);
+  console.log('stock =' + stock, 'cant =' + cant, 'dif =' + dif);
   if (stock >= cant) {    
     $(`#table_stock_${id}`).html(formato_miles(dif));    
     modificarSubtotales();    
   } else {
+    $(`#valid_cantidad_${count}`).val(0);
     toastr_error('No hay Stock!!', 'El producto se quedo sin stock, recarga en el modulo de <a href="ingreso_producto.php">compras</a>', 700);
   }  
 }
@@ -2118,7 +2119,7 @@ function autoincrement_comprobante(data) {
     $('#serie_comprobante').val("");
   } else {
     
-    $.post(`../ajax/venta_producto.php?op=autoincrement_comprobante`, function (e, textStatus, jqXHR) {
+    $.post(`../ajax/ajax_general.php?op=autoincrement_comprobante`, function (e, textStatus, jqXHR) {
       e = JSON.parse(e); //console.log(e);
 
       if (comprobante == 'Boleta') {

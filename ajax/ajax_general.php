@@ -50,6 +50,12 @@
         echo json_encode($rspta, true);
 
       break;
+
+      /* ══════════════════════════════════════ C O M P R O B A N T E  ══════════════════════════════════════ */
+      case 'autoincrement_comprobante':
+        $rspta = $ajax_general->autoincrement_comprobante();    
+        echo json_encode($rspta, true);    
+      break;
       
       /* ══════════════════════════════════════ T R A B A J A D O R  ══════════════════════════════════════ */
       case 'select2Trabajador': 
@@ -412,7 +418,7 @@
               $img = '../dist/docs/producto/img_perfil/' . $reg->imagen;
               $img_parametro = $reg->imagen;
             }
-            if ($reg->stock == 0 && $reg->stock <= 0) {
+            if ( $reg->stock <= 0) {
               $clas_stok = 'badge-danger';
             }else if ($reg->stock > 0 && $reg->stock <= 10) {
               $clas_stok = 'badge-warning';

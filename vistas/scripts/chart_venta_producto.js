@@ -20,7 +20,7 @@ function init() {
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
-  lista_select2(`../ajax/chart_venta_producto.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
+  lista_select2(`../ajax/chart_venta_producto.php?op=anios_select2`, '#year_filtro', anio_actual);
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
 
@@ -86,22 +86,25 @@ function chart_linea_barra(idnubeproyecto) {
     e = JSON.parse(e);   console.log(e);
     if (e.status == true) {
       // :::::::::::::::::::::::::::::::::::::::::::: C H A R T    P R O G R E S ::::::::::::::::::::::::::::::::::::
-      $('.cant_ft_aceptadas').html(`<b>${e.data.factura_aceptadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_rechazadas').html(`<b>${e.data.factura_rechazadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_eliminadas').html(`<b>${e.data.factura_eliminadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_rechazadas_eliminadas').html(`<b>${e.data.factura_rechazadas_eliminadas}</b>/${e.data.factura_total}`);
+
       var aceptadas = (e.data.factura_aceptadas/e.data.factura_total)*100;
       var rechazadas = (e.data.factura_rechazadas/e.data.factura_total)*100;
       var eliminadas = (e.data.factura_eliminadas/e.data.factura_total)*100;
-      var rechazadas_eliminadas = (e.data.factura_rechazadas_eliminadas/e.data.factura_total)*100;
+      var rechazadas_eliminadas = ((e.data.factura_rechazadas + e.data.factura_eliminadas)/e.data.factura_total)*100;
+
+      $('.cant_ft_aceptadas').html(`<b>${e.data.factura_aceptadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_rechazadas').html(`<b>${e.data.factura_rechazadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_eliminadas').html(`<b>${e.data.factura_eliminadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_rechazadas_eliminadas').html(`<b>${(e.data.factura_rechazadas + e.data.factura_eliminadas)}</b>/${e.data.factura_total}`);
+      
       $('.progress_ft_aceptadas').css({ width: `${aceptadas.toFixed(2)}%`, });
       $('.progress_ft_rechazadas').css({ width: `${rechazadas.toFixed(2)}%`, });
       $('.progress_ft_eliminadas').css({ width: `${eliminadas.toFixed(2)}%`, });
       $('.progress_ft_rechazadas_eliminadas').css({ width: `${rechazadas_eliminadas.toFixed(2)}%`, });
 
-      $('.monto_pagado').html(`<b><small>S/.</small> ${formato_miles(e.data.factura_total_pago)}</b>/ <small>S/.</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_pagado').html(`<b> ${formato_miles(e.data.factura_total_pago)}</b>/ ${formato_miles(e.data.factura_total_gasto)}`);
       var no_pagado = e.data.factura_total_gasto - e.data.factura_total_pago;
-      $('.monto_no_pagado').html(`<b><small>S/.</small> ${ formato_miles(no_pagado)}</b>/ <small>S/.</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_no_pagado').html(`<b> ${ formato_miles(no_pagado)}</b>/ ${formato_miles(e.data.factura_total_gasto)}`);
       var monto_pagado = (e.data.factura_total_pago/e.data.factura_total_gasto)*100;
       var monto_no_pagado = (no_pagado/e.data.factura_total_gasto)*100;
       $('.progress_monto_pagado').css({ width: `${monto_pagado.toFixed(2)}%`, });
@@ -241,7 +244,7 @@ function chart_linea_barra(idnubeproyecto) {
           ]
         },
         options: {
-          legend: {  display: false, position:'right'   },
+          legend: {  display: true, position:'right'   },
           events: false,
           animation: {
             duration: 500,
@@ -295,12 +298,20 @@ function chart_linea_barra(idnubeproyecto) {
         // $("#btn-download-chart-pie-productos-mas-usados").attr("download", "productos-mas-usados.jpg").attr("href", newData);
         var a = document.createElement('a');
         a.href = pieChart.toBase64Image();
-        a.download = 'my_file_name.png';
+        a.download = 'productos_mas_usados.png';
         // Trigger the download
         a.click();
 
         // para agregar el chart en una imagen
         // document.getElementById('some-image-tag').src = myChart.toBase64Image();
+      });
+
+      $("#btn-download-chart-linea").on('click', function () {       
+        var a = document.createElement('a');
+        a.href = chart_linea.toBase64Image();
+        a.download = 'Compras_y_pagos_por_mes.png';
+        // Trigger the download
+        a.click();
       });
 
     } else {

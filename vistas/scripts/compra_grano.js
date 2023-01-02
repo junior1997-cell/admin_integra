@@ -22,8 +22,7 @@ function init() {
   $("#mCompraGrano").addClass("active bg-green");
 
   $("#lComprasGrano").addClass("active ");
-
-  //$("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
+  $('.lComprasGrano-img').attr('src', '../dist/svg/blanco-grano-cafe-ico.svg');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', null);
@@ -913,6 +912,116 @@ function ver_compra_editar(idcompra_grano) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
+//mostramos para editar el datalle del comprobante de la compras
+function copiar_venta(idcompra_grano) {
+
+  $("#cargando-1-fomulario").hide();
+  $("#cargando-2-fomulario").show();
+
+  limpiar_form_compra();
+  array_class_trabajador = [];
+
+  cont = 0;
+  detalles = 0;
+  show_hide_form(3);
+
+  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
+    
+    e = JSON.parse(e); console.log(e);
+
+    if (e.status == true) {
+
+      if (e.data.tipo_comprobante == "Factura") {
+        $(".content-igv").show();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass("col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+        $(".content-serie-comprobante").show();
+      } else if (e.data.tipo_comprobante == "Boleta" || e.data.tipo_comprobante == "Nota de venta") {
+        $(".content-serie-comprobante").show();
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-4 col-lg-5").addClass("col-lg-5");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7 col-lg-8").addClass("col-lg-5");
+      } else if (e.data.tipo_comprobante == "Ninguno") {
+        $(".content-serie-comprobante").hide();
+        $(".content-serie-comprobante").val("");
+        $(".content-igv").hide();
+        $(".content-tipo-comprobante").removeClass("col-lg-5 col-lg-4").addClass("col-lg-4");
+        $(".content-descripcion").removeClass(" col-lg-4 col-lg-5 col-lg-7").addClass("col-lg-8");
+      } else {
+        $(".content-serie-comprobante").show();
+      }
+
+      // $("#idcompra_grano").val(e.data.idcompra_grano);      #esto no se usa cuando copiamos
+      $("#fecha_compra").val(e.data.fecha_compra);
+      $("#numero_comprobante").val(e.data.numero_comprobante);
+      $("#val_igv").val(e.data.val_igv);
+      $("#descripcion").val(e.data.descripcion);
+      
+      $("#idcliente").val(e.data.idpersona).trigger("change");
+      $("#metodo_pago").val(e.data.metodo_pago).trigger("change");
+      $("#fecha_proximo_pago").val(e.data.fecha_proximo_pago);
+      $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");      
+
+      if (e.data.detalle_compra) {
+
+        e.data.detalle_compra.forEach((key, index) => {
+          
+          var pergamino_select = (key.tipo_grano == 'PERGAMINO' ?  'selected' : '');
+          var coco_select = (key.tipo_grano == 'COCO' ? 'selected' : '');
+
+          var fila = `
+          <tr class="filas" id="fila${cont}">
+            <td class="">      
+              <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
+            </td>
+            <td class="">       
+              <select class="form-control w-140px" name="tipo_grano[]">
+                <option ${pergamino_select} >PERGAMINO</option>
+                <option ${coco_select} >COCO</option>
+              </select>   
+            </td>
+            <td class="">
+              <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
+            </td>
+            <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="${key.peso_bruto}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="${key.dcto_humedad}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="${key.porcentaje_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="${key.dcto_embase}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+        
+            <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="${key.peso_neto}" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="${key.precio_sin_igv}" readonly min="0" ></td>
+            <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="${key.precio_igv}" readonly ></td>
+            <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="${key.precio_con_igv}" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="${key.descuento_adicional}" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="text-right"><span class="text-right subtotal_producto_${cont}">${key.subtotal}</span> <input type="hidden" value="${key.subtotal}" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
+            <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
+          </tr>`;
+
+          detalles = detalles + 1;
+
+          $("#detalles").append(fila);
+
+          array_class_trabajador.push({ id_cont: cont });
+
+          cont++;
+          evaluar();
+        });
+
+        modificarSubtotales();
+      } else {  
+        toastr_error("Sin productos!!","Este registro no tiene productos para mostrar", 700);     
+      }
+
+      $("#cargando-1-fomulario").show();
+      $("#cargando-2-fomulario").hide();
+      
+    } else {
+      ver_errores(e);
+    }
+    
+  }).fail( function(e) { ver_errores(e); } );
+}
+
 //mostramos el detalle del comprobante de la compras
 function ver_detalle_compras(idcompra_grano) {
 
@@ -1675,6 +1784,28 @@ function export_excel_detalle_factura() {
 
 }
 
+function autoincrement_comprobante(data) {
+  var comprobante = $(data).select2('val');  
+
+  if (comprobante == null || comprobante == '' ) {
+    $('#numero_comprobante').val("");
+  } else {
+    
+    $.post(`../ajax/ajax_general.php?op=autoincrement_comprobante`, function (e, textStatus, jqXHR) {
+      e = JSON.parse(e); //console.log(e);
+
+      if (comprobante == 'Boleta') {
+        $('#numero_comprobante').val(`B-${e.data.compra_cafe_b}`);
+      } else if (comprobante == 'Factura'){
+        $('#numero_comprobante').val(`F-${e.data.compra_cafe_f}`);
+      } else if (comprobante == 'Nota de venta'){
+        $('#numero_comprobante').val(`NV-${e.data.compra_cafe_nv}`);
+      }
+      
+    },);
+  }
+}
+
 //Función para guardar o editar - COMPRAS
 function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -1759,3 +1890,4 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
     }
   });  
 }
+

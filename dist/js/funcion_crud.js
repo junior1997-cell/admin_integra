@@ -37,7 +37,7 @@ function lista_select2(url, nombre_input, id_tabla) {
 
     try {
       e = JSON.parse(e);   //console.log(e);
-
+      // console.log(url, nombre_input, id_tabla);
       if (e.status==true) {
 
         $(nombre_input).html(e.data); 

@@ -92,9 +92,9 @@ function tbla_principal(id_proyecto) {
 	  aServerSide: true,//Paginación y filtrado realizados por el servidor
 	  dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
 	  buttons: [ 
-      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], }  }, 
-      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], } }, 
-      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,3,4,5,6,9,10,11], }, orientation: 'landscape', pageSize: 'LEGAL', },
+      { extend: 'copyHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }  }, 
+      { extend: 'excelHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], } }, 
+      { extend: 'pdfHtml5', footer: true,exportOptions: { columns: [0,2,12,13,4,5,6,7,9,10,11], }, orientation: 'landscape', pageSize: 'LEGAL', },
     ],
 		ajax:	{
       url: '../ajax/resumen_venta_producto.php?op=tbla_principal',
@@ -129,14 +129,17 @@ function tbla_principal(id_proyecto) {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     footerCallback: function( tfoot, data, start, end, display ) {
-      var api = this.api(); var total = api.column( 11 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
-      $( api.column( 11 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total)}</span>` );
+      var api1 = this.api(); var total1 = api1.column( 10 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 10 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` );
+
+      var api2 = this.api(); var total2 = api2.column( 11 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api2.column( 11 ).footer() ).html( ` <span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
     },
 		bDestroy: true,
 		iDisplayLength: 10,//Paginación
 	  //order: [[ 0, "desc" ]]//Ordenar (columna,orden)
     columnDefs:[ 
-      // { "targets": [ 3 ], "visible": false, "searchable": false }, 
+      { "targets": [ 12,13 ], "visible": false, "searchable": false }, 
       { targets: [7], render: $.fn.dataTable.render.number(',', '.', 2) },
       { targets: [9,10,11], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },
     ]

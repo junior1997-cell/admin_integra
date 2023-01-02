@@ -1,7 +1,10 @@
 var chart_linea ;
 var chart_barras;
 var chart_pie_productos_mas_vendidos;
-var color_char_pie = ['text-danger','text-success']
+var color_char_pie = ['text-danger','text-success'];
+
+
+
 //Función que se ejecuta al inicio
 function init() {
 
@@ -12,20 +15,19 @@ function init() {
   $("#mCompraGrano").addClass("active bg-green");
 
   $("#lChartCompraGrano").addClass("active");
+  $('.lComprasGrano-img').attr('src', '../dist/svg/blanco-grano-cafe-ico.svg');
 
   box_content_reporte();
   //chart_linea_barra(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   var anio_actual = moment().format('YYYY');
-  lista_select2(`../ajax/chart_compra_grano.php?op=anios_select2&nube_idproyecto=${localStorage.getItem("nube_idproyecto")}`, '#year_filtro', anio_actual);
+  lista_select2(`../ajax/chart_compra_grano.php?op=anios_select2`, '#year_filtro', null);
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
 
-  $("#year_filtro").select2({ theme: "bootstrap4", placeholder: "Filtro Año", allowClear: false, });
+  $("#year_filtro").select2({ theme: "bootstrap4", placeholder: "Filtro Año", allowClear: true, });
   $("#month_filtro").select2({ theme: "bootstrap4", placeholder: "Filtro Mes", allowClear: true, });
-
-  $("#month_filtro").val("null").trigger("change");
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -39,7 +41,7 @@ function box_content_reporte() {
   $(".cant_proveedores_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_producto_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_insumos_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
-  $(".cant_activo_fijo_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_compra_pago_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
 
   $.post("../ajax/chart_compra_grano.php?op=box_content_reporte", function (e, status) {
 
@@ -49,7 +51,7 @@ function box_content_reporte() {
       $(".cant_proveedores_box").html( formato_miles(e.data.cant_clientes) );
       $(".cant_producto_box").html( 'Kg. ' + formato_miles(e.data.kilo_coco) );
       $(".cant_insumos_box").html( 'Kg. ' + formato_miles(e.data.kilo_pergamino) );
-      $(".cant_activo_fijo_box").html('S/. '+ formato_miles(e.data.total_compra) );
+      $(".cant_compra_pago_box").html(`${formato_miles(e.data.total_compra)} / ${formato_miles(e.data.total_pago)}` );
     } else {
       ver_errores(e);
     }    
@@ -84,22 +86,24 @@ function chart_linea_barra(idnubeproyecto) {
     e = JSON.parse(e);   console.log(e);
     if (e.status == true) {
       // :::::::::::::::::::::::::::::::::::::::::::: C H A R T    P R O G R E S ::::::::::::::::::::::::::::::::::::
-      $('.cant_ft_aceptadas').html(`<b>${e.data.factura_aceptadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_rechazadas').html(`<b>${e.data.factura_rechazadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_eliminadas').html(`<b>${e.data.factura_eliminadas}</b>/${e.data.factura_total}`);
-      $('.cant_ft_rechazadas_eliminadas').html(`<b>${e.data.factura_rechazadas_eliminadas}</b>/${e.data.factura_total}`);
       var aceptadas = (e.data.factura_aceptadas/e.data.factura_total)*100;
       var rechazadas = (e.data.factura_rechazadas/e.data.factura_total)*100;
       var eliminadas = (e.data.factura_eliminadas/e.data.factura_total)*100;
-      var rechazadas_eliminadas = (e.data.factura_rechazadas_eliminadas/e.data.factura_total)*100;
+      var rechazadas_eliminadas = ((e.data.factura_rechazadas + e.data.factura_eliminadas)/e.data.factura_total)*100;
+
+      $('.cant_ft_aceptadas').html(`<b>${e.data.factura_aceptadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_rechazadas').html(`<b>${e.data.factura_rechazadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_eliminadas').html(`<b>${e.data.factura_eliminadas}</b>/${e.data.factura_total}`);
+      $('.cant_ft_rechazadas_eliminadas').html(`<b>${(e.data.factura_rechazadas + e.data.factura_eliminadas)}</b>/${e.data.factura_total}`);
+      
       $('.progress_ft_aceptadas').css({ width: `${aceptadas.toFixed(2)}%`, });
       $('.progress_ft_rechazadas').css({ width: `${rechazadas.toFixed(2)}%`, });
       $('.progress_ft_eliminadas').css({ width: `${eliminadas.toFixed(2)}%`, });
       $('.progress_ft_rechazadas_eliminadas').css({ width: `${rechazadas_eliminadas.toFixed(2)}%`, });
 
-      $('.monto_pagado').html(`<b><small>S/.</small> ${formato_miles(e.data.factura_total_pago)}</b>/ <small>S/.</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_pagado').html(`<b> ${formato_miles(e.data.factura_total_pago)}</b>/ ${formato_miles(e.data.factura_total_gasto)}`);
       var no_pagado = e.data.factura_total_gasto - e.data.factura_total_pago;
-      $('.monto_no_pagado').html(`<b><small>S/.</small> ${ formato_miles(no_pagado)}</b>/ <small>S/.</small> ${formato_miles(e.data.factura_total_gasto)}`);
+      $('.monto_no_pagado').html(`<b> ${ formato_miles(no_pagado)}</b>/ ${formato_miles(e.data.factura_total_gasto)}`);
       var monto_pagado = (e.data.factura_total_pago/e.data.factura_total_gasto)*100;
       var monto_no_pagado = (no_pagado/e.data.factura_total_gasto)*100;
       $('.progress_monto_pagado').css({ width: `${monto_pagado.toFixed(2)}%`, });
@@ -115,22 +119,40 @@ function chart_linea_barra(idnubeproyecto) {
           labels: mes_o_dia(year_filtro, month_filtro),
           datasets: [
             {
-              type: 'line', data: e.data.total_gasto, 
-              backgroundColor: 'transparent', borderColor: '#007bff',
-              pointBorderColor: '#007bff', pointBackgroundColor: '#007bff',
-              fill: false, label: 'Total Compras',
-              // pointHoverBackgroundColor: '#007bff',
-              // pointHoverBorderColor    : '#007bff'
+              type: 'line',
+              data: e.data.total_kilos_coco,
+              backgroundColor: 'tansparent', borderColor: '#dc3545',
+              pointBorderColor: '#dc3545', pointBackgroundColor: '#dc3545',
+              fill: false, label: 'Total Kilos Coco',
+              // pointHoverBackgroundColor: '#dc3545',
+              // pointHoverBorderColor    : '#dc3545'
             },
             {
               type: 'line',
-              data: e.data.total_deposito,
-              backgroundColor: 'tansparent', borderColor: '#6b3109',
-              pointBorderColor: '#6b3109', pointBackgroundColor: '#6b3109',
-              fill: false, label: 'Total Kilos',
-              // pointHoverBackgroundColor: '#6b3109',
-              // pointHoverBorderColor    : '#6b3109'
-            }
+              data: e.data.total_kilos_pergamino,
+              backgroundColor: 'tansparent', borderColor: '#28a745',
+              pointBorderColor: '#28a745', pointBackgroundColor: '#28a745',
+              fill: false, label: 'Total Kilos Pergamino',
+              // pointHoverBackgroundColor: '#28a745',
+              // pointHoverBorderColor    : '#28a745'
+            },
+            {
+              type: 'line', data: e.data.total_compra, 
+              backgroundColor: 'transparent', borderColor: '#000',
+              pointBorderColor: '#000', pointBackgroundColor: '#000',
+              fill: false, label: 'Total Compras',
+              // pointHoverBackgroundColor: '#000',
+              // pointHoverBorderColor    : '#000'
+            },
+            {
+              type: 'line', data: e.data.total_deposito, 
+              backgroundColor: 'transparent', borderColor: '#03a9f4',
+              pointBorderColor: '#03a9f4', pointBackgroundColor: '#03a9f4',
+              fill: false, label: 'Total Pagos',
+              // pointHoverBackgroundColor: '#03a9f4',
+              // pointHoverBorderColor    : '#03a9f4'
+            },
+            
           ]
         },
         options: {
@@ -162,8 +184,10 @@ function chart_linea_barra(idnubeproyecto) {
         data: {
           labels: mes_o_dia(year_filtro, month_filtro),
           datasets: [
-            { backgroundColor: '#007bff', borderColor: '#007bff', data: e.data.total_gasto, label: 'Total Compras', },
-            { backgroundColor: '#6b3109', borderColor: '#6b3109', data: e.data.total_deposito, label: 'Total Kilos', }
+            { backgroundColor: '#dc3545', borderColor: '#dc3545', data: e.data.total_kilos_coco, label: 'Total Kilos Coco', },
+            { backgroundColor: '#28a745', borderColor: '#28a745', data: e.data.total_kilos_pergamino, label: 'Total Kilos Pergamino', },
+            { backgroundColor: '#000', borderColor: '#000', data: e.data.total_compra, label: 'Total Compras', },
+            { backgroundColor: '#03a9f4', borderColor: '#03a9f4', data: e.data.total_deposito, label: 'Total Pago', },
           ]
         },
         options: {
@@ -235,7 +259,7 @@ function chart_linea_barra(idnubeproyecto) {
           ]
         },
         options: {
-          legend: {  display: false, position:'right'   },
+          legend: {  display: true, position:'right'   },
           events: false,
           animation: {
             duration: 500,
@@ -277,15 +301,28 @@ function chart_linea_barra(idnubeproyecto) {
 
       // dowload - imagen chart PIE
       //var image = pieChart.toBase64Image();  console.log(image);
-      var element = $("#div-download-chart-pie-productos-mas-usados"); // global variable
-      var getCanvas; //global variable
-      html2canvas(element, { onrendered: function (canvas) { getCanvas = canvas; } });
+      // var element = $("#div-download-chart-pie-productos-mas-usados"); // global variable
+      // var getCanvas; //global variable
+      // html2canvas(element, { onrendered: function (canvas) { getCanvas = canvas; } });
 
       $("#btn-download-chart-pie-productos-mas-usados").on('click', function () {
-        var imgageData = getCanvas.toDataURL("image/jpg");
-        //Now browser starts downloading it instead of just showing it
-        var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
-        $("#btn-download-chart-pie-productos-mas-usados").attr("download", "Sumas-por-Tipos-de-cafe.jpg").attr("href", newData);
+        // var imgageData = getCanvas.toDataURL("image/jpg");
+        // //Now browser starts downloading it instead of just showing it
+        // var newData = imgageData.replace(/^data:image\/jpg/, "data:application/octet-stream");
+        // $("#btn-download-chart-pie-productos-mas-usados").attr("download", "Sumas-por-Tipos-de-cafe.jpg").attr("href", newData);
+        var a = document.createElement('a');
+        a.href = pieChart.toBase64Image();
+        a.download = 'tipos_cafe.png';
+        // Trigger the download
+        a.click();
+      });
+
+      $("#btn-download-chart-linea").on('click', function () {       
+        var a = document.createElement('a');
+        a.href = chart_linea.toBase64Image();
+        a.download = 'Compras_y_kilos_por_mes.png';
+        // Trigger the download
+        a.click();
       });
 
     } else {
@@ -305,8 +342,7 @@ function mes_o_dia(data_anio, data_mes) {
     var array_cant_dias = [];
     var cant_dias = cant_dias_mes(data_anio, data_mes);
     for (var dia = 1; dia <= cant_dias; dia++) {
-      array_cant_dias.push(dia);
-      
+      array_cant_dias.push(dia);      
     }
     return array_cant_dias;
   } 

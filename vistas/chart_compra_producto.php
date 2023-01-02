@@ -32,7 +32,7 @@
           <?php
             require 'nav.php';
             require 'aside.php';
-            if ($_SESSION['compra_insumos']==1){
+            if ($_SESSION['almacen_abono']==1){
               //require 'enmantenimiento.php';
               ?>
 
@@ -157,6 +157,9 @@
                             <div class=" d-flex justify-content-center ">
                               <h3 class="card-title font-weight-bold">Compras y Pagos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
+                              <a class="btn btn-tool btn-sm float-right" id="btn-download-chart-linea" data-toggle="tooltip" data-original-title="Descargar gráfico">
+                                <i class="fas fa-download fa-xl"></i>
+                              </a>
                             </div>
                           </div>
                           <div class="card-body">
@@ -201,6 +204,7 @@
                             <div class="d-flex justify-content-center">
                               <h3 class="card-title font-weight-bold">Compras y Pagos por Mes</h3>
                               <!-- <a href="javascript:void(0);">View Report</a> -->
+                              
                             </div>
                           </div>
                           <div class="card-body">
@@ -305,7 +309,7 @@
                         <!-- /.card -->
                       </div>
 
-                      <div class="col-lg-6">
+                      <div class="col-lg-8">
                         <div class="card">
                           <div class="card-header border-0">
                             <h2 class="card-title text-center">Productos mas usados</h2>
@@ -335,7 +339,7 @@
                         <!-- /.card -->
                       </div>
                       
-                      <div class="col-lg-6">
+                      <div class="col-lg-4">
                         <div class="card">
                           <div class="card-header border-0">
                             <h3 class="card-title text-center">Productos mas usados</h3>
@@ -348,15 +352,15 @@
                           </div>
                           <div class="card-body bg-white" id="div-download-chart-pie-productos-mas-usados">
                             <div class="row">
-                              <div class="col-md-8">
+                              <div class="col-md-12">
                                 <div class="chart-responsive">
                                   <canvas id="chart_pie_productos_mas_usados" height="250"></canvas>
                                 </div>
                               </div>
-                              <div class="col-md-4">
+                              <!-- <div class="col-md-4">
                                 <ul class="chart-legend clearfix leyenda-pai-productos-mas-usados" >
                                 </ul>
-                              </div>
+                              </div> -->
                             </div>                            
                           </div>
                         </div>
