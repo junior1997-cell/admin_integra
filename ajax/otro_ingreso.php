@@ -9,12 +9,10 @@
     echo json_encode($retorno);  //Validamos el acceso solo a los usuarios logueados al sistema.
   } else {
 
-    if ($_SESSION['otro_gasto'] == 1) {
+    if ($_SESSION['otro_ingreso'] == 1) {
 
       require_once "../modelos/Otro_ingreso.php";
-
       $otro_ingreso = new Otro_ingreso();
-
             
       date_default_timezone_set('America/Lima');
       $date_now = date("d-m-Y h.i.s A");   
@@ -36,10 +34,27 @@
       $ruc = isset($_POST["num_documento"]) ? limpiarCadena($_POST["num_documento"]) : "";
       $razon_social = isset($_POST["razon_social"]) ? limpiarCadena($_POST["razon_social"]) : "";
       $direccion = isset($_POST["direccion"]) ? limpiarCadena($_POST["direccion"]) : "";
-      $glosa = isset($_POST["glosa"]) ? limpiarCadena($_POST["glosa"]) : "";
 
       $foto2 = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
-      //$idotro_ingreso, $idpersona, $fecha_i, $forma_pago, $tipo_comprobante, $nro_comprobante, $subtotal, $igv, $val_igv, $tipo_gravada, $precio_parcial, $descripcion, $ruc, $razon_social, $direccion, $glosa, $foto2
+
+    // :::::::::::::::::::::::::::::::::::: D A T O S   P E R S O N A ::::::::::::::::::::::::::::::::::::::
+
+      $idpersona	  	  = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
+      $id_tipo_persona  = isset($_POST["idtipopersona"])? limpiarCadena($_POST["idtipopersona"]):"";
+      $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
+      $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
+      $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
+      $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
+      $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";  
+      $banco            = isset($_POST["banco"])? $_POST["banco"] :"";
+      $cta_bancaria_format  = isset($_POST["c_bancaria"])?$_POST["c_bancaria"]:"";
+      $cta_bancaria     = isset($_POST["c_bancaria"])?$_POST["c_bancaria"]:"";
+      $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
+      $cci            	= isset($_POST["cci"])? $_POST["cci"]:"";
+      $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
+
+      // $idpersona, $id_tipo_persona, $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $banco, $cta_bancaria, $cci, $titular_cuenta
+
       switch ($_GET["op"]) {
         case 'guardar_y_editar_otros_ingresos':
           // Comprobante
@@ -187,11 +202,8 @@
         break;
       
         case 'total':
-          // $idproyecto,$fecha_1,$fecha_2,$id_proveedor,$comprobante
           $rspta = $otro_ingreso->total();
-          //Codificar el resultado utilizando json
           echo json_encode($rspta,true);
-      
         break;
       
         case 'selecct_produc_o_provee':
@@ -220,6 +232,47 @@
           }
 
         break;
+
+        case 'select_tipo_persona':
+          $rspta = $otro_ingreso->select_tipo_persona(); $cont = 1; $data = "";
+
+          if ($rspta['status']) {
+  
+            foreach ($rspta['data'] as $key => $value) {  
+
+                $data .= '<option value=' .$value['idtipo_persona']. '>'.( !empty($value['nombre']) ?  $value['nombre'] : '') .'</option>';
+    
+            }
+  
+            $retorno = array(
+              'status' => true, 
+              'message' => 'Salió todo ok', 
+              'data' => $data, 
+            );
+    
+            echo json_encode($retorno, true);
+  
+          } else {
+  
+            echo json_encode($rspta, true); 
+          }
+        break;
+
+                
+      // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
+      case 'guardarpersona':
+    
+        if (empty($idpersona)){
+
+          $rspta=$otro_ingreso->insertar_persona($id_tipo_persona, $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $banco, $cta_bancaria, $cci, $titular_cuenta);
+          echo json_encode($rspta, true);
+          
+        }else{
+    
+          echo "error";
+        }
+    
+      break;
 
         case 'salir':
           //Limpiamos las variables de sesión

@@ -13,23 +13,37 @@ function init() {
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/otro_ingreso.php?op=selecct_produc_o_provee", '#idpersona', null);
+  lista_select2("../ajax/otro_ingreso.php?op=select_tipo_persona", '#idtipopersona', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
+
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════ 
 
-  $("#guardar_registro_proveedor").on("click", function (e) { $("#submit-form-proveedor").submit(); });
+  $("#guardar_registro_persona").on("click", function (e) { $("#submit-form-persona").submit(); console.log('HOLAA MUNDO'); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - OTRO INGRESO  ══════════════════════════════════════
   $("#idpersona").select2({ theme: "bootstrap4", placeholder: "Selecione un proveedor o productor", allowClear: true,   });
+  $("#idtipopersona").select2({ theme: "bootstrap4", placeholder: "Selecione un tipo", allowClear: true,   });
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Seleccinar tipo comprobante", allowClear: true, });
 
   $("#forma_pago").select2({ theme: "bootstrap4", placeholder: "Seleccinar forma de pago", allowClear: true, });
 
-  $("#glosa").select2({ theme: "bootstrap4", placeholder: "Seleccinar glosa",  allowClear: true, });
+  $("#banco").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
+
 
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
+
+function templateBanco (state) {
+  //console.log(state);
+  if (!state.id) { return state.text; }
+  var baseUrl = state.title != '' ? `../dist/docs/banco/logo/${state.title}`: '../dist/docs/banco/logo/logo-sin-banco.svg'; 
+  var onerror = `onerror="this.src='../dist/docs/banco/logo/logo-sin-banco.svg';"`;
+  var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
+  return $state;
+};
 
 
 
@@ -418,14 +432,13 @@ function mostrar(idotro_ingreso) {
     $("#idpersona").val(e.data.idpersona).trigger("change");
     $("#tipo_comprobante").val(e.data.tipo_comprobante).trigger("change");
     $("#forma_pago").val(e.data.forma_de_pago).trigger("change");
-    $("#glosa").val(e.data.glosa).trigger("change");
     $("#idotro_ingreso").val(e.data.idotro_ingreso);
     $("#fecha_i").val(e.data.fecha_ingreso);
     $("#nro_comprobante").val(e.data.numero_comprobante);  
 
     $("#subtotal").val(e.data.precio_sin_igv);
     $("#igv").val(e.data.precio_igv);
-    $("#val_igv").val('0');
+    $("#val_igv").val(e.data.val_igv);
     $("#tipo_gravada").val(e.data.tipo_gravada);
     $("#precio_parcial").val(e.data.precio_con_igv);
     $("#descripcion").val(e.data.descripcion);    
@@ -548,17 +561,17 @@ function eliminar(idotro_ingreso, nombre,numero_comprobante) {
 }
 // :::::::::::::::::::::::::::::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::::::::::::::::::::::::::::
 //Función limpiar
-function limpiar_form_proveedor() {
-  $("#idproveedor_prov").val("");
-  $("#tipo_documento_prov option[value='RUC']").attr("selected", true);
-  $("#nombre_prov").val("");
-  $("#num_documento_prov").val("");
-  $("#direccion_prov").val("");
-  $("#telefono_prov").val("");
-  $("#c_bancaria_prov").val("");
-  $("#cci_prov").val("");
-  $("#c_detracciones_prov").val("");
-  $("#titular_cuenta_prov").val("");
+function limpiar_persona() {
+  $("#idproveedor").val("");
+  $("#tipo_documento option[value='RUC']").attr("selected", true);
+  $("#nombre").val("");
+  $("#num_documento").val("");
+  $("#direccion").val("");
+  $("#telefono").val("");
+  $("#banco").val("").trigger("change");
+  $("#c_bancaria").val("");
+  $("#cci").val("");
+  $("#titular_cuenta").val("");
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -569,56 +582,96 @@ function limpiar_form_proveedor() {
 }
 
 //guardar proveedor
-function guardar_proveedor(e) {
+function guardarpersona(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-proveedor")[0]);
+  var formData = new FormData($("#form-persona")[0]);
 
   $.ajax({
-    url: "../ajax/otro_ingreso.php?op=guardar_proveedor",
+    url: "../ajax/otro_ingreso.php?op=guardarpersona",
     type: "POST",
     data: formData,
     contentType: false,
     processData: false,
     success: function (e) {
-      console.log(e);
-      // if(typeof e === 'object'){
+      e = JSON.parse(e);
 
-        var d = JSON.parse(e); console.log(d);
-
-        if ( d.message == 'noexiste' ) {
-
-          //Cargamos los items al select cliente
-          $.post("../ajax/ajax_general.php?op=select2Proveedor", function (r) {  $("#idproveedor").html(r); $("#idproveedor").val(d.id_tabla).trigger("change");});
-  
+      try {
+        if (e.status == true) {
           // toastr.success("proveedor registrado correctamente");
-          Swal.fire("Correcto!", "Proveedor guardado correctamente.", "success");        
-  
-          limpiar_form_proveedor(); 
-  
-          $("#modal-agregar-proveedor").modal("hide");
-  
-        } else if (d.message == 'existe') {   
-          var trabajdor = "";
-  
-          d.data.forEach(key => {
-            trabajdor = trabajdor.concat(`<li class="text-left font-size-13px">
-              <b>Razón Social: </b>${key.razon_social} <br>
-              <b>${key.tipo_documento}: </b>${key.ruc} <br>
-              <b>Papelera: </b>${( key.estado==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO')} <br>
-              <b>Eliminado: </b>${( key.estado_delete==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO')} <br>
-              <hr class="m-t-2px m-b-2px">
-            </li>`);
-          });
-  
-          trabajdor = `<ul>${trabajdor}</ul>`;     
-          Swal.fire("El Proveedor Existe!", trabajdor, "info");
+          Swal.fire("Correcto!", "Persona guardado correctamente.", "success");          
+          limpiar_persona();
+          $("#modal-agregar-persona").modal("hide");
+          //Cargamos los items al select persona
+          lista_select2("../ajax/otro_ingreso.php?op=selecct_produc_o_provee", '#idpersona', e.data);
+        } else {
+          ver_errores(e);
         }
-      // } else {
-      //   Swal.fire("Error!", `<div class="text-left">${e}</div>`, "error");
-      // }
+      } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }       
+      
+      $("#guardar_registro_persona").html('Guardar Cambios').removeClass('disabled');
     },
   });
 }
+
+
+// damos formato a: Cta, CCI
+function formato_banco() {
+
+  if ($("#banco").select2("val") == null || $("#banco").select2("val") == "" || $("#banco").select2("val") == "1" ) {
+
+    $("#c_bancaria").prop("readonly", true);
+    $("#cci").prop("readonly", true);
+
+  } else {
+    
+    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
+    $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
+    $(".chargue-format-3").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');    
+
+    $.post("../ajax/ajax_general.php?op=formato_banco", { 'idbanco': $("#banco").select2("val") }, function (e, status) {
+      
+      e = JSON.parse(e);  // console.log(e);
+
+      if (e.status == true) {
+        $(".chargue-format-1").html("Cuenta Bancaria");
+        $(".chargue-format-2").html("CCI");
+        $(".chargue-format-3").html("Cuenta Detracciones");
+
+        $("#c_bancaria").prop("readonly", false);
+        $("#cci").prop("readonly", false);
+
+        var format_cta = decifrar_format_banco(e.data.formato_cta);
+        var format_cci = decifrar_format_banco(e.data.formato_cci);
+        var formato_detracciones = decifrar_format_banco(e.data.formato_detracciones);
+        // console.log(format_cta, formato_detracciones);
+
+        $("#c_bancaria").inputmask(`${format_cta}`);
+        $("#cci").inputmask(`${format_cci}`);
+      } else {
+        ver_errores(e);
+      }      
+    }).fail( function(e) { ver_errores(e); } );
+  }
+}
+
+function decifrar_format_banco(format) {
+
+  var array_format =  format.split("-"); var format_final = "";
+
+  array_format.forEach((item, index)=>{
+
+    for (let index = 0; index < parseInt(item); index++) { format_final = format_final.concat("9"); }   
+
+    if (parseInt(item) != 0) { format_final = format_final.concat("-"); }
+  });
+
+  var ultima_letra = format_final.slice(-1);
+   
+  if (ultima_letra == "-") { format_final = format_final.slice(0, (format_final.length-1)); }
+
+  return format_final;
+}
+
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
 $(function () {   
@@ -626,8 +679,11 @@ $(function () {
   // Aplicando la validacion del select cada vez que cambie
   $("#forma_pago").on("change", function () { $(this).trigger("blur"); });
   $("#tipo_comprobante").on("change", function () { $(this).trigger("blur"); });
-  $("#glosa").on("change", function () { $(this).trigger("blur"); });
+
   $("#idpersona").on('change', function() { $(this).trigger('blur'); });
+  $("#banco").on('change', function() { $(this).trigger('blur'); });
+  $("#idtipopersona").on('change', function() { $(this).trigger('blur'); });
+
 
   $("#form-otro-ingreso").validate({
     ignore: '.select2-input, .select2-focusser',
@@ -673,29 +729,31 @@ $(function () {
 
   });
 
-  $("#form-proveedor").validate({
+  $("#form-persona").validate({
     ignore: '.select2-input, .select2-focusser',
     rules: {
-      tipo_documento_prov:  { required: true },
-      num_documento_prov:   { required: true, minlength: 6, maxlength: 20 },
-      nombre_prov:          { required: true, minlength: 6, maxlength: 100 },
-      direccion_prov:       { minlength: 5, maxlength: 150 },
-      telefono_prov:        { minlength: 8 },
-      c_bancaria_prov:      { minlength: 6,  },
-      cci_prov:             { minlength: 6,  },
-      c_detracciones_prov:  { minlength: 6,  },  
-      titular_cuenta_prov:  { minlength: 4 },
+      tipo_documento:  { required: true },
+      num_documento:   { required: true, minlength: 6, maxlength: 20 },
+      nombre:          { required: true, minlength: 6, maxlength: 100 },
+      direccion:       { minlength: 5, maxlength: 150 },
+      telefono:        { minlength: 8 },
+      c_bancaria:      { minlength: 6,  },
+      banco:           { required: true},
+      idtipopersona:   { required: true},
+      cci:             { minlength: 6,  },
+      titular_cuenta:  { minlength: 4 },
     },
     messages: {
-      tipo_documento_prov:{ required: "Por favor selecione un tipo de documento", },
-      num_documento_prov: { required: "Campo requerido", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
-      nombre_prov:        { required: "Campo requerido", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
-      direccion_prov:     { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 150 caracteres.", },
-      telefono_prov:      { minlength: "MÍNIMO 9 caracteres.", },
-      c_bancaria_prov:    { minlength: "MÍNIMO 6 caracteres.", },
-      cci_prov:           { minlength: "MÍNIMO 6 caracteres.",  },
-      c_detracciones_prov:{ minlength: "MÍNIMO 6 caracteres.", },  
-      titular_cuenta_prov:{ minlength: 'MÍNIMO 4 caracteres.' },
+      tipo_documento:{ required: "Por favor selecione un tipo de documento", },
+      num_documento: { required: "Campo requerido", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
+      nombre:        { required: "Campo requerido", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
+      direccion:     { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 150 caracteres.", },
+      telefono:      { minlength: "MÍNIMO 9 caracteres.", },
+      c_bancaria:    { minlength: "MÍNIMO 6 caracteres.", },
+      banco:          { required: "Campo requerido.", },
+      idtipopersona:  { required: "Campo requerido.", },
+      cci:           { minlength: "MÍNIMO 6 caracteres.",  },  
+      titular_cuenta:{ minlength: 'MÍNIMO 4 caracteres.' },
     },
 
     errorElement: "span",
@@ -715,21 +773,24 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardar_proveedor(e);
+      guardarpersona(e);
     },
   });
 
   //agregando la validacion del select  ya que no tiene un atributo name el plugin 
   $("#forma_pago").rules("add", { required: true, messages: { required: "Campo requerido" } });
   $("#tipo_comprobante").rules("add", { required: true, messages: { required: "Campo requerido" } });
-  $("#glosa").rules("add", { required: true, messages: { required: "Campo requerido" } });
+
   $("#idpersona").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#idtipopersona").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  
 
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
 
 // restringimos la fecha para no elegir mañana
-no_select_tomorrow('#fecha_i')
+no_select_tomorrow('#fecha_i');
 
 init();
