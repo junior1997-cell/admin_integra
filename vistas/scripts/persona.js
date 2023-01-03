@@ -11,6 +11,7 @@ function init() {
   tbla_principal('todos');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
+  lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
@@ -19,6 +20,7 @@ function init() {
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#banco").select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
+  $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -55,6 +57,8 @@ function limpiar_form_persona() {
 
   $("#idpersona").val(""); 
   $("#tipo_documento").val("null").trigger("change");
+  $("#cargo_trabajador").val("1").trigger("change");
+
   $("#num_documento").val(""); 
   $("#nombre").val(""); 
   $("#input_socio").val("0"); 
@@ -68,7 +72,7 @@ function limpiar_form_persona() {
   $(".sino").html('(NO)');
 
   $("#socio").prop('checked', false);
-
+  $("#nacimiento").val("");
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");
@@ -156,6 +160,8 @@ function tbla_principal(tipo_persona) {
 }
 
 function show_hide_btn_add(tipo_persona) {
+  $("#sueldo_mensual").val("");
+  $(".campos_trabajador").hide();
 
   if (tipo_persona=="todos") {
     $("#id_tipo_persona").val("");
@@ -166,17 +172,32 @@ function show_hide_btn_add(tipo_persona) {
     $("#id_tipo_persona").val(tipo_persona);
     $(".class_btn").show();
 
-    if (tipo_persona=="3") {
+    if (tipo_persona=="2") {
+      $("#sueldo_mensual").val("0.00");
+      $(".campos_trabajador").hide();
+
+      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Productor`);
+      //remove class
+      $(".classswichs").removeClass("hidden");
+      $(".classdirecc").removeClass("col-lg-12").addClass("col-lg-9");
+
+    }else if (tipo_persona=="3") {
+      $("#sueldo_mensual").val("0.00");
+      $(".campos_trabajador").hide();
+
       $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Proveedor`);
       //add class
       $(".classswichs").addClass("hidden");
       $(".classdirecc").removeClass("col-lg-9").addClass("col-lg-12");
 
-    }else{
-      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Cliente`);
+    }else if (tipo_persona=="4") {
+      $(".campos_trabajador").show();
+
+      $(".btn_add").html(`<i class="fas fa-plus"></i> Agregar Trabajador`);
       //remove class
       $(".classswichs").removeClass("hidden");
       $(".classdirecc").removeClass("col-lg-12").addClass("col-lg-9");
+      
     }
       
     
@@ -368,12 +389,15 @@ function mostrar(idpersona) {
     if (e.status == true) {       
 
       $("#tipo_documento").val(e.data.tipo_documento).trigger("change");
+      $("#cargo_trabajador").val(e.data.idcargo_trabajador).trigger("change");
+
       $("#nombre").val(e.data.nombres);
       $("#num_documento").val(e.data.numero_documento);
       $("#direccion").val(e.data.direccion);
       $("#telefono").val(e.data.celular);
       $("#email").val(e.data.correo);
-           
+      $("#nacimiento").val(e.data.fecha_nacimiento); 
+      $("#edad").val(e.data.edad); 
       $("#titular_cuenta").val(e.data.titular_cuenta);
       $("#idpersona").val(e.data.idpersona);
       $("#ruc").val(e.data.ruc);   
@@ -388,6 +412,8 @@ function mostrar(idpersona) {
       $("#input_socio").val(e.data.es_socio); 
       $("#id_tipo_persona").val(e.data.idtipo_persona); 
       // $('#socio').is(':checked'); ("#definiendo").prop('checked', true);
+      $("#sueldo_mensual").val(e.data.sueldo_mensual);
+      $("#sueldo_diario").val(e.data.sueldo_diario);  
       
       if (e.data.es_socio==1) {
         
@@ -401,7 +427,7 @@ function mostrar(idpersona) {
         $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
         $("#foto1_actual").val(e.data.foto_perfil);
       }
-
+      calcular_edad('#nacimiento','.edad','#edad'); 
 
       $("#cargando-1-fomulario").show();
       $("#cargando-2-fomulario").hide();
@@ -454,6 +480,7 @@ $(function () {
 
   $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
   $("#banco").on('change', function() { $(this).trigger('blur'); });
+  $("#cargo_trabajador").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-persona").validate({
     rules: {
@@ -499,6 +526,8 @@ $(function () {
 
   $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#cargo_trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
@@ -548,5 +577,18 @@ function habilitando_socio() {
   }
 
 }
+
+function sueld_mensual(){
+
+  var sueldo_mensual = $('#sueldo_mensual').val()
+
+  var sueldo_diario=(sueldo_mensual/30).toFixed(1);
+
+  var sueldo_horas=(sueldo_diario/8).toFixed(1);
+
+  $("#sueldo_diario").val(sueldo_diario);
+
+}
+
 
 

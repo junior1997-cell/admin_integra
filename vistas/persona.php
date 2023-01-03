@@ -12,7 +12,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Clientes Proveedores | Admin Integra</title>
+        <title>Personas | Admin Integra</title>
 
         <?php $title = "Personas"; require 'head.php'; ?>
         <link rel="stylesheet" href="../dist/css/switch_persona.css">
@@ -35,12 +35,12 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1>Clientes - Proveedores</h1>
+                      <h1>Personas</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="persona.php">Home</a></li>
-                        <li class="breadcrumb-item active">Clientes - Proveedores</li>
+                        <li class="breadcrumb-item active">Personas</li>
                       </ol>
                     </div>
                   </div>
@@ -166,7 +166,7 @@
                               <!-- tipo persona  -->
                               <input type="hidden" name="id_tipo_persona" id="id_tipo_persona" />
                               <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                                 <div class="form-group">
                                   <label for="tipo_documento">Tipo Doc.</label>
                                   <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
@@ -179,7 +179,7 @@
                               </div>
                               
                               <!-- N° de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                 <div class="form-group">
                                   <label for="num_documento">N° de documento</label>
                                   <div class="input-group">
@@ -201,6 +201,13 @@
                                   <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
                                 </div>
                               </div>
+                              <!-- Telefono -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-2">
+                                <div class="form-group">
+                                  <label for="telefono">Teléfono</label>
+                                  <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                </div>
+                              </div>
 
                               <!-- Correo electronico -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
@@ -210,11 +217,28 @@
                                 </div>
                               </div>
 
-                              <!-- Telefono -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <!-- fecha de nacimiento -->
+                              <div class="col-12 col-sm-10 col-md-6 col-lg-3">
                                 <div class="form-group">
-                                  <label for="telefono">Teléfono</label>
-                                  <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                  <label for="nacimiento">Fecha Nacimiento</label>
+                                  <input
+                                    type="date"
+                                    class="form-control"
+                                    name="nacimiento"
+                                    id="nacimiento"
+                                    placeholder="Fecha de Nacimiento"
+                                    onclick="calcular_edad('#nacimiento', '#edad', '.edad');"
+                                    onchange="calcular_edad('#nacimiento', '#edad', '.edad');"
+                                  />
+                                  <input type="hidden" name="edad" id="edad" />
+                                </div>
+                              </div>
+
+                              <!-- edad -->
+                              <div class="col-12 col-sm-2 col-md-6 col-lg-1">
+                                <div class="form-group">
+                                  <label for="edad">Edad</label>
+                                  <p class="edad" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
                                 </div>
                               </div>
 
@@ -252,6 +276,39 @@
                                 </div>
                               </div>
 
+                              <!-- Ruc -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-4" style="display: none;">
+                                <div class="form-group">
+                                  <label for="ruc">Ruc</label>
+                                  <input type="number" name="ruc" class="form-control" id="ruc" placeholder="Ingrese número de ruc" />
+                                </div>
+                              </div>
+                              <!-- cargo_trabajador  -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 campos_trabajador">
+                                <div class="form-group">
+                                  <label for="cargo_trabajador">Cargo </label>
+                                  <select name="cargo_trabajador" id="cargo_trabajador" class="form-control select2 cargo_trabajador" style="width: 100%;">
+                                    <!-- Aqui listamos los cargo_trabajador -->
+                                  </select>
+                                </div>
+                              </div>
+
+                              <!-- Sueldo(Mensual) -->
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
+                                <div class="form-group">
+                                  <label for="sueldo_mensual">Sueldo(Mensual)</label>
+                                  <input type="number" step="any" name="sueldo_mensual" class="form-control" id="sueldo_mensual" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
+                                </div>
+                              </div>
+
+                              <!-- Sueldo(Diario) -->
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
+                                <div class="form-group">
+                                  <label for="sueldo_diario">Sueldo(Diario)</label>
+                                  <input type="number" step="any" name="sueldo_diario" class="form-control" id="sueldo_diario" readonly />
+                                </div>
+                              </div>
+                              <!--nacimiento,ruc,cargo_trabajador, sueldo_mensual,sueldo_diario -->
                               <!-- Swichs permanente -->
                               <div class="col-4 col-sm-5 col-md-6 col-lg-3 classswichs">
                                   <label for="socio">Es socio ? <small class="text-danger text-bold sino">(NO)</small> </label>
@@ -269,7 +326,6 @@
                                   <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
                                 </div>
                               </div>
-                              <!-- idpersona,id_tipo_persona,tipo_documento,num_documento,nombre,input_socio,email,telefono,banco,cta_bancaria,cci,titular_cuenta,direccion -->
                               <!-- imagen perfil -->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                                 <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
