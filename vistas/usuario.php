@@ -110,7 +110,7 @@
                                   <div class="col-12 col-sm-9 col-md-9 col-lg-7 col-xl-7">
                                     <div class="form-group">
                                       <label for="trabajador" id="trabajador_c">Trabajador</label>                               
-                                      <select name="trabajador" id="trabajador" class="form-control select2" style="width: 100%;" > </select>
+                                      <select name="trabajador" id="trabajador" class="form-control select2" style="width: 100%;"  onchange="cargo_trabajador();" > </select>
                                       <input type="hidden" name="trabajador_old" id="trabajador_old">
                                     </div>                                                        
                                   </div>
@@ -121,7 +121,7 @@
                                       <label class="text-white d-none show-min-width-576px">.</label> 
                                       <label class="d-none show-max-width-576px" >Nuevo Trabajador</label>
                                       <a data-toggle="modal" href="#modal-agregar-trabajador" >
-                                        <button type="button" class="btn btn-success btn-block" data-toggle="tooltip" data-original-title="Agregar nuevo Trabajador" onclick="limpiar_form_trabajador();" >
+                                        <button type="button" class="btn btn-success btn-block" data-toggle="tooltip" data-original-title="Agregar nuevo Trabajador" onclick="limpiar_form_trabajador();">
                                           <i class="fa fa-user-plus" aria-hidden="true"></i>
                                         </button>
                                       </a>
@@ -132,12 +132,8 @@
                                   <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
                                       <label for="cargo">Cargo</label>                               
-                                      <select name="cargo" id="cargo" class="form-control select2" style="width: 100%;"  >
-                                        <option data-option-template='<span class="d-flex align-items-center"><img class="avatar avatar-xss avatar-circle mr-2" src="assets/vendor/flag-icon-css/flags/1x1/io.svg" alt="British Indian Ocean Territory Flag" /><span class="text-truncate">British Indian Ocean Territory</span></span>' value="Administrador">Administrador</option>
-                                        <option value="Recursos Humanos">Recursos Humanos</option>
-                                        <option value="Contador">Contador</option>
-                                        <option value="SSOMA">SSOMA</option>
-                                      </select> 
+                                      <input type="text" name="cargo" class="form-control" id="cargo" placeholder="Cargo trabajador" readonly>
+
                                     </div>                                                     
                                   </div>
 

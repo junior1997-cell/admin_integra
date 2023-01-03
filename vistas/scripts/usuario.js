@@ -25,7 +25,7 @@ function init() {
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   $("#trabajador").select2({ templateResult: formatState, theme: "bootstrap4",  placeholder: "Selecione trabajador", allowClear: true, });  
 
-  $("#cargo").select2({ theme: "bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
+  // $("#cargo").select2({ theme: "bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
   $("#banco_trab").select2({  templateResult: formatStateBanco,  theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
   $("#tipo_trab").select2({ theme: "bootstrap4", placeholder: "Selecione tipo", allowClear: true, });
   $("#cargo_trabajador_trab").select2({ theme: "bootstrap4",  placeholder: "Selecione Ocupación", allowClear: true, });
@@ -36,7 +36,8 @@ function init() {
   no_select_tomorrow('#nacimiento_trab')
   
   // Formato para telefono
-  $("[data-mask]").inputmask();   
+  $("[data-mask]").inputmask(); 
+  var estado_cargo = 0 ;
 }
 
 function formatState (state) {
@@ -61,7 +62,6 @@ function formatStateBanco (state) {
 $("#foto1_i").click(function() { $('#foto1').trigger('click'); });
 $("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id"), ) });
 
-
 function foto1_eliminar() {
 
 	$("#foto1").val("");
@@ -81,7 +81,7 @@ function limpiar_form_usuario() {
 
   $("#idusuario").val("");
   $("#trabajador_c").html("Trabajador"); 
-  $("#cargo").val("").trigger("change");
+  $("#cargo").val("");;
   $("#login").val("");
   $("#password").val("");
   $("#password-old").val(""); 
@@ -120,6 +120,14 @@ function show_hide_form(flag) {
     $(".btn-agregar").hide();
 	}
 }
+
+function cargo_trabajador() { 
+  var id_persona=$("#trabajador").select2('val');
+  $.post("../ajax/usuario.php?op=select2_cargo_trabajador", {id_persona : id_persona}, function(e, status) {
+    e = JSON.parse(e);
+    $("#cargo").val(e.data.cargo);
+  });
+ }
 
 //Función Listar
 function tbla_principal() {
@@ -246,14 +254,21 @@ function mostrar(idusuario) {
 
     $(".trabajador-name").html(` <i class="fas fa-users-cog text-primary"></i> <b class="texto-parpadeante font-size-20px">${data.data.nombres}</b> `);    
 
-    $("#trabajador_old").val(data.data.idtrabajador);
-    $("#cargo").val(data.data.cargo).trigger("change");
+    $("#trabajador_old").val(data.data.idpersona);
+    // $("#cargo").val(data.data.cargo).trigger("change");
     $("#login").val(data.data.login);
     $("#password-old").val(data.data.password);
     $("#idusuario").val(data.data.idusuario);
 
     $("#cargando-1-fomulario").show();
-    $("#cargando-2-fomulario").hide();    
+    $("#cargando-2-fomulario").hide();   
+    
+        // Cargo
+    $.post("../ajax/usuario.php?op=select2_cargo_trabajador", {id_persona : data.data.idpersona}, function(e, status) {
+
+      e = JSON.parse(e);
+      $("#cargo").val("");$("#cargo").val(e.data.cargo);
+    });
 
   }).fail( function(e) { console.log(e); ver_errores(e); } );
 
@@ -430,7 +445,7 @@ init();
 $(function () {
 
   $("#tipo_documento_trab").on('change', function() { $(this).trigger('blur'); });
-  $("#cargo").on('change', function() { $(this).trigger('blur'); });
+  // $("#cargo").on('change', function() { $(this).trigger('blur'); });
   $("#trabajador").on('change', function() { $(this).trigger('blur'); });
 
   $("#banco_trab").on('change', function() { $(this).trigger('blur'); });
@@ -521,7 +536,7 @@ $(function () {
   });
 
   $("#tipo_documento_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#cargo").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  // $("#cargo").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#banco_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#cargo_trabajador_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });

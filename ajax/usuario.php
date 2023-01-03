@@ -28,13 +28,13 @@
           //Declaramos las variables de sesión
           $_SESSION['idusuario'] = $rspta['data']['idusuario'];
           $_SESSION['nombre'] = $rspta['data']['nombres'];
-          $_SESSION['imagen'] = $rspta['data']['imagen_perfil'];
+          $_SESSION['imagen'] = $rspta['data']['foto_perfil'];
           $_SESSION['login'] = $rspta['data']['login'];
           $_SESSION['cargo'] = $rspta['data']['cargo'];
           $_SESSION['tipo_documento'] = $rspta['data']['tipo_documento'];
           $_SESSION['num_documento'] = $rspta['data']['numero_documento'];
-          $_SESSION['telefono'] = $rspta['data']['telefono'];
-          $_SESSION['email'] = $rspta['data']['email'];
+          $_SESSION['telefono'] = $rspta['data']['celular'];
+          $_SESSION['email'] = $rspta['data']['correo'];
 
           //Obtenemos los permisos del usuario
           $marcados = $usuario->listarmarcados($rspta['data']['idusuario']);
@@ -197,6 +197,9 @@
       echo json_encode($rspta, true);
 
     break;
+    // $sql = "SELECT u.idusuario, u.last_sesion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, 
+    // p.correo, u.cargo, u.login, p.foto_perfil, p.tipo_documento, u.estado
+
 
     case 'tbla_principal':
 
@@ -216,11 +219,11 @@
                 '<button class="btn btn-warning  btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' . 
                 ' <button class="btn btn-primary  btn-sm" onclick="activar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>',
             "2" => '<div class="user-block">'. 
-              '<img class="img-circle" src="../dist/docs/trabajador/perfil/' . $value['imagen_perfil'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
+              '<img class="img-circle" src="../dist/docs/trabajador/perfil/' . $value['celular'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
               '<span class="username"><p class="text-primary m-b-02rem" >' . $value['nombres'] . '</p></span>'. 
               '<span class="description"> - ' . $value['tipo_documento'] .  ': ' . $value['numero_documento'] . ' </span>'.
             '</div>',
-            "3" => $value['telefono'],
+            "3" => $value['celular'],
             "4" => $value['login'],
             "5" => $value['cargo'],
             "6" => nombre_dia_semana( date("Y-m-d", strtotime($value['last_sesion'])) ) .', <br>'. date("d/m/Y", strtotime($value['last_sesion'])) .' - '. date("g:i a", strtotime($value['last_sesion'])) ,
@@ -320,7 +323,7 @@
       if ($rspta['status']) {
 
         foreach ($rspta['data'] as $key => $value) {
-          $data  .= '<option value=' . $value['idtrabajador'] . ' title="'.$value['imagen_perfil'].'">' . $value['nombres'] . ' - ' . $value['numero_documento'] . '</option>';
+          $data  .= '<option value=' . $value['idpersona'] . ' title="'.$value['celular'].'">' . $value['nombres'] . ' - ' . $value['numero_documento'] . '</option>';
         }
     
         $retorno = array(
@@ -335,8 +338,8 @@
       }    
     break;    
 
-    case 'obtener_cargo_trabajador':
-      $rspta=$usuario->mostrar_cargo_trabajador($_POST['idtrabajador']);
+    case 'select2_cargo_trabajador':
+      $rspta=$usuario->select2_cargo_trabajador($_POST['id_persona']);
       echo json_encode($rspta, true);
     break;
     

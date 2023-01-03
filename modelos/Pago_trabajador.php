@@ -107,7 +107,15 @@
       return ejecutarConsultaSimpleFila($sql);
 
     }
-
+    //datos trabajador
+    public function datos_trabajador($idtrabajador)
+    {
+      $sql = "SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, t.nombres, t.tipo_documento, t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, t.direccion, t.telefono, t.email, t.imagen_perfil,   ct.nombre as cargo, b.nombre as banco
+      FROM trabajador as t, cargo_trabajador as ct, bancos as b
+      WHERE t.idcargo_trabajador = ct.idcargo_trabajador AND t.idbancos=b.idbancos AND t.idtrabajador='$idtrabajador';";
+      return ejecutarConsultaSimpleFila($sql);
+    }
+    // Ver pagos trabajador
     public function verdatos($idpago_trabajador) {
       $sql=" SELECT pt.idpago_trabajador, pt.fecha_pago, pt.monto as monto_pago, pt.descripcion, pt.comprobante, t.idtrabajador, ct.nombre as cargo,
       t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, t.imagen_perfil, t.tipo_documento, t.sueldo_diario, pt.estado

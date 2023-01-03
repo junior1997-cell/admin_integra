@@ -12,12 +12,12 @@ class Usuario
   //Implementamos un método para insertar registros
   public function insertar($trabajador, $cargo, $login, $clave, $permisos) {
 
-    // insertamos al persona
-    $sql = "INSERT INTO persona ( idpersona, cargo, login, password,user_created) VALUES ('$trabajador', '$cargo', '$login', '$clave','" . $_SESSION['idpersona'] . "')";
+    // insertamos al usuario
+    $sql = "INSERT INTO usuario ( idpersona, login, password,user_created) VALUES ('$trabajador','$login', '$clave','" . $_SESSION['idusuario'] . "')";
     $data_user = ejecutarConsulta_retornarID($sql); if ($data_user['status'] == false){return $data_user; }
 
     //add registro en nuestra bitacora
-    $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona','" . $data_user['data'] . "','Registrar','" . $_SESSION['idpersona'] . "')";
+    $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario','" . $data_user['data'] . "','Registrar','" . $_SESSION['idusuario'] . "')";
     $bitacora1 = ejecutarConsulta($sql2); if ( $bitacora1['status'] == false) {return $bitacora1; }
 
     $num_elementos = 0; $sw = "";
@@ -26,16 +26,16 @@ class Usuario
 
       while ($num_elementos < count($permisos)) {
         
-        $idpersonanew = $data_user['data'];
+        $idusuarionew = $data_user['data'];
 
-        $sql_detalle = "INSERT INTO persona_permiso(idpersona, idpermiso, user_created) VALUES('$idpersonanew', '$permisos[$num_elementos]','" . $_SESSION['idpersona'] . "')";
+        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso, user_created) VALUES('$idusuarionew', '$permisos[$num_elementos]','" . $_SESSION['idusuario'] . "')";
 
         $sw = ejecutarConsulta_retornarID($sql_detalle);  
 
         if ( $sw['status'] == false) {return $sw; }
 
         //add registro en nuestra bitacora
-        $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona_permiso','" .  $sw['data'] . "','Registrar permisos','" . $_SESSION['idpersona'] . "')";
+        $sql2 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','" .  $sw['data'] . "','Registrar permisos','" . $_SESSION['idusuario'] . "')";
         $bitacora = ejecutarConsulta($sql2);
 
         if ( $bitacora['status'] == false) {return $bitacora; }
@@ -55,22 +55,23 @@ class Usuario
   }
 
   //Implementamos un método para editar registros
-  public function editar($idpersona, $trabajador,$trabajador_old, $cargo, $login, $clave, $permisos) {
+  public function editar($idusuario, $trabajador,$trabajador_old, $cargo, $login, $clave, $permisos) {
+
     $trab = "";
     if (empty($trabajador)) {$trab = $trabajador_old;}else{$trab = $trabajador; }
     // var_dump($trab);die();
     $update_user = '[]';
     
     //Eliminamos todos los permisos asignados para volverlos a registrar
-    $sqldel = "DELETE FROM persona_permiso WHERE idpersona='$idpersona'";
+    $sqldel = "DELETE FROM usuario_permiso WHERE idusuario='$idusuario'";
     $delete =  ejecutarConsulta($sqldel); if ( $delete['status'] == false) {return $delete; }   
 
-    $sql = "UPDATE persona SET 
-    idpersona='$trab', cargo='$cargo', login='$login', password='$clave', user_updated= '" . $_SESSION['idpersona'] . "' WHERE idpersona='$idpersona'";
+    $sql = "UPDATE usuario SET 
+    idpersona='$trab', login='$login', password='$clave', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
     $update_user = ejecutarConsulta($sql); if ($update_user['status'] == false) {return $update_user; }     
     
     //add registro en nuestra bitacora
-    $sql5_1 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona', '$idpersona' ,'Editamos los campos del persona','" . $_SESSION['idpersona'] . "')";
+    $sql5_1 = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario', '$idusuario' ,'Editamos los campos del usuario','" . $_SESSION['idusuario'] . "')";
     $bitacora5_1 = ejecutarConsulta($sql5_1); if ( $bitacora5_1['status'] == false) {return $bitacora5_1; }  
 
     $num_elementos = 0; $sw = "";
@@ -79,14 +80,14 @@ class Usuario
 
       while ($num_elementos < count($permisos)) {
 
-        $sql_detalle = "INSERT INTO persona_permiso(idpersona, idpermiso,user_created) VALUES('$idpersona', '$permisos[$num_elementos]','" . $_SESSION['idpersona'] . "')";
+        $sql_detalle = "INSERT INTO usuario_permiso(idusuario, idpermiso,user_created) VALUES('$idusuario', '$permisos[$num_elementos]','" . $_SESSION['idusuario'] . "')";
 
         $sw = ejecutarConsulta_retornarID($sql_detalle);  
 
         if ( $sw['status'] == false) {return $sw; }
 
         //add registro en nuestra bitacora
-        $sqlsw = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona_permiso','" .  $sw['data'] . "','Asigamos nuevos persmisos cuando editamos persona','" . $_SESSION['idpersona'] . "')";
+        $sqlsw = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','" .  $sw['data'] . "','Asigamos nuevos persmisos cuando editamos usuario','" . $_SESSION['idusuario'] . "')";
         $bitacorasw = ejecutarConsulta($sqlsw);
 
         if ( $bitacorasw['status'] == false) {return $bitacorasw; }
@@ -102,15 +103,15 @@ class Usuario
   }
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idpersona) {
-    $sql = "UPDATE persona SET estado='0', user_trash= '" . $_SESSION['idpersona'] . "' WHERE idpersona='$idpersona'";
+  public function desactivar($idusuario) {
+    $sql = "UPDATE usuario SET estado='0', user_trash= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
 
     $desactivar = ejecutarConsulta($sql);
     
     if ( $desactivar['status'] == false) {return $desactivar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona_permiso','$idpersona','Registro desactivado','" . $_SESSION['idpersona'] . "')";
+    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro desactivado','" . $_SESSION['idusuario'] . "')";
     $bitacorade = ejecutarConsulta($sqlde);
 
     if ( $bitacorade['status'] == false) {return $bitacorade; }   
@@ -119,15 +120,15 @@ class Usuario
   }
 
   //Implementamos un método para activar :: !!sin usar ::
-  public function activar($idpersona) {
-    $sql = "UPDATE persona SET estado='1', user_updated= '" . $_SESSION['idpersona'] . "' WHERE idpersona='$idpersona'";
+  public function activar($idusuario) {
+    $sql = "UPDATE usuario SET estado='1', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
 
     $activar= ejecutarConsulta($sql);
         
     if ( $activar['status'] == false) {return $activar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona_permiso','$idpersona','Registro activado','" . $_SESSION['idpersona'] . "')";
+    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro activado','" . $_SESSION['idusuario'] . "')";
     $bitacorade = ejecutarConsulta($sqlde);
 
     if ( $bitacorade['status'] == false) {return $bitacorade; }   
@@ -135,16 +136,16 @@ class Usuario
     return $activar;
   }
 
-  //Implementamos un método para eliminar persona
-  public function eliminar($idpersona) {
-    $sql = "UPDATE persona SET estado_delete='0',user_delete= '" . $_SESSION['idpersona'] . "' WHERE idpersona='$idpersona'";
+  //Implementamos un método para eliminar usuario
+  public function eliminar($idusuario) {
+    $sql = "UPDATE usuario SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
 
     $eliminar= ejecutarConsulta($sql);
         
     if ( $eliminar['status'] == false) {return $eliminar; }    
 
     //add registro en nuestra bitacora
-    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('persona_permiso','$idpersona','Registro Eliminado','" . $_SESSION['idpersona'] . "')";
+    $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro Eliminado','" . $_SESSION['idusuario'] . "')";
     $bitacorade = ejecutarConsulta($sqlde);
 
     if ( $bitacorade['status'] == false) {return $bitacorade; }   
@@ -154,51 +155,55 @@ class Usuario
   }
 
   //Implementar un método para mostrar los datos de un registro a modificar
-  public function mostrar($idpersona) {
-    $sql = "SELECT u.idpersona, u.idpersona, u.cargo, u.login, u.password, u.estado, t.nombres FROM persona AS u, trabajador AS t WHERE u.idpersona='$idpersona' AND u.idpersona = t.idpersona;";
+  public function mostrar($idusuario) {
+    $sql = "SELECT u.idusuario, u.idpersona, u.login, u.password, u.estado, p.nombres 
+    FROM usuario AS u, persona AS p 
+    WHERE u.idusuario='$idusuario' AND u.idpersona = p.idpersona;";
 
     return ejecutarConsultaSimpleFila($sql);
   }
 
   //Implementar un método para listar los registros
   public function listar() {
-    $sql = "SELECT u.idpersona, u.last_sesion, t.nombres, t.tipo_documento, t.numero_documento, t.telefono, t.email, u.cargo, u.login, t.imagen_perfil, t.tipo_documento, u.estado
-		FROM persona as u, trabajador as t
-		WHERE  u.idpersona = t.idpersona  AND u.estado=1 AND u.estado_delete=1 ORDER BY t.nombres ASC;";
+    $sql = "SELECT u.idusuario, u.last_sesion, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, ct.nombre as cargo, u.login, p.foto_perfil, p.tipo_documento, u.estado 
+    FROM usuario as u, persona as p,cargo_trabajador as ct 
+    WHERE u.idpersona = p.idpersona AND p.idcargo_trabajador =ct.idcargo_trabajador AND u.estado=1 AND u.estado_delete=1 ORDER BY p.nombres ASC;";
     return ejecutarConsulta($sql);
   }
 
   //Implementar un método para listar los permisos marcados
-  public function listarmarcados($idpersona) {
-    $sql = "SELECT * FROM persona_permiso WHERE idpersona='$idpersona' ";
+  public function listarmarcados($idusuario) {
+    $sql = "SELECT * FROM usuario_permiso WHERE idusuario='$idusuario' ";
     return ejecutarConsulta($sql);
   }
 
   //Función para verificar el acceso al sistema
+  //Función para verificar el acceso al sistema
   public function verificar($login, $clave) {
-    $sql = "SELECT u.idpersona, t.nombres, t.tipo_documento, t.numero_documento, t.telefono, t.email, u.cargo, u.login, t.imagen_perfil, t.tipo_documento
-		FROM persona as u, trabajador as t
-		WHERE u.login='$login' AND u.password='$clave' AND t.estado=1 and u.estado=1 and u.estado_delete=1 and u.idpersona = t.idpersona;";
+    $sql = "SELECT u.idusuario, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, ct.nombre as cargo, u.login, p.foto_perfil, p.tipo_documento 
+    FROM usuario as u, persona as p,cargo_trabajador as ct 
+    WHERE u.login='$login' AND u.password='$clave' AND p.estado=1 and p.estado_delete=1 and u.estado=1 and u.estado_delete=1 and u.idpersona = p.idpersona 
+    AND p.idpersona =ct.idcargo_trabajador;";
     return ejecutarConsultaSimpleFila($sql);
   }
 
   //Función para verificar el acceso al sistema
   public function ultima_sesion($id) {
-    $sql = "UPDATE persona SET last_sesion= current_timestamp() WHERE idpersona = '$id';";
+    $sql = "UPDATE usuario SET last_sesion= current_timestamp() WHERE idusuario = '$id';";
     return ejecutarConsulta($sql);
   }
 
-  //Seleccionar Trabajador Select2
+  //Seleccionar Trabajador Select2 ok
   public function select2_trabajador() {
-    $sql = "SELECT t.idpersona, t.nombres, t.numero_documento, t.imagen_perfil
-    FROM trabajador as t 
-    LEFT JOIN persona as u ON t.idpersona=u.idpersona WHERE t.estado =1 AND t.estado_delete=1 AND u.idpersona IS NULL;";
+    $sql = "SELECT p.idpersona, p.nombres, p.numero_documento, p.foto_perfil, p.celular 
+    FROM persona as p LEFT JOIN usuario as u ON p.idpersona=u.idpersona 
+    WHERE p.idtipo_persona='4' AND p.estado =1 AND p.estado_delete=1 AND u.idusuario IS NULL;";
     return ejecutarConsulta($sql);
   }
 
-  public function mostrar_cargo_trabajador($id_trabajador)
+  public function select2_cargo_trabajador($id_persona)
   {
-    $sql = "SELECT t.idpersona, ct.nombre as cargo FROM trabajador as t, cargo_trabajador as ct WHERE t.idcargo_trabajador= ct.idcargo_trabajador AND t.idpersona='$id_trabajador';";
+    $sql = "SELECT ct.nombre as cargo FROM persona as p, cargo_trabajador as ct WHERE p.idcargo_trabajador= ct.idcargo_trabajador AND p.idpersona = '$id_persona'; ";
     return ejecutarConsultaSimpleFila($sql);
   }
   

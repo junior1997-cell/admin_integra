@@ -254,7 +254,101 @@ function guardar_y_editar_trabajador(e) {
 }
 
 // ver detallles del registro
-function verdatos(idpago_trabajador){
+// function verdatos(idpago_trabajador){
+
+//   $(".tooltip").removeClass("show").addClass("hidde");
+
+//   $('#datostrabajador').html(''+
+//   '<div class="row" >'+
+//     '<div class="col-lg-12 text-center">'+
+//       '<i class="fas fa-spinner fa-pulse fa-6x"></i><br />'+
+//       '<br />'+
+//       '<h4>Cargando...</h4>'+
+//     '</div>'+
+//   '</div>');
+
+//   var verdatos=''; 
+
+//   var imagen_perfil =''; btn_imagen_perfil=''; 
+
+//   $("#modal-ver-pago_trabajador").modal("show")
+
+//   $.post("../ajax/pago_trabajador.php?op=verdatos", { idpago_trabajador: idpago_trabajador }, function (e, status) {
+
+//     e = JSON.parse(e);  
+    
+//     if (e.status == true) {
+      
+    
+//       if (e.data.imagen_perfil != '') {
+
+//         imagen_perfil=`<img src="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" alt="" class="img-thumbnail w-130px">`
+        
+//         btn_imagen_perfil=`
+//         <div class="row">
+//           <div class="col-6"">
+//             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
+//           </div>
+//           <div class="col-6"">
+//             <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trabajador}"> <i class="fas fa-download"></i></a>
+//           </div>
+//         </div>`;
+      
+//       } else {
+//         imagen_perfil='No hay imagen';
+//         btn_imagen_perfil='';
+//       }
+
+//       verdatos=`                                                                            
+//       <div class="col-12">
+//         <div class="card">
+//           <div class="card-body">
+//             <table class="table table-hover table-bordered">        
+//               <tbody>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th rowspan="2" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
+//                   <td> <b>Nombre: </b>${e.data.nombre_trabajador}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <td> <b>DNI: </b>${e.data.numero_documento}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th>Fecha de Pago</th>
+//                   <td>${e.data.fecha_pago}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th>Sueldo mensual </th>
+//                   <td>${e.data.sueldo_mensual}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th>Sueldo diario </th>
+//                   <td>${e.data.sueldo_diario}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th>Monto a Pagar</th>
+//                   <td>${e.data.monto_pago}</td>
+//                 </tr>
+//                 <tr data-widget="expandable-table" aria-expanded="false">
+//                   <th>Descripcion</th>
+//                   <td>${e.data.descripcion}</td>
+//                 </tr>
+                
+//               </tbody>
+//             </table>
+//           </div>
+//         </div>
+//       </div>`;
+    
+//       $("#datostrabajador").html(verdatos);
+
+//     } else {
+//       ver_errores(e);
+//     }
+
+//   }).fail( function(e) { ver_errores(e); } );
+// }
+
+function datos_trabajador(idtrabajador){
 
   $(".tooltip").removeClass("show").addClass("hidde");
 
@@ -273,9 +367,9 @@ function verdatos(idpago_trabajador){
 
   $("#modal-ver-pago_trabajador").modal("show")
 
-  $.post("../ajax/pago_trabajador.php?op=verdatos", { idpago_trabajador: idpago_trabajador }, function (e, status) {
+  $.post("../ajax/pago_trabajador.php?op=datos_trabajador", { idtrabajador: idtrabajador }, function (e, status) {
 
-    e = JSON.parse(e);  //console.log(e); 
+    e = JSON.parse(e);  console.log(e);
     
     if (e.status == true) {
       
@@ -290,7 +384,7 @@ function verdatos(idpago_trabajador){
             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trabajador}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombres}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
@@ -306,15 +400,15 @@ function verdatos(idpago_trabajador){
             <table class="table table-hover table-bordered">        
               <tbody>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th rowspan="2" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
-                  <td> <b>Nombre: </b>${e.data.nombre_trabajador}</td>
+                  <th rowspan="3" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
+                  <td> <b>Nombre: </b>${e.data.nombres}</td>
+                 
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <td> <b>DNI: </b>${e.data.numero_documento}</td>
+                 <td> <b>Cargo: </b>${e.data.cargo}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Fecha de Pago</th>
-                  <td>${e.data.fecha_pago}</td>
+                  <td> <b>${e.data.tipo_documento}: </b>${e.data.numero_documento}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th>Sueldo mensual </th>
@@ -325,12 +419,16 @@ function verdatos(idpago_trabajador){
                   <td>${e.data.sueldo_diario}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Monto a Pagar</th>
-                  <td>${e.data.monto_pago}</td>
+                  <th>Banco</th>
+                  <td>${e.data.banco}</td>
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
-                  <th>Descripcion</th>
-                  <td>${e.data.descripcion}</td>
+                  <th>cuenta bancaria</th>
+                  <td>${e.data.cuenta_bancaria}</td>
+                </tr>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <th>cci</th>
+                  <td>${e.data.cci}</td>
                 </tr>
                 
               </tbody>

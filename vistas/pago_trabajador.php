@@ -24,7 +24,7 @@
           <?php
           require 'nav.php';
           require 'aside.php';
-          if ($_SESSION['recurso']==1){
+          if ($_SESSION['pago_trabajador']==1){
             //require 'enmantenimiento.php';
             ?>
 
@@ -35,7 +35,7 @@
                 <div class="container-fluid">
                   <div class="row mb-2">
                     <div class="col-sm-6">
-                      <h1> <i class="fas fa-dollar-sign nav-icon"></i> Pago Trabajador: </h1>
+                      <h1> <i class="fas fa-dollar-sign nav-icon"></i> Pago Trabajador</h1>
                     </div>
                     <div class="col-sm-6">
                       <ol class="breadcrumb float-sm-right">
@@ -71,12 +71,12 @@
                             <thead>
                               <tr>
                                 <th class="text-center">#</th>
-                                <th class="">Aciones</th>
+                                <th class=""><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
+                                <th>Teléfono</th>
+                                <th>Pagar</th>
                                 <th>Cuenta bancaria</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
@@ -95,12 +95,12 @@
                             <tfoot>
                               <tr>
                                 <th class="text-center">#</th>
-                                <th>Aciones</th>
+                                <th><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                 <th>Nombres</th>
                                 <th>Cargo</th>
                                 <th>Sueldo</th>
-                                <th>Telefono</th>
-                                <th>Fecha Nac. / Edad</th>
+                                <th>Teléfono</th>
+                                <th>Pagar</th>
                                 <th>Cuenta bancaria</th>
                                 <th>Estado</th>
                                 <th>Nombres</th>
