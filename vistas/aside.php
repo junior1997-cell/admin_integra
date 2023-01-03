@@ -95,18 +95,18 @@
             <ul class="nav nav-treeview ">
 
               <!-- Usuarios del sistema -->
-              <li class="nav-item ">
+              <!-- <li class="nav-item ">
                 <a href="trabajador.php" class="nav-link" id="lTrabajador">
                   <i class="nav-icon fas fa-users"></i>
                   <p>Trabajador</p>
                 </a>
-              </li>
+              </li> -->
 
               <!-- Proveedores y clientes de la empresa -->
               <li class="nav-item ">
                 <a href="persona.php" class="nav-link" id="lClienteProveedor">
-                  <i class="nav-icon fas fa-truck"></i>
-                  <p>Cliente y Proveedor </p>
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>Personas </p>
                 </a>
               </li>  
               

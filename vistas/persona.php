@@ -80,9 +80,9 @@
                                         <div class="col-12">
                                           <table id="tabla-persona" class="table table-bordered table-striped display" style="width: 100% !important;">
                                             <thead> 
-                                              <tr>
+                                              <tr>                                              
                                                 <th class="text-center">#</th>
-                                                <th class="">Acciones</th>
+                                                <th class=""><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                                 <th class="">Nombres</th>
                                                 <th>Dirección</th>
                                                 <th>Telefono</th>
@@ -102,7 +102,7 @@
                                             <tfoot>
                                               <tr>
                                                 <th class="text-center">#</th>
-                                                <th class="">Acciones</th>
+                                                <th class=""><i class="fa fa-cogs" aria-hidden="true"></i></th>
                                                 <th class="">Nombres</th>
                                                 <th>Dirección</th>
                                                 <th>Telefono</th>
