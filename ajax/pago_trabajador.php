@@ -53,7 +53,7 @@
 
             $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
-            move_uploaded_file($_FILES["comprobante"]["tmp_name"], "../dist/docs/trabajador/perfil/" . $imagen1);
+            move_uploaded_file($_FILES["comprobante"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
 						
 					}
 
@@ -69,7 +69,7 @@
             if ($flat_img1 == true) {
               $datos_f1 = $pago_trabajador->obtenerImg($idtrabajador);
               $img1_ant = $datos_f1['data']['imagen_perfil'];
-              if ($img1_ant != "") { unlink("../dist/docs/trabajador/perfil/" . $img1_ant);  }
+              if ($img1_ant != "") { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
             }            
 
             // editamos un trabajador existente
@@ -117,9 +117,9 @@
           
               $data[]=array(
                 "0"=>$cont++,
-                "1"=> ' <button class="btn btn-info btn-sm" onclick="datos_trabajador('.$value['idtrabajador'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
+                "1"=> ' <button class="btn btn-info btn-sm" onclick="datos_trabajador('.$value['idpersona'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
                 "2"=>'<div class="user-block">
-                  <img class="img-circle" src="../dist/docs/trabajador/perfil/'. $value['imagen_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
+                  <img class="img-circle" src="../dist/docs/persona/perfil/'. $value['foto_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
                   </div>',
@@ -128,8 +128,8 @@
                 <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
                 <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
-                "5"=>'<a href="tel:+51'.quitar_guion($value['telefono']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['telefono'] . '</a>',
-              "6"=> '<button class="btn btn-lg" onclick="tbla_pago_trabajador(' . $value['idtrabajador'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" ><i class="fas fa-hand-holding-usd fas-xl" style="color: #1a8722;"></i></button>',
+                "5"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
+              "6"=> '<button class="btn btn-lg" onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" ><i class="fas fa-hand-holding-usd fas-xl" style="color: #1a8722;"></i></button>',
                 "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
                 "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
                 "9"=> $value['nombres'],

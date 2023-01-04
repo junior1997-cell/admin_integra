@@ -282,15 +282,15 @@ function guardar_y_editar_trabajador(e) {
     
 //       if (e.data.imagen_perfil != '') {
 
-//         imagen_perfil=`<img src="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" alt="" class="img-thumbnail w-130px">`
+//         imagen_perfil=`<img src="../dist/docs/persona/perfil/${e.data.imagen_perfil}" alt="" class="img-thumbnail w-130px">`
         
 //         btn_imagen_perfil=`
 //         <div class="row">
 //           <div class="col-6"">
-//             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
+//             <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/persona/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
 //           </div>
 //           <div class="col-6"">
-//             <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trabajador}"> <i class="fas fa-download"></i></a>
+//             <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/persona/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombre_trabajador}"> <i class="fas fa-download"></i></a>
 //           </div>
 //         </div>`;
       
@@ -374,17 +374,17 @@ function datos_trabajador(idtrabajador){
     if (e.status == true) {
       
     
-      if (e.data.imagen_perfil != '') {
+      if (e.data.foto_perfil != '') {
 
-        imagen_perfil=`<img src="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" alt="" class="img-thumbnail w-130px">`
+        imagen_perfil=`<img src="../dist/docs/persona/perfil/${e.data.foto_perfil}" alt="" class="img-thumbnail w-130px">`
         
         btn_imagen_perfil=`
         <div class="row">
           <div class="col-6"">
-            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}"> <i class="fas fa-expand"></i></a>
+            <a type="button" class="btn btn-info btn-block btn-xs" target="_blank" href="../dist/docs/persona/perfil/${e.data.foto_perfil}"> <i class="fas fa-expand"></i></a>
           </div>
           <div class="col-6"">
-            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/trabajador/perfil/${e.data.imagen_perfil}" download="PERFIL ${e.data.nombres}"> <i class="fas fa-download"></i></a>
+            <a type="button" class="btn btn-warning btn-block btn-xs" href="../dist/docs/persona/perfil/${e.data.foto_perfil}" download="PERFIL ${e.data.nombres}"> <i class="fas fa-download"></i></a>
           </div>
         </div>`;
       
@@ -402,7 +402,6 @@ function datos_trabajador(idtrabajador){
                 <tr data-widget="expandable-table" aria-expanded="false">
                   <th rowspan="3" class="text-center">${imagen_perfil}<br>${btn_imagen_perfil} </th>
                   <td> <b>Nombre: </b>${e.data.nombres}</td>
-                 
                 </tr>
                 <tr data-widget="expandable-table" aria-expanded="false">
                  <td> <b>Cargo: </b>${e.data.cargo}</td>
@@ -470,7 +469,7 @@ function mostrar(idpago_trabajador) {
        
 
       if (e.data.imagen_perfil!="") {
-        $("#foto1_i").attr("src", "../dist/docs/trabajador/perfil/" + e.data.imagen_perfil);
+        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.imagen_perfil);
         $("#foto1_actual").val(e.data.imagen_perfil);
       }
       if (e.data.comprobante!="") {

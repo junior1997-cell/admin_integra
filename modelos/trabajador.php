@@ -108,11 +108,11 @@
 
     public function tbla_principal() {
       
-      $sql="SELECT t.idtrabajador, t.idcargo_trabajador, t.idbancos, ct.nombre as cargo,b.nombre as banco, t.nombres, t.tipo_documento, 
-      t.numero_documento, t.ruc, t.fecha_nacimiento, t.edad, t.cuenta_bancaria, t.cci, t.titular_cuenta, t.sueldo_mensual, t.sueldo_diario, 
-      t.direccion, t.telefono, t.email, t.imagen_perfil, t.estado, b.alias, b.formato_cta,b.formato_cci,b.icono 
-      FROM trabajador as t, cargo_trabajador as ct, bancos as b 
-      WHERE t.idcargo_trabajador= ct.idcargo_trabajador AND t.idbancos=b.idbancos AND t.estado =1 AND t.estado_delete=1 ORDER BY  t.nombres ASC ;";
+      $sql="SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, p.fecha_nacimiento, 
+      p.edad, p.celular, p.direccion, p.correo, p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.sueldo_mensual, 
+      p.sueldo_diario, p.foto_perfil, p.estado, cp.nombre as cargo, b.nombre as banco 
+      FROM persona as p ,bancos as b, cargo_trabajador as cp 
+      WHERE p.idbancos = b.idbancos AND p.idcargo_trabajador=cp.idcargo_trabajador AND p.idtipo_persona='4' AND p.estado='1' AND p.estado_delete ='1';";
 
       $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
 

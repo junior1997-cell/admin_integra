@@ -219,7 +219,7 @@
                 '<button class="btn btn-warning  btn-sm" onclick="mostrar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' . 
                 ' <button class="btn btn-primary  btn-sm" onclick="activar(' . $value['idusuario'] . ')" data-toggle="tooltip" data-original-title="Recuperar"><i class="fa fa-check"></i></button>',
             "2" => '<div class="user-block">'. 
-              '<img class="img-circle" src="../dist/docs/trabajador/perfil/' . $value['celular'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
+              '<img class="img-circle" src="../dist/docs/persona/perfil/' . $value['foto_perfil'] . '" alt="User Image" onerror="' . $imagen_error . '">'.
               '<span class="username"><p class="text-primary m-b-02rem" >' . $value['nombres'] . '</p></span>'. 
               '<span class="description"> - ' . $value['tipo_documento'] .  ': ' . $value['numero_documento'] . ' </span>'.
             '</div>',
@@ -357,7 +357,7 @@
 
         $imagen1 = rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
-        move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/trabajador/perfil/" . $imagen1);
+        move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
         
       }
 
