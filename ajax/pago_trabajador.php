@@ -29,9 +29,15 @@
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
+      $idmes_pago_trabajador = isset($_POST["idmes_pago_trabajador"])? limpiarCadena($_POST["idmes_pago_trabajador"]):"";
+      $idpersona = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
+      $nombres = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
+      $mes = isset($_POST["mes"])? limpiarCadena($_POST["mes"]):"";
+      $anio= isset($_POST["anio"])? limpiarCadena($_POST["anio"]):"";
+      // $idmes_pago_trabajador,$idpersona,$mes,$anio
       
       $idpago_trabajador	  	= isset($_POST["idpago_trabajador"])? limpiarCadena($_POST["idpago_trabajador"]):"";
-      $idtrabajador 		      = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
+      // $idtrabajador 		      = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
       $fecha_pago		      = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
       $monto		    = isset($_POST["monto_pago"])? limpiarCadena($_POST["monto_pago"]):"";
       $descripcion		    = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
@@ -40,40 +46,17 @@
       $comprobante			    = isset($_POST["comprobante"])? limpiarCadena($_POST["comprobante"]):"";
       switch ($_GET["op"]) {
 
-        case 'guardaryeditar':
+        case 'guardaryeditar_mes_pago':
           
-          // imgen de perfil
-          if (!file_exists($_FILES['comprobante']['tmp_name']) || !is_uploaded_file($_FILES['comprobante']['tmp_name'])) {
-
-						$imagen1=$_POST["comprobante_actual"]; $flat_img1 = false;
-
-					} else {
-
-						$ext1 = explode(".", $_FILES["comprobante"]["name"]); $flat_img1 = true;						
-
-            $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
-
-            move_uploaded_file($_FILES["comprobante"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
-						
-					}
-
-          if (empty($idpago_trabajador)){
+          if (empty($idmes_pago_trabajador)){
             
-            $rspta=$pago_trabajador->insertar($idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1);
+            $rspta=$pago_trabajador->insertar_mes_pago($idpersona,$nombres,$mes,$anio);
             
             echo json_encode($rspta, true);
   
           }else {
-
-            // validamos si existe LA IMG para eliminarlo
-            if ($flat_img1 == true) {
-              $datos_f1 = $pago_trabajador->obtenerImg($idtrabajador);
-              $img1_ant = $datos_f1['data']['imagen_perfil'];
-              if ($img1_ant != "") { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
-            }            
-
             // editamos un trabajador existente
-            $rspta=$pago_trabajador->editar($idpago_trabajador, $idtrabajador, $fecha_pago, $monto, $descripcion, $imagen1);
+            $rspta=$pago_trabajador->editar_mes_pago($idmes_pago_trabajador,$idpersona,$mes,$anio);
             
             echo json_encode($rspta, true);
           }            
@@ -157,9 +140,9 @@
           }
         break;
 
-        case 'tbla_pago_trabajador':          
+        case 'tbla_mes_pago':          
 
-          $rspta=$pago_trabajador->tbla_principal($_GET["idpago_trabajador"]);
+          $rspta=$pago_trabajador->tbla_mes_pago($_GET["idpersona"]);
           
           //Vamos a declarar un array
           $data= Array(); $cont=1;
@@ -171,10 +154,8 @@
               $data[]=array(
                 "0"=>$cont++,
                 "1"=> $value['anio'],
-                "2"=>$value['nombre_mes'],
-                "3"=> $_GET["sueldo_mensual"],
-                "4"=> $value['monto_pagado'],
-                "5"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['nombre_mes'].');" >Ver Detalle</button>',
+                "2"=>$value['mes_nombre'],
+                "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].','.$value['mes_nombre'].');" >Ver Detalle</button>',
                 
 
               );

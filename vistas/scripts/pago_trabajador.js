@@ -11,25 +11,22 @@ function init() {
   tbla_trabajador();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Trabajador", '#nombre_trabajador', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2_cargo_trabajador", '#cargo_trabajador', null);
+  // lista_select2("../ajax/ajax_general.php?op=select2Trabajador", '#nombre_trabajador', null);
   
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
-  $("#guardar_registro").on("click", function (e) {  $("#submit-form-trabajador").submit(); });  
+  $("#guardar_registro_mes").on("click", function (e) {  $("#submit-form-mes").submit(); });  
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
   
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
-  //$("#nombre_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione Trabajador", allowClear: true, });
 
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
 
 init();
-
-
 
 // abrimos el navegador de archivos
 $("#foto1_i").click(function() { $('#foto1').trigger('click'); });
@@ -44,29 +41,13 @@ function foto1_eliminar() {
 	$("#foto1_nombre").html("");
 }
 
-// function habilitando_socio() {
-//   // $("#input_socio").val('NO');
-  
-//   if ($("#socio").val()==null || $("#socio").val()=="" || $('#socio').is(':checked') ) {
-//     $("#input_socio").val('0');
-//     $(".sino").html('(NO)');
-//   }else{
-//     $("#input_socio").val('1');
-//     $(".sino").html('(SI)');
-
-//   }
-
-  
-
-// }
-
 //Función limpiar
 function limpiar_form_trabajador() {
   
-  $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
+  $("#guardar_registro_mes").html('Guardar Cambios').removeClass('disabled');
 
   $("#idtrabajador").val("");
-  $("#idpago_trabajador").val("");
+  $("#idpersona").val("");
   $("#num_documento").val(""); 
   $("#fecha_pago").val(""); 
   $("#monto_pago").val(""); 
@@ -90,15 +71,17 @@ function limpiar_form_trabajador() {
   $(".form-control").removeClass('is-invalid');
   $(".error.invalid-feedback").remove();
 }
+
 function show_hide_table(flag) {
   if (flag == 1) {
     $("#div-tabla-trabajador").show();
-    $("#div-tabla-pago-trabajador").hide();
+    $("#div-tabla-mes-pago").hide();
     $("#btn-agregar").hide();
     $("#btn-regresar").hide();
+    $(".nombre_trabajador_view").html("");
   } else if (flag == 2) {
     $("#div-tabla-trabajador").hide();
-    $("#div-tabla-pago-trabajador").show();
+    $("#div-tabla-mes-pago").show();
     $("#btn-agregar").show();
     $("#btn-regresar").show();
   }
@@ -148,18 +131,19 @@ function tbla_trabajador() {
 }
 
 //Función Listar
-function tbla_pago_trabajador(idpago_trabajador, nombres, sueldo_mensual, cargo) {
-  console.log(idpago_trabajador, sueldo_mensual, cargo);
- limpiar_form_trabajador();
-
-
+function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
+  get_year_month();
+  $(".nombre_trabajador_view").html(': '+nombres);
   $("#nombre_trabajador").val(nombres);
+  // console.log(idpersona, sueldo_mensual, cargo);
+ limpiar_form_trabajador();
+  $("#idpersona").val(idpersona);
   $("#sueldo_mensual").val(sueldo_mensual);
   $("#extraer_cargo").val(cargo);
 
   show_hide_table(2);
 
-  tabla=$('#tabla-pago-trabajador').dataTable({
+  tabla=$('#tabla-mes-pago').dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]],//mostramos el menú de registros a revisar
     aProcessing: true,//Activamos el procesamiento del datatables
@@ -171,7 +155,7 @@ function tbla_pago_trabajador(idpago_trabajador, nombres, sueldo_mensual, cargo)
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10], } }, {extend: "colvis"} ,
     ],
     ajax:{
-      url: `../ajax/pago_trabajador.php?op=tbla_pago_trabajador&idpago_trabajador=${idpago_trabajador}&nombre_trabajador=${nombres}&sueldo_mensual=${sueldo_mensual}&extraer_cargo=${cargo}`,
+      url: `../ajax/pago_trabajador.php?op=tbla_mes_pago&idpersona=${idpersona}`,
       type : "get",
       dataType : "json",						
       error: function(e){
@@ -199,15 +183,13 @@ function tbla_pago_trabajador(idpago_trabajador, nombres, sueldo_mensual, cargo)
 
 }
 
-
-
 //Función para guardar o editar
-function guardar_y_editar_trabajador(e) {
+function guardar_y_editar_mes_pago(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-trabajador")[0]);
+  var formData = new FormData($("#form-mes")[0]);
 
   $.ajax({
-    url: "../ajax/pago_trabajador.php?op=guardaryeditar",
+    url: "../ajax/pago_trabajador.php?op=guardaryeditar_mes_pago",
     type: "POST",
     data: formData,
     contentType: false,
@@ -216,7 +198,7 @@ function guardar_y_editar_trabajador(e) {
       try {
         e = JSON.parse(e);  //console.log(e); 
         if (e.status == true) {	
-          Swal.fire("Correcto!", "Trabajador guardado correctamente", "success");
+          Swal.fire("Correcto!", "Guardado correctamente", "success");
           tabla.ajax.reload(null, false);          
           limpiar_form_trabajador();
           $("#modal-agregar-trabajador").modal("hide"); 
@@ -226,7 +208,7 @@ function guardar_y_editar_trabajador(e) {
         }
       } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }      
 
-      $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
+      $("#guardar_registro_mes").html('Guardar Cambios').removeClass('disabled');
     },
     xhr: function () {
       var xhr = new window.XMLHttpRequest();
@@ -241,7 +223,7 @@ function guardar_y_editar_trabajador(e) {
       return xhr;
     },
     beforeSend: function () {
-      $("#guardar_registro").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#guardar_registro_mes").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
       $("#barra_progress").css({ width: "0%",  });
       $("#barra_progress").text("0%");
     },
@@ -254,7 +236,7 @@ function guardar_y_editar_trabajador(e) {
 }
 
 // ver detallles del registro
-// function verdatos(idpago_trabajador){
+// function verdatos(idpersona){
 
 //   $(".tooltip").removeClass("show").addClass("hidde");
 
@@ -273,7 +255,7 @@ function guardar_y_editar_trabajador(e) {
 
 //   $("#modal-ver-pago_trabajador").modal("show")
 
-//   $.post("../ajax/pago_trabajador.php?op=verdatos", { idpago_trabajador: idpago_trabajador }, function (e, status) {
+//   $.post("../ajax/pago_trabajador.php?op=verdatos", { idpersona: idpersona }, function (e, status) {
 
 //     e = JSON.parse(e);  
     
@@ -446,7 +428,7 @@ function datos_trabajador(idtrabajador){
 }
 
 // mostramos los datos para editar
-function mostrar(idpago_trabajador) {
+function mostrar(idpersona) {
   $(".tooltip").removeClass("show").addClass("hidde");
   limpiar_form_trabajador();  
 
@@ -455,13 +437,13 @@ function mostrar(idpago_trabajador) {
 
   $("#modal-agregar-trabajador").modal("show")
 
-  $.post("../ajax/pago_trabajador.php?op=mostrar", { idpago_trabajador: idpago_trabajador }, function (e, status) {
+  $.post("../ajax/pago_trabajador.php?op=mostrar", { idpersona: idpersona }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);   
 
     if (e.status == true) {         
       
-      $("#idpago_trabajador").val(e.data.idpago_trabajador).trigger("change");      
+      $("#idpersona").val(e.data.idpersona).trigger("change");      
       $("#nombre_trabajador").val(e.data.idtrabajador).trigger("change");
       $("#fecha_pago").val(e.data.fecha_pago);
       $("#monto_pago").val(e.data.monto);
@@ -488,12 +470,12 @@ function mostrar(idpago_trabajador) {
 }
 
 //Función para desactivar registros
-function eliminar_trabajador(idpago_trabajador, nombre) {
+function eliminar_trabajador(idpersona, nombre) {
 
   crud_eliminar_papelera(
     "../ajax/pago_trabajador.php?op=desactivar",
     "../ajax/pago_trabajador.php?op=eliminar", 
-    idpago_trabajador, 
+    idpersona, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
@@ -517,34 +499,17 @@ function ver_desglose_de_pago(nombre_mes) {
 
 $(function () {   
 
-  $("#tipo_documento").on('change', function() { $(this).trigger('blur'); });
-  $("#banco").on('change', function() { $(this).trigger('blur'); });
-  $("#cargo_trabajador").on('change', function() { $(this).trigger('blur'); });
-
-  $("#form-trabajador").validate({
+  $("#form-mes").validate({
     rules: {
-      tipo_documento: { required: true },
-      num_documento:  { required: true, minlength: 6, maxlength: 20 },
-      nombre:         { required: true, minlength: 6, maxlength: 100 },
-      email:          { email: true, minlength: 10, maxlength: 50 },
-      direccion:      { minlength: 5, maxlength: 70 },
-      telefono:       { minlength: 8 },
-      cta_bancaria:   { minlength: 10,},
-      banco:          { required: true},
-      ruc:            { minlength: 11, maxlength: 11},
-      sueldo_mensual: { required: true},
+      idpersona:      { required: true },
+      mes:            { required: true },
+      anio:           { required: true },
     },
     messages: {
-      tipo_documento: { required: "Campo requerido.", },
-      num_documento:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
-      nombre:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
-      email:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
-      direccion:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
-      telefono:       { minlength: "MÍNIMO 8 caracteres.", },
-      cta_bancaria:   { minlength: "MÍNIMO 10 caracteres.", },
-      banco:          { required: "Campo requerido.", },
-      ruc:            { minlength: "MÍNIMO 11 caracteres.", maxlength: "MÁXIMO 11 caracteres.", },
-      sueldo_mensual: { required: "Campo requerido.", }
+      idpersona:      { required: "Campo requerido.", },
+      mes:            { required: "Campo requerido.", },
+      anio:           { required: "Campo requerido.", },
+
     },
         
     errorElement: "span",
@@ -561,14 +526,10 @@ $(function () {
     },
     submitHandler: function (e) {
       $(".modal-body").animate({ scrollTop: $(document).height() }, 600); // Scrollea hasta abajo de la página
-      guardar_y_editar_trabajador(e);
+      guardar_y_editar_mes_pago(e);
     },
   });
 
-  $("#tipo_documento").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#cargo_trabajador").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#nombre_trab").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });
 
 // .....::::::::::::::::::::::::::::::::::::: F U N C I O N E S    A L T E R N A S  :::::::::::::::::::::::::::::::::::::::..
@@ -604,13 +565,23 @@ function extraer_sueldo_trabajador() {
   
   
 }
+
 function extraer_nombre_mes() {
   var fecha = $('#fecha_pago').val(); 
   if (fecha == '' || fecha == null) { } else {
     $('#nombre_mes').val();
   }
-   
-  
+    
+}
+
+//funcion para obtener mes y el año actual
+function get_year_month() {
+  var fecha = new Date();
+  var year = fecha.getFullYear();
+  var mesActual = new Intl.DateTimeFormat('es-ES', { month: 'long'}).format(new Date());
+  var correcion_mes =mesActual.charAt(0).toUpperCase() + mesActual.slice(1);
+  $("#anio").val(year);
+  $("#mes").val(correcion_mes);
 }
 
 

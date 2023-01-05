@@ -8,6 +8,44 @@
     public function __construct()
     {
     }
+    public function insertar_mes_pago($idpersona,$nombres,$mes,$anio)
+    {
+
+      $sql="SELECT idmes_pago_trabajador, idpersona, mes_nombre, anio,estado,estado_delete 
+      FROM mes_pago_trabajador 
+      WHERE idpersona='$idpersona' AND mes_nombre='$mes' AND anio='$anio' ";
+
+      $buscando = ejecutarConsultaArray($sql); if ($buscando['status'] == false) { return $buscando; }
+  
+      if ( empty($buscando['data']) ) {
+        $sql="INSERT INTO mes_pago_trabajador (idpersona,mes_nombre,anio)
+        VALUES ('$idpersona','$mes','$anio')";
+        return ejecutarConsulta($sql);
+      } else {
+        $info_repetida = ''; 
+  
+        foreach ($buscando['data'] as $key => $value) {
+          $info_repetida .= '<li class="text-left font-size-13px">
+            <b>Nombre: </b>'.$nombres.'<br>
+            <b>Descripción: </b>'. $value['mes_nombre'] . ' del '.$value['anio'].'<br>
+            <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .'<br>
+            <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
+            <hr class="m-t-2px m-b-2px">
+          </li>'; 
+        }
+        $sw = array( 'status' => 'duplicado', 'message' => 'duplicado', 'data' => '<ul>'.$info_repetida.'</ul>', 'id_tabla' => '' );
+        return $sw;
+      }   
+
+
+    }
+    public function editar_mes_pago($idmes_pago_trabajador,$idpersona,$mes,$anio)
+    {
+
+      $sql = "UPDATE mes_pago_trabajador SET idpersona='$idpersona',mes_nombre='$mes',anio='$anio' 
+      WHERE idmes_pago_trabajador='$idmes_pago_trabajador'";
+      return ejecutarConsulta($sql);
+    }
 
     public function insertar( $idtrabajador,$fecha_pago, $monto, $descripcion, $comprobante) {
       //var_dump($idtrabajador,$fecha_pago, $monto, $descripcion, $imagen1);die();
@@ -110,7 +148,9 @@
     //datos trabajador
     public function datos_trabajador($idtrabajador)
     {
-      $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, p.fecha_nacimiento, p.edad, p.celular, p.direccion, p.correo, p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, ct.nombre as cargo,b.nombre as banco 
+      $sql = "SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.idcargo_trabajador, p.nombres, p.tipo_documento, p.numero_documento, 
+      p.fecha_nacimiento, p.edad, p.celular, p.direccion, p.correo, p.cuenta_bancaria, p.cci, 
+      p.titular_cuenta, p.es_socio, p.sueldo_mensual, p.sueldo_diario, p.foto_perfil, ct.nombre as cargo,b.nombre as banco 
       FROM persona as p , cargo_trabajador as ct, bancos as b
       WHERE p.idcargo_trabajador = ct.idcargo_trabajador AND p.idbancos=b.idbancos AND p.idpersona='$idtrabajador';";
       return ejecutarConsultaSimpleFila($sql);
@@ -125,19 +165,9 @@
 
     }
 
-    public function tbla_principal($idtrabajador) {
+    public function tbla_mes_pago($idpersona) {
       
-      $sql="SELECT year(fecha_pago) as anio, nombre_mes, SUM(monto) as monto_pagado  
-      FROM pago_trabajador 
-      WHERE idtrabajador = '$idtrabajador' and  estado = '1' AND estado_delete ='1' GROUP BY nombre_mes;";
-
-      //SELECT ELT(MONTH(fecha_pago), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre') as mes_name, 
-      //SUM(monto) FROM pago_trabajador WHERE idtrabajador = '2' GROUP BY MONTH(fecha_pago);
-
-      /*SELECT pt.idpago_trabajador, pt.fecha_pago, pt.monto as monto_pago, pt.descripcion, pt.comprobante, t.idtrabajador, ct.nombre as cargo,
-      t.nombres as nombre_trabajador, t.numero_documento, t.sueldo_mensual, t.imagen_perfil, t.tipo_documento, pt.estado
-      FROM pago_trabajador as pt, trabajador as t, cargo_trabajador as ct
-      WHERE pt.idtrabajador= t.idtrabajador AND t.idcargo_trabajador = ct.idcargo_trabajador AND pt.estado =1 AND pt.estado_delete=1 ORDER BY  t.nombres ASC ;*/
+      $sql="SELECT idmes_pago_trabajador, mes_nombre, anio FROM mes_pago_trabajador WHERE idpersona='$idpersona'  AND estado=1 AND estado_delete =1";
 
       $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
 
