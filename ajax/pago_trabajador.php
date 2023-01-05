@@ -155,9 +155,7 @@
                 "0"=>$cont++,
                 "1"=> $value['anio'],
                 "2"=>$value['mes_nombre'],
-                "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].','.$value['mes_nombre'].');" >Ver Detalle</button>',
-                
-
+                "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].',\''.$value['mes_nombre'].'\');" >Ver Pagar</button>',
               );
             }
             $results = array(
