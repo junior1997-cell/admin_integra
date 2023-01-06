@@ -8,7 +8,7 @@
   }else{
     ?>
     <!DOCTYPE html>
-    <html lang="es">
+    <html lang="es"> 
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -385,6 +385,25 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- MODAL - VER PERFIL PERSONA-->
+                <div class="modal fade bg-color-02020280" id="modal-ver-perfil-persona">
+                  <div class="modal-dialog modal-dialog-centered modal-md">
+                    <div class="modal-content bg-color-0202022e shadow-none border-0">
+                      <div class="modal-header">
+                        <h4 class="modal-title text-white foto-persona">Foto Persona</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span class="text-white cursor-pointer" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body"> 
+                        <div id="perfil-persona" class="text-center">
+                          <!-- vemos los datos del trabajador -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>   
 
               </section>
               <!-- /.content -->

@@ -16,6 +16,7 @@
 			require_once "../modelos/Permiso.php";
 
 			$permiso=new Permiso();
+			$imagen_error = "this.src='../dist/svg/user_default.svg'";
 
 			switch ($_GET["op"]){
 				
@@ -47,27 +48,25 @@
 
 				break;
 
-				case 'listar_usuario':
+				case 'listar_usuario':				
 
-					$id_permiso = $_GET["id"];
-
-					$rspta=$permiso->ver_usuarios($id_permiso);
+					$rspta=$permiso->ver_usuarios($_GET["id"]);
 					$cont=1;
 					//Vamos a declarar un array
 					$data= Array();
-					$imagen_error = "this.src='../dist/svg/user_default.svg'";
+					
 					if ($rspta['status']) {
 						foreach ($rspta['data'] as $key => $value) {
 
 							$data[]=array(
 								"0"=>$cont++,
 								"1"=>'<div class="user-block">
-									<img class="img-circle" src="../dist/docs/all_trabajador/perfil/'. $value['imagen_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
-									<span class="username"><p class="text-primary"style="margin-bottom: 0.2rem !important"; >'. $value['nombres'] .'</p></span>
+									<img class="img-circle" src="../dist/docs/persona/perfil/'. $value['foto_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
+									<span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
 									<span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
 								</div>',
 								"2"=>$value['cargo'], 
-								"3"=>substr ( $value['created_at'] , 0, ((strlen($value['created_at']))-3) )
+								"3"=> nombre_dia_semana( date("Y-m-d", strtotime($value['created_at'])) ) .', <br>'. date("d/m/Y", strtotime($value['created_at'])) .' - '. date("g:i a", strtotime($value['created_at']))
 							);
 						}
 	
