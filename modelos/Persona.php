@@ -118,9 +118,10 @@
       if ($tipo_persona=='todos') { $filtro = "AND p.idtipo_persona>1"; }else{ $filtro = "AND p.idtipo_persona='$tipo_persona' "; }
 
       $sql="SELECT p.idpersona, p.idtipo_persona, p.idbancos, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.direccion, p.correo,p.estado, 
-      p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.foto_perfil, b.nombre as banco, tp.nombre as tipo_persona 
-      FROM persona as p, bancos as b, tipo_persona as tp 
-      WHERE p.idtipo_persona=tp.idtipo_persona  AND p.idbancos=b.idbancos $filtro AND p.estado ='1' AND p.estado_delete='1';";
+      p.cuenta_bancaria, p.cci, p.titular_cuenta, p.es_socio, p.foto_perfil, b.nombre as banco, tp.nombre as tipo_persona, ct.nombre as cargo
+      FROM persona as p, bancos as b, tipo_persona as tp, cargo_trabajador as ct 
+      WHERE p.idtipo_persona=tp.idtipo_persona  AND p.idbancos=b.idbancos AND p.idcargo_trabajador = ct.idcargo_trabajador 
+      $filtro AND p.estado ='1' AND p.estado_delete='1';";
 
       $persona = ejecutarConsultaArray($sql); if ($persona['status'] == false) { return  $persona;}
       

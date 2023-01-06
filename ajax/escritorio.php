@@ -34,7 +34,17 @@
           echo json_encode($rspta, true);	
         break;
 
-        
+        case 'chart_producto':
+          $rspta=$escritorio->chart_producto();
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);	
+        break;
+
+        case 'chart_cafe':
+          $rspta=$escritorio->chart_cafe();
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);	
+        break;
 
         default: 
           $rspta = ['status'=>'error_code', 'message'=>'Te has confundido en escribir en el <b>swich.</b>', 'data'=>[]]; echo json_encode($rspta, true); 

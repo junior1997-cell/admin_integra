@@ -37,7 +37,72 @@ class Escritorio
     return $results;
   }
 
+  public function chart_producto( ) {
 
+    $data_venta = Array(); $data_pagos = Array();
+    $data_compra = Array(); $data_pagos = Array(); $data_kilos_pergamino = Array(); $data_kilos_coco = Array();
+
+    for ($i=1; $i <= 12 ; $i++) { 
+      $sql_1 = "SELECT idpersona, SUM(total) as total_gasto , ELT(MONTH(fecha_venta), 'En.', 'Febr.', 'Mzo.', 'Abr.', 'My.', 'Jun.', 'Jul.', 'Agt.', 'Sept.', 'Oct.', 'Nov.', 'Dic.') as mes_name_abreviado, 
+      ELT(MONTH(fecha_venta), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre') as mes_name, fecha_venta 
+      FROM venta_producto  WHERE MONTH(fecha_venta)='$i'  AND estado='1' AND estado_delete='1';";
+      $mes = ejecutarConsultaSimpleFila($sql_1); if ($mes['status'] == false) { return $mes; }
+      array_push($data_venta, (empty($mes['data']) ? 0 : (empty($mes['data']['total_gasto']) ? 0 : floatval($mes['data']['total_gasto']) ) ));
+
+      $sql_2 = "SELECT SUM(pg.monto) as total_deposito  
+      FROM pago_venta_producto as pg, venta_producto as cpp 
+      WHERE pg.idventa_producto = cpp.idventa_producto AND MONTH(pg.fecha_pago)='$i' AND cpp.estado='1' AND cpp.estado_delete='1';";
+      $mes = ejecutarConsultaSimpleFila($sql_2); if ($mes['status'] == false) { return $mes; }
+      array_push($data_pagos, (empty($mes['data']) ? 0 : (empty($mes['data']['total_deposito']) ? 0 : floatval($mes['data']['total_deposito']) ) ));       
+
+    }
+
+    for ($i=1; $i <= 12 ; $i++) { 
+      $sql_1 = "SELECT idpersona, SUM(total_compra) as total_gasto , ELT(MONTH(fecha_compra), 'En.', 'Febr.', 'Mzo.', 'Abr.', 'My.', 'Jun.', 'Jul.', 'Agt.', 'Sept.', 'Oct.', 'Nov.', 'Dic.') as mes_name_abreviado, 
+      ELT(MONTH(fecha_compra), 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre') as mes_name, fecha_compra 
+      FROM compra_grano  WHERE MONTH(fecha_compra)='$i' AND estado='1' AND estado_delete='1';";
+      $mes = ejecutarConsultaSimpleFila($sql_1); if ($mes['status'] == false) { return $mes; }
+      array_push($data_compra, (empty($mes['data']) ? 0 : (empty($mes['data']['total_gasto']) ? 0 : floatval($mes['data']['total_gasto']) ) ));
+      
+      $sql_1 = "SELECT  SUM(pcg.monto) as total_pago
+      FROM pago_compra_grano AS pcg, compra_grano AS pg
+      WHERE pcg.idcompra_grano = pg.idcompra_grano AND MONTH(pcg.fecha_pago)='$i' AND pg.estado='1' AND pg.estado_delete='1' AND pcg.estado='1' AND pcg.estado_delete='1';";
+      $mes = ejecutarConsultaSimpleFila($sql_1); if ($mes['status'] == false) { return $mes; }
+      array_push($data_pagos, (empty($mes['data']) ? 0 : (empty($mes['data']['total_pago']) ? 0 : floatval($mes['data']['total_pago']) ) ));
+
+      $sql_2 = "SELECT SUM(dcg.peso_neto) as peso_neto  
+      FROM detalle_compra_grano as dcg, compra_grano as cg 
+      WHERE dcg.idcompra_grano = cg.idcompra_grano AND MONTH(cg.fecha_compra)='$i' 
+      AND cg.estado='1' AND cg.estado_delete='1' AND dcg.tipo_grano = 'PERGAMINO';";
+      $mes = ejecutarConsultaSimpleFila($sql_2);  if ($mes['status'] == false) { return $mes; }
+      array_push($data_kilos_pergamino, (empty($mes['data']) ? 0 : (empty($mes['data']['peso_neto']) ? 0 : floatval($mes['data']['peso_neto']) ) )); 
+      
+      $sql_2 = "SELECT SUM(dcg.peso_neto) as peso_neto  
+      FROM detalle_compra_grano as dcg, compra_grano as cg 
+      WHERE dcg.idcompra_grano = cg.idcompra_grano AND MONTH(cg.fecha_compra)='$i' 
+      AND cg.estado='1' AND cg.estado_delete='1' AND dcg.tipo_grano = 'COCO';";
+      $mes = ejecutarConsultaSimpleFila($sql_2);  if ($mes['status'] == false) { return $mes; }
+      array_push($data_kilos_coco, (empty($mes['data']) ? 0 : (empty($mes['data']['peso_neto']) ? 0 : floatval($mes['data']['peso_neto']) ) ));      
+
+    }
+
+    return $retorno = [
+      'status'=> true, 'message' => 'Salió todo ok,', 
+      'data' => [
+        'total_venta'=>$data_venta, 
+        'total_pagos'=>$data_pagos,
+
+        'total_compra'=>$data_compra, 
+        'total_deposito'=>$data_pagos,
+        'total_kilos_pergamino'=>$data_kilos_pergamino, 
+        'total_kilos_coco'=>$data_kilos_coco,        
+      ]
+    ];   
+  }
+
+  public function chart_cafe( ) {
+
+  }
 }
 
 ?>

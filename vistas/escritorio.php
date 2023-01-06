@@ -143,7 +143,7 @@
                                         <span class="text-bold text-lg">Ventas y Pagos</span> <span>de productos por mes</span>
                                       </p>
                                       <p class="ml-auto d-flex flex-column text-right">
-                                        <span class="text-success cursor-pointer" data-toggle="tooltip" data-original-title="Descargar gráfico"><i class="fas fa-download fa-xl"></i></span>
+                                        <span class="text-success cursor-pointer" id="btn-download-chart-linea" data-toggle="tooltip" data-original-title="Descargar gráfico"><i class="fas fa-download fa-xl"></i></span>
                                         <span class="text-muted">Descarga</span>
                                       </p>
                                       
@@ -155,8 +155,8 @@
                                     </div>
 
                                     <div class="d-flex flex-row justify-content-end">
-                                      <span class="mr-2"><i class="fas fa-square text-black-50"></i> Utilidad</span>
-                                      <span class="mr-2"><i class="fas fa-square text-blue"></i> Subcontrato</span>
+                                      <span class="mr-2" ><i class="fas fa-square" style="color: #28a745;" ></i> Total venta</span>
+                                      <span class="mr-2"><i class="fas fa-square" style="color: #ced4da;"></i> Total pago</span>
                                     </div>
                                   </div>
                                   <!-- linea divisoria -->
@@ -189,7 +189,7 @@
                                         <span class="text-bold text-lg">Compras de Café</span> <span>por mes</span>
                                       </p>
                                       <p class="ml-auto d-flex flex-column text-right">
-                                        <span class="text-success cursor-pointer" data-toggle="tooltip" data-original-title="Descargar gráfico"><i class="fas fa-download fa-xl"></i></span>
+                                        <span class="text-success cursor-pointer" id="btn-download-chart-barra" data-toggle="tooltip" data-original-title="Descargar gráfico"><i class="fas fa-download fa-xl"></i></span>
                                         <span class="text-muted">Descarga</span>
                                       </p>
                                     </div>

@@ -128,7 +128,7 @@ function tbla_principal(tipo_persona) {
     buttons: [
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
       { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, {extend: "colvis"} ,
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } },
     ],
     ajax:{
       url: `../ajax/persona.php?op=tbla_principal&tipo_persona=${tipo_persona}`,
@@ -198,11 +198,8 @@ function show_hide_btn_add(tipo_persona) {
       $(".classswichs").removeClass("hidden");
       $(".classdirecc").removeClass("col-lg-12").addClass("col-lg-9");
       
-    }
-      
-    
+    }    
   }
-
 }
 
 //Función para guardar o editar
@@ -588,6 +585,15 @@ function sueld_mensual(){
 
   $("#sueldo_diario").val(sueldo_diario);
 
+}
+
+// ver imagen grande de la persona
+function ver_img_persona(file, nombre) {
+  $('.foto-persona').html(nombre);
+  $(".tooltip").removeClass("show").addClass("hidde");
+  $("#modal-ver-perfil-persona").modal("show");
+  $('#perfil-persona').html(`<span class="jq_image_zoom"><img class="img-thumbnail" src="${file}" onerror="this.src='../dist/svg/404-v2.svg';" alt="Perfil" width="100%"></span>`);
+  $('.jq_image_zoom').zoom({ on:'grab' });
 }
 
 
