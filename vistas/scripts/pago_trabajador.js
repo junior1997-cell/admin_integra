@@ -1,7 +1,7 @@
 var tabla; 
 var tabla_mes;
 var tabla_pagos;
-var sueldo_view = 0;
+var mes_pago_trabajador = 0;
 //Función que se ejecuta al inicio
 function init() {
 
@@ -48,8 +48,6 @@ function doc1_eliminar() {
 
 	$("#doc1_nombre").html("");
 }
-
-
 
 function show_hide_table(flag) {
   if (flag == 1) {
@@ -155,9 +153,9 @@ function tbla_pago_trabajador(idpersona, nombres, sueldo_mensual, cargo) {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
-      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,9,10], } }, 
-      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,9,10], } }, 
-      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,9,10], } }, {extend: "colvis"} ,
+      { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
+      { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,1,2,4], } }, 
+      { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,1,2,4], } }, {extend: "colvis"} ,
     ],
     ajax:{
       url: `../ajax/pago_trabajador.php?op=tbla_mes_pago&idpersona=${idpersona}`,
@@ -357,9 +355,8 @@ function limpiar_form_pago() {
   $(".error.invalid-feedback").remove();
 }
 
-
 function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
-
+  mes_pago_trabajador = idmes_pago_trabajador;
   $("#idmes_pago_trabajador_p").val(idmes_pago_trabajador);
   $("#nombre_mes").val(nombre_mes);
   show_hide_table(3);
@@ -402,7 +399,7 @@ function ver_desglose_de_pago(idmes_pago_trabajador,nombre_mes) {
     ],
   }).DataTable();
 
-
+  total_pago_trabajador(mes_pago_trabajador);
 
 }
 
@@ -422,7 +419,9 @@ function guardar_y_editar_pago(e) {
         e = JSON.parse(e);  //console.log(e); 
         if (e.status == true) {	
           Swal.fire("Correcto!", "Guardado correctamente", "success");
-          tabla_pagos.ajax.reload(null, false);          
+          tabla_pagos.ajax.reload(null, false);  
+          tabla_mes.ajax.reload(null, false); 
+          total_pago_trabajador(mes_pago_trabajador);       
           limpiar_form_pago();
           $("#modal-agregar-pago-trabajdor").modal("hide"); 
           
@@ -511,7 +510,6 @@ function mostrar_pago(idpago_trabajador) {
   }).fail( function(e) { ver_errores(e); } );
 }
 
-
 //Función para desactivar registros
 function eliminar_pago(idpago_trabajador, descripcion) {
 
@@ -523,7 +521,7 @@ function eliminar_pago(idpago_trabajador, descripcion) {
     `<b class="text-danger"><del>${descripcion}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
-    function(){ tabla_pagos.ajax.reload(null, false); },
+    function(){ tabla_pagos.ajax.reload(null, false); total_pago_trabajador(mes_pago_trabajador); tabla_mes.ajax.reload(null, false);},
     false, 
     false, 
     false,
@@ -532,7 +530,25 @@ function eliminar_pago(idpago_trabajador, descripcion) {
  
 }
 
+function total_pago_trabajador(idmes_pago_trabajador) {
+  console.log(idmes_pago_trabajador);
+  
+  $(".monto_total_pago").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+    
+  $.post("../ajax/pago_trabajador.php?op=total_pago_trabajador", { idmes_pago_trabajador: idmes_pago_trabajador }, function (e, status) {
 
+    e = JSON.parse(e);  console.log(e);   
+
+    if (e.status == true) {     
+          
+      
+      $(".monto_total_pago").html('S/. '+formato_miles(e.data.total));
+    
+    } else {
+      ver_errores(e);
+    }    
+  }).fail( function(e) { ver_errores(e); } );
+}
 
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..

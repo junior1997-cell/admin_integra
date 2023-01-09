@@ -1,9 +1,10 @@
 <?php
   //Incluímos inicialmente la conexión a la base de datos
   require "../config/Conexion_v2.php";
-
+  // global $total;
   class PagoTrabajador
   {
+
     //Implementamos nuestro constructor
     public function __construct()
     {
@@ -111,6 +112,13 @@
       WHERE pt.idmes_pago_trabajador = mpt.idmes_pago_trabajador AND pt.estado=1 AND pt.estado_delete=1 AND mpt.idmes_pago_trabajador='$idmes_pago_trabajador';";
       return ejecutarConsulta($sql);		
     }
+    //total pagos por  total_pago_trabajador
+    public function total_pago_trabajador($idmes_pago_trabajador)
+    {
+      $sql="SELECT SUM(monto) as total FROM pago_trabajador WHERE estado =1 AND estado_delete=1 AND idmes_pago_trabajador='$idmes_pago_trabajador'";
+      return ejecutarConsultaSimpleFila($sql);  
+
+    }
     // =====================================================================================================
     // =====================================================================================================
     // =====================================================================================================
@@ -137,13 +145,29 @@
     }
 
     public function tbla_mes_pago($idpersona) {
-      
+      $data = Array();
       $sql="SELECT idmes_pago_trabajador, mes_nombre, anio FROM mes_pago_trabajador WHERE idpersona='$idpersona'  AND estado=1 AND estado_delete =1";
 
-      $trabajdor = ejecutarConsultaArray($sql); if ($trabajdor['status'] == false) { return  $trabajdor;}
+      $pagos_meses = ejecutarConsultaArray($sql); if ($pagos_meses['status'] == false) { return  $pagos_meses;}
 
-      return $trabajdor;
-      // var_dump($trabajdor);die();
+          // actualizamos el stock
+      foreach ($pagos_meses['data'] as $key => $value) { 
+           
+        $slq2 = "SELECT SUM(monto) as total FROM pago_trabajador WHERE estado =1 AND estado_delete=1 AND idmes_pago_trabajador='".$value['idmes_pago_trabajador']."';";
+        $total_por_meses = ejecutarConsultaSimpleFila($slq2); if ($total_por_meses['status'] == false) { return  $total_por_meses;}
+
+        $pago_total_por_meses =(empty($total_por_meses['data']) ? 0 : (empty($total_por_meses['data']['total']) ? 0 : floatval($total_por_meses['data']['total']) ) );
+        
+
+        $data[] = [
+          'idmes_pago_trabajador'   => $value['idmes_pago_trabajador'],
+          'anio'  => $value['anio'],
+          'mes_nombre'        => $value['mes_nombre'],
+          'pago_total_por_meses'   => $pago_total_por_meses,
+        ];
+        
+      }	
+      return $retorno = ['status' => true, 'message' => 'todo ok pe.', 'data' =>$data, 'affected_rows' =>$pagos_meses['affected_rows'],  ] ;
 
     }
 

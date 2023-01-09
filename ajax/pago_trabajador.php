@@ -133,6 +133,7 @@
                 "1"=> $value['anio'],
                 "2"=>$value['mes_nombre'],
                 "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].',\''.$value['mes_nombre'].'\');" >Pagos</button>',
+                "4"=> 'S/ ' . number_format($value['pago_total_por_meses'], 2, '.', ','),
               );
             }
             $results = array(
@@ -208,7 +209,7 @@
         case 'desactivar_pago':
           $rspta=$pago_trabajador->desactivar_pago($_GET["id_tabla"]);
          echo json_encode($rspta, true);
-         break;
+        break;
 
         case 'eliminar_pago':
          $rspta=$pago_trabajador->eliminar_pago($_GET["id_tabla"]);
@@ -263,6 +264,11 @@
           echo json_encode($rspta, true);           
         break;
 
+        case 'total_pago_trabajador':
+          $rspta=$pago_trabajador->total_pago_trabajador($_POST["idmes_pago_trabajador"]);
+          //Codificar el resultado utilizando json
+          echo json_encode($rspta, true);
+        break;
 
         /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
         case 'recuperar_banco':           

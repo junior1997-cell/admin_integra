@@ -151,6 +151,7 @@
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
+                                  <th >Pagos</th>
                                   
                                 </tr>
                               </thead>
@@ -162,7 +163,7 @@
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
-
+                                  <th>Pagos</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -189,7 +190,7 @@
                                   <th class="text-center">#</th> 
                                   <th>Op.</th> 
                                   <th>Fecha </th> 
-                                  <th>Monto</th>
+                                  <th class="monto_total_pago">Monto</th>
                                   <th>Descripcion</th>     
                                   <th>Comprobante</th>                                                  
                                 </tr>
