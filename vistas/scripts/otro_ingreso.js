@@ -16,10 +16,8 @@ function init() {
   lista_select2("../ajax/otro_ingreso.php?op=select_tipo_persona", '#idtipopersona', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
 
-
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════ 
-
-  $("#guardar_registro_persona").on("click", function (e) { $("#submit-form-persona").submit(); console.log('HOLAA MUNDO'); });
+  $("#guardar_registro_persona").on("click", function (e) { $("#submit-form-persona").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - OTRO INGRESO  ══════════════════════════════════════
   $("#idpersona").select2({ theme: "bootstrap4", placeholder: "Selecione un proveedor o productor", allowClear: true,   });
@@ -30,7 +28,6 @@ function init() {
   $("#forma_pago").select2({ theme: "bootstrap4", placeholder: "Seleccinar forma de pago", allowClear: true, });
 
   $("#banco").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
-
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -45,19 +42,14 @@ function templateBanco (state) {
   return $state;
 };
 
-
-
 // abrimos el navegador de archivos
 $("#doc1_i").click(function() {  $('#doc1').trigger('click'); });
 $("#doc1").change(function(e) {  addImageApplication(e,$("#doc1").attr("id")) });
 
 // Eliminamos el doc 1
 function doc1_eliminar() {
-
 	$("#doc1").val("");
-
 	$("#doc1_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-
 	$("#doc1_nombre").html("");
 }
 
@@ -114,9 +106,9 @@ function tbla_principal() {
     aProcessing: true, //Activamos el procesamiento del datatables
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
-    buttons: ["copyHtml5", "excelHtml5", "pdf", "colvis"],
+    buttons: ["copyHtml5", "excelHtml5", "pdf"],
     ajax: {
-      url: "../ajax/otro_ingreso.php?op=listar",
+      url: "../ajax/otro_ingreso.php?op=tbla_principal",
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -140,22 +132,26 @@ function tbla_principal() {
       buttons: { copyTitle: "Tabla Copiada", copySuccess: { _: "%d líneas copiadas", 1: "1 línea copiada", }, },
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
+    footerCallback: function( tfoot, data, start, end, display ) {
+      var api1 = this.api(); var total1 = api1.column( 6 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api1.column( 6 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total1)}</span>` ); 
+      
+      var api2 = this.api(); var total2 = api2.column( 7 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api2.column( 7 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total2)}</span>` );
+
+      var api3 = this.api(); var total3 = api3.column( 8 ).data().reduce( function ( a, b ) { return  (parseFloat(a) + parseFloat( b)) ; }, 0 )
+      $( api3.column( 8 ).footer() ).html( `<span class="float-left">S/</span> <span class="float-right">${formato_miles(total3)}</span>` );
+    },
     bDestroy: true,
     iDisplayLength: 10, //Paginación
     order: [[0, "asc"]], //Ordenar (columna,orden)
+    columnDefs: [
+      //{ targets: [], visible: false, searchable: false, }, 
+      { targets: [5], render: $.fn.dataTable.render.moment('YYYY-MM-DD', 'DD/MM/YYYY'), },
+      { targets: [6,7,8], render: function (data, type) { var number = $.fn.dataTable.render.number(',', '.', 2).display(data); if (type === 'display') { let color = 'numero_positivos'; if (data < 0) {color = 'numero_negativos'; } return `<span class="float-left">S/</span> <span class="float-right ${color} "> ${number} </span>`; } return number; }, },      
+    ],
   }).DataTable();
-  total();
 
-}
-
-function total() {
-  $("#total_monto").html(`<i class="fas fa-spinner fa-pulse"></i>`);
-
-  $.post("../ajax/otro_ingreso.php?op=total",function (e, status) {
-
-    e = JSON.parse(e); console.log(e);
-    $("#total_monto").html("S/ " + formato_miles(e.data.precio_parcial));
-  }).fail( function(e) { ver_errores(e); } );
 }
 
 //segun tipo de comprobante
@@ -398,7 +394,7 @@ function guardar_y_editar_otros_ingresos(e) {
 
           Swal.fire("Correcto!", "El registro se guardo correctamente.", "success");
 
-          tabla.ajax.reload(null, false); total();
+          tabla.ajax.reload(null, false);
 
           limpiar_form();    
           show_hide_form(1);
@@ -552,7 +548,7 @@ function eliminar(idotro_ingreso, nombre,numero_comprobante) {
     `<b class="text-danger"><del>${nombre} : ${numero_comprobante}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
     function(){ sw_success('♻️ Papelera! ♻️', "Tu registro ha sido reciclado." ) }, 
     function(){ sw_success('Eliminado!', 'Tu registro ha sido Eliminado.' ) }, 
-    function(){ tabla.ajax.reload(null, false),total(); },
+    function(){ tabla.ajax.reload(null, false); },
     false, 
     false, 
     false,

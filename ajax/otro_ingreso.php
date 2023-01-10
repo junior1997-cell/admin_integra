@@ -70,7 +70,7 @@
       
             $flat_ficha1 = true;
       
-            $comprobante = $date_now .' '.random_int(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+            $comprobante = $date_now .' '.random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
       
             move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/otro_ingreso/comprobante/" . $comprobante);
           }
@@ -133,7 +133,7 @@
       
         break;
       
-        case 'listar':
+        case 'tbla_principal':
           $rspta = $otro_ingreso->tbla_principal();
           //Vamos a declarar un array
           $data = [];
@@ -175,9 +175,9 @@
                   '</span>         
                   </div>',
                 "5" => $reg->fecha_ingreso,
-                "6" =>'S/ '. number_format($reg->precio_sin_igv, 2, '.', ','),
-                "7" =>'S/ '. number_format($reg->precio_igv, 2, '.', ','),
-                "8" =>'S/ '. number_format($reg->precio_con_igv, 2, '.', ','),
+                "6" =>$reg->precio_sin_igv,
+                "7" =>$reg->precio_igv,
+                "8" =>$reg->precio_con_igv,
                 "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
                 "10" => $comprobante. $toltip,
                 "11"=>$reg->numero_documento,

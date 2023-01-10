@@ -73,23 +73,25 @@
 
           if ($rspta['status'] == true) {
 
-            foreach ($rspta['data'] as $key => $value) {             
+            foreach ($rspta['data'] as $key => $value) {           
+              
+              $imagen = (empty($value['foto_perfil']) ? '../dist/svg/user_default.svg' : '../dist/docs/persona/perfil/'.$value['foto_perfil']) ;
           
               $data[]=array(
                 "0"=>$cont++,
                 "1"=> ' <button class="btn btn-info btn-sm" onclick="datos_trabajador('.$value['idpersona'].')"data-toggle="tooltip" data-original-title="ver datos"><i class="far fa-eye"></i></button>',
                 "2"=>'<div class="user-block">
-                  <img class="img-circle" src="../dist/docs/persona/perfil/'. $value['foto_perfil'] .'" alt="User Image" onerror="'.$imagen_error.'">
+                  <img class="img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description">'. $value['tipo_documento'] .': '. $value['numero_documento'] .' </span>
-                  </div>',
+                </div>',
                 "3"=> $value['cargo'],
                 "4"=> '<div>
                 <span class="description">Mensual: <b>'. number_format($value['sueldo_mensual']) .'</b> </span><br>
                 <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
                 "5"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
-                "6"=> '<button class="btn  btn-lg" onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fas-xl" style="color: #1a8722;"></i></button>',
+                "6"=> '<button class="btn btn-warning " onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fa-lg"></i></button>',
                 "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'] . $toltip,
                 
                 "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
@@ -130,11 +132,11 @@
             foreach ($rspta['data'] as $key => $value) {             
           
               $data[]=array(
-                "0"=>$cont++,
+                "0"=> $cont++,
                 "1"=> $value['anio'],
-                "2"=>$value['mes_nombre'],
+                "2"=> $value['mes_nombre'],
                 "3"=> '<button type="button" class="btn btn-success" onclick="ver_desglose_de_pago('.$value['idmes_pago_trabajador'].',\''.$value['mes_nombre'].'\');" >Pagos</button>',
-                "4"=> 'S/ ' . number_format($value['pago_total_por_meses'], 2, '.', ','),
+                "4"=> $value['pago_total_por_meses'],
               );
             }
             $results = array(
@@ -232,8 +234,7 @@
 
             foreach ($rspta['data'] as $key => $value) {       
               
-            $doc = (empty($value['comprobante']) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="../dist/docs/pago_trabajador/comprobante/'.$value['comprobante'].'" target="_blank" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');
-              
+            $doc = (empty($value['comprobante']) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="../dist/docs/pago_trabajador/comprobante/'.$value['comprobante'].'" target="_blank" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');              
           
               $data[]=array(
                 "0"=>$cont++,
@@ -243,7 +244,6 @@
                 "3"=>$value['monto'],
                 "4"=>'<textarea cols="30" rows="1" class="textarea_datatable" readonly >'.$value['descripcion'].'</textarea>',
                 "5"=>$doc,
-
               );
             }
             $results = array(

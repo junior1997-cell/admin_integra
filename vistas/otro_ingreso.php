@@ -74,13 +74,13 @@
                                   <th class="">Acciones</th>
                                   <th class="">Persona</th>
                                   <th data-toggle="tooltip" data-original-title="Forma Pago">Forma P.</th>
-                                  <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comprob</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comp.</th>
                                   <th>Fecha</th>
                                   <th>Subtotal</th>
                                   <th>IGV</th>
-                                  <th>Monto Total</th>
+                                  <th>Total</th>
                                   <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Comprobante">Comprob</th>
+                                  <th data-toggle="tooltip" data-original-title="Comprobante">Comp.</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -90,13 +90,13 @@
                                   <th class="">Acciones</th>
                                   <th class="">Persona</th>
                                   <th data-toggle="tooltip" data-original-title="Forma Pago">Forma P.</th>
-                                  <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comprob</th>
+                                  <th data-toggle="tooltip" data-original-title="Tipo Comprobante">Tipo Comp.</th>
                                   <th>Fecha</th>
-                                  <th>Subtotal</th>
-                                  <th>IGV</th>
-                                  <th class="text-nowrap text-right" id="total_monto"><i class="fas fa-spinner fa-pulse"></i></th>
+                                  <th class="text-nowrap px-2">0.00</th>
+                                  <th class="text-nowrap px-2">0.00</th>
+                                  <th class="text-nowrap px-2">0.00</th>
                                   <th>Descripción</th>
-                                  <th data-toggle="tooltip" data-original-title="Comprobante">Comprob</th>
+                                  <th data-toggle="tooltip" data-original-title="Comprobante">Comp.</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -111,8 +111,7 @@
                                   <!-- id hospedaje -->
                                   <input type="hidden" name="idotro_ingreso" id="idotro_ingreso" />
 
-                                  <!--Proveedor-->
-                                   
+                                  <!--Proveedor-->                                   
                                   <div class="col-sm-12 col-md-9 col-lg-7 col-xl-7">
                                     <div class="form-group">
                                       <label for="idpersona">Persona <sup class="text-danger">*</sup></label>
@@ -147,7 +146,7 @@
                                   </div>
 
                                   <!-- Tipo de comprobante -->
-                                  <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3" id="content-t-comprob">
+                                  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4" id="content-t-comprob">
                                     <div class="form-group">
                                       <label for="tipo_comprobante">Tipo Comprobante</label>
                                       <select name="tipo_comprobante" id="tipo_comprobante" class="form-control select2" onchange="comprob_factura(); validando_igv();" onkeyup="comprob_factura();" placeholder="Seleccinar un tipo de comprobante">
@@ -160,7 +159,7 @@
                                   </div>                                  
 
                                   <!-- Código-->
-                                  <div class="col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
                                       <label class="nro_comprobante" for="nro_comprobante">Núm. comprobante </label>
                                       <input type="text" name="nro_comprobante" id="nro_comprobante" class="form-control" placeholder="Código" />
@@ -406,18 +405,18 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                          <div class="row">
-                            <div class="col-6 col-md-6">
-                              <a class="btn btn-xs btn-block btn-warning" href="#" id="iddescargar" download="" type="button"><i class="fas fa-download"></i> Descargar</a>
-                            </div>
-                            <div class="col-6 col-md-6">
-                              <a class="btn btn-xs btn-block btn-info" href="#" id="ver_completo"  target="_blank" type="button"><i class="fas fa-expand"></i> Ver completo.</a>
-                            </div>
-                            <div class="col-12 col-md-12 mt-2">
-                              <div id="ver_fact_pdf" width="auto"></div>
-                            </div>
-                          </div>                          
-                        </div>
+                        <div class="row">
+                          <div class="col-6 col-md-6">
+                            <a class="btn btn-xs btn-block btn-warning" href="#" id="iddescargar" download="" type="button"><i class="fas fa-download"></i> Descargar</a>
+                          </div>
+                          <div class="col-6 col-md-6">
+                            <a class="btn btn-xs btn-block btn-info" href="#" id="ver_completo"  target="_blank" type="button"><i class="fas fa-expand"></i> Ver completo.</a>
+                          </div>
+                          <div class="col-12 col-md-12 mt-2">
+                            <div id="ver_fact_pdf" width="auto"></div>
+                          </div>
+                        </div>                          
+                      </div>
                     </div>
                   </div>
                 </div>
