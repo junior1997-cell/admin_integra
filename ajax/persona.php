@@ -64,7 +64,7 @@
 
 						$ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;						
 
-            $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+            $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
             move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
 						

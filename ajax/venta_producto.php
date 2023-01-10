@@ -322,7 +322,7 @@ if (!isset($_SESSION["nombre"])) {
           $comprobante_pago = $_POST["doc_old_1"]; $flat_doc1 = false;
         } else {
           $ext1 = explode(".", $_FILES["doc1"]["name"]); $flat_doc1 = true;	
-          $comprobante_pago  = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+          $comprobante_pago  = $date_now .' '. random_int(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
           move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/venta_producto/comprobante_pago/" . $comprobante_pago );          
         }
 

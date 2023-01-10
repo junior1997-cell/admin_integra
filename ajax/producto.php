@@ -47,7 +47,7 @@
 
             $flat_img1 = true;
 
-            $imagen1 = $date_now .' '. rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+            $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
 
             move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/producto/img_perfil/" . $imagen1);
           }
@@ -104,7 +104,7 @@
         break;
     
         case 'tbla_principal':
-          $rspta = $producto->tbla_principal();
+          $rspta = $producto->tbla_principal($_GET["idcategoria"]);
           //Vamos a declarar un array
           $data = []; $cont=1;
 
@@ -114,13 +114,7 @@
               $imagen = (empty($reg->imagen) ? 'producto-sin-foto.svg' : $reg->imagen );
               $clas_stok = "";
 
-              if ($reg->stock == 0 && $reg->stock <= 0) {
-                $clas_stok = 'badge-danger';
-              }else if ($reg->stock > 0 && $reg->stock <= 10) {
-                $clas_stok = 'badge-warning';
-              }else if ($reg->stock > 10) {
-                $clas_stok = 'badge-success';
-              }
+              if ( $reg->stock <= 0) { $clas_stok = 'badge-danger'; }else if ($reg->stock > 0 && $reg->stock <= 10) { $clas_stok = 'badge-warning'; }else if ($reg->stock > 10) { $clas_stok = 'badge-success'; }
               
               $data[] = [
                 "0"=>$cont++,
@@ -133,7 +127,7 @@
                   '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="../dist/docs/producto/img_perfil/' . $imagen . '" alt="user image" onerror="'.$imagen_error.'" onclick="ver_perfil(\'../dist/docs/producto/img_perfil/' . $imagen . '\', \''.encodeCadenaHtml($reg->nombre_medida).'\');" data-toggle="tooltip" data-original-title="Ver imagen">
                   <span class="username"><p class="mb-0">' . $reg->nombre . '</p></span>
                   <span class="description"><b>Marca: </b>' . $reg->marca . '</span>
-                </div>',
+                </div>' . $toltip,
                 "4" =>  $reg->categoria,
                 "5" => $reg->nombre_medida,     
                 "6" => $reg->precio_unitario,
@@ -142,9 +136,7 @@
                 "9" => '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $reg->descripcion . '</textarea>',
 
                 "10" => $reg->nombre,
-                "11" => $reg->marca,
-                
-                
+                "11" => $reg->marca                  
               ];
             }
   
@@ -161,6 +153,9 @@
           }
           
         break;
+
+        // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
+
         case 'lista_de_categorias':
 
           $rspta = $producto->lista_de_categorias();

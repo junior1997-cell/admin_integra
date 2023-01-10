@@ -29,22 +29,22 @@
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
-      $idmes_pago_trabajador = isset($_POST["idmes_pago_trabajador"])? limpiarCadena($_POST["idmes_pago_trabajador"]):"";
-      $idpersona = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
-      $nombres = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
-      $mes = isset($_POST["mes"])? limpiarCadena($_POST["mes"]):"";
-      $anio= isset($_POST["anio"])? limpiarCadena($_POST["anio"]):"";
+      $idmes_pago_trabajador= isset($_POST["idmes_pago_trabajador"])? limpiarCadena($_POST["idmes_pago_trabajador"]):"";
+      $idpersona            = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
+      $nombres              = isset($_POST["nombre_trabajador"])? limpiarCadena($_POST["nombre_trabajador"]):"";
+      $mes                  = isset($_POST["mes"])? limpiarCadena($_POST["mes"]):"";
+      $anio                 = isset($_POST["anio"])? limpiarCadena($_POST["anio"]):"";
       // $idmes_pago_trabajador,$idpersona,$mes,$anio
 
       //Pago trabajador
 
       $idpago_trabajador	  	= isset($_POST["idpago_trabajador"])? limpiarCadena($_POST["idpago_trabajador"]):"";
-      $idmes_pago_trabajador_p 		      = isset($_POST["idmes_pago_trabajador_p"])? limpiarCadena($_POST["idmes_pago_trabajador_p"]):"";
-      $nombre_mes		      = isset($_POST["nombre_mes"])? limpiarCadena($_POST["nombre_mes"]):"";
-      $monto		      = isset($_POST["monto"])? limpiarCadena($_POST["monto"]):"";
-      $fecha_pago		    = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
-      $descripcion		    = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
-      $comprobante			    = isset($_POST["doc1"])? limpiarCadena($_POST["doc1"]):"";
+      $idmes_pago_trabajador_p= isset($_POST["idmes_pago_trabajador_p"])? limpiarCadena($_POST["idmes_pago_trabajador_p"]):"";
+      $nombre_mes		          = isset($_POST["nombre_mes"])? limpiarCadena($_POST["nombre_mes"]):"";
+      $monto		              = isset($_POST["monto"])? limpiarCadena($_POST["monto"]):"";
+      $fecha_pago		          = isset($_POST["fecha_pago"])? limpiarCadena($_POST["fecha_pago"]):"";
+      $descripcion		        = isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
+      $comprobante			      = isset($_POST["doc1"])? limpiarCadena($_POST["doc1"]):"";
       //$idpago_trabajador,$idmes_pago_trabajador_p,$nombre_mes,$monto,$fecha_pago,$descripcion,$comprobante
 
       switch ($_GET["op"]) {
@@ -89,8 +89,9 @@
                 <span class="description">Diario: <b> '. $value['sueldo_diario'] .'</b> </span>
                 </div>',
                 "5"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al trabajador.">'. $value['celular'] . '</a>',
-              "6"=> '<button class="btn btn-lg" onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" ><i class="fas fa-hand-holding-usd fas-xl" style="color: #1a8722;"></i></button>',
-                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
+                "6"=> '<button class="btn  btn-lg" onclick="tbla_pago_trabajador(' . $value['idpersona'] . ',\''.$value['nombres'].'\',\''.$value['sueldo_mensual'].'\', \''.$value['cargo'].'\')" data-toggle="tooltip" data-original-title="Agregar mes de pago"><i class="fas fa-hand-holding-usd fas-xl" style="color: #1a8722;"></i></button>',
+                "7"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'] . $toltip,
+                
                 "8"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
                 "9"=> $value['nombres'],
                 "10"=> $value['tipo_documento'],
@@ -175,7 +176,7 @@
       
             $flat_ficha1 = true;
       
-            $comprobante = $date_now .' '.rand(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+            $comprobante = $date_now .' '.random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
       
             move_uploaded_file($_FILES["doc1"]["tmp_name"], "../dist/docs/pago_trabajador/comprobante/" . $comprobante);
           }
@@ -256,7 +257,6 @@
             echo $rspta['code_error'] .' - '. $rspta['message'] .' '. $rspta['data'];
           }
         break;
-
         
         case 'formato_banco':           
           $rspta=$pago_trabajador->formato_banco($_POST["idbanco"]);

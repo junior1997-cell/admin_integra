@@ -9,7 +9,7 @@ function init() {
 
   $("#lAllProducto").addClass("active");
   $('.lAllProducto-img').attr('src', '../dist/svg/negro-abono-ico.svg');
-
+  lista_de_items();
   tbla_principal();
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
 
@@ -85,7 +85,7 @@ function lista_de_items() {
 
   $(".lista-items").html(`<li class="nav-item"><a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a></li>`); 
 
-  $.post("../ajax/activos_fijos.php?op=lista_de_categorias", function (e, status) {
+  $.post("../ajax/producto.php?op=lista_de_categorias", function (e, status) {
     
     e = JSON.parse(e); console.log(e);
     // e.data.idtipo_tierra
@@ -95,13 +95,13 @@ function lista_de_items() {
       e.data.forEach((val, index) => {
         data_html = data_html.concat(`
         <li class="nav-item">
-          <a class="nav-link" onclick="delay(function(){tabla_principal('${val.idcategoria}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre_producto}</a>
+          <a class="nav-link" onclick="delay(function(){tbla_principal('${val.idcategoria_producto}')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="false">${val.nombre}</a>
         </li>`);
       });
 
       $(".lista-items").html(`
         <li class="nav-item">
-          <a class="nav-link active" onclick="delay(function(){tabla_principal('todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
+          <a class="nav-link active" onclick="delay(function(){tbla_principal('todos')}, 50 );" id="tabs-for-activo-fijo-tab" data-toggle="pill" href="#tabs-for-activo-fijo" role="tab" aria-controls="tabs-for-activo-fijo" aria-selected="true">Todos</a>
         </li>
         ${data_html}
       `); 
@@ -112,7 +112,7 @@ function lista_de_items() {
 }
 
 //Función Listar
-function tbla_principal() {
+function tbla_principal(idcategoria = 'todos') {
   tabla = $("#tabla-materiales").dataTable({
     responsive: true,
     lengthMenu: [[ -1, 5, 10, 25, 75, 100, 200,], ["Todos", 5, 10, 25, 75, 100, 200, ]], //mostramos el menú de registros a revisar
@@ -125,7 +125,7 @@ function tbla_principal() {
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } },
     ],
     ajax: {
-      url: "../ajax/producto.php?op=tbla_principal",
+      url: `../ajax/producto.php?op=tbla_principal&idcategoria=${idcategoria}`,
       type: "get",
       dataType: "json",
       error: function (e) {

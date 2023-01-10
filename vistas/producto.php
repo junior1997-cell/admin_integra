@@ -62,45 +62,77 @@
                           </h3>
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body">
-                          <table id="tabla-materiales" class="table table-bordered table-striped display" style="width: 100% !important;">
-                            <thead>
-                              <tr>
-                                <th class="text-center">#</th>
-                                <th class="">Acciones</th>
-                                <th class="">Code</th>
-                                <th>Nombre</th>
-                                <th>Categoria</th>
-                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
-                                <th >Precio </th>
-                                <th>Stock</th>
-                                <th>Contenido Neto</th>
-                                <th>Descripción</th> 
+                        <div class="card-body px-1 py-1">
+                          <div class="row">
+                            <div class="col-12 col-sm-12">
+                              <div class="card card-primary card-outline card-outline-tabs mb-0">
+                                <div class="card-header p-0 border-bottom-0">
+                                  <ul class="nav nav-tabs lista-items" id="tabs-for-tab" role="tablist">
+                                    <li class="nav-item">
+                                      <a class="nav-link active" role="tab" ><i class="fas fa-spinner fa-pulse fa-sm"></i></a>
+                                    </li>           
+                                  </ul>
+                                </div>
+                                <div class="card-body" >                                  
+                                  <div class="tab-content" id="tabs-for-tabContent">
+                                    <!-- TABLA - RESUMEN -->
+                                    <div class="tab-pane fade show active" id="tabs-for-activo-fijo" role="tabpanel" aria-labelledby="tabs-for-activo-fijo-tab">
+                                      <div class="row">                                        
+                                        <div class="col-12">
+                                          <table id="tabla-materiales" class="table table-bordered table-striped display" style="width: 100% !important;">
+                                            <thead>
+                                              <tr>
+                                                <th class="text-center">#</th>
+                                                <th class="">Acciones</th>
+                                                <th class="">Code</th>
+                                                <th>Nombre</th>
+                                                <th>Categoria</th>
+                                                <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                                <th >Precio </th>
+                                                <th>Stock</th>
+                                                <th>Contenido Neto</th>
+                                                <th>Descripción</th> 
 
-                                <th>Nombre</th>
-                                <th>Marca</th>
-                              </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot>
-                              <tr>
-                              <th class="text-center">#</th>
-                              <th class="">Acciones</th>
-                              <th class="">Code</th>
-                              <th>Nombre</th>
-                              <th>Categoria</th>
-                              <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
-                              <th >Precio </th>
-                              <th>Stock</th>
-                              <th>Contenido Neto</th>
-                              <th>Descripción</th>
+                                                <th>Nombre</th>
+                                                <th>Marca</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                              <tr>
+                                              <th class="text-center">#</th>
+                                              <th class="">Acciones</th>
+                                              <th class="">Code</th>
+                                              <th>Nombre</th>
+                                              <th>Categoria</th>
+                                              <th data-toggle="tooltip" data-original-title="Unidad Medida">UM</th>
+                                              <th >Precio </th>
+                                              <th>Stock</th>
+                                              <th>Contenido Neto</th>
+                                              <th>Descripción</th>
 
-                              <th>Nombre</th>
-                              <th>Marca</th>
-                              
-                              </tr>
-                            </tfoot>
-                          </table>
+                                              <th>Nombre</th>
+                                              <th>Marca</th>
+                                              
+                                              </tr>
+                                            </tfoot>
+                                          </table>
+                                        </div>
+                                        <!-- /.col -->
+                                      </div>
+                                      <!-- /.row -->
+                                    </div>                                    
+                                  </div>
+                                  <!-- /.tab-content -->
+                                </div>
+                                <!-- /.card-body -->
+                              </div>
+                              <!-- /.card -->
+                            </div>
+                            <!-- /.col -->
+                          </div>
+                          <!-- /.row -->
+                          
                         </div>
                         <!-- /.card-body -->
                       </div>

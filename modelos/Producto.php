@@ -10,8 +10,7 @@ class Producto
   }
 
   //Implementamos un método para insertar registros
-  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen)
-  {
+  public function insertar( $idcategoria_producto, $idunidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen) {
     $sql = "SELECT p.nombre, p.marca, p.contenido_neto, p.estado, p.descripcion,
     p.imagen, p.estado, p.estado_delete, um.nombre as nombre_medida, cp.nombre as nombre_categoria
 		FROM producto p, unidad_medida as um, categoria_producto as cp
@@ -55,8 +54,7 @@ class Producto
   }
 
   //Implementamos un método para editar registros
-  public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil)
-  {
+  public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil) {
     // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
     $sql = "UPDATE producto SET 
 
@@ -82,8 +80,7 @@ class Producto
   }
 
   //Implementamos un método para desactivar categorías
-  public function desactivar($idproducto)
-  {
+  public function desactivar($idproducto) {
     $sql = "UPDATE producto SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idproducto ='$idproducto'";
     $desactivar= ejecutarConsulta($sql);
 
@@ -97,15 +94,13 @@ class Producto
   }
 
   //Implementamos un método para activar categorías
-  public function activar($idproducto)
-  {
+  public function activar($idproducto) {
     $sql = "UPDATE producto SET estado='1' WHERE idproducto ='$idproducto'";
     return ejecutarConsulta($sql);
   }
 
   //Implementamos un método para activar categorías
-  public function eliminar($idproducto)
-  {
+  public function eliminar($idproducto) {
     $sql = "UPDATE producto SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idproducto ='$idproducto'";
     $eliminar =  ejecutarConsulta($sql);
     if ( $eliminar['status'] == false) {return $eliminar; }  
@@ -152,12 +147,22 @@ class Producto
   }
 
   //Implementar un método para listar los registros
-  public function tbla_principal() {
+  public function tbla_principal($idcategoria) {
+
+    $tipo_categoria = '';
+
+    if ($idcategoria == 'todos') {
+      $tipo_categoria = "";
+    } else{
+      $tipo_categoria = "AND p.idcategoria_producto = '$idcategoria'";
+    }
+
     $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, 
     p.descripcion, p.imagen, p.estado,  
     um.nombre as nombre_medida, cp.nombre AS categoria
     FROM producto as p, unidad_medida AS um, categoria_producto AS cp
-    WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
+    WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida 
+    $tipo_categoria and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";
     return ejecutarConsulta($sql);
   }
   
@@ -166,6 +171,14 @@ class Producto
     $sql = "SELECT imagen FROM producto WHERE idproducto='$idproducto'";
     return ejecutarConsulta($sql);
   }
+
+  // ══════════════════════════════════════  C A T E G O R I A S   P R O D U C T O  ══════════════════════════════════════
+
+  public function lista_de_categorias(  )  {
+    $sql = "SELECT * FROM categoria_producto WHERE estado = '1' AND estado_delete ='1';";
+    return ejecutarConsultaArray($sql);
+  }
+
   
 }
 

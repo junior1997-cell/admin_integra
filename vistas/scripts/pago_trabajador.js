@@ -21,11 +21,9 @@ function init() {
   $("#guardar_registro_mes").on("click", function (e) {  $("#submit-form-mes").submit(); });  
   $("#guardar_registro_pagos").on("click", function (e) {  $("#submit-form-pagos").submit(); });  
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════
-  
+  // ══════════════════════════════════════ INITIALIZE SELECT2 ══════════════════════════════════════  
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
-
 
   // Formato para telefono
   $("[data-mask]").inputmask();
@@ -41,11 +39,8 @@ $("#doc2").change(function(e) {  addImageApplication(e,$("#doc2").attr("id")) })
 
 // Eliminamos el doc 1
 function doc1_eliminar() {
-
 	$("#doc1").val("");
-
 	$("#doc1_ver").html('<img src="../dist/svg/pdf_trasnparent.svg" alt="" width="50%" >');
-
 	$("#doc1_nombre").html("");
 }
 
@@ -73,7 +68,6 @@ function show_hide_table(flag) {
     $("#btn-agregar-pago").hide();
     $(".sueldo_trab_view").show("");
 
-
   } else if (flag == 3) {
     $("#div-tabla-trabajador").hide();
     $("#div-tabla-mes-pago").hide();
@@ -84,8 +78,6 @@ function show_hide_table(flag) {
     $("#btn-regresar-todo").show();
     $("#btn-agregar-pago").show();
     $(".sueldo_trab_view").show("");
-
-
   }
 }
 
@@ -557,15 +549,14 @@ $(function () {
 
   $("#form-mes").validate({
     rules: {
-      idpersona:      { required: true },
-      mes:            { required: true },
-      anio:           { required: true },
+      idpersona:  { required: true },
+      mes:        { required: true },
+      anio:       { required: true },
     },
     messages: {
-      idpersona:      { required: "Campo requerido.", },
-      mes:            { required: "Campo requerido.", },
-      anio:           { required: "Campo requerido.", },
-
+      idpersona:  { required: "Campo requerido.", },
+      mes:        { required: "Campo requerido.", },
+      anio:       { required: "Campo requerido.", },
     },
         
     errorElement: "span",
@@ -588,13 +579,12 @@ $(function () {
 
   $("#form-pagos-trabajdor").validate({
     rules: {
-      fecha_pago:     { required: true},
+      fecha_pago:{ required: true},
       monto:     { required: true},
     },
     messages: {
-      fecha_pago:     { required: "Campo requerido seleccione una fecha dentro del rango.", },
+      fecha_pago:{ required: "Campo requerido seleccione una fecha dentro del rango.", },
       monto:     { required: "Campo requerido.", },
-
     },
         
     errorElement: "span",
@@ -638,25 +628,20 @@ function extraer_sueldo_trabajador() {
     $('.btn-editar-cliente').addClass('disabled').attr('data-original-title','Seleciona un cliente');
   } else { 
    
-      var sueldo_trabajador =  $('#nombre_trabajador').select2('data')[0].element.attributes.sueldo_mensual.value;
-      var cargo_trabajador =  $('#nombre_trabajador').select2('data')[0].element.attributes.cargo_trabajador.value;
+    var sueldo_trabajador =  $('#nombre_trabajador').select2('data')[0].element.attributes.sueldo_mensual.value;
+    var cargo_trabajador =  $('#nombre_trabajador').select2('data')[0].element.attributes.cargo_trabajador.value;
 
-      $("#sueldo_mensual").val(sueldo_trabajador);
-      
+    $("#sueldo_mensual").val(sueldo_trabajador);    
 
-      $("#extraer_cargo").val(cargo_trabajador);
-    
-  }
-  
-  
+    $("#extraer_cargo").val(cargo_trabajador);    
+  }  
 }
 
 function extraer_nombre_mes() {
   var fecha = $('#fecha_pago').val(); 
   if (fecha == '' || fecha == null) { } else {
     $('#nombre_mes').val();
-  }
-    
+  }    
 }
 
 //funcion para obtener mes y el año actual
