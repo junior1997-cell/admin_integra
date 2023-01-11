@@ -79,7 +79,6 @@
                                 <tr> 
                                   <th>#</th> 
                                   <th>Acciones</th>
-                                  <th>Proyecto</th>
                                   <th>Módulo</th>
                                   <th>Archivo</th>
                                   <th>Descripcion</th>
@@ -94,7 +93,6 @@
                                 <tr> 
                                   <th>#</th> 
                                   <th>Acciones</th>
-                                  <th>Proyecto</th>
                                   <th>Módulo</th>
                                   <th>Archivo</th>
                                   <th>Descripcion</th>
