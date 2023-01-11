@@ -111,24 +111,9 @@
       return ejecutarConsultaArray($sql);
     }
 
-    public function select2_tipo_trabajador() {
-      $sql="SELECT * FROM tipo_trabajador where estado='1' AND estado_delete = '1' ORDER BY nombre ASC";
-      return ejecutarConsulta($sql);		
-    }
-
-    public function select2_cargo_trabajador_id($id_tipo) {
-      $sql = "SELECT * FROM cargo_trabajador WHERE idtipo_trabjador='$id_tipo' AND estado='1' AND estado_delete = '1' ORDER BY nombre ASC";
-      return ejecutarConsulta($sql);
-    }
-
     public function select2_cargo_trabajador() {
       $sql = "SELECT * FROM cargo_trabajador WHERE estado='1' AND estado_delete = '1' ORDER BY nombre ASC";
       return ejecutarConsulta($sql);
-    }
-
-    public function select2_ocupacion_trabajador()  {
-      $sql="SELECT idocupacion AS id, nombre_ocupacion AS nombre FROM ocupacion where estado = '1' AND estado_delete = '1' ORDER BY nombre_ocupacion ASC;";
-		return ejecutarConsulta($sql);
     }
     
     /* ══════════════════════════════════════ C L I E N T E  ══════════════════════════════════════ */
@@ -148,7 +133,8 @@
     /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 
     public function select2_proveedor_cliente($tipo) {
-      $sql = "SELECT idpersona,nombres,tipo_documento,numero_documento FROM persona WHERE idtipo_persona ='$tipo' AND estado='1' AND estado_delete ='1'";
+      $sql = "SELECT idpersona, nombres, tipo_documento, numero_documento, es_socio FROM persona 
+      WHERE idtipo_persona ='$tipo' AND estado='1' AND estado_delete ='1'";
 
       return ejecutarConsulta($sql);
       // var_dump($return);die();

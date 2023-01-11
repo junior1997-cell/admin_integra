@@ -34,8 +34,8 @@ function init() {
   $("#idproyecto").val(localStorage.getItem("nube_idproyecto"));
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#idproveedor', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#filtro_proveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#filtro_proveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida_compra', null);
   lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
@@ -1166,24 +1166,6 @@ function formato_banco() {
   }
 }
 
-function decifrar_format_banco(format) {
-
-  var array_format =  format.split("-"); var format_final = "";
-
-  array_format.forEach((item, index)=>{
-
-    for (let index = 0; index < parseInt(item); index++) { format_final = format_final.concat("9"); }   
-
-    if (parseInt(item) != 0) { format_final = format_final.concat("-"); }
-  });
-
-  var ultima_letra = format_final.slice(-1);
-   
-  if (ultima_letra == "-") { format_final = format_final.slice(0, (format_final.length-1)); }
-
-  return format_final;
-}
-
 //guardar proveedor
 function guardar_proveedor(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -1204,7 +1186,7 @@ function guardar_proveedor(e) {
           limpiar_form_proveedor();
           $("#modal-agregar-proveedor").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=3", '#idproveedor', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=3", '#idproveedor', e.data);
         } else {
           ver_errores(e);
         }

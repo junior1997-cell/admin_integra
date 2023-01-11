@@ -22,6 +22,8 @@ function init() {
   $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   $("#cargo_trabajador").select2({theme:"bootstrap4", placeholder: "Selecione cargo", allowClear: true, });
 
+  no_select_over_18('#nacimiento');
+
   // Formato para telefono
   $("[data-mask]").inputmask();
 }
@@ -64,15 +66,19 @@ function limpiar_form_persona() {
   $("#input_socio").val("0"); 
   $("#email").val(""); 
   $("#telefono").val(""); 
+  $("#direccion").val(""); 
+
   $("#banco").val("").trigger("change");
   $("#cta_bancaria").val(""); 
   $("#cci").val(""); 
-  $("#titular_cuenta").val(""); 
-  $("#direccion").val("");
-  $(".sino").html('(NO)');
+  $("#titular_cuenta").val("");    
 
   $("#socio").prop('checked', false);
+  $(".sino").html('(NO)');
+
   $("#nacimiento").val("");
+  $("#edad").val("");
+  $(".edad").html("");
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");
@@ -393,7 +399,7 @@ function mostrar(idpersona) {
       $("#direccion").val(e.data.direccion);
       $("#telefono").val(e.data.celular);
       $("#email").val(e.data.correo);
-      $("#nacimiento").val(e.data.fecha_nacimiento); 
+      $("#nacimiento").val(e.data.fecha_nacimiento).trigger("change");
       $("#edad").val(e.data.edad); 
       $("#titular_cuenta").val(e.data.titular_cuenta);
       $("#idpersona").val(e.data.idpersona);
@@ -451,8 +457,7 @@ function eliminar_persona(idpersona, nombre) {
     false, 
     false,
     false
-  );
- 
+  ); 
 }
 
 /* =========================== S E C C I O N   R E C U P E R A R   B A N C O S =========================== */
@@ -561,18 +566,12 @@ function formato_banco() {
   }  
 }
 
-
-function habilitando_socio() {
-  
+function habilitando_socio() {  
   if ($("#socio").val()==null || $("#socio").val()=="" || $('#socio').is(':checked') ) {
-    $("#input_socio").val('0');
-    $(".sino").html('(NO)');
+    $("#input_socio").val('0'); $(".sino").html('(NO)');
   }else{
-    $("#input_socio").val('1');
-    $(".sino").html('(SI)');
-
+    $("#input_socio").val('1'); $(".sino").html('(SI)');
   }
-
 }
 
 function sueld_mensual(){

@@ -33,8 +33,8 @@ function init() {
   listarmateriales();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#idcliente', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Proveedor_cliente&id=2", '#filtro_proveedor', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#idcliente', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#filtro_proveedor', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
   lista_select2("../ajax/ajax_general.php?op=select2UnidaMedida", '#unidad_medida', null);
   lista_select2("../ajax/ajax_general.php?op=select2Categoria", '#categoria_producto', null);
@@ -57,7 +57,7 @@ function init() {
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - ventas ══════════════════════════════════════
 
-  $("#idcliente").select2({ theme: "bootstrap4", placeholder: "Selecione cliente", allowClear: true, });
+  $("#idcliente").select2({templateResult: templatePersona, theme: "bootstrap4", placeholder: "Selecione cliente", allowClear: true, });
 
   $("#tipo_comprobante").select2({ theme: "bootstrap4", placeholder: "Selecione Comprobante", allowClear: true, });
 
@@ -65,11 +65,10 @@ function init() {
 
   $("#forma_pago_pv").select2({ theme: "bootstrap4", placeholder: "Selecione", allowClear: true, });
 
-  // ══════════════════════════════════════ INITIALIZE SELECT2 - PROVEEDOR ══════════════════════════════════════
+  // ══════════════════════════════════════ INITIALIZE SELECT2 - AGRICULTOR ══════════════════════════════════════
 
   $("#banco").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
-  // $("#banco").select2({templateResult: formatState, theme: "bootstrap4", placeholder: "Selecione banco", allowClear: true, });
-  $("#tipo_documento").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
+  $("#tipo_documento_per").select2({theme:"bootstrap4", placeholder: "Selec. tipo Doc.", allowClear: true, });
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
@@ -78,9 +77,9 @@ function init() {
 
   $("#metodo_pago").select2({ theme: "bootstrap4", placeholder: "Selecione método", allowClear: true, });
 
-
   no_select_tomorrow("#fecha_venta");
   no_select_tomorrow("#fecha_pago_pv");
+  no_select_over_18('#nacimiento_per');
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
   //$('#filtro_fecha_inicio').inputmask('dd-mm-yyyy', { 'placeholder': 'dd-mm-yyyy' });
@@ -111,6 +110,15 @@ function templateBanco (state) {
   if (!state.id) { return state.text; }
   var baseUrl = state.title != '' ? `../dist/docs/banco/logo/${state.title}`: '../dist/docs/banco/logo/logo-sin-banco.svg'; 
   var onerror = `onerror="this.src='../dist/docs/banco/logo/logo-sin-banco.svg';"`;
+  var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
+  return $state;
+};
+
+function templatePersona (state) {
+  //console.log(state);
+  if (!state.id) { return state.text; }
+  var baseUrl = state.title != '' ? `../dist/docs/persona/perfil/${state.title}`: '../dist/svg/user_default.svg'; 
+  var onerror = `onerror="this.src='../dist/svg/user_default.svg';"`;
   var $state = $(`<span><img src="${baseUrl}" class="img-circle mr-2 w-25px" ${onerror} />${state.text}</span>`);
   return $state;
 };
@@ -1455,21 +1463,45 @@ function download_multimple() {
   }  
 }
 
-// :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
+// :::::::::::::::::::::::::: S E C C I O N   A G R I C U L T O R  ::::::::::::::::::::::::::
+// abrimos el navegador de archivos
+$("#foto1_i").click(function() { $('#foto1').trigger('click'); });
+$("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id")) });
+
+function foto1_eliminar() {
+	$("#foto1").val("");
+	$("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
+	$("#foto1_nombre").html("");
+}
 //Función limpiar
 function limpiar_form_proveedor() {
-  $("#idpersona").val(""); 
-  $("#tipo_documento").val("null").trigger("change");
-  $("#num_documento").val(""); 
-  $("#nombre").val(""); 
-  $("#input_socio").val("0"); 
-  $("#email").val(""); 
-  $("#telefono").val(""); 
+  $("#idpersona_per").val(""); 
+  $("#tipo_documento_per").val("null").trigger("change");
+  $("#cargo_trabajador_per").val("1").trigger("change");
+
+  $("#num_documento_per").val(""); 
+  $("#nombre_per").val("");   
+  $("#email_per").val(""); 
+  $("#telefono_per").val(""); 
+  $("#direccion_per").val("");
+
   $("#banco").val("").trigger("change");
   $("#cta_bancaria").val(""); 
   $("#cci").val(""); 
   $("#titular_cuenta").val(""); 
-  $("#direccion").val("");
+
+  $("#nacimiento_per").val("");
+  $("#edad_per").val("");
+  $(".edad_per").html("");  
+
+  $("#input_socio_per").val("0"); 
+  $(".sino_per").html('(NO)');
+  $("#socio_per").prop('checked', false);  
+
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
+	$("#foto1").val("");
+	$("#foto1_actual").val("");  
+  $("#foto1_nombre").html(""); 
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -1520,24 +1552,6 @@ function formato_banco() {
       }      
     }).fail( function(e) { ver_errores(e); } );
   }
-}
-
-function decifrar_format_banco(format) {
-
-  var array_format =  format.split("-"); var format_final = "";
-
-  array_format.forEach((item, index)=>{
-
-    for (let index = 0; index < parseInt(item); index++) { format_final = format_final.concat("9"); }   
-
-    if (parseInt(item) != 0) { format_final = format_final.concat("-"); }
-  });
-
-  var ultima_letra = format_final.slice(-1);
-   
-  if (ultima_letra == "-") { format_final = format_final.slice(0, (format_final.length-1)); }
-
-  return format_final;
 }
 
 //guardar proveedor
@@ -1600,27 +1614,49 @@ function mostrar_para_editar_proveedor() {
   $('#modal-agregar-proveedor').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/venta_producto.php?op=mostrar_editar_proveedor", { 'idcliente': $('#idcliente').select2("val") }, function (e, status) {
+  $.post("../ajax/venta_producto.php?op=mostrar_editar_proveedor", { 'idpersona': $('#idcliente').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
     if (e.status == true) {     
-      $("#tipo_documento").val(e.data.tipo_documento).trigger("change");
-      $("#nombre").val(e.data.nombres);
-      $("#num_documento").val(e.data.numero_documento);
-      $("#direccion").val(e.data.direccion);
-      $("#telefono").val(e.data.celular);
-      $("#email").val(e.data.correo);
-           
-      $("#titular_cuenta").val(e.data.titular_cuenta);
-      $("#idpersona").val(e.data.idpersona);
+      $("#tipo_documento_per").val(e.data.tipo_documento).trigger("change");     
+
+      $("#nombre_per").val(e.data.nombres);
+      $("#num_documento_per").val(e.data.numero_documento);
+      $("#direccion_per").val(e.data.direccion);
+      $("#telefono_per").val(e.data.celular);
+      $("#email_per").val(e.data.correo);
+      $("#nacimiento_per").val(e.data.fecha_nacimiento).trigger("change");
+      $("#edad_per").val(e.data.edad); 
+      $("#titular_cuenta_per").val(e.data.titular_cuenta);
+      $("#idpersona_per").val(e.data.idpersona);
       $("#ruc").val(e.data.ruc);   
     
       $("#cta_bancaria").val(e.data.cuenta_bancaria).trigger("change"); 
       $("#cci").val(e.data.cci).trigger("change"); 
       $("#banco").val(e.data.idbancos).trigger("change"); 
 
-      $("#id_tipo_persona").val(e.data.idtipo_persona); 
+      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
+      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
+      $("#cargo_trabajador_per").val(e.data.idcargo_trabajador);
+      
+      $("#id_tipo_persona_per").val(e.data.idtipo_persona); 
+
+      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
+      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
+      
+      $("#input_socio_per").val(e.data.es_socio); 
+      if (e.data.es_socio==1) {        
+        $("#input_socio_per").val('1');
+        $(".sino_per").html('(SI)');        
+        if($('#socio_per').is(':checked') ){$("#definiendo").prop('checked', false);  }else{ $("#socio_per").prop('checked', true); }
+      }
+
+      if (e.data.foto_perfil!="") {
+        $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
+        $("#foto1_actual").val(e.data.foto_perfil);
+      }
+      calcular_edad('#nacimiento','.edad','#edad'); 
 
       $("#cargando-11-fomulario").show();
       $("#cargando-12-fomulario").hide();
@@ -1642,6 +1678,14 @@ function extrae_ruc() {
     }
   }
   $('[data-toggle="tooltip"]').tooltip();
+}
+
+function habilitando_socio() {  
+  if ($("#socio_per").val()==null || $("#socio_per").val()=="" || $('#socio_per').is(':checked') ) {
+    $("#input_socio_per").val('0'); $(".sino_per").html('(NO)');
+  }else{
+    $("#input_socio_per").val('1'); $(".sino_per").html('(SI)');
+  }
 }
 
 // :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S  ::::::::::::::::::::::::::
@@ -1861,33 +1905,30 @@ $(function () {
 
   $("#form-proveedor").validate({
     rules: {
-      tipo_documento: { required: true },
-      num_documento:  { required: true, minlength: 6, maxlength: 20 },
-      nombre:         { required: true, minlength: 6, maxlength: 100 },
-      email:          { email: true, minlength: 10, maxlength: 50 },
-      direccion:      { minlength: 5, maxlength: 70 },
-      telefono:       { minlength: 8 },
-      cta_bancaria:   { minlength: 10,},
-      banco:          { required: true},
-      sueldo_mensual: { required: true},
+      tipo_documento_per: { required: true },
+      num_documento_per:  { required: true, minlength: 6, maxlength: 20 },
+      nombre_per:         { required: true, minlength: 6, maxlength: 100 },
+      email_per:          { email: true, minlength: 10, maxlength: 50 },
+      direccion_per:      { minlength: 5, maxlength: 70 },
+      telefono_per:       { minlength: 8 },
+      cta_bancaria_per:   { minlength: 10,},
+      banco_per:          { required: true},
     },
     messages: {
-      tipo_documento: { required: "Campo requerido.", },
-      num_documento:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
-      nombre:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
-      email:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
-      direccion:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
-      telefono:       { minlength: "MÍNIMO 8 caracteres.", },
-      cta_bancaria:   { minlength: "MÍNIMO 10 caracteres.", },
-      banco:          { required: "Campo requerido.", },
-      sueldo_mensual: { required: "Campo requerido.", }
+      tipo_documento_per: { required: "Campo requerido.", },
+      num_documento_per:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
+      nombre_per:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
+      email_per:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
+      direccion_per:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
+      telefono_per:       { minlength: "MÍNIMO 8 caracteres.", },
+      cta_bancaria_per:   { minlength: "MÍNIMO 10 caracteres.", },
+      banco_per:          { required: "Campo requerido.", },
     },
 
     errorElement: "span",
 
     errorPlacement: function (error, element) {
       error.addClass("invalid-feedback");
-
       element.closest(".form-group").append(error);
     },
 

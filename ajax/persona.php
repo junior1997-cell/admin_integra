@@ -25,8 +25,8 @@
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
       
-      $idpersona	  	= isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
-      $id_tipo_persona 		      = isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
+      $idpersona	  	  = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
+      $id_tipo_persona 	= isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
       $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
       $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
       $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
@@ -42,13 +42,10 @@
       $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
 
       $nacimiento       = isset($_POST["nacimiento"])? limpiarCadena($_POST["nacimiento"]):"";
-      $ruc              = isset($_POST["ruc"])? limpiarCadena($_POST["ruc"]):"";
       $cargo_trabajador = isset($_POST["cargo_trabajador"])? limpiarCadena($_POST["cargo_trabajador"]):"";
       $sueldo_mensual   = isset($_POST["sueldo_mensual"])? limpiarCadena($_POST["sueldo_mensual"]):"";
       $sueldo_diario    = isset($_POST["sueldo_diario"])? limpiarCadena($_POST["sueldo_diario"]):"";
       $edad             = isset($_POST["edad"])? limpiarCadena($_POST["edad"]):"";
-      //$nacimiento,$ruc,$cargo_trabajador,$sueldo_mensual,$sueldo_diario
-      //$idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion
        
       $imagen1			    = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
       switch ($_GET["op"]) {
@@ -57,17 +54,11 @@
 
           // imgen de perfil
           if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
-
 						$imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
-
 					} else {
-
-						$ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;						
-
+						$ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;
             $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
-
-            move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
-						
+            move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);						
 					}
 
           if (empty($idpersona)){
@@ -83,7 +74,7 @@
             if ($flat_img1 == true) {
               $datos_f1 = $persona->obtenerImg($idpersona);
               $img1_ant = $datos_f1['data']['foto_perfil'];
-              if ($img1_ant != "") { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
+              if ( !empty($img1_ant) ) { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
             }            
 
             // editamos un persona existente

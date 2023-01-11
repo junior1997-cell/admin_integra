@@ -25,8 +25,8 @@ function init() {
   $('.lComprasGrano-img').attr('src', '../dist/svg/blanco-grano-cafe-ico.svg');
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
-  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_cliente', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#idcliente', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#filtro_cliente', null);
   lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_cli', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
@@ -1365,24 +1365,6 @@ function formato_banco() {
   }
 }
 
-function decifrar_format_banco(format) {
-
-  var array_format =  format.split("-"); var format_final = "";
-
-  array_format.forEach((item, index)=>{
-
-    for (let index = 0; index < parseInt(item); index++) { format_final = format_final.concat("9"); }   
-
-    if (parseInt(item) != 0) { format_final = format_final.concat("-"); }
-  });
-
-  var ultima_letra = format_final.slice(-1);
-   
-  if (ultima_letra == "-") { format_final = format_final.slice(0, (format_final.length-1)); }
-
-  return format_final;
-}
-
 //guardar cliente
 function guardar_y_editar_cliente(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -1403,8 +1385,8 @@ function guardar_y_editar_cliente(e) {
           limpiar_form_cliente();
           $("#modal-agregar-cliente").modal("hide");
           //Cargamos los items al select cliente
-          lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#idcliente', e.data);
-          lista_select2("../ajax/ajax_general.php?op=select2Cliente", '#filtro_cliente', null);
+          lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#idcliente', e.data);
+          lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#filtro_cliente', null);
         } else {
           ver_errores(e);
         }

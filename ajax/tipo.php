@@ -13,9 +13,11 @@
 
     $tipo = new Tipo();
 
+    $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+
     $idtipo_persona = isset($_POST["idtipo_persona"]) ? limpiarCadena($_POST["idtipo_persona"]) : "";
-    $nombre_tipo = isset($_POST["nombre_tipo"]) ? limpiarCadena($_POST["nombre_tipo"]) : "";
-    $descripcion = isset($_POST["descripcion_t"]) ? limpiarCadena($_POST["descripcion_t"]) : "";
+    $nombre_tipo    = isset($_POST["nombre_tipo"]) ? limpiarCadena($_POST["nombre_tipo"]) : "";
+    $descripcion    = isset($_POST["descripcion_t"]) ? limpiarCadena($_POST["descripcion_t"]) : "";
 
     switch ($_GET["op"]) {
       case 'guardaryeditar_tipo':
@@ -47,31 +49,26 @@
       case 'listar_tipo':
         $rspta = $tipo->listar_tipo();
         //Vamos a declarar un array
-        $data = [];  $cont = 1;
+        $data = [];  $cont = 1;       
 
-        
-
-        $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
-
-        if ($rspta['status']) {
+        if ($rspta['status'] == true) {
           while ($reg = $rspta['data']->fetch_object()) {
 
             //static butom
+            $disable = ""; $onclick = ""; $onclick_mostrar = ""; $editar_title = ""; $eliminar_title = "";          
 
-            $disable = ""; $onclick = ""; $onclick_mostrar = ""; $editar_title = ""; $eliminar_title = "";
-
-            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
+            if ( $reg->idtipo_persona <= 4 ) {
               $disable = 'disabled';
-            }
-            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
               $onclick = '';
               $editar_title = 'Sin Acción';
               $eliminar_title = 'Sin Acción';
-
-            }else {  $onclick = $reg->idtipo_persona;   $editar_title = 'Editar'; $eliminar_title = 'Eliminar o Papelera'; }
-            if ($reg->idtipo_persona > 0 && $reg->idtipo_persona <=3 ) {
               $onclick_mostrar = "";
-            }else {  $onclick_mostrar = 'mostrar_tipo(' . $reg->idtipo_persona . ')';  }
+            }else {  
+              $onclick = $reg->idtipo_persona;   
+              $editar_title = 'Editar'; 
+              $eliminar_title = 'Eliminar o Papelera'; 
+              $onclick_mostrar = 'mostrar_tipo(' . $reg->idtipo_persona . ')';
+            }            
             
             $data[] = [
               "0" => $cont++,
@@ -80,9 +77,7 @@
                 : '<button class="btn btn-warning '.$disable.' btn-sm"  onclick="'.$onclick_mostrar.'"><i class="fas fa-pencil-alt"></i></button>' .
                   ' <button class="btn btn-primary '.$disable.' btn-sm" onclick="activar_tipo(' . $onclick . ')"><i class="fa fa-check"></i></button>',
               "2" => $reg->nombre,
-              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'.
-                $reg->descripcion,
-              '</div>',
+              "3" => '<div class="bg-color-242244245 " style="overflow: auto; resize: vertical; height: 45px;">'. $reg->descripcion .'</div>',
               "4" => ($reg->estado ? '<span class="text-center badge badge-success">Activado</span>' : '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
             ];
           }

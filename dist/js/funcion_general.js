@@ -8,6 +8,8 @@ function sumar_mes(fecha) {
   return mes_next;
 }
 
+function sumar_mes_v2(m = 1, fecha) { var date = new Date(fecha);   return new Date( date.setMonth(date.getMonth() + m ) ).toISOString().slice(0, 10); }
+
 // Función que suma o resta días a la fecha indicada
 sumaFecha = function(d, fecha){
   var Fecha = new Date();
@@ -25,6 +27,14 @@ sumaFecha = function(d, fecha){
   var fechaFinal = dia+sep+mes+sep+anno;
   return (fechaFinal);
 }
+
+function sumar_dias_moment(d, fecha) { return moment(fecha).add(d, 'days').format('YYYY-MM-DD'); }
+function sumar_meses_moment(d, fecha) { return moment(fecha).add(d, 'months').format('YYYY-MM-DD'); }
+function sumar_year_moment(d, fecha) { return moment(fecha).add(d, 'years').format('YYYY-MM-DD'); }
+
+// Extrae los nombres de dias de semana "Abreviado"
+function extraer_dia_semana_number_moment(fecha) { return moment(fecha, "YYYY-MM-DD").day(); }
+function extraer_semana_anio_number_moment(fecha) { return moment(fecha, "YYYY-MM-DD").week(); }
 
 // Extrae los nombres de dias de semana "Abreviado"
 function extraer_dia_semana(fecha) {
@@ -139,12 +149,17 @@ function format_m_a(fecha) {
 }
 
 // restringimos la fecha para no elegir mañana
-function no_select_tomorrow(nombre_input) { $(nombre_input).attr('max',moment().format('YYYY-MM-DD')); }
+function no_select_tomorrow(nombre_input) { 
+  var hoy = moment().format('YYYY-MM-DD'); $(nombre_input).attr('max',hoy);
+}
+
+// restringimos la fecha para no elegir menores de 18
+function no_select_over_18(nombre_input) { 
+  var fecha = sumar_year_moment(-18, moment().format('YYYY-MM-DD')); $(nombre_input).attr('max',fecha); 
+}
 
 // restringimos la fecha para no elegir mañana
 function restrigir_fecha_ant(nombre_input, fecha_minima) {
-  console.log(nombre_input,fecha_minima);  
-
   $(nombre_input).attr('min',fecha_minima);
   $(nombre_input).rules("add", { min: fecha_minima, messages: { min: `Ingresa una fecha mayor a: ${format_d_m_a(fecha_minima)}` } });
 }

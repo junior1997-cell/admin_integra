@@ -16,14 +16,13 @@ if (!isset($_SESSION["nombre"])) {
     require_once "../modelos/Producto.php";
 
     $venta_producto = new Venta_producto($_SESSION['idusuario']);
-    $proveedor = new Persona();
+    $persona = new Persona();
     $productos = new Producto();      
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
     $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
-
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   V E N T A ::::::::::::::::::::::::::::::::::::::
     $idventa_producto  = isset($_POST["idventa_producto"]) ? limpiarCadena($_POST["idventa_producto"]) : "";
@@ -35,7 +34,7 @@ if (!isset($_SESSION["nombre"])) {
     $descripcion        = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : "";
     $subtotal_compra    = isset($_POST["subtotal_compra"]) ? limpiarCadena($_POST["subtotal_compra"]) : "";
     $tipo_gravada       = isset($_POST["tipo_gravada"]) ? limpiarCadena($_POST["tipo_gravada"]) : "";    
-    $igv_venta         = isset($_POST["igv_venta"]) ? limpiarCadena($_POST["igv_venta"]) : "";
+    $igv_venta          = isset($_POST["igv_venta"]) ? limpiarCadena($_POST["igv_venta"]) : "";
     $total_venta        = isset($_POST["total_venta"]) ? limpiarCadena($_POST["total_venta"]) : "";
 
     $metodo_pago        = isset($_POST["metodo_pago"]) ? limpiarCadena($_POST["metodo_pago"]) : "";
@@ -51,10 +50,10 @@ if (!isset($_SESSION["nombre"])) {
     $descripcion_pv            = isset($_POST["descripcion_pv"]) ? limpiarCadena($_POST["descripcion_pv"]) : "";  
      
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R O B A N T E ::::::::::::::::::::::::::::::::::::::
-    $id_compra_proyecto = isset($_POST["id_compra_proyecto"]) ? limpiarCadena($_POST["id_compra_proyecto"]) : "";
-    $idfactura_compra_insumo = isset($_POST["idfactura_compra_insumo"]) ? limpiarCadena($_POST["idfactura_compra_insumo"]) : "";
-    $doc_comprobante               = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
-    $doc_old_1          = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
+    $id_compra_proyecto       = isset($_POST["id_compra_proyecto"]) ? limpiarCadena($_POST["id_compra_proyecto"]) : "";
+    $idfactura_compra_insumo  = isset($_POST["idfactura_compra_insumo"]) ? limpiarCadena($_POST["idfactura_compra_insumo"]) : "";
+    $doc_comprobante          = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
+    $doc_old_1                = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   M A T E R I A L E S ::::::::::::::::::::::::::::::::::::::
     $idproducto_p            = isset($_POST["idproducto_p"]) ? limpiarCadena($_POST["idproducto_p"]) : "" ;
@@ -67,22 +66,31 @@ if (!isset($_SESSION["nombre"])) {
 
     $imagen1 = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
 
-    // :::::::::::::::::::::::::::::::::::: D A T O S   P R O V E E D O R ::::::::::::::::::::::::::::::::::::::
-    $idpersona	  	  = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
-    $id_tipo_persona  = isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
-    $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
-    $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
-    $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
-    $input_socio     	= isset($_POST["input_socio"])? limpiarCadena($_POST["input_socio"]):"";
-    $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
-    $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";     
-    $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-    $banco            = isset($_POST["banco"])? $_POST["banco"] :"";
+    // :::::::::::::::::::::::::::::::::::: D A T O S   A G R I C U L T O R ::::::::::::::::::::::::::::::::::::::
+    $idpersona_per	  	  = isset($_POST["idpersona_per"])? limpiarCadena($_POST["idpersona_per"]):"";
+    $id_tipo_persona_per 	= isset($_POST["id_tipo_persona_per"])? limpiarCadena($_POST["id_tipo_persona_per"]):"";
+    $nombre_per 		      = isset($_POST["nombre_per"])? limpiarCadena($_POST["nombre_per"]):"";
+    $tipo_documento_per 	= isset($_POST["tipo_documento_per"])? limpiarCadena($_POST["tipo_documento_per"]):"";
+    $num_documento_per  	= isset($_POST["num_documento_per"])? limpiarCadena($_POST["num_documento_per"]):"";
+    $input_socio_per     	= isset($_POST["input_socio_per"])? limpiarCadena($_POST["input_socio_per"]):"";
+    $direccion_per		    = isset($_POST["direccion_per"])? limpiarCadena($_POST["direccion_per"]):"";
+    $telefono_per		      = isset($_POST["telefono_per"])? limpiarCadena($_POST["telefono_per"]):"";     
+    $email_per			      = isset($_POST["email_per"])? limpiarCadena($_POST["email_per"]):"";
+    
+    $banco                = isset($_POST["banco"])? $_POST["banco"] :"";
     $cta_bancaria_format  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-    $cta_bancaria     = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-    $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
-    $cci            	= isset($_POST["cci"])? $_POST["cci"]:"";
-    $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
+    $cta_bancaria         = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
+    $cci_format      	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $cci            	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $titular_cuenta_per		= isset($_POST["titular_cuenta_per"])? limpiarCadena($_POST["titular_cuenta_per"]):"";
+
+    $nacimiento_per       = isset($_POST["nacimiento_per"])? limpiarCadena($_POST["nacimiento_per"]):"";
+    $cargo_trabajador_per = isset($_POST["cargo_trabajador_per"])? limpiarCadena($_POST["cargo_trabajador_per"]):"";
+    $sueldo_mensual_per   = isset($_POST["sueldo_mensual_per"])? limpiarCadena($_POST["sueldo_mensual_per"]):"";
+    $sueldo_diario_per    = isset($_POST["sueldo_diario_per"])? limpiarCadena($_POST["sueldo_diario_per"]):"";
+    $edad_per             = isset($_POST["edad_per"])? limpiarCadena($_POST["edad_per"]):"";
+      
+    $imagen1			        = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
 
     switch ($_GET["op"]) {   
       
@@ -112,25 +120,41 @@ if (!isset($_SESSION["nombre"])) {
         
       // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
       case 'guardar_proveedor':
-    
+        // imgen de perfil
+        if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
+          $imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
+        } else {
+          $ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;
+          $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
+          move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);          
+        }
+
         if (empty($idpersona)){
 
-          $rspta=$proveedor->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
+          $rspta=$persona->insertar($id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
                       
           echo json_encode($rspta, true);
           
         }else{
-          
-            // editamos un persona existente
-            $rspta=$proveedor->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
+          // validamos si existe LA IMG para eliminarlo
+          if ($flat_img1 == true) {
+            $datos_f1 = $persona->obtenerImg($idpersona);
+            $img1_ant = $datos_f1['data']['foto_perfil'];
+            if ( !empty($img1_ant) ) { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
+          }           
+
+          // editamos un persona existente
+          $rspta=$persona->editar($idpersona_per,$id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
             
-            echo json_encode($rspta, true);
+          echo json_encode($rspta, true);
         }
     
       break;
 
       case 'mostrar_editar_proveedor':
-        $rspta = $proveedor->mostrar($_POST["idcliente"]);
+        $rspta = $persona->mostrar($_POST["idpersona"]);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
       break;

@@ -57,6 +57,31 @@
         echo json_encode($rspta, true);    
       break;
       
+      /* ══════════════════════════════════════ TIPO PERSONA  ══════════════════════════════════════ */
+      case 'select2TipoPersona': 
+
+        $rspta = $ajax_general->select2_tipo_persona();  $cont = 1; $data = "";
+
+        if ($rspta['status'] == true) {
+
+          foreach ($rspta['data'] as $key => $value) {
+            $data .= '<option  value=' . $value['idpersona'] . ' >' . $value['nombre']  . '</option>';
+          }
+
+          $retorno = array(
+            'status' => true, 
+            'message' => 'Salió todo ok', 
+            'data' =>  $data, 
+          );
+  
+          echo json_encode($retorno, true);
+
+        } else {
+
+          echo json_encode($rspta, true); 
+        } 
+      break;
+
       /* ══════════════════════════════════════ T R A B A J A D O R  ══════════════════════════════════════ */
       case 'select2Trabajador': 
 
@@ -83,56 +108,6 @@
         } 
       break;
 
-      case "select2TipoTrabajador":
-
-        $rspta = $ajax_general->select2_tipo_trabajador(); $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {
-
-            $data .= '<option  value=' . $value['idtipo_trabajador']  . '>' . $value['nombre'] . '</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }        
-      break;
-
-      case 'select2CargoTrabajdorId':         
-         
-        $rspta=$ajax_general->select2_cargo_trabajador_id( $_GET["idtipo"] ); $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {
-
-            $data .= '<option  value=' . $value['idcargo_trabajador']  . '>' . $value['nombre'] .'</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
-
       case 'select2_cargo_trabajador':         
          
         $rspta=$ajax_general->select2_cargo_trabajador( ); $cont = 1; $data = "";
@@ -156,33 +131,8 @@
           echo json_encode($rspta, true); 
         }
       break;
-
-      case 'select2OcupacionTrabajador':         
-         
-        $rspta=$ajax_general->select2_ocupacion_trabajador( ); $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {
-
-            $data .= '<option  value=' .  $value['id']  . '>' .  $value['nombre'] .'</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' => $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        }
-      break;
-
-      /* ══════════════════════════════════════ C L I E N T E  ══════════════════════════════════════ */
+   
+      /* ══════════════════════════════════════ C L I E N T E ---- no se usa por ahora  ══════════════════════════════════════ */
       case 'select2Cliente': 
 
         $rspta = $ajax_general->select2_cliente();  $cont = 1; $data = "";
@@ -208,47 +158,22 @@
         } 
       break;
 
-      /* ══════════════════════════════════════ TIPO PERSONA  ══════════════════════════════════════ */
-      case 'select2TipoPersona': 
-
-        $rspta = $ajax_general->select2_tipo_persona();  $cont = 1; $data = "";
-
-        if ($rspta['status'] == true) {
-
-          foreach ($rspta['data'] as $key => $value) {
-            $data .= '<option  value=' . $value['idpersona'] . ' >' . $value['nombre']  . '</option>';
-          }
-
-          $retorno = array(
-            'status' => true, 
-            'message' => 'Salió todo ok', 
-            'data' =>  $data, 
-          );
-  
-          echo json_encode($retorno, true);
-
-        } else {
-
-          echo json_encode($rspta, true); 
-        } 
-      break;
-
-      /* ══════════════════════════════════════ P R O V E E D O R E S --- C L I E N T E S  ══════════════════════════════════════ */
-      case 'select2Proveedor_cliente': 
+      /* ══════════════════════════════════════ P E R S O N A   P O R   T I P O  ══════════════════════════════════════ */
+      case 'select2Persona_por_tipo': 
     
-        $rspta=$ajax_general->select2_proveedor_cliente($_GET['id']);  $cont = 1; $data = "";
+        $rspta=$ajax_general->select2_proveedor_cliente($_GET['tipo']);  $cont = 1; $data = "";
 
         if ($rspta['status'] == true) {
 
           foreach ($rspta['data'] as $key => $value) {  
-
-            $data .= '<option value="' .  $value['idpersona'] . '">' .$cont++.'. '.  $value['nombres'] .' - '.  $value['numero_documento'] . '</option>';      
+            $es_socio = $value['es_socio'] ? 'SOCIO': 'NO SOCIO';
+            $data .= '<option value="' .  $value['idpersona'] . '">' .$cont++.'. '.  $value['nombres'] .' - '.  $value['numero_documento'] . ' - ' . $es_socio . '</option>';      
           }
 
           $retorno = array(
             'status' => true, 
             'message' => 'Salió todo ok', 
-            'data' => '<option value="1" ruc="">Anónimo - 00000000000</option>' . $data, 
+            'data' => '<option value="1" ruc="">0. ANÓNIMO - 00000000000</option>' . $data, 
           );
   
           echo json_encode($retorno, true);
@@ -395,7 +320,6 @@
           echo json_encode($rspta, true); 
         }
       break;
-
 
       /* ══════════════════════════════════════ P R O D U C T O ══════════════════════════════════════ */
 
