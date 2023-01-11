@@ -89,7 +89,7 @@ class Otro_ingreso
   {
     $sql="INSERT INTO persona (idtipo_persona, nombres, tipo_documento, numero_documento, direccion,celular,idbancos, cuenta_bancaria, cci, titular_cuenta)
     VALUES ('$id_tipo_persona', '$nombre', '$tipo_documento', '$num_documento', '$direccion', '$telefono', '$banco', '$cta_bancaria', '$cci', '$titular_cuenta');";
-    return ejecutarConsulta($sql);
+    return ejecutarConsulta_retornarID($sql);
   }
 
   public function selecct_produc_o_provee()

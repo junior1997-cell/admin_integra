@@ -70,19 +70,9 @@
                           </h3>
                           <!--Agregar pago -->
                           <h3 class="card-title mr-3"  style="padding-left: 2px;"  data-toggle="tooltip" data-original-title="Agregar pago">
-                            <button type="button" 
-                            class="btn bg-gradient-success" 
-                            id="btn-agregar-pago" 
-                            data-toggle="modal" 
-                            style="display: none;" 
-                            onclick="limpiar_form_pago();"
-                            data-target="#modal-agregar-pago-trabajdor" ><i class="fa-solid fa-circle-plus"></i> Agregar Pago</button>
-
+                            <button type="button" class="btn bg-gradient-success" id="btn-agregar-pago" data-toggle="modal" style="display: none;" onclick="limpiar_form_pago();" data-target="#modal-agregar-pago-trabajdor" ><i class="fa-solid fa-circle-plus"></i> Agregar Pago</button>
                           </h3>
-
                           <div class="sueldo_trab_view" style="text-align: right; display:none; "> Total a pagar: <b class="texto-parpadeante val_sueldo"> S/ 100</b> </div>
-
-
                         </div>
 
                         <!-- /.card-header -->
@@ -146,24 +136,21 @@
                             <table id="tabla-mes-pago" class="table table-bordered table-striped display" style="width: 100% !important; ">
                               <thead>
                                 <tr>
-                                  <th class="text-center">#</th>
-                                  
+                                  <th class="text-center">#</th>                                  
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
-                                  <th >Pagos</th>
-                                  
+                                  <th >Pagos</th>                                  
                                 </tr>
                               </thead>
                               <tbody></tbody>
                               <tfoot>
                                 <tr>
-                                  <th class="text-center">#</th>
-                                  
+                                  <th class="text-center">#</th>                                  
                                   <th>Año</th>
                                   <th>Mes</th>
                                   <th>Ver Detalle</th>
-                                  <th>Pagos</th>
+                                  <th class="px-2">Pagos</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -190,7 +177,7 @@
                                   <th class="text-center">#</th> 
                                   <th>Op.</th> 
                                   <th>Fecha </th> 
-                                  <th class="monto_total_pago">Monto</th>
+                                  <th class="px-2">Monto</th>
                                   <th>Descripcion</th>     
                                   <th>Comprobante</th>                                                  
                                 </tr>
@@ -294,7 +281,7 @@
                         </form>
                       </div>
                       <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" onclick="limpiar_form_trabajador();" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="limpiar_form_pago();" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success" id="guardar_registro_mes">Guardar Cambios</button>
                       </div>
                     </div>
@@ -404,7 +391,25 @@
                     </div>
                   </div>
                 </div>
-
+                
+                <!-- MODAL - VER PERFIL PERSONA-->
+                <div class="modal fade bg-color-02020280" id="modal-ver-perfil-persona">
+                  <div class="modal-dialog modal-dialog-centered modal-md">
+                    <div class="modal-content bg-color-0202022e shadow-none border-0">
+                      <div class="modal-header">
+                        <h4 class="modal-title text-white foto-persona">Foto Persona</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span class="text-white cursor-pointer" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body"> 
+                        <div id="perfil-persona" class="text-center">
+                          <!-- vemos los datos del trabajador -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
 
               </section>
               <!-- /.content -->

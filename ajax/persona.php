@@ -64,7 +64,7 @@
 
 						$ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;						
 
-            $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . rand(21, 41) . '.' . end($ext1);
+            $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
 
             move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);
 						
@@ -137,7 +137,7 @@
                 "1"=>'<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
                   ' <button class="btn btn-danger btn-sm" onclick="eliminar_persona('.$value['idpersona'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
                 "2"=>'<div class="user-block">
-                  <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');">
+                  <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description"><b>Cargo: </b>'. $value['cargo'] .' ─ <b>'. $value['tipo_documento'] .':</b> '. $value['numero_documento'] .' </span>
                   </div>',
