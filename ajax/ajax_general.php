@@ -18,14 +18,14 @@
     require_once "../modelos/Compra_producto.php";
     require_once "../modelos/Venta_producto.php";
     
-    $ajax_general = new Ajax_general();
-    $compra_insumos = new Producto();
-    $compra_producto = new Compra_producto();
+    $ajax_general   = new Ajax_general();
+    $compra_insumos = new Producto($_SESSION['idusuario']);
+    $compra_producto= new Compra_producto();
     $venta_producto = new Venta_producto();
 
-    $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
+    $scheme_host  =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
     $imagen_error = "this.src='../dist/svg/404-v2.svg'";
-    $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
+    $toltip       = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
 
     switch ($_GET["op"]) {       
 
@@ -167,13 +167,13 @@
 
           foreach ($rspta['data'] as $key => $value) {  
             $es_socio = $value['es_socio'] ? 'SOCIO': 'NO SOCIO';
-            $data .= '<option value="' .  $value['idpersona'] . '">' .$cont++.'. '.  $value['nombres'] .' - '.  $value['numero_documento'] . ' - ' . $es_socio . '</option>';      
+            $data .= '<option value="' .  $value['idpersona'] . '" title="'.$value['foto_perfil'].'" ruc_dni="'.$value['numero_documento'].'">' .$cont++.'. '.  $value['nombres'] .' - '.  $value['numero_documento'] . ' - ' . $es_socio . '</option>';      
           }
 
           $retorno = array(
             'status' => true, 
             'message' => 'Salió todo ok', 
-            'data' => '<option value="1" ruc="">0. ANÓNIMO - 00000000000</option>' . $data, 
+            'data' => '<option value="1" ruc_dni="">0. ANÓNIMO - 00000000000</option>' . $data, 
           );
   
           echo json_encode($retorno, true);
@@ -327,8 +327,7 @@
           
         $rspta = $ajax_general->tblaProductos(); 
 
-        $datas = []; 
-        
+        $datas = [];         
 
         if ($rspta['status'] == true) {
 
@@ -342,16 +341,11 @@
               $img = '../dist/docs/producto/img_perfil/' . $reg->imagen;
               $img_parametro = $reg->imagen;
             }
-            if ( $reg->stock <= 0) {
-              $clas_stok = 'badge-danger';
-            }else if ($reg->stock > 0 && $reg->stock <= 10) {
-              $clas_stok = 'badge-warning';
-            }else if ($reg->stock > 10) {
-              $clas_stok = 'badge-success';
-            }
+
+            if ( $reg->stock <= 0) { $clas_stok = 'badge-danger'; }else if ($reg->stock > 0 && $reg->stock <= 10) { $clas_stok = 'badge-warning'; }else if ($reg->stock > 10) { $clas_stok = 'badge-success'; }
 
             $datas[] = [
-              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\',\'' . $reg->categoria . '\',\'' . $reg->precio_unitario . '\',\'' . $img_parametro . '\',\'' .$reg->stock. '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
+              "0" => '<button class="btn btn-warning" onclick="agregarDetalleComprobante(' . $reg->idproducto . ', \'' .  htmlspecialchars($reg->nombre, ENT_QUOTES) . '\', \'' . $reg->nombre_medida . '\',\'' . $reg->categoria . '\',\'' . $reg->precio_unitario . '\',\'' . $reg->precio_compra_actual . '\',\'' . $img_parametro . '\',\'' .$reg->stock. '\')" data-toggle="tooltip" data-original-title="Agregar Activo"><span class="fa fa-plus"></span></button>',
               "1" => '<div class="user-block w-250px">'.
                 '<img class="profile-user-img img-responsive img-circle cursor-pointer" src="' . $img . '" alt="user image" onerror="' . $imagen_error . '" onclick="ver_img_producto(\'' . $img . '\', \''.encodeCadenaHtml($reg->nombre).'\');">'.
                 '<span class="username"><p class="mb-0" >' . $reg->nombre . '</p></span>

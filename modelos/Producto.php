@@ -5,8 +5,11 @@ require "../config/Conexion_v2.php";
 class Producto
 {
   //Implementamos nuestro constructor
-  public function __construct()
+  public $id_usr_sesion;
+  //Implementamos nuestro constructor
+  public function __construct( $id_usr_sesion = 0)
   {
+    $this->id_usr_sesion = $id_usr_sesion;
   }
 
   //Implementamos un método para insertar registros
@@ -17,19 +20,16 @@ class Producto
     WHERE um.idunidad_medida=p.idunidad_medida AND cp.idcategoria_producto=p.idcategoria_producto AND  
     p.idcategoria_producto = '$idcategoria_producto' AND p.idunidad_medida = '$idunidad_medida' AND 
     p.nombre='$nombre'";
-    $buscando = ejecutarConsultaArray($sql);
-
-    if ($buscando['status'] == false) { return $buscando; }
+    $buscando = ejecutarConsultaArray($sql);  if ($buscando['status'] == false) { return $buscando; }
 
     if ( empty($buscando['data']) ) {
       $sql = "INSERT INTO producto (idcategoria_producto, idunidad_medida, nombre, marca, contenido_neto, descripcion, imagen, user_created) 
-      VALUES ( '$idcategoria_producto', '$idunidad_medida', '$nombre', '$marca', '$contenido_neto', '$descripcion', '$imagen','" . $_SESSION['idusuario'] . "')";
+      VALUES ( '$idcategoria_producto', '$idunidad_medida', '$nombre', '$marca', '$contenido_neto', '$descripcion', '$imagen','$this->id_usr_sesion')";
      
-      $intertar =  ejecutarConsulta_retornarID($sql); 
-      if ($intertar['status'] == false) {  return $intertar; } 
+      $intertar =  ejecutarConsulta_retornarID($sql); if ($intertar['status'] == false) {  return $intertar; } 
 
       //add registro en nuestra bitacora
-      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$intertar['data']."','Nuevo producto registrado','" . $_SESSION['idusuario'] . "')";
+      $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$intertar['data']."','Nuevo producto registrado','$this->id_usr_sesion')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
 
       return $intertar;
@@ -56,24 +56,15 @@ class Producto
   //Implementamos un método para editar registros
   public function editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil) {
     // var_dump($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $img_pefil);die();
-    $sql = "UPDATE producto SET 
-
-		idcategoria_producto = '$idcategoria_producto',
-		idunidad_medida = '$unidad_medida',
-		nombre = '$nombre',
-		marca = '$marca',
-		contenido_neto = '$contenido_neto',
-		descripcion = '$descripcion',
-		imagen = '$img_pefil',
-		
-    user_updated= '" . $_SESSION['idusuario'] . "'
+    $sql = "UPDATE producto SET idcategoria_producto = '$idcategoria_producto',	idunidad_medida = '$unidad_medida',	nombre = '$nombre',
+		marca = '$marca',	contenido_neto = '$contenido_neto',	descripcion = '$descripcion',	imagen = '$img_pefil', user_updated= '$this->id_usr_sesion'
 		WHERE idproducto='$idproducto'";
 
     $editar =  ejecutarConsulta($sql);
     if ( $editar['status'] == false) {return $editar; } 
 
     //add registro en nuestra bitacora
-    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto editado','" . $_SESSION['idusuario'] . "')";
+    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto editado','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }  
 
     return $editar;
@@ -81,13 +72,13 @@ class Producto
 
   //Implementamos un método para desactivar categorías
   public function desactivar($idproducto) {
-    $sql = "UPDATE producto SET estado='0',user_trash= '" . $_SESSION['idusuario'] . "' WHERE idproducto ='$idproducto'";
+    $sql = "UPDATE producto SET estado='0',user_trash= '$this->id_usr_sesion' WHERE idproducto ='$idproducto'";
     $desactivar= ejecutarConsulta($sql);
 
     if ($desactivar['status'] == false) {  return $desactivar; }
     
     //add registro en nuestra bitacora
-    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$idproducto."','Producto desactivado','" . $_SESSION['idusuario'] . "')";
+    $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','".$idproducto."','Producto desactivado','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; }   
     
     return $desactivar;
@@ -101,12 +92,12 @@ class Producto
 
   //Implementamos un método para activar categorías
   public function eliminar($idproducto) {
-    $sql = "UPDATE producto SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idproducto ='$idproducto'";
+    $sql = "UPDATE producto SET estado_delete='0',user_delete= '$this->id_usr_sesion' WHERE idproducto ='$idproducto'";
     $eliminar =  ejecutarConsulta($sql);
     if ( $eliminar['status'] == false) {return $eliminar; }  
     
     //add registro en nuestra bitacora
-    $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto Eliminado','" . $_SESSION['idusuario'] . "')";
+    $sql = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('producto','$idproducto','Producto Eliminado','$this->id_usr_sesion')";
     $bitacora = ejecutarConsulta($sql); if ( $bitacora['status'] == false) {return $bitacora; }  
     
     return $eliminar;

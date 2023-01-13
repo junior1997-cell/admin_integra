@@ -13,7 +13,7 @@
       
       require_once "../modelos/Producto.php";
 
-      $producto = new Producto();
+      $producto = new Producto($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
       $imagen_error = "this.src='../dist/svg/404-v2.svg'";
@@ -21,60 +21,45 @@
 
       $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
       
-      $idproducto     = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
-      $idcategoria_producto  = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
-      $unidad_medida          = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "" ;
-      $nombre         = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
-      $marca         = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
-      $contenido_neto          = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
-      $descripcion    = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
+      $idproducto           = isset($_POST["idproducto"]) ? limpiarCadena($_POST["idproducto"]) : "" ;
+      $idcategoria_producto = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
+      $unidad_medida        = isset($_POST["unidad_medida"]) ? limpiarCadena($_POST["unidad_medida"]) : "" ;
+      $nombre_producto      = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
+      $marca                = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
+      $contenido_neto       = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
+      $descripcion          = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
 
-      $imagen1 = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
+      $imagen1              = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
 
       switch ($_GET["op"]) {
 
         case 'guardaryeditar':
-          // imgen
+          // imagen
           if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
-
             $imagen1 = $_POST["foto1_actual"];
-
             $flat_img1 = false;
-
           } else {
-
             $ext1 = explode(".", $_FILES["foto1"]["name"]);
-
             $flat_img1 = true;
-
             $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
-
             move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/producto/img_perfil/" . $imagen1);
           }
 
           if (empty($idproducto)) {
            
-            $rspta = $producto->insertar($idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
-            
+            $rspta = $producto->insertar($idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );            
             echo json_encode( $rspta, true);
 
           } else {
 
-            // validamos si existe LA IMG para eliminarlo
-          
+            // validamos si existe LA IMG para eliminarlo          
             if ($flat_img1 == true) {
-
               $datos_f1 = $producto->obtenerImg($idproducto);
-
               $img1_ant = $datos_f1['data']->fetch_object()->imagen;
-
-              if ( validar_url_completo($scheme_host. "dist/docs/producto/img_perfil/" . $img1_ant)  == 200) {
-                unlink("../dist/docs/producto/img_perfil/" . $img1_ant);
-              }
+              if ( !empty( $img1_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img1_ant); }
             }
             
-            $rspta = $producto->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre, $marca, $contenido_neto, $descripcion, $imagen1 );
-            
+            $rspta = $producto->editar($idproducto, $idcategoria_producto, $unidad_medida, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );            
             echo json_encode( $rspta, true) ;
           }
         break;

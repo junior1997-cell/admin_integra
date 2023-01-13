@@ -40,8 +40,8 @@
           echo json_encode($rspta, true);	
         break;
 
-        case 'chart_cafe':
-          $rspta=$escritorio->chart_cafe();
+        case 'sumas_totales':
+          $rspta=$escritorio->sumas_totales();
           //Codificar el resultado utilizando json
           echo json_encode($rspta, true);	
         break;

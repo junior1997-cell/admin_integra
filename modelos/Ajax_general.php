@@ -133,7 +133,7 @@
     /* ══════════════════════════════════════ P R O V E E D O R -- C L I E N T E S  ══════════════════════════════════════ */
 
     public function select2_proveedor_cliente($tipo) {
-      $sql = "SELECT idpersona, nombres, tipo_documento, numero_documento, es_socio FROM persona 
+      $sql = "SELECT idpersona, nombres, tipo_documento, numero_documento, es_socio, foto_perfil FROM persona 
       WHERE idtipo_persona ='$tipo' AND estado='1' AND estado_delete ='1'";
 
       return ejecutarConsulta($sql);
@@ -188,8 +188,8 @@
 
     //funcion para mostrar registros de prosuctos
     public function tblaProductos() {
-      $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.stock, 
-      p.descripcion, p.imagen, p.estado,  
+      $sql = "SELECT p.idproducto, p.idcategoria_producto, p.idunidad_medida, p.nombre, p.marca, p.contenido_neto, p.precio_unitario, p.precio_compra_actual,
+      p.stock, p.descripcion, p.imagen, p.estado,  
       um.nombre as nombre_medida, cp.nombre AS categoria
       FROM producto as p, unidad_medida AS um, categoria_producto AS cp
       WHERE p.idcategoria_producto = cp.idcategoria_producto and p.idunidad_medida = um.idunidad_medida and p.estado='1' AND p.estado_delete='1' ORDER BY p.nombre ASC";

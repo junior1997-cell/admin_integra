@@ -132,6 +132,7 @@ function tbla_principal(tipo_persona) {
     aServerSide: true,//Paginación y filtrado realizados por el servidor
     dom: '<Bl<f>rtip>',//Definimos los elementos del control de tabla
     buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
       { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } }, 
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,7,8,9,3,4,10,11,12], } },
@@ -490,7 +491,7 @@ $(function () {
       num_documento:  { required: true, minlength: 6, maxlength: 20 },
       nombre:         { required: true, minlength: 6, maxlength: 100 },
       email:          { email: true, minlength: 10, maxlength: 50 },
-      direccion:      { minlength: 5, maxlength: 70 },
+      direccion:      { minlength: 5, maxlength: 200 },
       telefono:       { minlength: 8 },
       cta_bancaria:   { minlength: 10,},
       banco:          { required: true},
@@ -501,7 +502,7 @@ $(function () {
       num_documento:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
       nombre:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
       email:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
-      direccion:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
+      direccion:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
       telefono:       { minlength: "MÍNIMO 8 caracteres.", },
       cta_bancaria:   { minlength: "MÍNIMO 10 caracteres.", },
       banco:          { required: "Campo requerido.", },

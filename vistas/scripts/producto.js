@@ -39,41 +39,35 @@ function templateColor (state) {
 }
 // abrimos el navegador de archivos
 $("#foto1_i").click(function () { $("#foto1").trigger("click"); });
-$("#foto1").change(function (e) { addImage(e, $("#foto1").attr("id"), "../dist/img/default/img_defecto_activo_fijo.png"); });
+$("#foto1").change(function (e) { addImage(e, $("#foto1").attr("id"), "../dist/img/default/img_defecto_producto.jpg"); });
 
 function foto1_eliminar() {
   $("#foto1").val("");
-
-  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_activo_fijo.png");
-
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
   $("#foto1_nombre").html("");
 }
+
 //Función limpiar
 function limpiar_form_material() {
 
   $("#guardar_registro").html('Guardar Cambios').removeClass('disabled');
   $('.name-modal-title-agregar').html('Agregar Producto');
 
-
   //Mostramos los Materiales
   $("#idproducto").val("");  
-  $("#nombre_producto").val("");
-  // $("#marca").val("");
-  $("#descripcion").val("");
+  $("#nombre_producto").val("");  
+  $("#categoria_producto").val("").trigger("change");
+  $("#unidad_medida").val("null").trigger("change");
+  $("#marca").val(""); 
+  $("#contenido_neto").val(1).trigger("change");  
+  $("#precio_unitario").val('0.00');  
+  $("#stock").val('0.00').trigger("change");
+  $("#descripcion").val(""); 
 
-  $("#precio_unitario").val('0:00');
-
-  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_activo_fijo.png");
+  $("#foto1_i").attr("src", "../dist/img/default/img_defecto_producto.jpg");
   $("#foto1").val("");
   $("#foto1_actual").val("");
-  $("#foto1_nombre").html("");   
-
-  $("#unidad_medida").val("null").trigger("change");
-  $("#contenido_neto").val(1).trigger("change");
-  $("#stock").val('0:00').trigger("change");
-  $("#marca").val("").trigger("change");
-  $("#categoria_producto").val("").trigger("change");
- 
+  $("#foto1_nombre").html("");  
 
   // Limpiamos las validaciones
   $(".form-control").removeClass('is-valid');
@@ -120,6 +114,7 @@ function tbla_principal(idcategoria = 'todos') {
     aServerSide: true, //Paginación y filtrado realizados por el servidor
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: [
+      { text: '<i class="fa-solid fa-arrows-rotate"></i>', action: function ( e, dt, node, config ) { tabla.ajax.reload(); toastr_success('Exito!!', 'Actualizando tabla', 400); } },
       { extend: 'copyHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
       { extend: 'excelHtml5', footer: true, exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } }, 
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,10,11,4,5,6,7,8,9], } },

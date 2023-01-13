@@ -131,11 +131,11 @@
                   <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">
                   <span class="username"><p class="text-primary m-b-02rem" >'. $value['nombres'] .'</p></span>
                   <span class="description"><b>Cargo: </b>'. $value['cargo'] .' ─ <b>'. $value['tipo_documento'] .':</b> '. $value['numero_documento'] .' </span>
-                  </div>',
-                "3"=> $value['direccion'],
-                "4"=>'<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al persona.">'. $value['celular'] . '</a>',
+                </div>',
+                "3"=> '<textarea cols="30" rows="1" class="textarea_datatable" readonly="">' . $value['direccion'] . '</textarea>',
+                "4"=> '<a href="tel:+51'.quitar_guion($value['celular']).'" data-toggle="tooltip" data-original-title="Llamar al persona.">'. $value['celular'] . '</a>',
                 "5"=> '<b>'.$value['banco'] .': </b>'. $value['cuenta_bancaria'] .' <br> <b>CCI: </b>'.$value['cci'],
-                "6"=>(($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
+                "6"=> (($value['estado'])?'<span class="text-center badge badge-success">Activado</span>': '<span class="text-center badge badge-danger">Desactivado</span>').$toltip,
                 "7"=> $value['nombres'],
                 "8"=> $value['tipo_documento'],
                 "9"=> $value['numero_documento'],

@@ -144,7 +144,7 @@
                 </div>
                 <!-- /.container-fluid -->
 
-                <!-- MODAL - AGREGAR MATERIAL -->
+                <!-- MODAL - AGREGAR MATERIAL - charge-1 -->
                 <div class="modal fade" id="modal-agregar-material">
                   <div class="modal-dialog modal-dialog-scrollable modal-md">
                     <div class="modal-content">
@@ -178,15 +178,7 @@
                                   <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
                                   </select>
                                 </div>
-                              </div>   
-                              
-                              <!-- Stock -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
-                                <div class="form-group">
-                                  <label for="stock">Stock: </label>
-                                  <input type="text" name="stock" value="0" id="stock" class="form-control" readonly="readonly">                                  
-                                </div>
-                              </div>
+                              </div>                               
 
                               <!-- Unnidad de medida-->
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
@@ -199,8 +191,16 @@
                                <!-- Marca -->
                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                  <label for="marca">Marca <sup class="text-danger">(unico*)</sup></label>
-                                  <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
+                                  <label for="marca_pro">Marca <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="marca_pro" class="form-control" id="marca_pro" placeholder="Marca." />
+                                </div>
+                              </div>
+
+                              <!-- ContenidoNeto -->
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                  <label for="contenido_neto">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="contenido_neto" id="contenido_neto" class="form-control"  placeholder="Contenido Neto." />
                                 </div>
                               </div>
 
@@ -208,20 +208,19 @@
                               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
                                   <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
-                                  <input type="text" name="precio_unitario"  value="0" class="form-control" readonly id="precio_unitario" />
+                                  <input type="text" name="precio_unitario" id="precio_unitario" value="0" class="form-control" readonly  />
                                 </div>
                               </div>
 
-                                <!-- Nombre -->
-                               <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                              <!-- Stock -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
                                 <div class="form-group">
-                                  <label for="contenido_neto">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
-                                  <input type="text" name="contenido_neto" class="form-control" id="contenido_neto" placeholder="Contenido Neto." />
+                                  <label for="stock">Stock: </label>
+                                  <input type="text" name="stock" id="stock" value="0.00"  class="form-control" readonly="readonly">                                  
                                 </div>
-                              </div>
+                              </div> 
 
-
-                              <!--nombre_producto-->
+                              <!-- Descripcion-->
                               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">
                                   <label for="descripcion">Descripción </label> <br />
@@ -233,14 +232,8 @@
                               <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
                                 <label for="foto1">Imagen</label>
                                 <div style="text-align: center;">
-                                  <img
-                                    onerror="this.src='../dist/img/default/img_defecto_activo_fijo.png';"
-                                    src="../dist/img/default/img_defecto_activo_fijo.png"
-                                    class="img-thumbnail"
-                                    id="foto1_i"
-                                    style="cursor: pointer !important; height: 100% !important;"
-                                    width="auto"
-                                  />
+                                  <img onerror="this.src='../dist/img/default/img_defecto_producto.jpg';" src="../dist/img/default/img_defecto_producto.jpg"
+                                    class="img-thumbnail" id="foto1_i" style="cursor: pointer !important; height: 100% !important;" width="auto" />
                                   <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
                                   <input type="hidden" name="foto1_actual" id="foto1_actual" />
                                   <div class="text-center" id="foto1_nombre"><!-- aqui va el nombre de la FOTO --></div>
@@ -276,8 +269,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                
+                </div>                
 
                 <!-- MODAL - VER DETALLE INSUMO-->
                 <div class="modal fade" id="modal-ver-insumo">

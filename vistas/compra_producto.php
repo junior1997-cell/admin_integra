@@ -250,12 +250,13 @@
                                 <div class="row" id="cargando-1-fomulario">
                                   <!-- id compra_producto  -->
                                   <input type="hidden" name="idcompra_producto" id="idcompra_producto" /> 
+                                  <input type="hidden" name="num_doc" id="num_doc" /> 
 
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-7">
                                     <div class="form-group">
                                       <label for="idproveedor">Proveedor <sup class="text-danger">(único*)</sup></label>
-                                      <select id="idproveedor" name="idproveedor" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                      <select id="idproveedor" name="idproveedor" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc('#idproveedor', '#num_doc');"> </select>
                                     </div>
                                   </div>
 
@@ -343,10 +344,10 @@
                                         <th>Producto</th>
                                         <th>Unidad</th>
                                         <th>Cantidad</th>
-                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
+                                        <th class="hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U </th>
                                         <th class="hidden">IGV</th>
-                                        <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
-                                        <th data-toggle="tooltip" data-original-title="Precio Venta">P/V</th>
+                                        <th data-toggle="tooltip" data-original-title="Precio Unitario">P/U <small>(unitario)</small></th>
+                                        <th data-toggle="tooltip" data-original-title="Precio Venta">P/V <small>(venta)</small></th>
                                         <th>Descuento</th>
                                         <th>Subtotal</th>
                                       </thead>
@@ -608,12 +609,12 @@
                   </div>
                   <!-- /.container-fluid -->
 
-                  <!-- Modal agregar proveedores -->
+                  <!-- Modal agregar proveedores - charge-11 -->
                   <div class="modal fade" id="modal-agregar-proveedor">
                     <div class="modal-dialog modal-dialog-scrollable modal-xl">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title">Agregar proveedor</h4>
+                          <h4 class="modal-title ">Agregar proveedor</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span class="text-danger" aria-hidden="true">&times;</span>
                           </button>
@@ -622,18 +623,23 @@
                         <div class="modal-body">
                           <!-- form start -->
                           <form id="form-proveedor" name="form-proveedor" method="POST">
-                            <div class="card-body "> 
+                            <div class="card-body">
 
                               <div class="row" id="cargando-11-fomulario">
                                 <!-- id persona -->
-                                <input type="hidden" name="idpersona" id="idpersona" />
+                                <input type="hidden" name="idpersona_per" id="idpersona_per" />
                                 <!-- tipo persona  -->
-                                <input type="hidden" name="id_tipo_persona" id="id_tipo_persona" value="3" />
+                                <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="3" />
+                                <input type="hidden" name="cargo_trabajador_per" id="cargo_trabajador_per" value="1">
+                                <input type="hidden" name="sueldo_mensual_per" id="sueldo_mensual_per">
+                                <input type="hidden" name="sueldo_diario_per" id="sueldo_diario_per">
+                                <input type="hidden" name="input_socio_per" id="input_socio_per" value="0"  >
+
                                 <!-- Tipo de documento -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                                   <div class="form-group">
-                                    <label for="tipo_documento">Tipo Doc.</label>
-                                    <select name="tipo_documento" id="tipo_documento" class="form-control" placeholder="Tipo de documento">
+                                    <label for="tipo_documento_per">Tipo Doc.</label>
+                                    <select name="tipo_documento_per" id="tipo_documento_per" class="form-control" placeholder="Tipo de documento">
                                       <option selected value="DNI">DNI</option>
                                       <option value="RUC">RUC</option>
                                       <option value="CEDULA">CEDULA</option>
@@ -643,15 +649,15 @@
                                 </div>
                                 
                                 <!-- N° de documento -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                   <div class="form-group">
-                                    <label for="num_documento">N° de documento</label>
+                                    <label for="num_documento_per">N° de documento</label>
                                     <div class="input-group">
-                                      <input type="number" name="num_documento" class="form-control" id="num_documento" placeholder="N° de documento" />
-                                      <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('');">
+                                      <input type="number" name="num_documento_per" class="form-control" id="num_documento_per" placeholder="N° de documento" />
+                                      <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('_per');">
                                         <span class="input-group-text" style="cursor: pointer;">
-                                          <i class="fas fa-search text-primary" id="search"></i>
-                                          <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge" style="display: none;"></i>
+                                          <i class="fas fa-search text-primary" id="search_per"></i>
+                                          <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge_per" style="display: none;"></i>
                                         </span>
                                       </div>
                                     </div>
@@ -661,24 +667,42 @@
                                 <!-- Nombre -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                                   <div class="form-group">
-                                    <label for="nombre">Nombres/Razon Social</label>
-                                    <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Nombres y apellidos" />
+                                    <label for="nombre_per">Nombres/Razon Social</label>
+                                    <input type="text" name="nombre_per" class="form-control" id="nombre_per" placeholder="Nombres y apellidos" />
+                                  </div>
+                                </div>
+                                
+                                <!-- Telefono -->
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-2">
+                                  <div class="form-group">
+                                    <label for="telefono_per">Teléfono</label>
+                                    <input type="text" name="telefono_per" id="telefono_per" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
                                   </div>
                                 </div>
 
                                 <!-- Correo electronico -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                   <div class="form-group">
-                                    <label for="email">Correo electrónico</label>
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
+                                    <label for="email_per">Correo electrónico</label>
+                                    <input type="email" name="email_per" class="form-control" id="email_per" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
                                   </div>
                                 </div>
 
-                                <!-- Telefono -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                                <!-- fecha de nacimiento -->
+                                <div class="col-12 col-sm-10 col-md-6 col-lg-3">
                                   <div class="form-group">
-                                    <label for="telefono">Teléfono</label>
-                                    <input type="text" name="telefono" id="telefono" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                    <label for="nacimiento_per">Fecha Nacimiento</label>
+                                    <input type="date" class="form-control" name="nacimiento_per" id="nacimiento_per" placeholder="Fecha de Nacimiento"
+                                      onclick="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" onchange="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" />
+                                    <input type="hidden" name="edad_per" id="edad_per" />
+                                  </div>
+                                </div>
+
+                                <!-- edad -->
+                                <div class="col-12 col-sm-2 col-md-6 col-lg-1">
+                                  <div class="form-group">
+                                    <label for="edad_per">Edad</label>
+                                    <p class="edad_per" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
                                   </div>
                                 </div>
 
@@ -711,42 +735,46 @@
                                 <!-- Titular de la cuenta -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                   <div class="form-group">
-                                    <label for="titular_cuenta">Titular de la cuenta</label>
-                                    <input type="text" name="titular_cuenta" class="form-control" id="titular_cuenta" placeholder="Titular de la cuenta" />
+                                    <label for="titular_cuenta_per">Titular de la cuenta</label>
+                                    <input type="text" name="titular_cuenta_per" class="form-control" id="titular_cuenta_per" placeholder="Titular de la cuenta" />
                                   </div>
-                                </div>
-
-                                <!-- Swichs permanente -->
-                                <div class="col-4 col-sm-5 col-md-6 col-lg-3 hidden ">
-                                    <input type="hidden" name="input_socio" id="input_socio" value="0"  >
-                                </div>
+                                </div>                                 
 
                                 <!-- Direccion -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-12">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 classdirecc">
                                   <div class="form-group">
-                                    <label for="direccion">Dirección</label>
-                                    <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Dirección" />
+                                    <label for="direccion_per">Dirección</label>
+                                    <input type="text" name="direccion_per" class="form-control" id="direccion_per" placeholder="Dirección" />
                                   </div>
+                                </div>
+
+                                <!-- imagen perfil -->
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                                  <div class="col-lg-12 borde-arriba-naranja mt-2 mb-2"></div>
+                                  <label for="foto1">Foto de perfil</label> <br />
+                                  <img onerror="this.src='../dist/img/default/img_defecto.png';" src="../dist/img/default/img_defecto.png" class="img-thumbnail" id="foto1_i" style="cursor: pointer !important;" width="auto" />
+                                  <input style="display: none;" type="file" name="foto1" id="foto1" accept="image/*" />
+                                  <input type="hidden" name="foto1_actual" id="foto1_actual" />
+                                  <div class="text-center" id="foto1_nombre"><!-- aqui va el nombre de la FOTO --></div>
                                 </div>
 
                                 <!-- Progress -->
-                                <div class="col-md-12" style="display: none !important;" id="barra_progress_proveedor_div">
+                                <div class="col-md-12">
                                   <div class="form-group">
-                                    <div class="progress"  >
-                                      <div id="barra_progress_proveedor" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress" id="div_barra_progress" style="display: none !important;">
+                                      <div id="barra_progress" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
 
-                              <div class="row" id="cargando-12-fomulario" style="display: none;">
+                              <div class="row" id="cargando-12-fomulario" style="display: none;" >
                                 <div class="col-lg-12 text-center">
-                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
-                                  <br />
+                                  <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
                                   <h4>Cargando...</h4>
                                 </div>
-                              </div>                              
-
+                              </div>
+                                    
                             </div>
                             <!-- /.card-body -->
                             <button type="submit" style="display: none;" id="submit-form-proveedor">Submit</button>
@@ -760,7 +788,7 @@
                     </div>
                   </div>
 
-                  <!-- Modal elegir material -->
+                  <!-- MODAL - TABLA PRODUCTO -->
                   <div class="modal fade" id="modal-elegir-material">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
@@ -794,7 +822,7 @@
                     </div>
                   </div>                  
 
-                  <!-- Modal agregar Pagos - charge -->
+                  <!-- MDOAL - agregar Pagos - charge-3 -->
                   <div class="modal fade" id="modal-agregar-pago">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
@@ -945,7 +973,7 @@
                     </div>
                   </div>
 
-                  <!-- MODAL - DETALLE compras - charge -->
+                  <!-- MODAL - DETALLE compras - charge-5 -->
                   <div class="modal fade" id="modal-ver-compras">
                     <div class="modal-dialog modal-dialog-scrollable modal-xl">
                       <div class="modal-content">
@@ -979,51 +1007,7 @@
                     </div>
                   </div>
 
-                  <!-- MODAL -  agregar comprobantes - charge -->
-                  <div class="modal fade" id="modal-tabla-comprobantes-compra">
-                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                      <div class="modal-content">
-                        <div class="modal-header"> 
-                          <h4 class="modal-title titulo-comprobante-compra">Lista de Comprobantes</h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span class="text-danger" aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-
-                        <div class="modal-body row">
-                          <div class="col-12">
-                            <button  class="btn btn-success btn-sm" data-toggle="modal"  data-target="#modal-comprobantes-compra" onclick="limpiar_form_comprobante();" >Agregar</button>
-                          </div>
-                          <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 mt-3">
-                            <table id="tabla-comprobantes-compra" class="table table-bordered table-striped display " style="width: 100% !important;">
-                              <thead>
-                                <tr>
-                                  <th class="">#</th>
-                                  <th data-toggle="tooltip" data-original-title="Opciones">OP</th>
-                                  <th data-toggle="tooltip" data-original-title="Documentos">Comprobante</th>
-                                  <th data-toggle="tooltip" data-original-title="Fecha de subida">Fecha</th>                          
-                                </tr>
-                              </thead>
-                              <tbody></tbody>
-                              <tfoot>
-                                <tr>
-                                  <th class="">#</th>
-                                  <th class="">OP</th>
-                                  <th>Doc</th>
-                                  <th>Fecha</th>                                    
-                                </tr>
-                              </tfoot>
-                            </table>
-                          </div>
-
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
+                  <!-- MODAL -  AGREGAR comprobantes - charge-7 -->                   
                   <div class="modal fade bg-color-02020263" id="modal-comprobantes-compra">
                     <div class="modal-dialog  modal-dialog-scrollable modal-md shadow-0px1rem3rem-rgb-0-0-0-50 rounded">
                       <div class="modal-content">
@@ -1090,7 +1074,7 @@
                     </div>
                   </div>
 
-                  <!-- Modal-ver-vaucher-pagos -->
+                  <!-- MODAL - ver-vaucher-pagos -->
                   <div class="modal fade" id="modal-ver-vaucher">
                     <div class="modal-dialog modal-dialog-scrollable modal-xm">
                       <div class="modal-content">
@@ -1126,12 +1110,12 @@
                     </div>
                   </div>   
 
-                  <!-- Modal agregar Productos - charge -->                 
+                  <!-- MODAL - AGREGAR Productos - charge-9 -->                 
                   <div class="modal fade bg-color-02020263" id="modal-agregar-productos">
                     <div class="modal-dialog modal-dialog-scrollable modal-lg">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title">Agregar Producto</h4>
+                          <h4 class="modal-title name-modal-title-agregar">Agregar Producto</h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span class="text-danger" aria-hidden="true">&times;</span>
                           </button>
@@ -1142,77 +1126,89 @@
                           <form id="form-producto" name="form-producto" method="POST">
                             <div class="card-body">
                               <div class="row" id="cargando-9-fomulario">
+      
                                 <!-- id proveedores -->
-                                <input type="hidden" name="idproducto_compra" id="idproducto_compra" />
-                                
+                                <input type="hidden" name="idproducto_pro" id="idproducto_pro" />
                                 <!-- cont registro -->
-                                <input type="hidden" name="cont" id="cont" />   
+                                <input type="hidden" name="cont" id="cont" />
+                                
                                 <!-- Nombre -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
-                                    <label for="nombre_producto">Nombre <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="nombre_producto" class="form-control" id="nombre_producto" placeholder="Nombre del Producto." />
+                                    <label for="nombre_producto_pro">Nombre <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="nombre_producto_pro" class="form-control" id="nombre_producto_pro" placeholder="Nombre del Insumo." />
                                   </div>
                                 </div>
 
                                 <!-- Categoria -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="categoria_producto">Categoria <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="categoria_producto" id="categoria_producto" class="form-control select2" style="width: 100%;"> 
+                                    <label for="categoria_producto_pro">Categoria <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="categoria_producto_pro" id="categoria_producto_pro" class="form-control select2" style="width: 100%;"> 
                                     </select>
                                   </div>
-                                </div>   
-                                
-                                <!-- Stock -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
-                                  <div class="form-group">
-                                    <label for="stock">Stock: </label>
-                                    <input type="text" name="stock" value="0" id="stock" class="form-control" readonly="readonly">                                  
-                                  </div>
-                                </div>
+                                </div>                                  
 
                                 <!-- Unnidad de medida-->
                                 <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
                                   <div class="form-group">
-                                    <label for="unidad_medida_compra">Unidad medida <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="unidad_medida_compra" id="unidad_medida_compra" class="form-control select2" style="width: 100%;"> </select>
+                                    <label for="unidad_medida_pro">Unidad medida <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="unidad_medida_pro" id="unidad_medida_pro" class="form-control select2" style="width: 100%;"> </select>
                                   </div>
                                 </div>
 
                                 <!-- Marca -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="marca">Marca <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
+                                    <label for="marca_pro">Marca <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="marca_pro" id="marca_pro" class="form-control"  placeholder="Marca." />
+                                  </div>
+                                </div>
+
+                                <!-- ContenidoNeto -->
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                  <div class="form-group">
+                                    <label for="contenido_neto_pro">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="contenido_neto_pro" id="contenido_neto_pro" class="form-control" placeholder="Contenido Neto." />
                                   </div>
                                 </div>
 
                                 <!--Precio U-->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="precio_unitario">Precio <sup class="text-danger">*</sup></label>
-                                    <input type="text" name="precio_unitario"  value="0" class="form-control" readonly id="precio_unitario" />
+                                    <label for="precio_unitario_pro">Precio <sup class="text-danger">*</sup></label>
+                                    <input type="text" name="precio_unitario_pro" id="precio_unitario_pro" value="0" class="form-control" readonly />
                                   </div>
                                 </div>
 
-                                  <!-- Nombre -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <!-- Stock -->
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
                                   <div class="form-group">
-                                    <label for="contenido_neto">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="contenido_neto" class="form-control" id="contenido_neto" placeholder="Contenido Neto." />
+                                    <label for="stock_pro">Stock: </label>
+                                    <input type="text" name="stock_pro" id="stock_pro" value="0" class="form-control" readonly="readonly">                                  
                                   </div>
                                 </div>
 
-
-                                <!--Descripción-->
+                                <!-- Descripcion -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
-                                    <label for="descripcion">Descripción </label> <br />
-                                    <textarea name="descripcion" id="descripcion" class="form-control" rows="2"></textarea>
+                                    <label for="descripcion_pro">Descripción </label> <br />
+                                    <textarea name="descripcion_pro" id="descripcion_pro" class="form-control" rows="2"></textarea>
                                   </div>
                                 </div>
-                                 
+
+                                <!--imagen-material-->
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                  <label for="foto2">Imagen</label>
+                                  <div style="text-align: center;">
+                                    <img onerror="this.src='../dist/img/default/img_defecto_producto.jpg';" src="../dist/img/default/img_defecto_producto.jpg" class="img-thumbnail"
+                                      id="foto2_i" style="cursor: pointer !important; height: 100% !important;" width="auto" />
+                                    <input style="display: none;" type="file" name="foto2" id="foto2" accept="image/*" />
+                                    <input type="hidden" name="foto2_actual" id="foto2_actual" />
+                                    <div class="text-center" id="foto2_nombre"><!-- aqui va el nombre de la FOTO --></div>
+                                  </div>
+                                </div>
+                                
                                 <!-- barprogress -->
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
                                   <div class="progress" id="barra_progress_div">
@@ -1223,7 +1219,6 @@
                                 </div>
 
                               </div>
-
 
                               <div class="row" id="cargando-10-fomulario" style="display: none;">
                                 <div class="col-lg-12 text-center">

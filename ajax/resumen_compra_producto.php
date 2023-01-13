@@ -16,7 +16,7 @@
       require_once "../modelos/Producto.php";
 
       $resumen_producto = new ResumenCompraProducto();
-      $producto = new Producto();
+      $producto = new Producto($_SESSION['idusuario']);
 
       date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
       $imagen_error = "this.src='../dist/svg/404-v2.svg'";

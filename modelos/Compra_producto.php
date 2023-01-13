@@ -11,22 +11,18 @@ class Compra_producto
 
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::::::::::::::::: 
   //Implementamos un método para insertar registros
-  public function insertar( $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+  public function insertar( $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
   $total_compra, $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv, 
-  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
+  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {    
 
-    $sql_1 = "SELECT numero_documento FROM persona WHERE idpersona ='$idproveedor';";
-    $proveedor = ejecutarConsultaSimpleFila($sql_1);  if ($proveedor['status'] == false) { return  $proveedor;}
-
-    $ruc = $proveedor['data']['numero_documento'];
-
-    $sql_2 = "SELECT  cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.igv, cp.total, p.numero_documento, p.tipo_documento,p.nombres
+    // buscamos al si la FACTURA existe
+    $sql_2 = "SELECT  cp.fecha_compra, cp.tipo_comprobante, cp.serie_comprobante, cp.igv, cp.total, cp.estado, cp.estado_delete, 
+    p.nombres, p.numero_documento, p.tipo_documento
     FROM compra_producto as cp, persona as p 
-    WHERE cp.tipo_comprobante ='$tipo_comprobante' AND cp.serie_comprobante = '$serie_comprobante' AND p.numero_documento='$ruc'";
+    WHERE cp.idpersona = p.idpersona AND cp.tipo_comprobante ='$tipo_comprobante' AND cp.serie_comprobante = '$serie_comprobante' AND p.numero_documento='$num_doc'";
     $compra_existe = ejecutarConsultaArray($sql_2); if ($compra_existe['status'] == false) { return  $compra_existe;}
 
     if (empty($compra_existe['data']) || $tipo_comprobante == 'Ninguno') {
-
      
       $sql_3 = "INSERT INTO compra_producto(idpersona, fecha_compra, tipo_comprobante, serie_comprobante, val_igv, subtotal, igv, total,tipo_gravada, descripcion) 
       VALUES ('$idproveedor','$fecha_compra','$tipo_comprobante','$serie_comprobante','$val_igv','$subtotal_compra','$igv_compra','$total_compra','$tipo_gravada','$descripcion')";
@@ -55,7 +51,7 @@ class Compra_producto
           $compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($compra_new['status'] == false) { return  $compra_new;}
 
           //add update table producto el stock
-          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]', precio_unitario='$precio_venta[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
+          $sql_producto = "UPDATE producto SET stock = stock + '$cantidad[$num_elementos]', precio_unitario='$precio_venta[$num_elementos]', precio_compra_actual='$precio_con_igv[$num_elementos]' WHERE idproducto = '$idproducto[$num_elementos]'";
           $producto = ejecutarConsulta($sql_producto); if ($producto['status'] == false) { return  $producto;}
 
           //add registro en nuestra bitacora.
@@ -74,11 +70,10 @@ class Compra_producto
       foreach ($compra_existe['data'] as $key => $value) {
         $info_repetida .= '<li class="text-left font-size-13px">
           <b class="font-size-18px text-danger">'.$value['tipo_comprobante'].': </b> <span class="font-size-18px text-danger">'.$value['serie_comprobante'].'</span><br>
-          <b>Razón Social: </b>'.$value['razon_social'].'<br>
-          <b>'.$value['tipo_documento'].': </b>'.$value['ruc'].'<br>          
+          <b>Razón Social: </b>'.$value['nombres'].'<br>
+          <b>'.$value['tipo_documento'].': </b>'.$value['numero_documento'].'<br>          
           <b>Fecha: </b>'.format_d_m_a($value['fecha_compra']).'<br>
-          <b>Total: </b>'.number_format($value['total'], 2, '.', ',').'<br>
-          <b>Glosa: </b>'.$value['glosa'].'<br>
+          <b>Total: </b>S/ '.number_format($value['total'], 2, '.', ',').'<br>
           <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .' <b>|</b> 
           <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
           <hr class="m-t-2px m-b-2px">
@@ -89,7 +84,7 @@ class Compra_producto
   }
 
   //Implementamos un método para editar registros
-  public function editar( $idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
+  public function editar( $idcompra_producto, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, $total_venta, 
   $subtotal_compra, $igv_compra,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv,  $precio_con_igv,$precio_venta, $descuento, $tipo_gravada) {
 
     if ( !empty($idcompra_producto) ) {

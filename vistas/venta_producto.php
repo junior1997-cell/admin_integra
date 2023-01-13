@@ -170,6 +170,7 @@
                                   <th>Tipo Comprobante</th>
                                   <th>Num. Comprobante</th>
                                   <th>Pagos</th>
+                                  <th>Utilidad</th>
                                 </tr>
                               </thead>
                               <tbody></tbody>
@@ -191,6 +192,7 @@
                                   <th>Tipo Comprobante</th>
                                   <th>Num. Comprobante</th>
                                   <th>Pagos</th>
+                                  <th>Utilidad</th>
                                 </tr>
                               </tfoot>
                             </table>
@@ -262,14 +264,16 @@
                                 <div class="row" id="cargando-1-fomulario">
                                   <!-- id compra_producto  -->
                                   <input type="hidden" name="idventa_producto" id="idventa_producto" />
-                                  <!-- Grupos de -->
+                                  <input type="hidden" name="num_doc" id="num_doc" /> 
+
+                                  <!-- no se usa -->
                                   <div style="display: none !important;" id="add-productos-eliminados"> </div>
 
                                   <!-- Tipo de Empresa -->
                                   <div class="col-lg-5">
                                     <div class="form-group">
                                       <label for="idcliente">Agricultor <sup class="text-danger">(único*)</sup></label>
-                                      <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                      <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc('#idcliente', '#num_doc');"> </select>
                                     </div>
                                   </div> 
 
@@ -502,10 +506,11 @@
 
                               <div class="row" id="cargando-11-fomulario">
                                 <!-- id persona -->
-                                <input type="hidden" name="idpersona_per" id="idpersona_per" />
+                                <input type="hidden" name="idpersona_per" id="idpersona_per" />                                
+
                                 <!-- tipo persona  -->
-                                <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" />
-                                <input type="hidden" name="cargo_trabajador_per" id="cargo_trabajador_per">
+                                <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="2" />
+                                <input type="hidden" name="cargo_trabajador_per" id="cargo_trabajador_per" value="1">
                                 <input type="hidden" name="sueldo_mensual_per" id="sueldo_mensual_per">
                                 <input type="hidden" name="sueldo_diario_per" id="sueldo_diario_per">
 
@@ -609,19 +614,19 @@
                                 <!-- Titular de la cuenta -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                   <div class="form-group">
-                                    <label for="titular_cuenta">Titular de la cuenta</label>
-                                    <input type="text" name="titular_cuenta" class="form-control" id="titular_cuenta" placeholder="Titular de la cuenta" />
+                                    <label for="titular_cuenta_per">Titular de la cuenta</label>
+                                    <input type="text" name="titular_cuenta_per" class="form-control" id="titular_cuenta_per" placeholder="Titular de la cuenta" />
                                   </div>
                                 </div>                               
 
                                 <!-- Swichs permanente -->
                                 <div class="col-4 col-sm-5 col-md-6 col-lg-3 classswichs">
-                                  <label for="socio_per">Es socio ? <small class="text-danger text-bold sino">(NO)</small> </label>
+                                  <label for="socio_per">Es socio ? <small class="text-danger text-bold sino_per">(NO)</small> </label>
                                   <div class="switch-toggle">
                                     <input type="checkbox" id="socio_per" >
                                     <label for="socio_per" onclick="habilitando_socio();" onchange="habilitando_socio();"></label>
                                   </div>
-                                  <input type="hidden" name="input_socio" id="input_socio" value="0"  >
+                                  <input type="hidden" name="input_socio_per" id="input_socio_per" value="0"  >
                                 </div>
 
                                 <!-- Direccion -->
@@ -678,9 +683,9 @@
                       <div class="modal-content">
                         <div class="modal-header">
                           <h4 class="modal-title "> 
-                            <a data-toggle="modal" data-target="#modal-agregar-productos">
+                            <!-- <a data-toggle="modal" data-target="#modal-agregar-productos">
                               <button id="btnAgregarArt" type="button" class="btn btn-success" onclick="limpiar_producto()"><span class="fa fa-plus"></span> Crear Productos</button>
-                            </a>
+                            </a> -->
                             Seleccionar producto
                           </h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -972,87 +977,99 @@
                           <form id="form-producto" name="form-producto" method="POST">
                             <div class="card-body">
                               <div class="row" id="cargando-9-fomulario">
+      
                                 <!-- id proveedores -->
-                                <input type="hidden" name="idproducto_p" id="idproducto_p" />
-                                
+                                <input type="hidden" name="idproducto_pro" id="idproducto_pro" />
                                 <!-- cont registro -->
-                                <input type="hidden" name="cont" id="cont" />   
+                                <input type="hidden" name="cont" id="cont" />
+                                
                                 <!-- Nombre -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
-                                    <label for="nombre_producto_p">Nombre <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="nombre_producto_p" class="form-control" id="nombre_producto_p" placeholder="Nombre del Producto." />
+                                    <label for="nombre_producto_pro">Nombre <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="nombre_producto_pro" class="form-control" id="nombre_producto_pro" placeholder="Nombre del Insumo." />
                                   </div>
                                 </div>
 
                                 <!-- Categoria -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="categoria_producto_p">Categoria <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="categoria_producto_p" id="categoria_producto_p" class="form-control select2" style="width: 100%;"> 
+                                    <label for="categoria_producto_pro">Categoria <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="categoria_producto_pro" id="categoria_producto_pro" class="form-control select2" style="width: 100%;"> 
                                     </select>
                                   </div>
-                                </div>   
-                                
-                                <!-- Stock -->
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
-                                  <div class="form-group">
-                                    <label for="stock_p">Stock: </label>
-                                    <input type="text" name="stock_p" value="0" id="stock_p" class="form-control" readonly="readonly">                                  
-                                  </div>
-                                </div>
+                                </div>                                  
 
                                 <!-- Unnidad de medida-->
                                 <div class="col-12 col-sm-6 col-md-6 col-lg-6" >
                                   <div class="form-group">
-                                    <label for="Unidad_medida_p">Unidad medida <sup class="text-danger">(unico*)</sup></label>
-                                    <select name="unidad_medida_p" id="unidad_medida_p" class="form-control select2" style="width: 100%;"> </select>
+                                    <label for="unidad_medida_pro">Unidad medida <sup class="text-danger">(unico*)</sup></label>
+                                    <select name="unidad_medida_pro" id="unidad_medida_pro" class="form-control select2" style="width: 100%;"> </select>
                                   </div>
                                 </div>
 
                                 <!-- Marca -->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="marca_p">Marca <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="marca_p" class="form-control" id="marca_p" placeholder="Marca." />
+                                    <label for="marca_pro">Marca <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="marca_pro" id="marca_pro" class="form-control"  placeholder="Marca." />
                                   </div>
-                                </div> 
+                                </div>
+
+                                <!-- ContenidoNeto -->
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                  <div class="form-group">
+                                    <label for="contenido_neto_pro">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
+                                    <input type="text" name="contenido_neto_pro" id="contenido_neto_pro" class="form-control" placeholder="Contenido Neto." />
+                                  </div>
+                                </div>
 
                                 <!--Precio U-->
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                   <div class="form-group">
-                                    <label for="precio_unitario_p">Precio <sup class="text-danger">*</sup></label>
-                                    <input type="text" name="precio_unitario_p"  value="0" class="form-control" readonly id="precio_unitario_p" />
+                                    <label for="precio_unitario_pro">Precio <sup class="text-danger">*</sup></label>
+                                    <input type="text" name="precio_unitario_pro" id="precio_unitario_pro" value="0" class="form-control" readonly />
                                   </div>
                                 </div>
 
-                                <!-- Contenido Neto -->
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                <!-- Stock -->
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6x">
                                   <div class="form-group">
-                                    <label for="contenido_neto_p">Contenido Neto <sup class="text-danger">(unico*)</sup></label>
-                                    <input type="text" name="contenido_neto_p" class="form-control" id="contenido_neto_p" placeholder="Contenido Neto." />
+                                    <label for="stock_pro">Stock: </label>
+                                    <input type="text" name="stock_pro" id="stock_pro" value="0" class="form-control" readonly="readonly">                                  
                                   </div>
                                 </div>
 
-                                <!--Descripción-->
+                                <!-- Descripcion -->
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                   <div class="form-group">
-                                    <label for="descripcion_p">Descripción </label> <br />
-                                    <textarea name="descripcion_p" id="descripcion_p" class="form-control" rows="2"></textarea>
+                                    <label for="descripcion_pro">Descripción </label> <br />
+                                    <textarea name="descripcion_pro" id="descripcion_pro" class="form-control" rows="2"></textarea>
                                   </div>
                                 </div>
-                                 
+
+                                <!--imagen-material-->
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                  <label for="foto2">Imagen</label>
+                                  <div style="text-align: center;">
+                                    <img onerror="this.src='../dist/img/default/img_defecto_producto.jpg';" src="../dist/img/default/img_defecto_producto.jpg" class="img-thumbnail"
+                                      id="foto2_i" style="cursor: pointer !important; height: 100% !important;" width="auto" />
+                                    <input style="display: none;" type="file" name="foto2" id="foto2" accept="image/*" />
+                                    <input type="hidden" name="foto2_actual" id="foto2_actual" />
+                                    <div class="text-center" id="foto2_nombre"><!-- aqui va el nombre de la FOTO --></div>
+                                  </div>
+                                </div>
+                                
                                 <!-- barprogress -->
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top:20px;">
-                                  <div class="progress" id="barra_progress_producto_div">
-                                    <div id="barra_progress_producto" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
+                                  <div class="progress" id="barra_progress_div">
+                                    <div id="barra_progress" class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 0%;">
                                       0%
                                     </div>
                                   </div>
                                 </div>
 
                               </div>
-
 
                               <div class="row" id="cargando-10-fomulario" style="display: none;">
                                 <div class="col-lg-12 text-center">

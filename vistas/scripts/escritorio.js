@@ -5,6 +5,7 @@ function init() {
   $('#mEscritorio').addClass("active");
 
   tablero();
+  sumas_totales();
 
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
 
@@ -35,7 +36,23 @@ function tablero() {
   }).fail( function(e) { ver_errores(e); } );
 }
 
+function sumas_totales() {   
 
+  $.post("../ajax/escritorio.php?op=sumas_totales",  function (e, status) {
+
+    e = JSON.parse(e);  console.log(e);
+
+    if (e.status == true) {
+      $(".footer_total_venta").html(formato_miles(e.data.total_venta));
+      $(".footer_total_utilidad").html(formato_miles(e.data.total_utilidad));
+      $(".footer_total_compra").html(formato_miles(e.data.total_compra));
+      $(".footer_total_deuda").html(formato_miles(e.data.total_deposito_compra));
+    } else {
+      ver_errores(e);
+    } 
+
+  }).fail( function(e) { ver_errores(e); } );
+}
 
 init();
 

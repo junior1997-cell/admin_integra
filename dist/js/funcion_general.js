@@ -1207,8 +1207,8 @@ function buscar_sunat_reniec(input='') {
           $(`#charge${input}`).hide();
 
           $(`#nombre${input}`).val(''); $(`#titular_cuenta${input}`).val('');
-  
-          toastr.error("Verifique su conexion a internet o el sistema de BUSQUEDA esta en mantenimiento.");
+          
+          toastr_error('Error!!', 'Verifique su conexion a internet o el sistema de BUSQUEDA esta en mantenimiento.', 700);
           
         } else {
           if (data.success == false) {
@@ -1217,8 +1217,7 @@ function buscar_sunat_reniec(input='') {
 
             $(`#charge${input}`).hide();
 
-            toastr.error("Es probable que el sistema de busqueda esta en mantenimiento o los datos no existe en la RENIEC!!!");
-
+            toastr_error('Error de búsqueda!!', 'Es probable que el sistema de busqueda esta en mantenimiento o los datos no existe en la RENIEC!!!', 700);
           } else {
 
             $(`#search${input}`).show();
@@ -1228,7 +1227,7 @@ function buscar_sunat_reniec(input='') {
             $(`#nombre${input}`).val(data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno);
             $(`#titular_cuenta${input}`).val(data.nombres + " " + data.apellidoPaterno + " " + data.apellidoMaterno);
 
-            toastr.success("Persona encontrada!!!!");
+            toastr_success('Éxito!!!', 'Persona encontrada!!!', 700);
           }
         }
         
@@ -1243,7 +1242,7 @@ function buscar_sunat_reniec(input='') {
 
       $(`#nombre${input}`).val(''); $(`#titular_cuenta${input}`).val('');
 
-      toastr.info("Asegurese de que el DNI tenga 8 dígitos!!!");
+      toastr_info('Alerta!!', 'Asegurese de que el DNI tenga 8 dígitos!!!', 700);
     }
   } else {
     if (tipo_doc == "RUC") {
@@ -1258,7 +1257,8 @@ function buscar_sunat_reniec(input='') {
     
             $(`#charge${input}`).hide();
     
-            toastr.error("Verifique su conexion a internet o el sistema de BUSQUEDA esta en mantenimiento.");
+            toastr.error("");
+            toastr_error('Error!!', 'Verifique su conexion a internet o el sistema de BUSQUEDA esta en mantenimiento.', 700);
             
           } else {
 
@@ -1270,7 +1270,7 @@ function buscar_sunat_reniec(input='') {
 
               $(`#nombre${input}`).val(''); $(`#titular_cuenta${input}`).val('');  $(`#empresa${input}`).val('');  $(`#razon_social${input}`).val(''); $(`#direccion${input}`).val('');
 
-              toastr.error("Datos no encontrados en la SUNAT!!!");
+              toastr_error('Error de búsqueda', 'Datos no encontrados en la SUNAT!!!', 700);
               
             } else {
 
@@ -1293,11 +1293,12 @@ function buscar_sunat_reniec(input='') {
                 data.direccion == null ? $(`#direccion${input}`).val(`${departamento} - ${provincia} - ${distrito}`) : $(`#direccion${input}`).val(data.direccion);
                 data.direccion == null ? $(`#ubicacion${input}`).val(`${departamento} - ${provincia} - ${distrito}`) : $(`#ubicacion${input}`).val(data.direccion);
 
-                toastr.success("Datos encontrados!!");
+                toastr.success("");
+                toastr_success('', 'Datos encontrados!!', 700);
 
               } else {
 
-                toastr.info("Se recomienda NO generar FACTURAS ó BOLETAS!!!");
+                toastr_info('Alerta!!', 'Se recomienda NO generar FACTURAS ó BOLETAS!!!', 700);
 
                 $(`#search${input}`).show();
 
@@ -1328,7 +1329,7 @@ function buscar_sunat_reniec(input='') {
 
         $(`#nombre${input}`).val(''); $(`#titular_cuenta${input}`).val('');  $(`#empresa${input}`).val('');  $(`#razon_social${input}`).val(''); $(`#direccion${input}`).val('');
 
-        toastr.info("Asegurese de que el RUC tenga 11 dígitos!!!");
+        toastr_info('Alerta!!', 'Asegurese de que el RUC tenga 11 dígitos!!!', 700);
       }
     } else {
       if (tipo_doc == "CEDULA" || tipo_doc == "OTRO") {
@@ -1337,7 +1338,7 @@ function buscar_sunat_reniec(input='') {
 
         $(`#charge${input}`).hide();
 
-        toastr.info("No necesita hacer consulta");
+        toastr_info('Alerta!!', 'No necesita hacer consulta.', 700);
 
       } else {
 
@@ -1346,8 +1347,8 @@ function buscar_sunat_reniec(input='') {
         $(`#search${input}`).show();
 
         $(`#charge${input}`).hide();
-
-        toastr.error("Selecione un tipo de documento");
+        
+        toastr_error('Error!!', 'Selecione un tipo de documento.', 700);
       }
     }
   }
@@ -1616,4 +1617,24 @@ function quitar_igv_del_precio(precio , igv, tipo ) {
   } 
   
   return precio_sin_igv; 
+}
+
+// Extrae el numero de documento de un SELECT2
+function extrae_ruc(select = null, input = null) {
+  $(input).val('');
+  if (select) {
+    if ($(select).select2("val") == null || $(select).select2("val") == '') { 
+      $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','Seleciona un proveedor');
+    } else if ($(select).select2("val") == 1) {    
+      $('.btn-editar-proveedor').addClass('disabled').attr('data-original-title','No editable');      
+    } else{
+      var name_proveedor = $(select).select2('data')[0].text;
+      $('.btn-editar-proveedor').removeClass('disabled').attr('data-original-title',`Editar: ${recorte_text(name_proveedor, 15)}`);
+
+      // guardamos el numero de documento selecionado
+      if (input) { $(input).val($(select).select2('data')[0].element.attributes.ruc_dni.value ); }         
+    }
+  }
+  
+  $('[data-toggle="tooltip"]').tooltip();
 }

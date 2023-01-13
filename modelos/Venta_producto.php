@@ -13,20 +13,16 @@ class Venta_producto
   
   // ::::::::::::::::::::::::::::::::::::::::: S E C C I O N   C O M P R A  ::::::::::::::::::::::::::::::::::::::::: 
   //Implementamos un método para insertar registros
-  public function insertar( $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+  public function insertar( $idcliente, $num_doc, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
   $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
   $total_compra, $subtotal_compra, $igv_venta,  $idproducto, $unidad_medida, $categoria, $cantidad, $precio_sin_igv, $precio_igv, 
-  $precio_con_igv, $descuento, $tipo_gravada) {
+  $precio_con_igv, $precio_compra, $descuento, $tipo_gravada) {
 
-    $sql_1 = "SELECT numero_documento FROM persona WHERE idpersona ='$idcliente';";
-    $proveedor = ejecutarConsultaSimpleFila($sql_1);  if ($proveedor['status'] == false) { return  $proveedor;}
-
-    $ruc = $proveedor['data']['numero_documento'];
-
+    // buscamos al si la FACTURA existe
     $sql_2 = "SELECT  vp.fecha_venta, vp.tipo_comprobante, vp.serie_comprobante, vp.igv, vp.total, p.numero_documento, 
     p.tipo_documento, p.nombres as razon_social,  vp.estado, vp.estado_delete, vp.metodo_pago
     FROM venta_producto as vp, persona as p 
-    WHERE vp.idpersona = p.idpersona AND vp.tipo_comprobante ='$tipo_comprobante' AND vp.serie_comprobante = '$serie_comprobante' AND p.numero_documento='$ruc'";
+    WHERE vp.idpersona = p.idpersona AND vp.tipo_comprobante ='$tipo_comprobante' AND vp.serie_comprobante = '$serie_comprobante' AND p.numero_documento='$num_doc'";
     $venta_existe = ejecutarConsultaArray($sql_2); if ($venta_existe['status'] == false) { return  $venta_existe;}
 
     if (empty($venta_existe['data']) || $tipo_comprobante == 'Ninguno') {
@@ -71,9 +67,9 @@ class Venta_producto
           $subtotal_producto = (floatval($cantidad[$i]) * floatval($precio_con_igv[$i])) - $descuento[$i];
 
           $sql_detalle = "INSERT INTO detalle_venta_producto(idventa_producto, idproducto, unidad_medida, categoria, cantidad, precio_sin_igv, igv, 
-          precio_con_igv, descuento, subtotal, user_created) 
+          precio_con_igv, precio_compra, descuento, subtotal, user_created) 
           VALUES ('$id','$idproducto[$i]', '$unidad_medida[$i]',  '$categoria[$i]', '$cantidad[$i]', '$precio_sin_igv[$i]', '$precio_igv[$i]', 
-          '$precio_con_igv[$i]', '$descuento[$i]', 
+          '$precio_con_igv[$i]', '$precio_compra[$i]', '$descuento[$i]', 
           '$subtotal_producto','$this->id_usr_sesion')";
           $compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($compra_new['status'] == false) { return  $compra_new;}
 
@@ -112,7 +108,7 @@ class Venta_producto
   }
 
   //Implementamos un método para editar registros
-  public function editar( $idventa_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+  public function editar( $idventa_producto, $idcliente, $num_doc, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
   $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
   $total_venta, $subtotal_compra, $igv_venta,  $idproducto, $unidad_medida, $categoria, $cantidad, $cantidad_old, $precio_sin_igv, $precio_igv,  $precio_con_igv, $descuento, $tipo_gravada) {
 
@@ -171,7 +167,7 @@ class Venta_producto
 
     $venta =  ejecutarConsultaSimpleFila($sql); if ($venta['status'] == false) {return $venta; }
 
-    $sql = "SELECT dvp.idproducto, dvp.unidad_medida, dvp.categoria, dvp.cantidad, dvp.precio_sin_igv, dvp.igv, dvp.precio_con_igv, 
+    $sql = "SELECT dvp.idproducto, dvp.unidad_medida, dvp.categoria, dvp.cantidad, dvp.precio_sin_igv, dvp.igv, dvp.precio_con_igv, p.precio_compra_actual as precio_compra,
     dvp.descuento, dvp.subtotal, p.nombre, p.imagen, cp.nombre as categoria, um.abreviatura
     FROM detalle_venta_producto as dvp, producto as p, categoria_producto as cp, unidad_medida as um
     WHERE dvp.idproducto =p.idproducto AND p.idcategoria_producto = cp.idcategoria_producto AND p.idunidad_medida = um.idunidad_medida AND dvp.idventa_producto ='$idventa_producto';";
@@ -276,6 +272,11 @@ class Venta_producto
       $sql_3 ="SELECT SUM(monto) as deposito FROM pago_venta_producto WHERE idventa_producto = '$id' AND estado ='1' AND estado_delete = '1'";
       $pagos = ejecutarConsultaSimpleFila($sql_3); if ($pagos['status'] == false) { return $pagos; }
 
+      $sql_4 ="SELECT SUM(dvp.subtotal - (dvp.cantidad * dvp.precio_compra)) as utilidad 
+      FROM detalle_venta_producto as dvp, venta_producto as vp 
+      WHERE dvp.idventa_producto = vp.idventa_producto AND dvp.idventa_producto = '$id' AND vp.estado ='1' AND vp.estado_delete='1' AND dvp.estado='1' AND dvp.estado_delete='1';";
+      $utilidad = ejecutarConsultaSimpleFila($sql_4); if ($utilidad['status'] == false) { return $utilidad; }
+
       $data[] = [
         'idventa_producto'  => $value['idventa_producto'],
         'idpersona'         => $value['idpersona'],
@@ -292,6 +293,7 @@ class Venta_producto
         'val_igv'           => $value['val_igv'],
         'igv'               => $value['igv'],
         'total'             => $value['total'],
+        'utilidad'          => (empty($utilidad['data']) ? 0 : (empty($utilidad['data']['utilidad']) ? 0 : floatval($utilidad['data']['utilidad']) ) ),
         'metodo_pago'       => $value['metodo_pago'],
         'estado'            => $value['estado'],
         'total_pago'        => (empty($pagos['data']) ? 0 : (empty($pagos['data']['deposito']) ? 0 : floatval($pagos['data']['deposito']) ) ),

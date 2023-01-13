@@ -163,16 +163,16 @@
                                   <div class="col-lg-12 borde-arriba-naranja mt-3 mb-3"> </div>
 
                                   <div class="col-md-6">
-                                    <p class="text-center"> <strong>Utilidad Total</strong> </p>
+                                    <p class="text-center"> <strong>Venta Total</strong> </p>
                                     <div class="progress-group text-center mb-4">
-                                      <h2 class="progress_total_utilidad_subcontrato" >S/. 700.00</h2>
+                                      <h2 class="footer_total_venta" >S/. 0.00</h2>
                                     </div>
                                     <!-- /.progress-group -->                                    
                                   </div>                                  
                                   <div class="col-md-6">
-                                    <p class="text-center"> <strong>Subcontrato</strong> </p>
+                                    <p class="text-center"> <strong>Utilidad Total</strong> </p>
                                     <div class="progress-group text-center">
-                                      <h2 class="progress_total_subcontrato" >S/. 100.00</h2>
+                                      <h2 class="footer_total_utilidad" >S/. 0.00</h2>
                                     </div>
                                     <!-- /.progress-group -->
                                   </div>
@@ -208,16 +208,16 @@
                                   <div class="col-lg-12 borde-arriba-naranja mt-3 mb-3"> </div>
 
                                   <div class="col-md-6">
-                                    <p class="text-center"> <strong>Gastos Total</strong> </p>
+                                    <p class="text-center"> <strong>Compra Total</strong> </p>
                                     <div class="progress-group text-center mb-4">
-                                      <h2 class="progress_total_utilidad_subcontrato" >S/. 500.00</h2>
+                                      <h2 class="footer_total_compra" >S/. 0.00</h2>
                                     </div>
                                     <!-- /.progress-group -->                                    
                                   </div>                                  
                                   <div class="col-md-6">
-                                    <p class="text-center"> <strong>Ingresos</strong> </p>
+                                    <p class="text-center"> <strong>Deuda Total</strong> </p>
                                     <div class="progress-group text-center">
-                                      <h2 class="progress_total_subcontrato" >S/. 1,500.00</h2>
+                                      <h2 class="footer_total_deuda" >S/. 0.00</h2>
                                     </div>
                                     <!-- /.progress-group -->
                                   </div>

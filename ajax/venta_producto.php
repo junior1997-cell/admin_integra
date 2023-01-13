@@ -17,7 +17,7 @@ if (!isset($_SESSION["nombre"])) {
 
     $venta_producto = new Venta_producto($_SESSION['idusuario']);
     $persona = new Persona();
-    $productos = new Producto();      
+    $producto = new Producto($_SESSION['idusuario']);      
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
@@ -25,8 +25,9 @@ if (!isset($_SESSION["nombre"])) {
     $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   V E N T A ::::::::::::::::::::::::::::::::::::::
-    $idventa_producto  = isset($_POST["idventa_producto"]) ? limpiarCadena($_POST["idventa_producto"]) : "";
+    $idventa_producto   = isset($_POST["idventa_producto"]) ? limpiarCadena($_POST["idventa_producto"]) : "";
     $idcliente          = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
+    $num_doc            = isset($_POST["num_doc"]) ? limpiarCadena($_POST["num_doc"]) : "";
     $fecha_venta        = isset($_POST["fecha_venta"]) ? limpiarCadena($_POST["fecha_venta"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
     $serie_comprobante  = isset($_POST["serie_comprobante"]) ? limpiarCadena($_POST["serie_comprobante"]) : "";
@@ -55,16 +56,15 @@ if (!isset($_SESSION["nombre"])) {
     $doc_comprobante          = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
     $doc_old_1                = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
 
-    // :::::::::::::::::::::::::::::::::::: D A T O S   M A T E R I A L E S ::::::::::::::::::::::::::::::::::::::
-    $idproducto_p            = isset($_POST["idproducto_p"]) ? limpiarCadena($_POST["idproducto_p"]) : "" ;
-    $idcategoria_producto_p  = isset($_POST["categoria_producto_p"]) ? limpiarCadena($_POST["categoria_producto_p"]) : "" ;
-    $unidad_medida_p         = isset($_POST["unidad_medida_p"]) ? limpiarCadena($_POST["unidad_medida_p"]) : "" ;
-    $nombre_producto_p       = isset($_POST["nombre_producto_p"]) ? encodeCadenaHtml($_POST["nombre_producto_p"]) : "" ;
-    $marca_p                 = isset($_POST["marca_p"]) ? encodeCadenaHtml($_POST["marca_p"]) : "" ;
-    $contenido_neto_p        = isset($_POST["contenido_neto_p"]) ? limpiarCadena($_POST["contenido_neto_p"]) : "" ;
-    $descripcion_p           = isset($_POST["descripcion_p"]) ? encodeCadenaHtml($_POST["descripcion_p"]) : "" ;
-
-    $imagen1 = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
+    // :::::::::::::::::::::::::::::::::::: D A T O S   P R O D U C T O  ::::::::::::::::::::::::::::::::::::::
+    $idproducto_pro           = isset($_POST["idproducto_pro"]) ? limpiarCadena($_POST["idproducto_pro"]) : "" ;
+    $idcategoria_producto_pro = isset($_POST["categoria_producto_pro"]) ? limpiarCadena($_POST["categoria_producto_pro"]) : "" ;
+    $unidad_medida_pro        = isset($_POST["unidad_medida_pro"]) ? limpiarCadena($_POST["unidad_medida_pro"]) : "" ;
+    $nombre_producto_pro      = isset($_POST["nombre_producto_pro"]) ? encodeCadenaHtml($_POST["nombre_producto_pro"]) : "" ;
+    $marca_pro                = isset($_POST["marca_pro"]) ? encodeCadenaHtml($_POST["marca_pro"]) : "" ;
+    $contenido_neto_pro       = isset($_POST["contenido_neto_pro"]) ? limpiarCadena($_POST["contenido_neto_pro"]) : "" ;
+    $descripcion_pro          = isset($_POST["descripcion_pro"]) ? encodeCadenaHtml($_POST["descripcion_pro"]) : "" ;
+    $imagen2                  = isset($_POST["foto2"]) ? limpiarCadena($_POST["foto2"]) : "" ;
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   A G R I C U L T O R ::::::::::::::::::::::::::::::::::::::
     $idpersona_per	  	  = isset($_POST["idpersona_per"])? limpiarCadena($_POST["idpersona_per"]):"";
@@ -96,24 +96,40 @@ if (!isset($_SESSION["nombre"])) {
       
       // :::::::::::::::::::::::::: S E C C I O N   P R O D U C T O S ::::::::::::::::::::::::::
       case 'guardar_y_editar_productos':
-    
-        if (empty($idproducto_p)) {
-          $rspta = $productos->insertar($idcategoria_producto_p, $unidad_medida_p, $nombre_producto_p, $marca_p, $contenido_neto_p, $descripcion_p, $imagen1 );
-            
+        // imagen
+        if (!file_exists($_FILES['foto2']['tmp_name']) || !is_uploaded_file($_FILES['foto2']['tmp_name'])) {
+          $imagen2 = $_POST["foto2_actual"];
+          $flat_img2 = false;
+        } else {
+          $ext1 = explode(".", $_FILES["foto2"]["name"]);
+          $flat_img2 = true;
+          $imagen2 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
+          move_uploaded_file($_FILES["foto2"]["tmp_name"], "../dist/docs/producto/img_perfil/" . $imagen2);
+        }
+
+        if (empty($idproducto_pro)) {
+
+          $rspta = $producto->insertar($idcategoria_producto_pro, $unidad_medida_pro, $nombre_producto_pro, $marca_pro, $contenido_neto_pro, $descripcion_pro, $imagen2 );            
           echo json_encode( $rspta, true);
     
         } else {
+
+          // validamos si existe LA IMG para eliminarlo          
+          if ($flat_img2 == true) {
+            $datos_f1 = $producto->obtenerImg($idproducto_pro);
+            $img2_ant = $datos_f1['data']->fetch_object()->imagen;
+            if ( !empty( $img2_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img2_ant); }
+          }
             
-          $rspta = $productos->editar($idproducto_p, $idcategoria_producto_p, $unidad_medida_p, $nombre_producto_p, $marca_p, $contenido_neto_p, $descripcion_p, $imagen1 );
-            
-          echo json_encode( $rspta, true) ;
+          $rspta = $producto->editar($idproducto_pro, $idcategoria_producto_pro, $unidad_medida_pro, $nombre_producto_pro, $marca_pro, $contenido_neto_pro, $descripcion_pro, $imagen2 );            
+          echo json_encode( $rspta, true);
         }
     
       break;
     
       case 'mostrar_productos':
     
-        $rspta = $productos->mostrar($idproducto);
+        $rspta = $producto->mostrar($idproducto_pro);
         echo json_encode($rspta, true);
     
       break;
@@ -129,7 +145,7 @@ if (!isset($_SESSION["nombre"])) {
           move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);          
         }
 
-        if (empty($idpersona)){
+        if (empty($idpersona_per)){
 
           $rspta=$persona->insertar($id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
             $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
@@ -139,7 +155,7 @@ if (!isset($_SESSION["nombre"])) {
         }else{
           // validamos si existe LA IMG para eliminarlo
           if ($flat_img1 == true) {
-            $datos_f1 = $persona->obtenerImg($idpersona);
+            $datos_f1 = $persona->obtenerImg($idpersona_per);
             $img1_ant = $datos_f1['data']['foto_perfil'];
             if ( !empty($img1_ant) ) { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
           }           
@@ -164,19 +180,19 @@ if (!isset($_SESSION["nombre"])) {
 
         if (empty($idventa_producto)) {
           
-          $rspta = $venta_producto->insertar($idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $venta_producto->insertar($idcliente, $num_doc, $fecha_venta, $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
           $total_venta, $subtotal_compra, $igv_venta,  $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
+          $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"], $_POST["precio_con_igv"], $_POST["precio_compra"], $_POST["descuento"], 
           $tipo_gravada);
 
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $venta_producto->editar( $idventa_producto, $idcliente, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $venta_producto->editar( $idventa_producto, $idcliente, $num_doc, $fecha_venta,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $metodo_pago, $fecha_proximo_pago, $monto_pago_compra,
           $total_venta, $subtotal_compra, $igv_venta,  $_POST["idproducto"], $_POST["unidad_medida"], 
-          $_POST["categoria"], $_POST["cantidad"], $_POST["cantidad_old"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["descuento"], 
+          $_POST["categoria"], $_POST["cantidad"], $_POST["cantidad_old"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST["precio_compra"], $_POST["descuento"], 
           $tipo_gravada);
     
           echo json_encode($rspta, true);
@@ -246,6 +262,7 @@ if (!isset($_SESSION["nombre"])) {
               "12" => $reg['tipo_comprobante'],
               "13" => $reg['serie_comprobante'],
               "14" => $reg['total_pago'],
+              "15" => $reg['utilidad'],
             ];
             $cont++;
           }

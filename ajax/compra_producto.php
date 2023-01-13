@@ -15,19 +15,18 @@ if (!isset($_SESSION["nombre"])) {
     require_once "../modelos/Persona.php";
     require_once "../modelos/Producto.php";
 
-    $compra_producto = new Compra_producto();
-    $proveedor = new Persona();
-    $productos = new Producto();      
+    $compra_producto  = new Compra_producto();
+    $persona          = new Persona();
+    $producto         = new Producto($_SESSION['idusuario']);      
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
-
     $scheme_host =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
-
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C O M P R A ::::::::::::::::::::::::::::::::::::::
     $idcompra_producto  = isset($_POST["idcompra_producto"]) ? limpiarCadena($_POST["idcompra_producto"]) : "";
     $idproveedor        = isset($_POST["idproveedor"]) ? limpiarCadena($_POST["idproveedor"]) : "";
+    $num_doc            = isset($_POST["num_doc"]) ? limpiarCadena($_POST["num_doc"]) : "";
     $fecha_compra       = isset($_POST["fecha_compra"]) ? limpiarCadena($_POST["fecha_compra"]) : "";
     $tipo_comprobante   = isset($_POST["tipo_comprobante"]) ? limpiarCadena($_POST["tipo_comprobante"]) : "";    
     $serie_comprobante  = isset($_POST["serie_comprobante"]) ? limpiarCadena($_POST["serie_comprobante"]) : "";
@@ -60,56 +59,80 @@ if (!isset($_SESSION["nombre"])) {
     $doc_comprobante               = isset($_POST["doc1"]) ? limpiarCadena($_POST["doc1"]) : "";
     $doc_old_1          = isset($_POST["doc_old_1"]) ? limpiarCadena($_POST["doc_old_1"]) : "";
 
-    // :::::::::::::::::::::::::::::::::::: D A T O S   M A T E R I A L E S ::::::::::::::::::::::::::::::::::::::
-    $idproducto_compra     = isset($_POST["idproducto_compra"]) ? limpiarCadena($_POST["idproducto_compra"]) : "" ;
-    $idcategoria_producto  = isset($_POST["categoria_producto"]) ? limpiarCadena($_POST["categoria_producto"]) : "" ;
-    $unidad_medida_compra  = isset($_POST["unidad_medida_compra"]) ? limpiarCadena($_POST["unidad_medida_compra"]) : "" ;
-    $nombre_producto       = isset($_POST["nombre_producto"]) ? encodeCadenaHtml($_POST["nombre_producto"]) : "" ;
-    $marca                 = isset($_POST["marca"]) ? encodeCadenaHtml($_POST["marca"]) : "" ;
-    $contenido_neto        = isset($_POST["contenido_neto"]) ? limpiarCadena($_POST["contenido_neto"]) : "" ;
-    $descripcion           = isset($_POST["descripcion"]) ? encodeCadenaHtml($_POST["descripcion"]) : "" ;
-
-    $imagen1 = isset($_POST["foto1"]) ? limpiarCadena($_POST["foto1"]) : "" ;
+    // :::::::::::::::::::::::::::::::::::: D A T O S   P R O D U C T O  ::::::::::::::::::::::::::::::::::::::
+    $idproducto_pro           = isset($_POST["idproducto_pro"]) ? limpiarCadena($_POST["idproducto_pro"]) : "" ;
+    $idcategoria_producto_pro = isset($_POST["categoria_producto_pro"]) ? limpiarCadena($_POST["categoria_producto_pro"]) : "" ;
+    $unidad_medida_pro        = isset($_POST["unidad_medida_pro"]) ? limpiarCadena($_POST["unidad_medida_pro"]) : "" ;
+    $nombre_producto_pro      = isset($_POST["nombre_producto_pro"]) ? encodeCadenaHtml($_POST["nombre_producto_pro"]) : "" ;
+    $marca_pro                = isset($_POST["marca_pro"]) ? encodeCadenaHtml($_POST["marca_pro"]) : "" ;
+    $contenido_neto_pro       = isset($_POST["contenido_neto_pro"]) ? limpiarCadena($_POST["contenido_neto_pro"]) : "" ;
+    $descripcion_pro          = isset($_POST["descripcion_pro"]) ? encodeCadenaHtml($_POST["descripcion_pro"]) : "" ;
+    $imagen2                  = isset($_POST["foto2"]) ? limpiarCadena($_POST["foto2"]) : "" ;
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   P R O V E E D O R ::::::::::::::::::::::::::::::::::::::
-    $idpersona	  	  = isset($_POST["idpersona"])? limpiarCadena($_POST["idpersona"]):"";
-    $id_tipo_persona  = isset($_POST["id_tipo_persona"])? limpiarCadena($_POST["id_tipo_persona"]):"";
-    $nombre 		      = isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
-    $tipo_documento 	= isset($_POST["tipo_documento"])? limpiarCadena($_POST["tipo_documento"]):"";
-    $num_documento  	= isset($_POST["num_documento"])? limpiarCadena($_POST["num_documento"]):"";
-    $input_socio     	= isset($_POST["input_socio"])? limpiarCadena($_POST["input_socio"]):"";
-    $direccion		    = isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
-    $telefono		      = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";     
-    $email			      = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-    $banco            = isset($_POST["banco"])? $_POST["banco"] :"";
+    $idpersona_per	  	  = isset($_POST["idpersona_per"])? limpiarCadena($_POST["idpersona_per"]):"";
+    $id_tipo_persona_per 	= isset($_POST["id_tipo_persona_per"])? limpiarCadena($_POST["id_tipo_persona_per"]):"";
+    $nombre_per 		      = isset($_POST["nombre_per"])? limpiarCadena($_POST["nombre_per"]):"";
+    $tipo_documento_per 	= isset($_POST["tipo_documento_per"])? limpiarCadena($_POST["tipo_documento_per"]):"";
+    $num_documento_per  	= isset($_POST["num_documento_per"])? limpiarCadena($_POST["num_documento_per"]):"";
+    $input_socio_per     	= isset($_POST["input_socio_per"])? limpiarCadena($_POST["input_socio_per"]):"";
+    $direccion_per		    = isset($_POST["direccion_per"])? limpiarCadena($_POST["direccion_per"]):"";
+    $telefono_per		      = isset($_POST["telefono_per"])? limpiarCadena($_POST["telefono_per"]):"";     
+    $email_per			      = isset($_POST["email_per"])? limpiarCadena($_POST["email_per"]):"";
+    
+    $banco                = isset($_POST["banco"])? $_POST["banco"] :"";
     $cta_bancaria_format  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-    $cta_bancaria     = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
-    $cci_format      	= isset($_POST["cci"])? $_POST["cci"]:"";
-    $cci            	= isset($_POST["cci"])? $_POST["cci"]:"";
-    $titular_cuenta		= isset($_POST["titular_cuenta"])? limpiarCadena($_POST["titular_cuenta"]):"";
+    $cta_bancaria         = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
+    $cci_format      	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $cci            	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $titular_cuenta_per		= isset($_POST["titular_cuenta_per"])? limpiarCadena($_POST["titular_cuenta_per"]):"";
+
+    $nacimiento_per       = isset($_POST["nacimiento_per"])? limpiarCadena($_POST["nacimiento_per"]):"";
+    $cargo_trabajador_per = isset($_POST["cargo_trabajador_per"])? limpiarCadena($_POST["cargo_trabajador_per"]):"";
+    $sueldo_mensual_per   = isset($_POST["sueldo_mensual_per"])? limpiarCadena($_POST["sueldo_mensual_per"]):"";
+    $sueldo_diario_per    = isset($_POST["sueldo_diario_per"])? limpiarCadena($_POST["sueldo_diario_per"]):"";
+    $edad_per             = isset($_POST["edad_per"])? limpiarCadena($_POST["edad_per"]):"";
+      
+    $imagen1			        = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
 
     switch ($_GET["op"]) {   
       
       // :::::::::::::::::::::::::: S E C C I O N   M A T E R I A L E S ::::::::::::::::::::::::::
       case 'guardar_y_editar_productos':
-    
-        if (empty($idproducto_compra)) {
-          $rspta = $productos->insertar($idcategoria_producto, $unidad_medida_compra, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
-            
+        // imagen
+        if (!file_exists($_FILES['foto2']['tmp_name']) || !is_uploaded_file($_FILES['foto2']['tmp_name'])) {
+          $imagen2 = $_POST["foto2_actual"];
+          $flat_img2 = false;
+        } else {
+          $ext1 = explode(".", $_FILES["foto2"]["name"]);
+          $flat_img2 = true;
+          $imagen2 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
+          move_uploaded_file($_FILES["foto2"]["tmp_name"], "../dist/docs/producto/img_perfil/" . $imagen2);
+        }
+
+        if (empty($idproducto_pro)) {
+
+          $rspta = $producto->insertar($idcategoria_producto_pro, $unidad_medida_pro, $nombre_producto_pro, $marca_pro, $contenido_neto_pro, $descripcion_pro, $imagen2 );            
           echo json_encode( $rspta, true);
     
         } else {
+
+          // validamos si existe LA IMG para eliminarlo          
+          if ($flat_img2 == true) {
+            $datos_f1 = $producto->obtenerImg($idproducto_pro);
+            $img2_ant = $datos_f1['data']->fetch_object()->imagen;
+            if ( !empty( $img2_ant ) ) { unlink("../dist/docs/producto/img_perfil/" . $img2_ant); }
+          }
             
-          $rspta = $productos->editar($idproducto_compra, $idcategoria_producto, $unidad_medida_compra, $nombre_producto, $marca, $contenido_neto, $descripcion, $imagen1 );
-            
-          echo json_encode( $rspta, true) ;
+          $rspta = $producto->editar($idproducto_pro, $idcategoria_producto_pro, $unidad_medida_pro, $nombre_producto_pro, $marca_pro, $contenido_neto_pro, $descripcion_pro, $imagen2 );            
+          echo json_encode( $rspta, true);
         }
     
       break;
     
       case 'mostrar_productos':
     
-        $rspta = $productos->mostrar($idproducto_compra);
+        $rspta = $producto->mostrar($idproducto_pro);
         echo json_encode($rspta, true);
     
       break;
@@ -117,16 +140,33 @@ if (!isset($_SESSION["nombre"])) {
       // :::::::::::::::::::::::::: S E C C I O N   P R O V E E D O R  ::::::::::::::::::::::::::
       case 'guardar_proveedor':
     
-        if (empty($idpersona)){
+        // imgen de perfil
+        if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
+          $imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
+        } else {
+          $ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;
+          $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
+          move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);          
+        }
 
-          $rspta=$proveedor->insertar($id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
+        if (empty($idpersona_per)){
+
+          $rspta=$persona->insertar($id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
                       
           echo json_encode($rspta, true);
           
         }else{
-          
+          // validamos si existe LA IMG para eliminarlo
+          if ($flat_img1 == true) {
+            $datos_f1 = $persona->obtenerImg($idpersona_per);
+            $img1_ant = $datos_f1['data']['foto_perfil'];
+            if ( !empty($img1_ant) ) { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
+          }           
+
           // editamos un persona existente
-          $rspta=$proveedor->editar($idpersona,$id_tipo_persona,$tipo_documento,$num_documento,$nombre,$input_socio,$email,$telefono,$banco,$cta_bancaria,$cci,$titular_cuenta,$direccion, $imagen1);
+          $rspta=$persona->editar($idpersona_per,$id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
             
           echo json_encode($rspta, true);
         }
@@ -134,7 +174,7 @@ if (!isset($_SESSION["nombre"])) {
       break;
 
       case 'mostrar_editar_proveedor':
-        $rspta = $proveedor->mostrar($_POST["idproveedor"]);
+        $rspta = $persona->mostrar($_POST["idproveedor"]);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
       break;
@@ -144,7 +184,7 @@ if (!isset($_SESSION["nombre"])) {
 
         if (empty($idcompra_producto)) {
           // $idcompra_producto,$idproveedor,$fecha_compra,$tipo_comprobante,$serie_comprobante,$val_igv,$descripcion,$subtotal_compra,$tipo_gravada,$igv_compra,$total_venta
-          $rspta = $compra_producto->insertar($idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $compra_producto->insertar($idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $total_venta, $subtotal_compra, $igv_compra,  $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST['precio_venta'], $_POST["descuento"], 
           $tipo_gravada);
@@ -152,7 +192,7 @@ if (!isset($_SESSION["nombre"])) {
           echo json_encode($rspta, true);
         } else {
 
-          $rspta = $compra_producto->editar( $idcompra_producto, $idproveedor, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
+          $rspta = $compra_producto->editar( $idcompra_producto, $idproveedor, $num_doc, $fecha_compra,  $tipo_comprobante, $serie_comprobante, $val_igv, $descripcion, 
           $total_venta, $subtotal_compra, $igv_compra,  $_POST["idproducto"], $_POST["unidad_medida"], 
           $_POST["categoria"], $_POST["cantidad"], $_POST["precio_sin_igv"], $_POST["precio_igv"],  $_POST["precio_con_igv"], $_POST['precio_venta'], $_POST["descuento"], 
           $tipo_gravada);

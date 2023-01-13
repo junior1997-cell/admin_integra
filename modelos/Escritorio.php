@@ -15,7 +15,7 @@ class Escritorio
   public function tablero()  {
     $sql = "SELECT COUNT(p.idproducto) AS cant_producto FROM producto AS p WHERE p.estado = '1' AND p.estado_delete = '1';";
     $sql2 = "SELECT COUNT(p.idpersona) AS cant_agricultor FROM persona AS p WHERE p.idtipo_persona = '2' AND p.estado = '1' AND p.estado_delete = '1';";
-    $sql3 = "SELECT COUNT(p.idpersona) AS cant_trabajador FROM persona AS p WHERE p.idtipo_persona = '2' AND p.estado = '1' AND p.estado_delete = '1';";
+    $sql3 = "SELECT COUNT(p.idpersona) AS cant_trabajador FROM persona AS p WHERE p.idtipo_persona = '4' AND p.estado = '1' AND p.estado_delete = '1';";
     $sql4 = "SELECT SUM(vp.total) AS cant_venta_producto FROM venta_producto AS vp WHERE vp.estado = '1' AND vp.estado_delete = '1';";
 
     $data1 = ejecutarConsultaSimpleFila($sql); if ($data1['status'] == false) { return $data1; }
@@ -100,8 +100,28 @@ class Escritorio
     ];   
   }
 
-  public function chart_cafe( ) {
+  public function sumas_totales( ) {
+    $sql_1 = "SELECT SUM(total) total_venta FROM venta_producto WHERE estado = '1' AND estado_delete ='1';";
+    $sql_2 = "SELECT SUM(dvp.subtotal - (dvp.cantidad * dvp.precio_compra)) as total_utilidad FROM detalle_venta_producto as dvp, venta_producto as vp 
+    WHERE dvp.idventa_producto = vp.idventa_producto AND vp.estado ='1' AND vp.estado_delete='1' AND dvp.estado='1' AND dvp.estado_delete='1';";
+    $sql_3 = "SELECT SUM(total_compra) as total_compra FROM compra_grano WHERE estado = '1' AND estado_delete ='1';";
+    $sql_4 = "SELECT SUM(monto) as total_deposito FROM pago_compra_grano as pcg, compra_grano as pg 
+    WHERE pcg.idcompra_grano = pg.idcompra_grano AND pcg.estado = '1' AND pcg.estado_delete = '1' AND pg.estado = '1' AND pg.estado_delete = '1';";
 
+    $data1 = ejecutarConsultaSimpleFila($sql_1);  if ($data1['status'] == false) { return $data1; }
+    $data2 = ejecutarConsultaSimpleFila($sql_2);  if ($data2['status'] == false) { return $data2; }
+    $data3 = ejecutarConsultaSimpleFila($sql_3);  if ($data3['status'] == false) { return $data3; }
+    $data4 = ejecutarConsultaSimpleFila($sql_4);  if ($data4['status'] == false) { return $data4; }
+
+    return $retorno = [
+      'status'=> true, 'message' => 'Salió todo ok,', 
+      'data' => [
+        'total_venta'   =>(empty($data1['data']) ? 0 : (empty($data1['data']['total_venta']) ? 0 : floatval($data1['data']['total_venta'])) ), 
+        'total_utilidad' =>(empty($data2['data']) ? 0 : (empty($data2['data']['total_utilidad']) ? 0 : floatval($data2['data']['total_utilidad'])) ),
+        'total_compra'  =>(empty($data3['data']) ? 0 : (empty($data3['data']['total_compra']) ? 0 : floatval($data3['data']['total_compra'])) ), 
+        'total_deposito_compra'=>(empty($data4['data']) ? 0 : (empty($data4['data']['total_deposito']) ? 0 : floatval($data4['data']['total_deposito'])) ),        
+      ]
+    ];   
   }
 }
 
