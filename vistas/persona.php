@@ -58,7 +58,7 @@
                         <div class="card-body px-1 py-1">
                           <div class="row">                              
                             <div class=" col-12 col-sm-12">
-                              <div class="card card-primary card-outline card-outline-tabs mb-0">
+                              <div class="card card-success card-outline card-outline-tabs mb-0">
                                 <div class="card-header p-0 border-bottom-0">
                                   <ul class="nav nav-tabs lista-items" id="tabs-for-tab" role="tablist">
                                     <li class="nav-item">

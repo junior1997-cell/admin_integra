@@ -78,7 +78,7 @@ function limpiar_form_persona() {
 
   $("#nacimiento").val("");
   $("#edad").val("");
-  $(".edad").html("");
+  $(".edad").html("0.00");
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");

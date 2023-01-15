@@ -48,16 +48,19 @@
 
 /*  ══════════════════════════════════════════ - E S T Y L O   D E S A R R O L L A D O R - ══════════════════════════════════════════ */
 .desarrollador-whatsapp { color: black !important; }
-
 .desarrollador-whatsapp:hover { color: #28a745 !important; }
 
 .desarrollador-facebook { color: black !important; }
-
 .desarrollador-facebook:hover { color: #007bff !important; }
 
 .desarrollador-linkedin { color: black !important; }
-
 .desarrollador-linkedin:hover { color: #007bff !important;}
+
+.desarrollador-instagram { color: black !important; }
+.desarrollador-instagram:hover { color: #ff00d4 !important;}
+
+.desarrollador-tiktok { color: black !important; }
+.desarrollador-tiktok:hover { color: #aaaaaa !important; }
 
 .paint_row_morado{ background-color: #88ef8642; }
 
@@ -179,6 +182,30 @@ table th { vertical-align: top !important; }
 .click-boton-success{  background: #28a745  linear-gradient( 180deg, #48b461, #041604) repeat-x !important; }
 
 /* ::::::::::::::::: END stylos para tblas::::::::::::::::::: */
+
+/*  ══════════════════════════════════════════ - B O R D E R - ══════════════════════════════════════════ */
+
+.border-t-1px{ border-top: 1px !important; }
+.border-t-2px{ border-top: 2px !important; }
+.border-t-3px{ border-top: 3px !important; }
+.border-t-4px{ border-top: 4px !important; }
+.border-t-5px{ border-top: 5px !important; }
+.border-t-6px{ border-top: 6px !important; }
+.border-t-7px{ border-top: 7px !important; }
+.border-t-8px{ border-top: 8px !important; }
+.border-t-9px{ border-top: 9px !important; }
+.border-t-10px{ border-top: 10px !important; }
+
+.border-b-1px{ border-bottom: 1px !important; }
+.border-b-2px{ border-bottom: 2px !important; }
+.border-b-3px{ border-bottom: 3px !important; }
+.border-b-4px{ border-bottom: 4px !important; }
+.border-b-5px{ border-bottom: 5px !important; }
+.border-b-6px{ border-bottom: 6px !important; }
+.border-b-7px{ border-bottom: 7px !important; }
+.border-b-8px{ border-bottom: 8px !important; }
+.border-b-9px{ border-bottom: 9px !important; }
+.border-b-10px{ border-bottom: 10px !important; }
 
 /*  ══════════════════════════════════════════ - D I S E Ñ O   D E   S C R O L L - ══════════════════════════════════════════ */
 
@@ -783,6 +810,14 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 /* this will set the toastr style */
 .toast-text-black { color: black !important; }
 
+/*  ══════════════════════════════════════════ - T I P O S   D E   C U R S O R - ══════════════════════════════════════════ */
+.cursor-not-allowed{ cursor: not-allowed !important; }
+.cursor-help{ cursor: help !important; }
+.cursor-wait{ cursor: wait !important; }
+.cursor-crosshair{ cursor: crosshair !important; }
+.cursor-zoom-in{ cursor: zoom-in !important; }
+.cursor-grab{ cursor: grab !important; }
+
 /*  ══════════════════════════════════════════ - O T R O S - ══════════════════════════════════════════ */
 .hidden{ display: none; }
 
@@ -839,8 +874,8 @@ select[readonly].select2-hidden-accessible + .select2-container .select2-selecti
 
 /* clase que nos permite modificar el car en view modulos en papelera */
 
-.bb-m{ border-bottom: 1px;}
-.cur_point {  cursor: pointer;}
+
+
 
 /*  ══════════════════════════════════════════ - @ M E D I A  - M I N - ══════════════════════════════════════════ */
 /* min-width = como minimo ─|──────── */

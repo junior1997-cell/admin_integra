@@ -15,7 +15,9 @@
         <title>Usuarios | Admin Integra</title>
 
         <?php $title = "Usuarios"; require 'head.php'; ?>
-        
+
+        <!-- CSS  switch persona -->
+        <link rel="stylesheet" href="../dist/css/switch_persona.css" />        
       </head>
       <body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed">
         <!-- Content Wrapper. Contains page content -->
@@ -109,7 +111,7 @@
                                   <!-- Trabajador -->
                                   <div class="col-12 col-sm-9 col-md-9 col-lg-7 col-xl-7">
                                     <div class="form-group">
-                                      <label for="trabajador" id="trabajador_c">Trabajador</label>                               
+                                      <label for="trabajador" id="trabajador_c">Trabajador <sup class="text-danger">*</sup></label>                               
                                       <select name="trabajador" id="trabajador" class="form-control select2" style="width: 100%;"  onchange="cargo_trabajador();" > </select>
                                       <input type="hidden" name="trabajador_old" id="trabajador_old">
                                     </div>                                                        
@@ -131,9 +133,8 @@
                                   <!-- cargo -->
                                   <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
-                                      <label for="cargo">Cargo</label>                               
-                                      <input type="text" name="cargo" class="form-control" id="cargo" placeholder="Cargo trabajador" readonly>
-
+                                      <label for="cargo" >Cargo <span class="charge-cargo"> </span></label>    
+                                      <span class="form-control cursor-not-allowed" id="cargo" ></span>
                                     </div>                                                     
                                   </div>
 
@@ -141,7 +142,7 @@
                                   <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
                                       <label for="login">Login <small class="text-danger">(Dato para ingresar al sistema)</small></label>
-                                      <input type="text" name="login" class="form-control" id="login" placeholder="Login" autocomplete="off" onkeyup="convert_minuscula(this);">
+                                      <input type="text" name="login" class="form-control" id="login" placeholder="Login" autocomplete="off" onkeyup="convert_minuscula(this);" onchange="convert_minuscula(this);">
                                     </div>
                                   </div>
 
@@ -149,10 +150,24 @@
                                   <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
                                       <label for="password">Contraseña <small class="text-danger">(por defecto "123456")</small></label>
-                                      <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" autocomplete="off">
+                                      <div class="input-group">
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Contraseña" autocomplete="off" />
+                                        <div class="input-group-append cursor-pointer" data-toggle="tooltip" data-original-title="Ver contraseña" onclick="ver_password(this);">
+                                          <span class="input-group-text" id="icon-view-password">
+                                            <i class="fa-solid fa-eye text-primary"></i>
+                                          </span>
+                                        </div>
+                                      </div>
                                       <input type="hidden" name="password-old"   id="password-old"  >
                                     </div>
-                                  </div>     
+                                  </div>  
+
+                                  <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="form-group">
+                                      <label for="confirm_password">Repetir Contraseña</label>
+                                      <input type="password" name="confirm_password" id="confirm_password" class="form-control"  placeholder="Repetir Contraseña" autocomplete="off">                                      
+                                    </div>
+                                  </div>        
 
                                   <!-- permisos -->
                                   <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -216,14 +231,20 @@
                         <!-- form start -->
                         <form id="form-trabajador" name="form-trabajador" method="POST">
                           <div class="card-body">
-                            <div class="row" id="cargando-3-fomulario">
-                              <!-- id trabajador -->
-                              <input type="hidden" name="idtrabajador_trab" id="idtrabajador_trab" />
+
+                            <div class="row" id="cargando-11-fomulario">
+                              <!-- id persona -->
+                              <input type="hidden" name="idpersona_per" id="idpersona_per" />                                
+
+                              <!-- tipo persona  -->
+                              <input type="hidden" name="id_tipo_persona_per" id="id_tipo_persona_per" value="4" />                              
+                              <input type="hidden" name="input_socio_per" id="input_socio_per" value="0"  >
+
                               <!-- Tipo de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-2">
                                 <div class="form-group">
-                                  <label for="tipo_documento_trab">Tipo de documento</label>
-                                  <select name="tipo_documento_trab" id="tipo_documento_trab" class="form-control" placeholder="Tipo de documento">
+                                  <label for="tipo_documento_per">Tipo Doc.</label>
+                                  <select name="tipo_documento_per" id="tipo_documento_per" class="form-control" placeholder="Tipo de documento">
                                     <option selected value="DNI">DNI</option>
                                     <option value="RUC">RUC</option>
                                     <option value="CEDULA">CEDULA</option>
@@ -231,17 +252,17 @@
                                   </select>
                                 </div>
                               </div>
-
+                              
                               <!-- N° de documento -->
-                              <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                 <div class="form-group">
-                                  <label for="num_documento_trab">N° de documento</label>
+                                  <label for="num_documento_per">N° de documento</label>
                                   <div class="input-group">
-                                    <input type="number" name="num_documento_trab" class="form-control" id="num_documento_trab" placeholder="N° de documento" />
-                                    <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('_trab');">
+                                    <input type="number" name="num_documento_per" class="form-control" id="num_documento_per" placeholder="N° de documento" />
+                                    <div class="input-group-append" data-toggle="tooltip" data-original-title="Buscar Reniec/SUNAT" onclick="buscar_sunat_reniec('_per');">
                                       <span class="input-group-text" style="cursor: pointer;">
-                                        <i class="fas fa-search text-primary" id="search_trab"></i>
-                                        <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge_trab" style="display: none;"></i>
+                                        <i class="fas fa-search text-primary" id="search_per"></i>
+                                        <i class="fa fa-spinner fa-pulse fa-fw fa-lg text-primary" id="charge_per" style="display: none;"></i>
                                       </span>
                                     </div>
                                   </div>
@@ -249,59 +270,52 @@
                               </div>
 
                               <!-- Nombre -->
-                              <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                                 <div class="form-group">
-                                  <label for="nombre_trab">Nombre y Apellidos/Razon Social</label>
-                                  <input type="text" name="nombre_trab" class="form-control" id="nombre_trab" placeholder="Nombres y apellidos" />
+                                  <label for="nombre_per">Nombres/Razon Social</label>
+                                  <input type="text" name="nombre_per" class="form-control" id="nombre_per" placeholder="Nombres y apellidos" />
+                                </div>
+                              </div>
+                              
+                              <!-- Telefono -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-2">
+                                <div class="form-group">
+                                  <label for="telefono_per">Teléfono</label>
+                                  <input type="text" name="telefono_per" id="telefono_per" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
                                 </div>
                               </div>
 
                               <!-- Correo electronico -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                  <label for="email_trab">Correo electrónico</label>
-                                  <input type="email" name="email_trab" class="form-control" id="email_trab" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
-                                </div>
-                              </div>
-
-                              <!-- Telefono -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="telefono_trab">Teléfono</label>
-                                  <input type="text" name="telefono_trab" id="telefono_trab" class="form-control" data-inputmask="'mask': ['999-999-999', '+51 999 999 999']" data-mask />
+                                  <label for="email_per">Correo electrónico</label>
+                                  <input type="email" name="email_per" class="form-control" id="email_per" placeholder="Correo electrónico" onkeyup="convert_minuscula(this);" />
                                 </div>
                               </div>
 
                               <!-- fecha de nacimiento -->
                               <div class="col-12 col-sm-10 col-md-6 col-lg-3">
                                 <div class="form-group">
-                                  <label for="nacimiento_trab">Fecha Nacimiento</label>
-                                  <input
-                                    type="date"
-                                    class="form-control"
-                                    name="nacimiento_trab"
-                                    id="nacimiento_trab"
-                                    placeholder="Fecha de Nacimiento"
-                                    onclick="calcular_edad('#nacimiento_trab', '#edad_trab', '.edad_trab');"
-                                    onchange="calcular_edad('#nacimiento_trab', '#edad_trab', '.edad_trab');"
-                                  />
-                                  <input type="hidden" name="edad_trab" id="edad_trab" />
+                                  <label for="nacimiento_per">Fecha Nacimiento</label>
+                                  <input type="date" class="form-control" name="nacimiento_per" id="nacimiento_per" placeholder="Fecha de Nacimiento"
+                                    onclick="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" onchange="calcular_edad('#nacimiento_per', '#edad_per', '.edad_per');" />
+                                  <input type="hidden" name="edad_per" id="edad_per" />
                                 </div>
                               </div>
 
                               <!-- edad -->
                               <div class="col-12 col-sm-2 col-md-6 col-lg-1">
                                 <div class="form-group">
-                                  <label for="edad_trab">Edad</label>
-                                  <p class="edad_trab" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
+                                  <label for="edad_per">Edad</label>
+                                  <p class="edad_per" style="border: 1px solid #ced4da; border-radius: 4px; padding: 5px;">0 años.</p>
                                 </div>
                               </div>
 
                               <!-- banco -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                  <label for="banco_trab">Banco</label>
-                                  <select name="banco_trab" id="banco_trab" class="form-control select2 banco_trab" style="width: 100%;" onchange="formato_banco();">
+                                  <label for="banco">Banco</label>
+                                  <select name="banco" id="banco" class="form-control select2 banco" style="width: 100%;" onchange="formato_banco();">
                                     <!-- Aqui listamos los bancos -->
                                   </select>
                                 </div>
@@ -310,65 +324,58 @@
                               <!-- Cuenta bancaria -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                  <label for="cta_bancaria_trab" class="chargue-format-1">Cuenta Bancaria</label>
-                                  <input type="text" name="cta_bancaria_trab" class="form-control" id="cta_bancaria_trab" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
+                                  <label for="cta_bancaria" class="chargue-format-1">Cuenta Bancaria</label>
+                                  <input type="text" name="cta_bancaria" class="form-control" id="cta_bancaria" placeholder="Cuenta Bancaria" data-inputmask="" data-mask />
                                 </div>
                               </div>
 
                               <!-- CCI -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                  <label for="cci_trab" class="chargue-format-2">CCI</label>
-                                  <input type="text" name="cci_trab" class="form-control" id="cci_trab" placeholder="CCI" data-inputmask="" data-mask />
+                                  <label for="cci" class="chargue-format-2">CCI</label>
+                                  <input type="text" name="cci" class="form-control" id="cci" placeholder="CCI" data-inputmask="" data-mask />
                                 </div>
                               </div>
 
                               <!-- Titular de la cuenta -->
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                                 <div class="form-group">
-                                  <label for="titular_cuenta_trab">Titular de la cuenta</label>
-                                  <input type="text" name="titular_cuenta_trab" class="form-control" id="titular_cuenta_trab" placeholder="Titular de la cuenta" />
+                                  <label for="titular_cuenta_per">Titular de la cuenta</label>
+                                  <input type="text" name="titular_cuenta_per" class="form-control" id="titular_cuenta_per" placeholder="Titular de la cuenta" />
                                 </div>
-                              </div>
-
-                              <!-- Ruc -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                                <div class="form-group">
-                                  <label for="ruc_trab">Ruc</label>
-                                  <input type="number" name="ruc_trab" class="form-control" id="ruc_trab" placeholder="Ingrese número de ruc" />
-                                </div>
-                              </div>
+                              </div> 
+                              
                               <!-- cargo_trabajador  -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 campos_trabajador">
                                 <div class="form-group">
-                                  <label for="cargo_trabajador_trab">Cargo </label>
-                                  <select name="cargo_trabajador_trab" id="cargo_trabajador_trab" class="form-control select2 cargo_trabajador_trab" style="width: 100%;">
+                                  <label for="cargo_trabajador_per">Cargo </label>
+                                  <select name="cargo_trabajador_per" id="cargo_trabajador_per" class="form-control select2" style="width: 100%;">
                                     <!-- Aqui listamos los cargo_trabajador -->
                                   </select>
                                 </div>
                               </div>
 
                               <!-- Sueldo(Mensual) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
                                 <div class="form-group">
-                                  <label for="sueldo_mensual_trab">Sueldo(Mensual)</label>
-                                  <input type="number" step="any" name="sueldo_mensual_trab" class="form-control" id="sueldo_mensual_trab" onclick="sueld_mensual();" onkeyup="sueld_mensual();" />
+                                  <label for="sueldo_mensual_per">Sueldo(Mensual)</label>
+                                  <input type="number" step="any" name="sueldo_mensual_per" id="sueldo_mensual_per" class="form-control"  onclick="sueld_mensual(this); this.select();" onkeyup="sueld_mensual(this);" />
                                 </div>
                               </div>
 
                               <!-- Sueldo(Diario) -->
-                              <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                              <div class="col-12 col-sm-6 col-md-3 col-lg-3 campos_trabajador">
                                 <div class="form-group">
-                                  <label for="sueldo_diario_trab">Sueldo(Diario)</label>
-                                  <input type="number" step="any" name="sueldo_diario_trab" class="form-control" id="sueldo_diario_trab" readonly />
+                                  <label for="sueldo_diario_per">Sueldo(Diario)</label>
+                                  <input type="number" step="any" name="sueldo_diario_per" id="sueldo_diario_per" class="form-control cursor-not-allowed"  readonly />
                                 </div>
                               </div>
 
                               <!-- Direccion -->
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-8">
+                              <div class="col-12 col-sm-12 col-md-12 col-lg-12 classdirecc">
                                 <div class="form-group">
-                                  <label for="direccion_trab">Dirección</label>
-                                  <input type="text" name="direccion_trab" class="form-control" id="direccion_trab" placeholder="Dirección" />
+                                  <label for="direccion_per">Dirección</label>
+                                  <input type="text" name="direccion_per" id="direccion_per" class="form-control" placeholder="Dirección" />
                                 </div>
                               </div>
 
@@ -383,22 +390,22 @@
                               </div>
 
                               <!-- Progress -->
-                              <div class="col-md-12">
+                              <div class="col-md-12" id="barra_progress_trabajador_div" style="display: none !important;">
                                 <div class="form-group">
-                                  <div class="progress" id="div_barra_progress_trabajador" style="display: none !important;">
+                                  <div class="progress" >
                                     <div id="barra_progress_trabajador" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
 
-                            <div class="row" id="cargando-4-fomulario" style="display: none;">
+                            <div class="row" id="cargando-12-fomulario" style="display: none;" >
                               <div class="col-lg-12 text-center">
-                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br />
-                                <br />
+                                <i class="fas fa-spinner fa-pulse fa-6x"></i><br><br>
                                 <h4>Cargando...</h4>
                               </div>
                             </div>
+                                  
                           </div>
                           <!-- /.card-body -->
                           <button type="submit" style="display: none;" id="submit-form-trabajador">Submit</button>

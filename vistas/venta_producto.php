@@ -18,7 +18,7 @@
 
         <?php $title = "ventas"; require 'head.php'; ?>
 
-        <!--CSS  switch_MATERIALES-->
+        <!-- CSS  switch persona -->
         <link rel="stylesheet" href="../dist/css/switch_persona.css" />
         <link rel="stylesheet" href="../dist/css/leyenda.css" />
         

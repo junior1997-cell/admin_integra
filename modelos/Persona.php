@@ -13,8 +13,7 @@
     $titular_cuenta,$direccion,$nacimiento,$cargo_trabajador,$sueldo_mensual,$sueldo_diario,$edad, $imagen1) {
       $sw = Array();
       // var_dump($idcargo_persona,$nombre, $tipo_documento, $num_documento, $direccion, $telefono, $nacimiento, $edad,  $email, $banco, $cta_bancaria,  $cci,  $titular_cuenta, $ruc, $imagen1); die();
-      $sql_0 = "SELECT nombres,tipo_documento, numero_documento,estado, estado_delete FROM persona as t WHERE numero_documento = '$num_documento';";
-
+      $sql_0 = "SELECT nombres,tipo_documento, numero_documento, correo, estado, estado_delete FROM persona as t WHERE numero_documento = '$num_documento';";
       $existe = ejecutarConsultaArray($sql_0); if ($existe['status'] == false) { return $existe;}
       
       if ( empty($existe['data']) ) {
@@ -38,6 +37,7 @@
           $info_repetida .= '<li class="text-left font-size-13px">
             <span class="font-size-15px text-danger"><b>Nombre: </b>'.$value['nombres'].'</span><br>
             <b>'.$value['tipo_documento'].': </b>'.$value['numero_documento'].'<br>
+            <b>Correo: </b>'.$value['correo'].'<br>
             <b>Papelera: </b>'.( $value['estado']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO') .' <b>|</b>
             <b>Eliminado: </b>'. ($value['estado_delete']==0 ? '<i class="fas fa-check text-success"></i> SI':'<i class="fas fa-times text-danger"></i> NO').'<br>
             <hr class="m-t-2px m-b-2px">

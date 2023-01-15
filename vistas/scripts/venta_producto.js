@@ -1919,8 +1919,8 @@ $(function () {
       email_per:          { email: true, minlength: 10, maxlength: 50 },
       direccion_per:      { minlength: 5, maxlength: 200 },
       telefono_per:       { minlength: 8 },
-      cta_bancaria_per:   { minlength: 10,},
-      banco_per:          { required: true},
+      cta_bancaria:       { minlength: 10,},
+      banco:              { required: true},
     },
     messages: {
       tipo_documento_per: { required: "Campo requerido.", },
@@ -1929,8 +1929,8 @@ $(function () {
       email_per:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
       direccion_per:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
       telefono_per:       { minlength: "MÍNIMO 8 caracteres.", },
-      cta_bancaria_per:   { minlength: "MÍNIMO 10 caracteres.", },
-      banco_per:          { required: "Campo requerido.", },
+      cta_bancaria:       { minlength: "MÍNIMO 10 caracteres.", },
+      banco:              { required: "Campo requerido.", },
     },
 
     errorElement: "span",

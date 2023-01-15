@@ -19,8 +19,7 @@
 
       $persona = new Persona();
 
-      date_default_timezone_set('America/Lima');
-      $date_now = date("d-m-Y h.i.s A");
+      date_default_timezone_set('America/Lima'); $date_now = date("d-m-Y h.i.s A");
 
       $imagen_error = "this.src='../dist/svg/user_default.svg'";
       $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
@@ -122,10 +121,11 @@
             foreach ($rspta['data'] as $key => $value) {        
 
               $imagen = (empty($value['foto_perfil']) ? '../dist/svg/user_default.svg' : '../dist/docs/persona/perfil/'.$value['foto_perfil']) ;
+              $edit_tipo = $_GET["tipo_persona"] == 'todos' ? '' : '<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>' ;
               
               $data[]=array(
                 "0"=>$cont++,
-                "1"=>'<button class="btn btn-warning btn-sm" onclick="mostrar('.$value['idpersona'].')" data-toggle="tooltip" data-original-title="Editar"><i class="fas fa-pencil-alt"></i></button>'.
+                "1"=>$edit_tipo.
                   ' <button class="btn btn-danger btn-sm" onclick="eliminar_persona('.$value['idpersona'].', \''.encodeCadenaHtml($value['nombres']).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i></button>',
                 "2"=>'<div class="user-block">
                   <img class="profile-user-img img-responsive img-circle cursor-pointer" src="'. $imagen .'" alt="User Image" onerror="'.$imagen_error.'" onclick="ver_img_persona(\'' . $imagen . '\', \''.encodeCadenaHtml($value['nombres']).'\');" data-toggle="tooltip" data-original-title="Ver foto">

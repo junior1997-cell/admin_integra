@@ -51,7 +51,6 @@ class Usuario
       return $data_user;
 
     }
-
   }
 
   //Implementamos un método para editar registros
@@ -105,16 +104,11 @@ class Usuario
   //Implementamos un método para desactivar categorías
   public function desactivar($idusuario) {
     $sql = "UPDATE usuario SET estado='0', user_trash= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
-
-    $desactivar = ejecutarConsulta($sql);
-    
-    if ( $desactivar['status'] == false) {return $desactivar; }    
+    $desactivar = ejecutarConsulta($sql); if ( $desactivar['status'] == false) {return $desactivar; }    
 
     //add registro en nuestra bitacora
     $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro desactivado','" . $_SESSION['idusuario'] . "')";
-    $bitacorade = ejecutarConsulta($sqlde);
-
-    if ( $bitacorade['status'] == false) {return $bitacorade; }   
+    $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $desactivar;
   }
@@ -122,16 +116,11 @@ class Usuario
   //Implementamos un método para activar :: !!sin usar ::
   public function activar($idusuario) {
     $sql = "UPDATE usuario SET estado='1', user_updated= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
-
-    $activar= ejecutarConsulta($sql);
-        
-    if ( $activar['status'] == false) {return $activar; }    
+    $activar= ejecutarConsulta($sql); if ( $activar['status'] == false) {return $activar; }    
 
     //add registro en nuestra bitacora
     $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro activado','" . $_SESSION['idusuario'] . "')";
-    $bitacorade = ejecutarConsulta($sqlde);
-
-    if ( $bitacorade['status'] == false) {return $bitacorade; }   
+    $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $activar;
   }
@@ -139,19 +128,13 @@ class Usuario
   //Implementamos un método para eliminar usuario
   public function eliminar($idusuario) {
     $sql = "UPDATE usuario SET estado_delete='0',user_delete= '" . $_SESSION['idusuario'] . "' WHERE idusuario='$idusuario'";
-
-    $eliminar= ejecutarConsulta($sql);
-        
-    if ( $eliminar['status'] == false) {return $eliminar; }    
+    $eliminar= ejecutarConsulta($sql);  if ( $eliminar['status'] == false) {return $eliminar; }    
 
     //add registro en nuestra bitacora
     $sqlde = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('usuario_permiso','$idusuario','Registro Eliminado','" . $_SESSION['idusuario'] . "')";
-    $bitacorade = ejecutarConsulta($sqlde);
-
-    if ( $bitacorade['status'] == false) {return $bitacorade; }   
+    $bitacorade = ejecutarConsulta($sqlde); if ( $bitacorade['status'] == false) {return $bitacorade; }   
 
     return $eliminar;
-
   }
 
   //Implementar un método para mostrar los datos de un registro a modificar
@@ -159,8 +142,18 @@ class Usuario
     $sql = "SELECT u.idusuario, u.idpersona, u.login, u.password, u.estado, p.nombres 
     FROM usuario AS u, persona AS p 
     WHERE u.idusuario='$idusuario' AND u.idpersona = p.idpersona;";
-
     return ejecutarConsultaSimpleFila($sql);
+  }
+
+  //Implementar un método para mostrar los datos de un registro a modificar
+  public function validar_usuario($idusuario, $user) {
+    $validar_user = empty($idusuario) ? "" : "AND u.idusuario != '$idusuario'" ;
+    $sql = "SELECT u.idusuario, u.idpersona, u.login, u.password, u.estado, p.nombres 
+    FROM usuario AS u, persona AS p 
+    WHERE u.idpersona = p.idpersona AND u.login = '$user' $validar_user;";
+    $buscando =  ejecutarConsultaArray($sql); if ( $buscando['status'] == false) {return $buscando; }
+
+    if (empty($buscando['data'])) { return true; }else { return false; }
   }
 
   //Implementar un método para listar los registros
@@ -181,9 +174,9 @@ class Usuario
   //Función para verificar el acceso al sistema
   public function verificar($login, $clave) {
     $sql = "SELECT u.idusuario, p.nombres, p.tipo_documento, p.numero_documento, p.celular, p.correo, ct.nombre as cargo, u.login, p.foto_perfil, p.tipo_documento 
-    FROM usuario as u, persona as p,cargo_trabajador as ct 
-    WHERE u.login='$login' AND u.password='$clave' AND p.estado=1 and p.estado_delete=1 and u.estado=1 and u.estado_delete=1 and u.idpersona = p.idpersona 
-    AND p.idpersona =ct.idcargo_trabajador;";
+    FROM usuario as u, persona as p, cargo_trabajador as ct 
+    WHERE  u.idpersona = p.idpersona AND p.idcargo_trabajador =ct.idcargo_trabajador AND  u.login='$login' AND u.password='$clave' 
+    AND p.estado=1 and p.estado_delete=1 and u.estado=1 and u.estado_delete=1;";
     return ejecutarConsultaSimpleFila($sql);
   }
 
@@ -201,8 +194,7 @@ class Usuario
     return ejecutarConsulta($sql);
   }
 
-  public function select2_cargo_trabajador($id_persona)
-  {
+  public function select2_cargo_trabajador($id_persona){
     $sql = "SELECT ct.nombre as cargo FROM persona as p, cargo_trabajador as ct WHERE p.idcargo_trabajador= ct.idcargo_trabajador AND p.idpersona = '$id_persona'; ";
     return ejecutarConsultaSimpleFila($sql);
   }

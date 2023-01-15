@@ -191,8 +191,8 @@
                                <!-- Marca -->
                                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                 <div class="form-group">
-                                  <label for="marca_pro">Marca <sup class="text-danger">(unico*)</sup></label>
-                                  <input type="text" name="marca_pro" class="form-control" id="marca_pro" placeholder="Marca." />
+                                  <label for="marca">Marca <sup class="text-danger">(unico*)</sup></label>
+                                  <input type="text" name="marca" class="form-control" id="marca" placeholder="Marca." />
                                 </div>
                               </div>
 

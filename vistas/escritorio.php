@@ -65,13 +65,12 @@
                         <div class="small-box bg-info">
                           <div class="inner">
                             <h3 id="cantidad_box_producto" > <i class="fas fa-spinner fa-pulse "></i> </h3>
-
                             <p>Total de Productos</p>
                           </div>
                           <div class="icon">
                             <i class="fas fa-th"></i>
                           </div>
-                          <a href="#" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                          <a href="producto.php" data-toggle="tooltip" data-original-title="Click para visitar" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                       </div>
 
@@ -83,7 +82,7 @@
                             <p>Total de Agricultores</p>
                           </div>
                           <div class="icon"><i class="fas fa-users"></i> </div>
-                          <a href="all_proveedor.php" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                          <a href="persona.php" data-toggle="tooltip" data-original-title="Click para visitar" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                       </div>
 
@@ -92,11 +91,10 @@
                         <div class="small-box bg-warning">
                           <div class="inner">
                             <h3 id="cantidad_box_trabajador"> <i class="fas fa-spinner fa-pulse "></i> </h3>
-
                             <p>Total de Trabajadores</p>
                           </div>
                           <div class="icon"> <i class="fa-solid fa-briefcase"></i> </div>
-                          <a href="all_trabajador.php" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                          <a href="persona.php" data-toggle="tooltip" data-original-title="Click para visitar" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                       </div>
 
@@ -105,13 +103,10 @@
                         <div class="small-box bg-danger">
                           <div class="inner">
                             <h3 id="cantidad_box_venta"> <i class="fas fa-spinner fa-pulse "></i> </h3>
-
                             <p>Total de Ventas de Productos </p>
                           </div>
-                          <div class="icon">
-                            <i class="fas fa-shopping-cart"></i>
-                          </div>
-                          <a href="compra_insumos.php" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+                          <div class="icon"> <i class="fas fa-shopping-cart"></i> </div>
+                          <a href="venta_producto.php" class="small-box-footer" data-toggle="tooltip" data-original-title="Click para visitar">Más info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                       </div>
 
