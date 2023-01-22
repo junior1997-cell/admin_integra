@@ -195,8 +195,10 @@
                                     </div>
 
                                     <div class="d-flex flex-row justify-content-end">
-                                      <span class="mr-2"><i class="fas fa-square text-black-50"></i> Gastos</span>
-                                      <span class="mr-2"><i class="fas fa-square text-blue" ></i> Ingresos</span>
+                                      <span class="mr-2"><i class="fas fa-square" style="color: #28a745 !important;"></i> Total compra</span>
+                                      <span class="mr-2"><i class="fas fa-square" style="color: #000 !important;"></i> Total pago</span>
+                                      <span class="mr-2"><i class="fas fa-square" style="color: #dc3545 !important;"></i> Kg. pergamino</span>
+                                      <span class="mr-2"><i class="fas fa-square" style="color: #ffc107 !important;"></i> Kg. coco</span>
                                     </div>
                                   </div>
                                   <!-- linea divisoria -->
