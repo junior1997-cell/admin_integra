@@ -35,6 +35,18 @@ class Compra_grano
       $sql_bit = "INSERT INTO bitacora_bd( nombre_tabla, id_tabla, accion, id_user) VALUES ('compra_grano','".$id_compra['data']."','Agregar compra cafe','" . $_SESSION['idusuario'] . "')";
       $bitacora = ejecutarConsulta($sql_bit); if ( $bitacora['status'] == false) {return $bitacora; } 
 
+      //add update table autoincrement_comprobante - numero de comprobante de pago
+      if ($tipo_comprobante == 'Boleta') {
+        $sql_nro = "UPDATE autoincrement_comprobante SET 	compra_cafe_b = 	compra_cafe_b + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      } else if ($tipo_comprobante == 'Factura'){
+        $sql_nro = "UPDATE autoincrement_comprobante SET 	compra_cafe_f = 	compra_cafe_f + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      } else if ($tipo_comprobante == 'Nota de venta'){
+        $sql_nro = "UPDATE autoincrement_comprobante SET 	compra_cafe_nv = 	compra_cafe_nv + '1' WHERE idautoincrement_comprobante = '1'";
+        $nro_comprobante = ejecutarConsulta($sql_nro); if ($nro_comprobante['status'] == false) { return  $nro_comprobante;}
+      }       
+
       // creamos un pago de compra
       $insert_pago = "INSERT INTO pago_compra_grano( idcompra_grano, forma_pago, fecha_pago, monto, descripcion, comprobante, user_created) 
       VALUES ('$id','EFECTIVO','$fecha_compra','$monto_pago_compra', '', '', '".$_SESSION['idusuario']."')";

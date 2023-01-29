@@ -215,7 +215,7 @@
               <li class="nav-item  b-radio-3px" id="bloc_ComprasGrano">
                 <a href="#" class="nav-link pl-2" id="mCompraGrano">
                   <img src="../dist/svg/plomo-grano-cafe-ico.svg" class="nav-icon lComprasGrano-img" alt="" style="width: 21px !important;" >
-                  <p>Compras Grano <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">2</span></p>
+                  <p>Compras Café <i class="fas fa-angle-left right"></i> <span class="badge badge-info right">2</span></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->

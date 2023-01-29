@@ -27,12 +27,12 @@ function init() {
   // ══════════════════════════════════════ S E L E C T 2 ══════════════════════════════════════
   lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#idcliente', null);
   lista_select2("../ajax/ajax_general.php?op=select2Persona_por_tipo&tipo=2", '#filtro_cliente', null);
-  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco_cli', null);
+  lista_select2("../ajax/ajax_general.php?op=select2Banco", '#banco', null);
 
   // ══════════════════════════════════════ G U A R D A R   F O R M ══════════════════════════════════════
 
   $("#guardar_registro_compras").on("click", function (e) {  $("#submit-form-compras").submit(); });
-  $("#guardar_registro_cliente").on("click", function (e) { $("#submit-form-cliente").submit(); });
+  $("#guardar_registro_proveedor").on("click", function (e) { $("#submit-form-proveedor").submit(); });
   $("#guardar_registro_pago_compra").on("click", function (e) { $("#submit-form-pago-compra").submit(); });
 
   // ══════════════════════════════════════ INITIALIZE SELECT2 - COMPRAS ══════════════════════════════════════
@@ -47,8 +47,8 @@ function init() {
   $("#forma_pago_p").select2({ theme: "bootstrap4", placeholder: "Selecione forma de pago", allowClear: true, });
   // ══════════════════════════════════════ INITIALIZE SELECT2 - cliente ══════════════════════════════════════
 
-  $("#banco_cli").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
-  $("#tipo_documento_cli").select2({theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
+  $("#banco").select2({templateResult: templateBanco, theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
+  $("#tipo_documento_per").select2({theme: "bootstrap4", placeholder: "Selecione un banco", allowClear: true, });
   
   // ══════════════════════════════════════ INITIALIZE SELECT2 - MATERIAL ══════════════════════════════════════
 
@@ -67,6 +67,7 @@ function init() {
   $('#precio_total_p').number( true, 2 );
 
   no_select_tomorrow('#fecha_compra');
+  no_select_over_18('#nacimiento_per');
 
   $('#monto_pago_compra').number( true, 2 );
 
@@ -436,6 +437,7 @@ function agregarDetalleComprobante() {
     <td class="">
       <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
     </td>
+
     <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
@@ -507,9 +509,11 @@ function modificarSubtotales() {
       array_class_trabajador.forEach((element, index) => {
         // calculando peso neto
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
-        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+
+        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
 
         var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
         $(`.peso_neto_${element.id_cont}`).val(peso_neto);
@@ -557,9 +561,10 @@ function modificarSubtotales() {
 
       array_class_trabajador.forEach((element, index) => {
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
-        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
 
         var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
         $(`.peso_neto_${element.id_cont}`).val(peso_neto);
@@ -601,9 +606,10 @@ function modificarSubtotales() {
     } else {
       array_class_trabajador.forEach((element, index) => {
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
-        var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
+        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
+        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
 
         var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
         $(`.peso_neto_${element.id_cont}`).val(peso_neto);
@@ -1290,26 +1296,43 @@ function ver_documento_pago(doc, name_download) {
 
 
 // :::::::::::::::::::::::::: S E C C I O N   C L I E N T E  ::::::::::::::::::::::::::
+// abrimos el navegador de archivos
+$("#foto1_i").click(function() { $('#foto1').trigger('click'); });
+$("#foto1").change(function(e) { addImage(e,$("#foto1").attr("id")) });
+
+function foto1_eliminar() {
+	$("#foto1").val("");
+	$("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
+	$("#foto1_nombre").html("");
+}
+
 //Función limpiar
 function limpiar_form_cliente() {
-  $("#guardar_registro_cliente").html('Guardar Cambios').removeClass('disabled');
+  $("#guardar_registro_proveedor").html('Guardar Cambios').removeClass('disabled');
 
-  $("#idpersona_cli").val(""); 
-  $("#tipo_documento_cli").val("null").trigger("change");
-  $("#num_documento_cli").val(""); 
-  $("#nombre_cli").val(""); 
-  $("#input_socio_cli").val("0"); 
-  $("#email_cli").val(""); 
-  $("#telefono_cli").val(""); 
-  $("#banco_cli").val("").trigger("change");
-  $("#cta_bancaria_cli").val(""); 
-  $("#cci_cli").val(""); 
-  $("#titular_cuenta_cli").val(""); 
-  $("#direccion_cli").val("");
+  $("#idpersona_per").val(""); 
+  $("#tipo_documento_per").val("null").trigger("change");
+  $("#cargo_trabajador_per").val("1");
+  $("#id_tipo_persona_per").val("2");
 
-  $(".sino_cli").html('(NO)');
-  $("#socio_cli").prop('checked', false);
+  $("#num_documento_per").val(""); 
+  $("#nombre_per").val("");   
+  $("#email_per").val(""); 
+  $("#telefono_per").val(""); 
+  $("#direccion_per").val("");
 
+  $("#banco").val("").trigger("change");
+  $("#cta_bancaria").val(""); 
+  $("#cci").val(""); 
+  $("#titular_cuenta").val(""); 
+
+  $("#nacimiento_per").val("");
+  $("#edad_per").val("");
+  $(".edad_per").html("0 años.");  
+
+  $("#input_socio_per").val("0"); 
+  $(".sino_per").html('(NO)');
+  $("#socio_per").prop('checked', false);  
 
   $("#foto1_i").attr("src", "../dist/img/default/img_defecto.png");
 	$("#foto1").val("");
@@ -1325,50 +1348,39 @@ function limpiar_form_cliente() {
 // damos formato a: Cta, CCI
 function formato_banco() {
 
-  if ($("#banco_prov").select2("val") == null || $("#banco_prov").select2("val") == "" || $("#banco_prov").select2("val") == "1" ) {
+  if ($("#banco").select2("val") == null || $("#banco").select2("val") == "" || $("#banco").select2("val") == '1') {
 
-    $("#c_bancaria_prov").prop("readonly", true);
-    $("#cci_prov").prop("readonly", true);
-    $("#c_detracciones_prov").prop("readonly", true);
-
+    $("#cta_bancaria").prop("readonly",true);   $("#cci").prop("readonly",true);
   } else {
     
-    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
-    $(".chargue-format-3").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');    
+    $(".chargue-format-1").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>'); $(".chargue-format-2").html('<i class="fas fa-spinner fa-pulse fa-lg text-danger"></i>');
 
-    $.post("../ajax/ajax_general.php?op=formato_banco", { 'idbanco': $("#banco_prov").select2("val") }, function (e, status) {
-      
-      e = JSON.parse(e);  // console.log(e);
+    $("#cta_bancaria").prop("readonly",false);   $("#cci").prop("readonly",false);
 
-      if (e.status == true) {
-        $(".chargue-format-1").html("Cuenta Bancaria");
-        $(".chargue-format-2").html("CCI");
-        $(".chargue-format-3").html("Cuenta Detracciones");
+    $.post("../ajax/ajax_general.php?op=formato_banco", { idbanco: $("#banco").select2("val") }, function (e, status) {
 
-        $("#c_bancaria_prov").prop("readonly", false);
-        $("#cci_prov").prop("readonly", false);
-        $("#c_detracciones_prov").prop("readonly", false);
+      e = JSON.parse(e);  console.log(e); 
 
-        var format_cta = decifrar_format_banco(e.data.formato_cta);
-        var format_cci = decifrar_format_banco(e.data.formato_cci);
-        var formato_detracciones = decifrar_format_banco(e.data.formato_detracciones);
-        // console.log(format_cta, formato_detracciones);
+      if (e.status) {
+        $(".chargue-format-1").html('Cuenta Bancaria'); $(".chargue-format-2").html('CCI');
 
-        $("#c_bancaria_prov").inputmask(`${format_cta}`);
-        $("#cci_prov").inputmask(`${format_cci}`);
-        $("#c_detracciones_prov").inputmask(`${formato_detracciones}`);
+        var format_cta = decifrar_format_banco(e.data.formato_cta); var format_cci = decifrar_format_banco(e.data.formato_cci);
+
+        $("#cta_bancaria").inputmask(`${format_cta}`);
+
+        $("#cci").inputmask(`${format_cci}`);
       } else {
         ver_errores(e);
       }      
-    }).fail( function(e) { ver_errores(e); } );
-  }
+
+    }).fail( function(e) { ver_errores(e); } );   
+  }  
 }
 
 //guardar cliente
-function guardar_y_editar_cliente(e) {
+function guardar_proveedor(e) {
   // e.preventDefault(); //No se activará la acción predeterminada del evento
-  var formData = new FormData($("#form-cliente")[0]);
+  var formData = new FormData($("#form-proveedor")[0]);
 
   $.ajax({
     url: "../ajax/compra_grano.php?op=guardar_y_editar_cliente",
@@ -1381,7 +1393,7 @@ function guardar_y_editar_cliente(e) {
       try {
         if (e.status == true) {
           // toastr.success("cliente registrado correctamente");
-          Swal.fire("Correcto!", "cliente guardado correctamente.", "success");          
+          Swal.fire("Correcto!", "Cliente guardado correctamente.", "success");          
           limpiar_form_cliente();
           $("#modal-agregar-cliente").modal("hide");
           //Cargamos los items al select cliente
@@ -1392,7 +1404,7 @@ function guardar_y_editar_cliente(e) {
         }
       } catch (err) { console.log('Error: ', err.message); toastr_error("Error temporal!!",'Puede intentalo mas tarde, o comuniquese con:<br> <i><a href="tel:+51921305769" >921-305-769</a></i> ─ <i><a href="tel:+51921487276" >921-487-276</a></i>', 700); }       
       
-      $("#guardar_registro_cliente").html('Guardar Cambios').removeClass('disabled');
+      $("#guardar_registro_proveedor").html('Guardar Cambios').removeClass('disabled');
     },
     xhr: function () {
       var xhr = new window.XMLHttpRequest();
@@ -1400,20 +1412,20 @@ function guardar_y_editar_cliente(e) {
         if (evt.lengthComputable) {
           var percentComplete = (evt.loaded / evt.total)*100;
           /*console.log(percentComplete + '%');*/
-          $("#barra_progress_cliente").css({"width": percentComplete+'%'});
-          $("#barra_progress_cliente").text(percentComplete.toFixed(2)+" %");
+          $("#barra_progress_proveedor").css({"width": percentComplete+'%'});
+          $("#barra_progress_proveedor").text(percentComplete.toFixed(2)+" %");
         }
       }, false);
       return xhr;
     },
     beforeSend: function () {
-      $("#guardar_registro_cliente").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
-      $("#barra_progress_cliente").css({ width: "0%",  });
-      $("#barra_progress_cliente").text("0%").addClass('progress-bar-striped progress-bar-animated');
+      $("#guardar_registro_proveedor").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>').addClass('disabled');
+      $("#barra_progress_proveedor").css({ width: "0%",  });
+      $("#barra_progress_proveedor").text("0%").addClass('progress-bar-striped progress-bar-animated');
     },
     complete: function () {
-      $("#barra_progress_cliente").css({ width: "0%", });
-      $("#barra_progress_cliente").text("0%").removeClass('progress-bar-striped progress-bar-animated');
+      $("#barra_progress_proveedor").css({ width: "0%", });
+      $("#barra_progress_proveedor").text("0%").removeClass('progress-bar-striped progress-bar-animated');
     },
     error: function (jqXhr) { ver_errores(jqXhr); },
   });
@@ -1433,37 +1445,39 @@ function mostrar_para_editar_cliente() {
     e = JSON.parse(e);  console.log(e);
 
     if (e.status == true) {     
-      $("#tipo_documento_cli").val(e.data.tipo_documento).trigger("change");
-      $("#nombre_cli").val(e.data.nombres);
-      $("#num_documento_cli").val(e.data.numero_documento);
-      $("#direccion_cli").val(e.data.direccion);
-      $("#telefono_cli").val(e.data.celular);
-      $("#email_cli").val(e.data.correo);
-           
-      $("#titular_cuenta_cli").val(e.data.titular_cuenta);
-      $("#idpersona_cli").val(e.data.idpersona);
-      $("#ruc_cli").val(e.data.ruc);   
+      $("#idpersona_per").val(e.data.idpersona);
+      $("#tipo_documento_per").val(e.data.tipo_documento).trigger("change");     
+
+      $("#nombre_per").val(e.data.nombres);
+      $("#num_documento_per").val(e.data.numero_documento);
+      $("#direccion_per").val(e.data.direccion);
+      $("#telefono_per").val(e.data.celular);
+      $("#email_per").val(e.data.correo);
+
+      $("#nacimiento_per").val(e.data.fecha_nacimiento).trigger("change");
+      $("#edad_per").val(e.data.edad);        
     
-      $("#cta_bancaria_cli").val(e.data.cuenta_bancaria).trigger("change"); 
-      $("#cci_cli").val(e.data.cci).trigger("change"); 
-      $("#banco_cli").val(e.data.idbancos).trigger("change"); 
+      $("#cta_bancaria").val(e.data.cuenta_bancaria).trigger("change"); 
+      $("#cci").val(e.data.cci).trigger("change"); 
+      $("#banco").val(e.data.idbancos).trigger("change"); 
+      $("#titular_cuenta_per").val(e.data.titular_cuenta);
 
-      $("#sueldo_mensual_cli").val(e.data.sueldo_mensual);
-      $("#sueldo_diario_cli").val(e.data.sueldo_diario);  
-
-      $("#input_socio_cli").val(e.data.es_socio); 
-      $("#id_tipo_persona_cli").val(e.data.idtipo_persona); 
+      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
+      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
+      $("#cargo_trabajador_per").val(e.data.idcargo_trabajador);
       
-      if (e.data.es_socio==1) {        
-        $("#input_socio_cli").val('1');
-        $(".sino_cli").html('(SI)');        
-        if($('#socio_cli').is(':checked') ){  }else{ $("#socio_cli").prop('checked', true); }
-      }
+      $("#id_tipo_persona_per").val(e.data.idtipo_persona); 
+
+      $("#sueldo_mensual_per").val(e.data.sueldo_mensual);
+      $("#sueldo_diario_per").val(e.data.sueldo_diario);  
+      
+      $("#input_socio_per").val(e.data.es_socio);       
 
       if (e.data.foto_perfil!="") {
         $("#foto1_i").attr("src", "../dist/docs/persona/perfil/" + e.data.foto_perfil);
         $("#foto1_actual").val(e.data.foto_perfil);
       }
+      calcular_edad('#nacimiento_per','.edad_per','#edad_per'); 
 
       $("#cargando-3-fomulario").show();
       $("#cargando-4-fomulario").hide();
@@ -1544,8 +1558,6 @@ function guardaryeditar(e) {
   });
 }
 
-
-
 init();
 
 // .....::::::::::::::::::::::::::::::::::::: V A L I D A T E   F O R M  :::::::::::::::::::::::::::::::::::::::..
@@ -1556,8 +1568,8 @@ $(function () {
   $("#tipo_comprobante").on('change', function() { $(this).trigger('blur'); });
   $("#metodo_pagos").on('change', function() { $(this).trigger('blur'); });
 
-  $("#num_documento_cli").on('change', function() { $(this).trigger('blur'); });
-  $("#banco_cli").on('change', function() { $(this).trigger('blur'); });
+  $("#tipo_documento_per").on('change', function() { $(this).trigger('blur'); });
+  $("#banco").on('change', function() { $(this).trigger('blur'); });
 
   $("#form-compras").validate({
     ignore: '.select2-input, .select2-focusser',
@@ -1607,35 +1619,32 @@ $(function () {
     },
   });  
 
-  $("#form-cliente").validate({
+  $("#form-proveedor").validate({
     rules: {
-      tipo_documento_cli: { required: true },
-      num_documento_cli:  { required: true, minlength: 6, maxlength: 20 },
-      nombre_cli:         { required: true, minlength: 6, maxlength: 100 },
-      email_cli:          { email: true, minlength: 10, maxlength: 50 },
-      direccion_cli:      { minlength: 5, maxlength: 70 },
-      telefono_cli:       { minlength: 8 },
-      cta_bancaria_cli:   { minlength: 10,},
-      banco_cli:          { required: true},
-      sueldo_mensual_cli: { required: true},
+      tipo_documento_per: { required: true },
+      num_documento_per:  { required: true, minlength: 6, maxlength: 20 },
+      nombre_per:         { required: true, minlength: 6, maxlength: 100 },
+      email_per:          { email: true, minlength: 10, maxlength: 50 },
+      direccion_per:      { minlength: 5, maxlength: 200 },
+      telefono_per:       { minlength: 8 },
+      cta_bancaria_per:   { minlength: 10,},
+      banco_per:          { required: true},
     },
     messages: {
-      tipo_documento_cli: { required: "Campo requerido.", },
-      num_documento_cli:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
-      nombre_cli:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
-      email_cli:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
-      direccion_cli:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 70 caracteres.", },
-      telefono_cli:       { minlength: "MÍNIMO 8 caracteres.", },
-      cta_bancaria_cli:   { minlength: "MÍNIMO 10 caracteres.", },
-      banco_cli:          { required: "Campo requerido.", },
-      sueldo_mensual_cli: { required: "Campo requerido.", }
+      tipo_documento_per: { required: "Campo requerido.", },
+      num_documento_per:  { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 20 caracteres.", },
+      nombre_per:         { required: "Campo requerido.", minlength: "MÍNIMO 6 caracteres.", maxlength: "MÁXIMO 100 caracteres.", },
+      email_per:          { required: "Campo requerido.", email: "Ingrese un coreo electronico válido.", minlength: "MÍNIMO 10 caracteres.", maxlength: "MÁXIMO 50 caracteres.", },
+      direccion_per:      { minlength: "MÍNIMO 5 caracteres.", maxlength: "MÁXIMO 200 caracteres.", },
+      telefono_per:       { minlength: "MÍNIMO 8 caracteres.", },
+      cta_bancaria_per:   { minlength: "MÍNIMO 10 caracteres.", },
+      banco_per:          { required: "Campo requerido.", },
     },
 
     errorElement: "span",
 
     errorPlacement: function (error, element) {
       error.addClass("invalid-feedback");
-
       element.closest(".form-group").append(error);
     },
 
@@ -1648,7 +1657,7 @@ $(function () {
     },
 
     submitHandler: function (e) {
-      guardar_y_editar_cliente(e);
+      guardar_proveedor(e);
     },
   });
 
@@ -1686,13 +1695,12 @@ $(function () {
     },
   });
 
-
   $("#idcliente").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#metodo_pago").rules('add', { required: true, messages: {  required: "Campo requerido" } });
   $("#tipo_comprobante").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 
-  $("#num_documento_cli").rules('add', { required: true, messages: {  required: "Campo requerido" } });
-  $("#banco_cli").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#tipo_documento_per").rules('add', { required: true, messages: {  required: "Campo requerido" } });
+  $("#banco").rules('add', { required: true, messages: {  required: "Campo requerido" } });
 });
 
 

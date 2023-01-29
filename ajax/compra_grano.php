@@ -15,7 +15,7 @@ if (!isset($_SESSION["nombre"])) {
     require_once "../modelos/Persona.php";
 
     $compra_grano = new Compra_grano();
-    $cliente = new Persona();
+    $persona = new Persona();
     
     date_default_timezone_set('America/Lima');  $date_now = date("d-m-Y h.i.s A");
     $toltip = '<script> $(function () { $(\'[data-toggle="tooltip"]\').tooltip(); }); </script>';
@@ -50,21 +50,30 @@ if (!isset($_SESSION["nombre"])) {
     $descripcion_p          = isset($_POST["descripcion_p"]) ? limpiarCadena($_POST["descripcion_p"]) : "";     
 
     // :::::::::::::::::::::::::::::::::::: D A T O S   C L I E N T E ::::::::::::::::::::::::::::::::::::::
-    $idpersona_cli	  	  = isset($_POST["idpersona_cli"])? limpiarCadena($_POST["idpersona_cli"]):"";
-    $id_tipo_persona_cli 	= isset($_POST["id_tipo_persona_cli"])? limpiarCadena($_POST["id_tipo_persona_cli"]):"";
-    $nombre_cli 		      = isset($_POST["nombre_cli"])? limpiarCadena($_POST["nombre_cli"]):"";
-    $tipo_documento_cli 	= isset($_POST["tipo_documento_cli"])? limpiarCadena($_POST["tipo_documento_cli"]):"";
-    $num_documento_cli  	= isset($_POST["num_documento_cli"])? limpiarCadena($_POST["num_documento_cli"]):"";
-    $input_socio_cli     	= isset($_POST["input_socio_cli"])? limpiarCadena($_POST["input_socio_cli"]):"";
-    $direccion_cli		    = isset($_POST["direccion_cli"])? limpiarCadena($_POST["direccion_cli"]):"";
-    $telefono_cli		      = isset($_POST["telefono_cli"])? limpiarCadena($_POST["telefono_cli"]):"";     
-    $email_cli			      = isset($_POST["email_cli"])? limpiarCadena($_POST["email_cli"]):"";
-    $banco_cli            = isset($_POST["banco_cli"])? $_POST["banco_cli"] :"";
-    $cta_bancaria_format_cli  = isset($_POST["cta_bancaria_cli"])?$_POST["cta_bancaria_cli"]:"";
-    $cta_bancaria_cli     = isset($_POST["cta_bancaria_cli"])?$_POST["cta_bancaria_cli"]:"";
-    $cci_format_cli      	= isset($_POST["cci_cli"])? $_POST["cci_cli"]:"";
-    $cci_cli            	= isset($_POST["cci_cli"])? $_POST["cci_cli"]:"";
-    $titular_cuenta_cli		= isset($_POST["titular_cuenta_cli"])? limpiarCadena($_POST["titular_cuenta_cli"]):"";
+    $idpersona_per	  	  = isset($_POST["idpersona_per"])? limpiarCadena($_POST["idpersona_per"]):"";
+    $id_tipo_persona_per 	= isset($_POST["id_tipo_persona_per"])? limpiarCadena($_POST["id_tipo_persona_per"]):"";
+    $nombre_per 		      = isset($_POST["nombre_per"])? limpiarCadena($_POST["nombre_per"]):"";
+    $tipo_documento_per 	= isset($_POST["tipo_documento_per"])? limpiarCadena($_POST["tipo_documento_per"]):"";
+    $num_documento_per  	= isset($_POST["num_documento_per"])? limpiarCadena($_POST["num_documento_per"]):"";
+    $input_socio_per     	= isset($_POST["input_socio_per"])? limpiarCadena($_POST["input_socio_per"]):"";
+    $direccion_per		    = isset($_POST["direccion_per"])? limpiarCadena($_POST["direccion_per"]):"";
+    $telefono_per		      = isset($_POST["telefono_per"])? limpiarCadena($_POST["telefono_per"]):"";     
+    $email_per			      = isset($_POST["email_per"])? limpiarCadena($_POST["email_per"]):"";
+    
+    $banco                = isset($_POST["banco"])? $_POST["banco"] :"";
+    $cta_bancaria_format  = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
+    $cta_bancaria         = isset($_POST["cta_bancaria"])?$_POST["cta_bancaria"]:"";
+    $cci_format      	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $cci            	    = isset($_POST["cci"])? $_POST["cci"]:"";
+    $titular_cuenta_per		= isset($_POST["titular_cuenta_per"])? limpiarCadena($_POST["titular_cuenta_per"]):"";
+
+    $nacimiento_per       = isset($_POST["nacimiento_per"])? limpiarCadena($_POST["nacimiento_per"]):"";
+    $cargo_trabajador_per = isset($_POST["cargo_trabajador_per"])? limpiarCadena($_POST["cargo_trabajador_per"]):"";
+    $sueldo_mensual_per   = isset($_POST["sueldo_mensual_per"])? limpiarCadena($_POST["sueldo_mensual_per"]):"";
+    $sueldo_diario_per    = isset($_POST["sueldo_diario_per"])? limpiarCadena($_POST["sueldo_diario_per"]):"";
+    $edad_per             = isset($_POST["edad_per"])? limpiarCadena($_POST["edad_per"]):"";
+      
+    $imagen1			        = isset($_POST["foto1"])? limpiarCadena($_POST["foto1"]):"";
 
     switch ($_GET["op"]) {       
         
@@ -75,34 +84,37 @@ if (!isset($_SESSION["nombre"])) {
         if (!file_exists($_FILES['foto1']['tmp_name']) || !is_uploaded_file($_FILES['foto1']['tmp_name'])) {
           $imagen1=$_POST["foto1_actual"]; $flat_img1 = false;
         } else {
-          $ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;	
+          $ext1 = explode(".", $_FILES["foto1"]["name"]); $flat_img1 = true;
           $imagen1 = $date_now .' '. random_int(0, 20) . round(microtime(true)) . random_int(21, 41) . '.' . end($ext1);
           move_uploaded_file($_FILES["foto1"]["tmp_name"], "../dist/docs/persona/perfil/" . $imagen1);          
         }
 
-        if (empty($idpersona_cli)){
-          
-          $rspta=$cliente->insertar($id_tipo_persona_cli, $tipo_documento_cli, $num_documento_cli, $nombre_cli, $input_socio_cli, $email_cli, $telefono_cli, $banco_cli, $cta_bancaria_cli, $cci_cli, $titular_cuenta_cli, $direccion_cli,  $imagen1);          
+        if (empty($idpersona_per)){
+
+          $rspta=$persona->insertar($id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
+                      
           echo json_encode($rspta, true);
-
-        }else {
-
+          
+        }else{
           // validamos si existe LA IMG para eliminarlo
           if ($flat_img1 == true) {
-            $datos_f1 = $cliente->obtenerImg($idpersona_cli);
+            $datos_f1 = $persona->obtenerImg($idpersona_per);
             $img1_ant = $datos_f1['data']['foto_perfil'];
-            if ($img1_ant != "") { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
-          }            
+            if ( !empty($img1_ant) ) { unlink("../dist/docs/persona/perfil/" . $img1_ant);  }
+          }           
 
           // editamos un persona existente
-          $rspta=$cliente->editar($idpersona_cli,$id_tipo_persona_cli, $tipo_documento_cli, $num_documento_cli, $nombre_cli, $input_socio_cli, $email_cli, $telefono_cli, $banco_cli, $cta_bancaria_cli, $cci_cli, $titular_cuenta_cli, $direccion_cli,  $imagen1);          
+          $rspta=$persona->editar($idpersona_per,$id_tipo_persona_per,$tipo_documento_per,$num_documento_per,$nombre_per,$input_socio_per,$email_per,$telefono_per,$banco,$cta_bancaria,$cci,
+            $titular_cuenta_per,$direccion_per,$nacimiento_per,$cargo_trabajador_per,$sueldo_mensual_per,$sueldo_diario_per,$edad_per, $imagen1);
+            
           echo json_encode($rspta, true);
         }
     
       break;
 
       case 'mostrar_editar_cliente':
-        $rspta = $cliente->mostrar($_POST["idcliente"]);
+        $rspta = $persona->mostrar($_POST["idcliente"]);
         //Codificar el resultado utilizando json
         echo json_encode($rspta, true);
       break;

@@ -53,7 +53,8 @@ function validar_response(e) {
                 $(location).attr("href","escritorio.php");
             } else {
                 //console.log(redirecinando.file);
-                $(location).attr("href",redirecinando.file);                                
+                //$(location).attr("href",redirecinando.file);  
+                $(location).attr("href","escritorio.php");                              
             }
             //console.log(redirecinando);            
         }
