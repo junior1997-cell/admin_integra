@@ -2,7 +2,7 @@
 //Incluímos inicialmente la conexión a la base de datos
 require "../config/Conexion_v2.php";
 
-class Compra_grano
+class Compra_cafe
 {
   //Implementamos nuestro constructor
   public function __construct()
@@ -14,9 +14,10 @@ class Compra_grano
   //Implementamos un método para insertar registros
   
   public function insertar(  $idcliente, $ruc_dni_cliente, $fecha_compra, $tipo_comprobante, $numero_comprobante, $descripcion, 
-  $metodo_pago, $monto_pago_compra, $fecha_proximo_pago, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, 
-  $tipo_grano, $unidad_medida, $peso_bruto, $dcto_humedad, $porcentaje_cascara, $dcto_embase, $peso_neto, $precio_sin_igv,
-  $precio_igv, $precio_con_igv, $descuento, $subtotal_producto ) {   
+  $metodo_pago, $monto_pago_compra, $fecha_proximo_pago, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $tipo_grano, $unidad_medida, $peso_bruto, 
+  $sacos, $dcto_humedad, $dcto_rendimiento, $dcto_segunda, $dcto_cascara, $dcto_taza, $dcto_tara, 
+  $peso_neto,  $quintal_neto, 
+  $precio_sin_igv, $precio_igv, $precio_con_igv, $descuento, $subtotal_producto ) {   
 
     $sql_2 = "SELECT p.nombres as cliente, p.tipo_documento, p.numero_documento, tp.nombre as tipo_persona, cg.idcompra_grano, cg.idpersona, cg.fecha_compra, cg.metodo_pago, cg.tipo_comprobante, cg.numero_comprobante, cg.total_compra, cg.descripcion, cg.estado, cg.estado_delete
     FROM compra_grano as cg, persona as p, tipo_persona as tp
@@ -62,11 +63,14 @@ class Compra_grano
         
         while ($indice < count($tipo_grano)) {                  
 
-          $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, porcentaje_cascara, dcto_embase, 
-          peso_neto, precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
-          VALUES ('$id','$tipo_grano[$indice]','$unidad_medida[$indice]','$peso_bruto[$indice]','$dcto_humedad[$indice]','$porcentaje_cascara[$indice]',
-          '$dcto_embase[$indice]','$peso_neto[$indice]','$precio_sin_igv[$indice]','$precio_igv[$indice]','$precio_con_igv[$indice]','$descuento[$indice]',
-          '$subtotal_producto[$indice]')";
+          $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, 
+          sacos, dcto_humedad, dcto_rendimiento, dcto_segunda, dcto_cascara, dcto_taza, dcto_tara, 
+          peso_neto, quintal_neto,
+          precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
+          VALUES ('$id','$tipo_grano[$indice]','$unidad_medida[$indice]','$peso_bruto[$indice]',
+          '$sacos[$indice]','$dcto_humedad[$indice]','$dcto_rendimiento[$indice]','$dcto_segunda[$indice]','$dcto_cascara[$indice]','$dcto_taza[$indice]','$dcto_tara[$indice]',
+          '$peso_neto[$indice]', '$quintal_neto[$indice]',
+          '$precio_sin_igv[$indice]','$precio_igv[$indice]','$precio_con_igv[$indice]','$descuento[$indice]', '$subtotal_producto[$indice]')";
           
           $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
 
@@ -103,7 +107,7 @@ class Compra_grano
   //Implementamos un método para editar registros
   public function editar( $idcompra_grano, $idcliente, $ruc_dni_cliente, $fecha_compra,  $tipo_comprobante, $numero_comprobante, 
   $descripcion, $metodo_pago, $fecha_proximo_pago, $subtotal_compra, $val_igv, $igv_compra, $total_compra, $tipo_gravada, $tipo_grano, $unidad_medida, $peso_bruto, 
-  $dcto_humedad, $porcentaje_cascara, $dcto_embase, $peso_neto, $precio_sin_igv,
+  $dcto_humedad, $dcto_cascara, $dcto_tara, $peso_neto, $precio_sin_igv,
   $precio_igv, $precio_con_igv, $descuento, $subtotal_producto ) {
 
     if ( !empty($idcompra_grano) ) {
@@ -126,10 +130,10 @@ class Compra_grano
         
       while ($indice < count($tipo_grano)) {            
 
-        $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, porcentaje_cascara, dcto_embase, 
+        $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, dcto_cascara, dcto_tara, 
         peso_neto, precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
-        VALUES ('$idcompra_grano','$tipo_grano[$indice]','$unidad_medida[$indice]','$peso_bruto[$indice]','$dcto_humedad[$indice]','$porcentaje_cascara[$indice]',
-        '$dcto_embase[$indice]','$peso_neto[$indice]','$precio_sin_igv[$indice]','$precio_igv[$indice]','$precio_con_igv[$indice]','$descuento[$indice]',
+        VALUES ('$idcompra_grano','$tipo_grano[$indice]','$unidad_medida[$indice]','$peso_bruto[$indice]','$dcto_humedad[$indice]','$dcto_cascara[$indice]',
+        '$dcto_tara[$indice]','$peso_neto[$indice]','$precio_sin_igv[$indice]','$precio_igv[$indice]','$precio_con_igv[$indice]','$descuento[$indice]',
         '$subtotal_producto[$indice]')";
         
         $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
@@ -156,8 +160,10 @@ class Compra_grano
     WHERE cg.idpersona = p.idpersona AND p.idtipo_persona = tp.idtipo_persona AND idcompra_grano = '$idcompra_grano' ;";
     $compra = ejecutarConsultaSimpleFila($sql); if ($compra['status'] == false) { return $compra; }
 
-    $sql_2 = "SELECT iddetalle_compra_grano, idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, porcentaje_cascara, 
-    dcto_embase, peso_neto, precio_sin_igv, precio_igv, precio_con_igv, descuento_adicional, subtotal
+    $sql_2 = "SELECT iddetalle_compra_grano, idcompra_grano, tipo_grano, unidad_medida, peso_bruto, 
+    sacos, dcto_humedad, dcto_rendimiento, dcto_segunda, dcto_cascara, dcto_taza, dcto_tara,
+    peso_neto, quintal_neto,
+    precio_sin_igv, precio_igv, precio_con_igv, descuento_adicional, subtotal
     FROM detalle_compra_grano 
     WHERE estado = '1' AND estado_delete = '1' AND idcompra_grano = '$idcompra_grano'; ";
     $producto = ejecutarConsultaArray($sql_2); if ($producto['status'] == false) { return $producto;  }   

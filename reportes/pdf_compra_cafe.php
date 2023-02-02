@@ -11,11 +11,11 @@ if (!isset($_SESSION["nombre"])) {
 } else {
       
   require 'Factura.php';
-  require_once "../modelos/Compra_grano.php";
+  require_once "../modelos/Compra_cafe.php";
 
   //Establecemos la configuración de la factura
   $pdf = new PDF_Invoice('P', 'mm', 'A4');  
-  $compra_grano = new Compra_grano();
+  $compra_grano = new Compra_cafe();
   $numero_a_letra = new NumeroALetras();
 
   if (empty($_GET)) {
@@ -30,14 +30,15 @@ if (!isset($_SESSION["nombre"])) {
   $logo     = "../dist/img/default/empresa-logo.jpg";
   $ext_logo = "jpg";
   $empresa  = 'INTEGRA PERU SAC';
-  $documento= 'RUC: 3532432423' ;
-  $direccion= 'JR. LAS ROSASA / JAEN / PERU';
-  $telefono = '938-724-523' ;
+  $documento= 'RUC: 20608636766' ;
+  $direccion= 'C.P. Churuyacu / TABACONAS / JAEN ';
+  $telefono = '937-594-303 / 995-742-995 ' ;
+  $email = 'integraperu20@gmail.com' ;
 
   //Enviamos los datos de la empresa al método addSociete de la clase Factura
   $pdf->AddPage();  
   $pdf->addSociete(utf8_decode($empresa), 
-  $documento . "\n" . utf8_decode("Dirección: ") . utf8_decode($direccion) . "\n" . utf8_decode("Teléfono: ") . $telefono , 
+  $documento . "\n" . utf8_decode("Dirección: ") . utf8_decode($direccion) . "\n" . utf8_decode("Teléfono: ") . $telefono  . "\n" . utf8_decode("Email: ") . $email, 
   $logo, $ext_logo);
   $pdf->fact_dev($rspta['data']['tipo_comprobante'], $rspta['data']['numero_comprobante']);
   $pdf->addClient( zero_fill($rspta['data']['idpersona'], 6) ); #codigo de Persona

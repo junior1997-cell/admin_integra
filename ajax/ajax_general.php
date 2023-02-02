@@ -17,11 +17,13 @@
     require_once "../modelos/Producto.php";
     require_once "../modelos/Compra_producto.php";
     require_once "../modelos/Venta_producto.php";
+    require_once "../modelos/Compra_cafe.php";
     
     $ajax_general   = new Ajax_general();
     $compra_insumos = new Producto($_SESSION['idusuario']);
     $compra_producto= new Compra_producto();
     $venta_producto = new Venta_producto();
+    $compra_cafe = new Compra_cafe();
 
     $scheme_host  =  ($_SERVER['HTTP_HOST'] == 'localhost' ? 'http://localhost/admin_integra/' :  $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].'/');
     $imagen_error = "this.src='../dist/svg/404-v2.svg'";
@@ -639,6 +641,316 @@
         </div> ';
 
         $retorno = ['status' => true, 'message' => 'todo oka', 'data' => $inputs . $tabla_detalle ,];
+        echo json_encode( $retorno, true );
+
+      break;
+
+      /* ══════════════════════════════════════ C O M P R A   D E   C A F E ════════════════════════════ */
+      case 'ver_detalle_compras_grano':
+        
+        $rspta = $compra_cafe->mostrar_compra_para_editar($_GET['idcompra_grano']);
+
+        $es_socio = $rspta['data']['cliente'] ? 'SOCIO': 'NO SOCIO';    
+
+        $inputs = '<!-- Tipo de Empresa -->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label class="font-size-15px" for="idproveedor">Proveedor</label>
+              <h5 class="form-control-mejorado-sm" >'.$rspta['data']['cliente'].' - '.$rspta['data']['numero_documento'].' - '.$es_socio.'</h5>
+            </div>
+          </div>
+          <!-- fecha -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label class="font-size-15px" for="fecha_compra">Fecha </label>
+              <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['fecha_compra']).' </span>
+            </div>
+          </div>
+          <!-- fecha -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label class="font-size-15px" for="fecha_compra">Método de pago </label>
+              <span class="form-control form-control-sm">'.$rspta['data']['metodo_pago'].' </span>
+            </div>
+          </div>
+          <!-- Tipo de comprobante -->
+          <div class="col-lg-3">
+            <div class="form-group">
+              <label class="font-size-15px" for="tipo_comprovante">Tipo Comprobante</label>
+              <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['tipo_comprobante'])) ? '- - -' :  $rspta['data']['tipo_comprobante'])  .' </span>
+            </div>
+          </div>
+          <!-- serie_comprovante-->
+          <div class="col-lg-2">
+            <div class="form-group">
+              <label class="font-size-15px" for="serie_comprovante">N° de Comprobante</label>
+              <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['numero_comprobante'])) ? '- - -' :  $rspta['data']['numero_comprobante']).' </span>
+            </div>
+          </div>
+          <!-- IGV-->
+          <div class="col-lg-1 " >
+            <div class="form-group">
+              <label class="font-size-15px" for="igv">IGV</label>
+              <span class="form-control form-control-sm"> '.$rspta['data']['val_igv'].' </span>                                 
+            </div>
+          </div>
+          <!-- Descripcion-->
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label class="font-size-15px" for="descripcion">Descripción </label> <br />
+              <textarea class="form-control form-control-sm" readonly rows="1">'.((empty($rspta['data']['descripcion'])) ? '- - -' :$rspta['data']['descripcion']).'</textarea>
+            </div>
+        </div>';
+
+        $tbody = ""; $cont = 1;
+
+        foreach ($rspta['data']['detalle_compra'] as $key => $reg) {
+          
+          $tbody .= '<tr class="filas">
+            <td class="text-center p-6px">' . $cont++ . '</td>
+            <td class="text-left p-6px">' . $reg['tipo_grano'] . '</td>
+            <td class="text-center p-6px">'. $reg['unidad_medida'] . '</td>
+            <td class="text-right p-6px">' . $reg['peso_bruto'] . '</td>
+            <td class="text-right p-6px">' . $reg['sacos'] . '</td>
+            <td class="text-right p-6px">' . $reg['dcto_humedad'] . '</td>
+            <td class="text-right p-6px">' . $reg['dcto_rendimiento'] . '</td>
+            <td class="text-right p-6px">' . $reg['dcto_segunda'] . '</td>
+            <td class="text-right p-6px">' . $reg['dcto_cascara'] . '</td>	
+            <td class="text-right p-6px">' . $reg['dcto_taza'] . '</td>	
+            <td class="text-right p-6px">' . $reg['dcto_tara'] . '</td>	
+            <td class="text-right p-6px">' . number_format($reg['peso_neto'], 2, '.',',') . '</td>
+            <td class="text-right p-6px">' . number_format($reg['quintal_neto'], 2, '.',',') . '</td>
+            <td class="text-right p-6px">' . number_format($reg['precio_sin_igv'], 2, '.',',') . '</td>
+            <td class="text-right p-6px">' . number_format($reg['precio_igv'], 2, '.',',') . '</td>
+            <td class="text-right p-6px">' . number_format($reg['precio_con_igv'], 2, '.',',') . '</td>
+            <td class="text-right p-6px">' . number_format($reg['descuento_adicional'], 2, '.',',') .'</td>
+            <td class="text-right p-6px">' . number_format($reg['subtotal'], 2, '.',',') .'</td>
+          </tr>';
+        }         
+
+        $tabla_detalle = '<div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive">
+          <table class="table table-striped table-bordered table-condensed table-hover" id="tabla_detalle_factura">
+            <thead style="background-color:#00821e80;">
+              <tr class="text-center hidden">
+                <th class="p-10px">Proveedor:</th>
+                <th class="text-center p-10px" colspan="12" >'.$rspta['data']['cliente'].'</th>
+              </tr>
+              <tr class="text-center hidden">                
+                <th class="text-center p-10px" colspan="3" >'.((empty($rspta['data']['tipo_comprobante'])) ? '' :  $rspta['data']['tipo_comprobante']). ' ─ ' . ((empty($rspta['data']['numero_comprobante'])) ? '' :  $rspta['data']['numero_comprobante']) .'</th>
+                <th class="p-10px">Fecha:</th>
+                <th class="text-center p-10px" colspan="3" >'.format_d_m_a($rspta['data']['fecha_compra']).'</th>
+                <th class="p-10px">Metodo de pago:</th>
+                <th class="text-center p-10px" colspan="3" >'.$rspta['data']['metodo_pago'].'</th>
+              </tr>
+              <tr class="text-center">
+                <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Opciones">#</th>
+                <th rowspan="2" class="p-y-2px">Tipo Grano</th>
+                <th rowspan="2" class="p-y-2px">Unidad</th>
+                <th rowspan="2" class="p-y-2px">Peso Bruto</th>
+                <th colspan="7" class="p-y-2px">Descuento en KG</th>
+                <th rowspan="2" class="p-y-2px">Peso Neto</th>
+                <th rowspan="2" class="p-y-2px">Quintal Neto <br> <small >('.($reg['tipo_grano'] == 'PERGAMINO' ? '55.2' : '56.0' ).')</small></th>
+                <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
+                <th rowspan="2" class="p-y-2px">IGV</th>
+                <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Precio">Precio</th>
+                <th rowspan="2" class="p-y-2px">Descuento <br> <small>(adicional)</small></th>
+                <th rowspan="2" class="p-y-2px">Subtotal</th>
+              </tr>
+
+              <tr class="text-center">                
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Sacos">Sacos</th>
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Humedad">% H</th>
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Rendimiento">% R</th>  
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Segunda">% S</th>                                          
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Cáscara">% C</th>
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Taza">% T</th>
+                <th class="p-y-1px" data-toggle="tooltip" data-original-title="Tara">(Kg) Tara</th>
+              </tr>
+            </thead>
+            <tbody>'.$tbody.'</tbody>          
+            <tfoot>
+              <tr>
+                  <td class="p-0" colspan="16"></td>
+                  <td class="p-0 text-right"> <p class="mt-1 mb-1 mr-1">'.$rspta['data']['tipo_gravada'].'</p> </td>
+                  <td class="p-0 text-right">
+                    <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['subtotal_compra'], 2, '.',',') . '</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-0" colspan="16"></td>
+                  <td class="p-0 text-right">
+                    <h6 class="mt-1 mb-1 mr-1">IGV('.( ( empty($rspta['data']['val_igv']) ? 0 : floatval($rspta['data']['val_igv']) )  * 100 ).'%)</h6>
+                  </td>
+                  <td class="p-0 text-right">
+                    <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['igv_compra'], 2, '.',',') . '</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-0" colspan="16"></td>
+                  <td class="p-0 text-right"> <h5 class="mt-1 mb-1 mr-1 font-weight-bold">TOTAL</h5> </td>
+                  <td class="p-0 text-right">
+                    <h5 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['total_compra'], 2, '.',',') . '</h5>
+                  </td>
+                </tr>
+            </tfoot>
+          </table>
+        </div> ';
+        $retorno = ['status' => true, 'message' => 'todo oka', 'data' => $inputs . $tabla_detalle ,];
+        echo json_encode( $retorno, true );
+
+      break;
+
+      case 'ver_detalle_compras_grano_v2':
+        
+        $rspta = $compra_cafe->mostrar_compra_para_editar($_GET['idcompra_grano']);
+
+        $es_socio = $rspta['data']['cliente'] ? 'SOCIO': 'NO SOCIO';     
+
+        $tabla_detalle = '
+        <!--tabla detalles compra-->
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="font-size-15px" for="idproveedor">Proveedor</label>
+                <h5 class="form-control-mejorado-sm" >'.$rspta['data']['cliente'].' - '.$rspta['data']['numero_documento'].' - '.$es_socio.'</h5>
+              </div>
+            </div>
+            <!-- fecha -->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label class="font-size-15px" for="fecha_compra">Fecha </label>
+                <span class="form-control form-control-sm"><i class="far fa-calendar-alt"></i>&nbsp;&nbsp;&nbsp;'.format_d_m_a($rspta['data']['fecha_compra']).' </span>
+              </div>
+            </div>
+            <!-- fecha -->
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label class="font-size-15px" for="fecha_compra">Método de pago </label>
+                <span class="form-control form-control-sm">'.$rspta['data']['metodo_pago'].' </span>
+              </div>
+            </div>
+            <!-- Tipo de comprobante -->
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label class="font-size-15px" for="tipo_comprovante">Tipo Comprobante</label>
+                <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['tipo_comprobante'])) ? '- - -' :  $rspta['data']['tipo_comprobante'])  .' </span>
+              </div>
+            </div>
+            <!-- serie_comprovante-->
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label class="font-size-15px" for="serie_comprovante">N° de Comprobante</label>
+                <span  class="form-control form-control-sm"> '. ((empty($rspta['data']['numero_comprobante'])) ? '- - -' :  $rspta['data']['numero_comprobante']).' </span>
+              </div>
+            </div>
+            <!-- IGV-->
+            <div class="col-lg-4" >
+              <div class="form-group">
+                <label class="font-size-15px" for="igv">IGV</label>
+                <span class="form-control form-control-sm"> '.$rspta['data']['val_igv'].' </span>                                 
+              </div>
+            </div>
+            <!-- Descripcion-->
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="font-size-15px" for="descripcion">Base </label> <br />
+                <textarea class="form-control form-control-sm" readonly rows="1">'.((empty($rspta['data']['descripcion'])) ? '- - -' :$rspta['data']['descripcion']).'</textarea>
+              </div>
+            </div>
+          </div>
+        </div>  
+
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 table-responsive ">          
+          <table id="detalles" class="table /*table-striped*/ table-bordered table-condensed table-hover">                                      
+            <tbody>
+              <tr >
+                <th>TIPO DE CAFE</th>
+                <td class="py-1 text-left form-group">'.$rspta['data']['detalle_compra'][0]['tipo_grano'].'</td>
+              </tr>
+              <tr>
+                <th class="py-1">UNDIAD</th>
+                <td class="py-1 text-left">'.$rspta['data']['detalle_compra'][0]['unidad_medida'].'</td>
+              </tr>
+              <tr>
+                <th class="py-1">KILOS BRUTOS </th>
+                <td class="py-1 text-right form-group text-bold" >'.number_format($rspta['data']['detalle_compra'][0]['peso_bruto'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">SACOS</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['sacos'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">HUMEDAD(%)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_humedad'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">RENDIMINETO(%)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_rendimiento'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">SEGUNDA(%)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_segunda'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">CASCARA(%)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_taza'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">TAZA(%)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_cascara'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">TARA(SACOS + HUMEDAD)</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['dcto_tara'] , 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">KG. NETOS </th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['peso_neto'], 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">QUINTAL NETO <span>('. ($rspta['data']['detalle_compra'][0]['tipo_grano'] == 'PERGAMINO' ? '55.2' : '56.0').')</span></th>
+                <td class="py-1 text-right form-group text-bold">'.number_format($rspta['data']['detalle_compra'][0]['quintal_neto'], 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">PRECIO</th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['precio_con_igv'], 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1">DESCUENTO <small>(adicional)</small></th>
+                <td class="py-1 text-right form-group">'.number_format($rspta['data']['detalle_compra'][0]['descuento_adicional'], 2, '.',',').'</td>
+              </tr>
+              <tr>
+                <th class="py-1 text-right">SUBTOTAL</th>
+                <td class="py-1 text-right">'.number_format($rspta['data']['detalle_compra'][0]['subtotal'], 2, '.',',').'</td>
+              </tr>
+            </tbody>
+            <tfoot>              
+              <tr>
+                <td class="p-0 text-right"> <p class="mt-1 mb-1 mr-1">'.$rspta['data']['tipo_gravada'].'</p> </td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['subtotal_compra'], 2, '.',',') . '</h6>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1">IGV('.( ( empty($rspta['data']['val_igv']) ? 0 : floatval($rspta['data']['val_igv']) )  * 100 ).'%)</h6>
+                </td>
+                <td class="p-0 text-right">
+                  <h6 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['igv_compra'], 2, '.',',') . '</h6>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0 text-right"> <h5 class="mt-1 mb-1 mr-1 font-weight-bold">TOTAL</h5> </td>
+                <td class="p-0 text-right">
+                  <h5 class="mt-1 mb-1 mr-1 pl-1 font-weight-bold text-nowrap formato-numero-conta"><span>S/</span>' . number_format($rspta['data']['total_compra'], 2, '.',',') . '</h5>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>   
+        ';
+        $retorno = ['status' => true, 'message' => 'todo oka', 'data' => $tabla_detalle ,];
         echo json_encode( $retorno, true );
 
       break;

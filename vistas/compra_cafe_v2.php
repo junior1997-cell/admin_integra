@@ -14,7 +14,7 @@
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title> Compras Grano | Admin Integra </title>
+        <title> Compras Cafe | Admin Integra </title>
 
         <?php $title = "Compras"; require 'head.php'; ?>
 
@@ -307,150 +307,203 @@
                                 <div class="row" id="cargando-1-fomulario">
                                   <input type="hidden" name="idcompra_grano" id="idcompra_grano" /> 
 
-                                  <!-- Tipo de Empresa -->
-                                  <div class="col-lg-5">
-                                    <div class="form-group">
-                                      <label for="idcliente">Cliente <sup class="text-danger">(único*)</sup></label>
-                                      <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
-                                      <input type="hidden" name="ruc_dni_cliente" id="ruc_dni_cliente" /> 
-                                    </div>
-                                  </div>
-
-                                  <!-- adduser -->
-                                  <div class="col-lg-1">
-                                    <div class="form-group">
-                                    <label for="Add" class="d-none d-sm-inline-block text-break" style="color: white;">.</label> <br class="d-none d-sm-inline-block">
-                                      <a data-toggle="modal" href="#modal-agregar-cliente" >
-                                        <button type="button" class="btn btn-success p-x-6px" data-toggle="tooltip" data-original-title="Agregar Provedor" onclick="limpiar_form_cliente();">
-                                          <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                        </button>
-                                      </a>
-                                      <button type="button" class="btn btn-warning p-x-6px btn-editar-cliente" data-toggle="tooltip" data-original-title="Editar:" onclick="mostrar_para_editar_cliente();">
-                                        <i class="fa-solid fa-pencil" aria-hidden="true"></i>
-                                      </button>
-                                    </div>
-                                  </div>
-
-                                  <!-- fecha -->
-                                  <div class="col-lg-3" >
-                                    <div class="form-group">
-                                      <label for="fecha_compra">Fecha <sup class="text-danger">*</sup></label>
-                                      <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" onchange="capturar_pago_compra();" />
-                                    </div>
-                                  </div>
-
-                                  <!-- Establecimiento-->
-                                  <div class="col-lg-3" >
-                                    <div class="form-group">
-                                      <label for="establecimiento">Establecimiento </label> <br />
-                                      <textarea name="establecimiento" id="establecimiento" class="form-control" rows="1">JR. LOS MARINOS #453 - JAEN - CAJAMARCA</textarea>
-                                    </div>
-                                  </div>                                  
-
-                                  <!-- Tipo de comprobante -->
-                                  <div class="col-lg-4" id="content-tipo-comprobante">
-                                    <div class="form-group">
-                                      <label for="tipo_comprobante">Tipo Comprobante <sup class="text-danger">(único*)</sup></label>
-                                      <select name="tipo_comprobante" id="tipo_comprobante" class="form-control select2"  onchange="default_val_igv(); modificarSubtotales(); ocultar_comprob(); autoincrement_comprobante(this);" placeholder="Seleccinar un tipo de comprobante">
-                                        <option value="Ninguno">Ninguno</option>
-                                        <option value="Boleta">Boleta</option>
-                                        <option value="Factura">Factura</option>
-                                        <option value="Nota de venta">Nota de venta</option>
-                                      </select>
-                                    </div>
-                                  </div> 
-
-                                  <!-- numero_comprobante -->
-                                  <div class="col-lg-2" id="content-serie-comprobante">
-                                    <div class="form-group">
-                                      <label for="numero_comprobante">N° de Comprobante <sup class="text-danger">(único*)</sup></label>
-                                      <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" placeholder="N° de Comprobante" readonly />
-                                    </div>
-                                  </div>
-
-                                  <!-- IGV-->
-                                  <div class="col-lg-1" id="content-igv">
-                                    <div class="form-group">
-                                      <label for="val_igv">IGV <sup class="text-danger">*</sup></label>
-                                      <input type="text" name="val_igv" id="val_igv" class="form-control" value="0.18" onkeyup="modificarSubtotales();" />
-                                    </div>
-                                  </div>
-
-                                  <!-- descripcion-->
-                                  <div class="col-lg-5" id="content-descripcion">
-                                    <div class="form-group">
-                                      <label for="descripcion">Descripcion </label> <br />
-                                      <textarea name="descripcion" id="descripcion" class="form-control" rows="1"></textarea>
-                                    </div>
-                                  </div>    
-                                  
-                                  <!-- metodo de pago -->
-                                  <div class="col-lg-3">
-                                    <div class="form-group">
-                                      <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
-                                      <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa" onchange="capturar_pago_compra();"> 
-                                        <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
-                                        <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
-                                      </select>
-                                    </div> 
-                                  </div>
-
-                                  <!-- Fecha pago -->
-                                  <div class="col-lg-3" >
-                                    <div class="form-group">
-                                      <label for="fecha_proximo_pago">Fecha proximo pago<sup class="text-danger">*</sup></label>
-                                      <input type="date" name="fecha_proximo_pago" id="fecha_proximo_pago" class="form-control" placeholder="Fecha" />
-                                    </div>
-                                  </div>
-
-                                  <!-- Pago a realizar -->
-                                  <div class="col-sm-6 col-lg-3 ">
-                                    <div class="form-group">
-                                      <label for="monto_pago_compra">Pago de compra <span class="span-pago-compra"></span> </label>
-                                      <input type="text" name="monto_pago_compra" id="monto_pago_compra" class="form-control" readonly onClick="this.select();" placeholder="Pago realizado" />
-                                    </div>
-                                  </div>
-
-                                  <!--Boton agregar material-->
-                                  <div class="row col-lg-12 justify-content-between">
-                                    <!-- add detalle -->
-                                    <div class="col-sm-6 col-lg-4 ">
-                                      <div class="row">
-                                        <div class="col-lg-6">                                                                                      
-                                          <button id="btn-agregar-detalle-form-compra" type="button" class="btn btn-primary btn-block"><span class="fa fa-plus"></span> Agregar Detalle</button>                                            
-                                        </div>                                        
+                                  <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="row">
+                                    
+                                      <!-- Tipo de Empresa -->
+                                      <div class="col-lg-10">
+                                        <div class="form-group">
+                                          <label for="idcliente">Cliente <sup class="text-danger">(*)</sup></label>
+                                          <select id="idcliente" name="idcliente" class="form-control select2" data-live-search="true" required title="Seleccione cliente" onchange="extrae_ruc();"> </select>
+                                          <input type="hidden" name="ruc_dni_cliente" id="ruc_dni_cliente" /> 
+                                        </div>
                                       </div>
-                                    </div>                                    
-                                  </div>
+
+                                      <!-- adduser -->
+                                      <div class="col-lg-2">
+                                        <div class="form-group">                                          
+                                          <label for="opciones">Opciones</label>                                          
+                                          <div class="row">
+                                            <div class="col-6 text-center">
+                                              <a data-toggle="modal" href="#modal-agregar-cliente" >
+                                                <button type="button" class="btn btn-success" data-toggle="tooltip" data-original-title="Agregar Provedor" onclick="limpiar_form_cliente();">
+                                                  <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                                </button>
+                                              </a>
+                                            </div>
+                                            <div class="col-6 text-center">
+                                              <button type="button" class="btn btn-warning btn-editar-cliente" data-toggle="tooltip" data-original-title="Editar:" onclick="mostrar_para_editar_cliente();">
+                                                <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+                                              </button>
+                                            </div>       
+                                          </div>                                           
+                                        </div>
+                                      </div>
+
+                                      <!-- fecha -->
+                                      <div class="col-lg-4" >
+                                        <div class="form-group">
+                                          <label for="fecha_compra">Fecha <sup class="text-danger">*</sup></label>
+                                          <input type="date" name="fecha_compra" id="fecha_compra" class="form-control" placeholder="Fecha" onchange="capturar_pago_compra();" />
+                                        </div>
+                                      </div>                                        
+                                      
+                                      <!-- Tipo de comprobante -->
+                                      <div class="col-lg-4" id="content-tipo-comprobante">
+                                        <div class="form-group">
+                                          <label for="tipo_comprobante">Tipo Comprob. <sup class="text-danger">(*)</sup></label>
+                                          <select name="tipo_comprobante" id="tipo_comprobante" class="form-control select2"  onchange="default_val_igv(); modificarSubtotales(); ocultar_comprob(); autoincrement_comprobante(this);" placeholder="Seleccinar un tipo de comprobante">
+                                            <option value="Ninguno">Ninguno</option>
+                                            <option value="Boleta">Boleta</option>
+                                            <option value="Factura">Factura</option>
+                                            <option value="Nota de venta">Nota de venta</option>
+                                          </select>
+                                        </div>
+                                      </div>                                       
+
+                                      <!-- IGV-->
+                                      <div class="col-lg-4" id="content-igv">
+                                        <div class="form-group">
+                                          <label for="val_igv">IGV <sup class="text-danger">*</sup></label>
+                                          <input type="text" name="val_igv" id="val_igv" class="form-control" value="0.18" onkeyup="modificarSubtotales();" />
+                                        </div>
+                                      </div>
+
+                                      <!-- numero_comprobante -->
+                                      <div class="col-lg-6" id="content-serie-comprobante">
+                                        <div class="form-group">
+                                          <label for="numero_comprobante">N° de Comprob. <sup class="text-danger">(único*)</sup></label>
+                                          <input type="text" name="numero_comprobante" id="numero_comprobante" class="form-control" placeholder="N° de Comprobante" readonly />
+                                        </div>
+                                      </div>
+
+                                      <!-- Establecimiento-->
+                                      <div class="col-lg-12" id="content-establecimiento">
+                                        <div class="form-group">
+                                          <label for="establecimiento">Establecimiento </label> <br />
+                                          <textarea name="establecimiento" id="establecimiento" class="form-control" rows="1">PASAJE Sr. DE SIPAN #140 - SECTOR SAN CAMILO</textarea>
+                                        </div>
+                                      </div> 
+
+                                      <!-- descripcion-->
+                                      <div class="col-lg-12">
+                                        <div class="form-group">
+                                          <label for="descripcion">Base </label> <br />
+                                          <textarea name="descripcion" id="descripcion" class="form-control" rows="2"></textarea>
+                                        </div>
+                                      </div>    
+                                      
+                                      <!-- metodo de pago -->
+                                      <div class="col-sm-12 col-md-12 col-lg-4">
+                                        <div class="form-group">
+                                          <label for="metodo_pago">Método de pago <sup class="text-danger">*</sup></label>
+                                          <select id="metodo_pago" name="metodo_pago" class="form-control select2" data-live-search="true" required title="Seleccione glosa" onchange="capturar_pago_compra();"> 
+                                            <option title="fas fa-hammer" value="CONTADO">CONTADO</option>
+                                            <option title="fas fa-gas-pump" value="CREDITO">CREDITO</option>
+                                          </select>
+                                        </div> 
+                                      </div>
+
+                                      <!-- Fecha pago -->
+                                      <div class="col-sm-12 col-md-6 col-lg-4" >
+                                        <div class="form-group">
+                                          <label for="fecha_proximo_pago">Próximo pago<sup class="text-danger">*</sup></label>
+                                          <input type="date" name="fecha_proximo_pago" id="fecha_proximo_pago" class="form-control" placeholder="Fecha" />
+                                        </div>
+                                      </div>
+
+                                      <!-- Pago a realizar -->
+                                      <div class="col-sm-12 col-md-6 col-lg-4 ">
+                                        <div class="form-group">
+                                          <label for="monto_pago_compra">Pago <small class="span-pago-compra"></small> </label>
+                                          <input type="text" name="monto_pago_compra" id="monto_pago_compra" class="form-control" readonly onClick="this.select();" placeholder="Pago realizado" />
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                    <!-- /.row -->
+                                  </div> 
+                                  <!-- /.col -->
 
                                   <!--tabla detalles compra-->
-                                  <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 table-responsive row-horizon disenio-scroll">
-                                    <br />
-                                    <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                                      <thead style="background-color: #00821e80;">
-                                        <tr class="text-center">
-                                          <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Opciones">Op.</th>
-                                          <th rowspan="2" class="p-y-2px">Tipo Grano</th>
-                                          <th rowspan="2" class="p-y-2px">Unidad</th>
-                                          <th rowspan="2" class="p-y-2px">Peso Bruto</th>
-                                          <th colspan="3" class="p-y-2px">Calidad</th>
-                                          <th rowspan="2" class="p-y-2px">Peso Neto</th>
-                                          <th rowspan="2" class="p-y-2px hidden" data-toggle="tooltip" data-original-title="Valor Unitario" >V/U</th>
-                                          <th rowspan="2" class="p-y-2px hidden">IGV</th>
-                                          <th rowspan="2" class="p-y-2px" data-toggle="tooltip" data-original-title="Precio Unitario">P/U</th>
-                                          <th rowspan="2" class="p-y-2px">Descuento <br> <small>(adicional)</small></th>
-                                          <th rowspan="2" class="p-y-2px">Subtotal</th>
+                                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 table-responsive ">
+                                    
+                                    <table id="detalles" class="table /*table-striped*/ table-bordered table-condensed table-hover">                                      
+                                      <tbody>
+                                        <tr >
+                                          <th>TIPO DE CAFE</th>
+                                          <td class="py-1 text-right form-group">
+                                            <select class="form-control tipo_grano" name="tipo_grano" onchange="modificarSubtotales()">
+                                              <option >PERGAMINO</option>
+                                              <option>COCO</option>
+                                            </select>
+                                          </td>
                                         </tr>
-
-                                        <tr class="text-center">
-                                          <th class="p-y-1px" data-toggle="tooltip" data-original-title="Rendimiento">% R</th>
-                                          <th class="p-y-1px" data-toggle="tooltip" data-original-title="Humedad">% H</th>
-                                          <th class="p-y-1px" data-toggle="tooltip" data-original-title="Cáscara">% C</th>
+                                        <tr>
+                                          <th class="py-1">UNDIAD</th>
+                                          <td class="py-1 text-right form-group">
+                                            <input type="text" class="form-control form-control-sm input-no-border unidad_medida"  name="unidad_medida" id="unidad_medida" value="KILO" readonly required>
+                                          </td>
                                         </tr>
-                                        
-                                      </thead>
+                                        <tr>
+                                          <th class="py-1">KILOS BRUTOS </th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm peso_bruto text-bold" name="peso_bruto" value="0" min="0.01" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">SACOS</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm sacos" name="sacos" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">HUMEDAD(%)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_humedad" name="dcto_humedad" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">RENDIMINETO(%)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_rendimiento" name="dcto_rendimiento" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">SEGUNDA(%)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_segunda" name="dcto_segunda" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">CASCARA(%)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_cascara" name="dcto_cascara" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">TAZA(%)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_taza" name="dcto_taza" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">TARA(SACOS + HUMEDAD)</th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm dcto_tara" name="dcto_tara" value="0" min="0.00" step="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">KG. NETOS </th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm input-no-border-right peso_neto" name="peso_neto" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">QUINTAL NETO <span class="convert_a_q"></span></th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm input-no-border-right text-bold quintal_neto" name="quintal_neto" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">PRECIO</th>
+                                          <td class="py-1 text-right form-group">
+                                            <input type="hidden" class="precio_sin_igv" name="precio_sin_igv" value="0">
+                                            <input type="hidden" class="precio_igv" name="precio_igv" value="0">
+                                            <input type="number" class="form-control form-control-sm precio_con_igv" name="precio_con_igv" value="0" min="0.01" step="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();">
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1">DESCUENTO <small>(adicional)</small></th>
+                                          <td class="py-1 text-right form-group"><input type="number" class="form-control form-control-sm descuento" name="descuento" value="0" min="0" step="0.01" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+                                        </tr>
+                                        <tr>
+                                          <th class="py-1 text-right">SUBTOTAL</th>
+                                          <td class="py-1 text-right"><span class="text-right subtotal_producto">0.00</span> <input type="hidden" class="input_subtotal_producto" name="subtotal_producto" id="subtotal_producto"></td>
+                                        </tr>
+                                      </tbody>
                                       <tfoot>
-                                        <td colspan="11" id="colspan_subtotal"></td>
+                                        
                                         <th class="text-right">
                                           <h6 class="tipo_gravada">GRAVADA</h6>
                                           <h6 class="val_igv">IGV (18%)</h6>
@@ -469,10 +522,12 @@
                                           
                                         </th>
                                       </tfoot>
-                                      <tbody></tbody>
                                     </table>
-                                  </div>                                    
+                                    <!-- /.table -->
+                                  </div>
+                                  <!-- /.col -->
                                 </div>
+                                <!-- /.row -->
 
                                 <div class="row" id="cargando-2-fomulario" style="display: none;">
                                   <div class="col-lg-12 text-center">
@@ -488,7 +543,7 @@
 
                             <div class="modal-footer justify-content-between pl-0 pb-0 ">
                               <button type="button" class="btn btn-danger" onclick="show_hide_form(1);" data-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-success" style="display: none;" id="guardar_registro_compras">Guardar Cambios</button>
+                              <button type="submit" class="btn btn-success" id="guardar_registro_compras">Guardar Cambios</button>
                             </div>
                           </div>                          
 
@@ -906,7 +961,7 @@
         <script src="../plugins/jszip/dist/jszip-utils.js"></script>
         <script src="../plugins/FileSaver/dist/FileSaver.js"></script>
         
-        <script type="text/javascript" src="scripts/compra_grano.js"></script>         
+        <script type="text/javascript" src="scripts/compra_cafe_v2.js"></script>         
 
         <script> $(function () { $('[data-toggle="tooltip"]').tooltip(); }); </script>
         

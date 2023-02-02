@@ -222,7 +222,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,10,11,4,12,13,6,7,14,9], } } ,        
     ],
     ajax: {
-      url: `../ajax/compra_grano.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_cliente=${id_cliente}&comprobante=${comprobante}`,
+      url: `../ajax/compra_cafe.php?op=tbla_principal&fecha_1=${fecha_1}&fecha_2=${fecha_2}&id_cliente=${id_cliente}&comprobante=${comprobante}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -278,7 +278,7 @@ function tbla_principal( fecha_1, fecha_2, id_cliente, comprobante) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5", "pdf"],
     ajax: {
-      url: `../ajax/compra_grano.php?op=tabla_compra_x_cliente`,
+      url: `../ajax/compra_cafe.php?op=tabla_compra_x_cliente`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -325,7 +325,7 @@ function listar_facuras_cliente(idcliente, nombre) {
     dom: "<Bl<f>rtip>", //Definimos los elementos del control de tabla
     buttons: ["copyHtml5", "excelHtml5",  "pdf",],
     ajax: {
-      url: `../ajax/compra_grano.php?op=listar_detalle_compra_x_cliente&idcliente=${idcliente}`,
+      url: `../ajax/compra_cafe.php?op=listar_detalle_compra_x_cliente&idcliente=${idcliente}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -361,7 +361,7 @@ function guardar_y_editar_compras(e) {
     cancelButtonColor: "#d33",
     confirmButtonText: "Si, Guardar!",
     preConfirm: (input) => {
-      return fetch("../ajax/compra_grano.php?op=guardar_y_editar_compra_grano", {
+      return fetch("../ajax/compra_cafe.php?op=guardar_y_editar_compra_grano", {
         method: 'POST', // or 'PUT'
         body: formData, // data can be `string` or {object}!        
       }).then(response => {
@@ -395,8 +395,8 @@ function eliminar_compra(idcompra_proyecto, nombre) {
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/compra_grano.php?op=anular",
-    "../ajax/compra_grano.php?op=eliminar_compra", 
+    "../ajax/compra_cafe.php?op=anular",
+    "../ajax/compra_cafe.php?op=eliminar_compra", 
     idcompra_proyecto, 
     "!Elija una opción¡", 
     `<b class="text-danger">${nombre}</b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -429,8 +429,8 @@ function agregarDetalleComprobante() {
       <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
     </td>
     <td class="">       
-      <select class="form-control w-140px" name="tipo_grano[]">
-        <option>PERGAMINO</option>
+      <select class="form-control w-140px tipo_grano_${cont}" name="tipo_grano[]" onchange="modificarSubtotales()">
+        <option >PERGAMINO</option>
         <option>COCO</option>
       </select>   
     </td>
@@ -439,14 +439,22 @@ function agregarDetalleComprobante() {
     </td>
 
     <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="0" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-    <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-    <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-    <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    
+    <td class="form-group"><input type="number" class="w-100px form-control sacos_${cont}" name="sacos[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_rendimiento_${cont}" name="dcto_rendimiento[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_segunda_${cont}" name="dcto_segunda[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_cascara_${cont}" name="dcto_cascara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_taza_${cont}" name="dcto_taza[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-100px form-control dcto_tara_${cont}" name="dcto_tara[]" value="0" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
 
     <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    <td class="form-group"><input type="number" class="w-140px form-control input-no-border quintal_neto_${cont}" name="quintal_neto[]" value="0" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+    
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="0" readonly min="0" ></td>
     <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="0" readonly ></td>
     <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="0" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+    
     <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="0" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
     <td class="text-right"><span class="text-right subtotal_producto_${cont}">0.00</span> <input type="hidden" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
     <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
@@ -491,11 +499,13 @@ function modificarSubtotales() {
 
   var val_igv = $('#val_igv').val(); //console.log(array_class_trabajador);
 
+  $('.convert_a_q').html( `(${$('.tipo_grano_0').val() == 'PERGAMINO' ? '55.2' : '56.0'})` );
+
   if ($("#tipo_comprobante").select2("val") == null) {
 
     $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
 
-    $("#colspan_subtotal").attr("colspan", 9); //cambiamos el: colspan
+    $("#colspan_subtotal").attr("colspan",14); //cambiamos el: colspan
 
     $("#val_igv").val(0);
     $("#val_igv").prop("readonly",true);
@@ -510,13 +520,15 @@ function modificarSubtotales() {
         // calculando peso neto
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
         // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
+        // var dcto_cascara = parseFloat($(`.dcto_cascara_${element.id_cont}`).val());
+        var dcto_tara = parseFloat($(`.dcto_tara_${element.id_cont}`).val());
 
-        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
+        var dcto_humedad = 0, dcto_cascara = 0;
 
-        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
-        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+        var peso_neto = peso_bruto - (dcto_humedad + dcto_cascara + dcto_tara);
+        var quintal_neto = peso_neto / ( $(`.tipo_grano_${element.id_cont}`).val() == 'PERGAMINO' ? 55.2 : 56 )  ;
+        $(`.peso_neto_${element.id_cont}`).val(redondearExp(peso_neto, 2));
+        $(`.quintal_neto_${element.id_cont}`).val(redondearExp(quintal_neto, 2));
 
         var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
         var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
@@ -531,7 +543,7 @@ function modificarSubtotales() {
         $(`.precio_igv_${element.id_cont}`).val(igv);
 
         // Calculamos: Subtotal de cada producto
-        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        subtotal_producto = quintal_neto * parseFloat(precio_con_igv) - deacuento;
         $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
         $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
       });
@@ -541,7 +553,7 @@ function modificarSubtotales() {
 
     $(".hidden").show(); //Mostramos: IGV, PRECIO SIN IGV
 
-    $("#colspan_subtotal").attr("colspan", 11); //cambiamos el: colspan
+    $("#colspan_subtotal").attr("colspan", 16); //cambiamos el: colspan
     
     $("#val_igv").prop("readonly",false);
 
@@ -562,12 +574,14 @@ function modificarSubtotales() {
       array_class_trabajador.forEach((element, index) => {
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
         // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
-        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
+        // var dcto_cascara = parseFloat($(`.dcto_cascara_${element.id_cont}`).val());
+        var dcto_tara = parseFloat($(`.dcto_tara_${element.id_cont}`).val());
+        var dcto_humedad = 0, dcto_cascara = 0;
 
-        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
-        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+        var peso_neto = peso_bruto - (dcto_humedad + dcto_cascara + dcto_tara);
+        var quintal_neto = peso_neto / ( $(`.tipo_grano_${element.id_cont}`).val() == 'PERGAMINO' ? 55.2 : 56 )  ;
+        $(`.peso_neto_${element.id_cont}`).val(redondearExp(peso_neto, 2));
+        $(`.quintal_neto_${element.id_cont}`).val(redondearExp(quintal_neto, 2));
 
         var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
         var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
@@ -582,7 +596,7 @@ function modificarSubtotales() {
         $(`.precio_igv_${element.id_cont}`).val(igv);
 
         // Calculamos: Subtotal de cada producto
-        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        subtotal_producto = quintal_neto * parseFloat(precio_con_igv) - deacuento;
         $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
         $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
       });
@@ -593,7 +607,7 @@ function modificarSubtotales() {
 
     $(".hidden").hide(); //Ocultamos: IGV, PRECIO CON IGV
 
-    $("#colspan_subtotal").attr("colspan", 9); //cambiamos el: colspan
+    $("#colspan_subtotal").attr("colspan", 14); //cambiamos el: colspan
 
     $("#val_igv").val(0);
     $("#val_igv").prop("readonly",true);
@@ -607,12 +621,14 @@ function modificarSubtotales() {
       array_class_trabajador.forEach((element, index) => {
         var peso_bruto = parseFloat($(`.peso_bruto_${element.id_cont}`).val());
         // var dcto_humedad = parseFloat($(`.dcto_humedad_${element.id_cont}`).val());
-        // var porcentaje_cascara = parseFloat($(`.porcentaje_cascara_${element.id_cont}`).val());
-        // var dcto_embase = parseFloat($(`.dcto_embase_${element.id_cont}`).val());
-        var dcto_humedad = 0, porcentaje_cascara = 0, dcto_embase = 0;
+        // var dcto_cascara = parseFloat($(`.dcto_cascara_${element.id_cont}`).val());
+        var dcto_tara = parseFloat($(`.dcto_tara_${element.id_cont}`).val());
+        var dcto_humedad = 0, dcto_cascara = 0;
 
-        var peso_neto = peso_bruto - (dcto_humedad + porcentaje_cascara + dcto_embase);
-        $(`.peso_neto_${element.id_cont}`).val(peso_neto);
+        var peso_neto = peso_bruto - (dcto_humedad + dcto_cascara + dcto_tara);
+        var quintal_neto = peso_neto / ( $(`.tipo_grano_${element.id_cont}`).val() == 'PERGAMINO' ? 55.2 : 56 )  ;
+        $(`.peso_neto_${element.id_cont}`).val(redondearExp(peso_neto, 2));
+        $(`.quintal_neto_${element.id_cont}`).val(redondearExp(quintal_neto, 2));
         
         var precio_con_igv = parseFloat($(`.precio_con_igv_${element.id_cont}`).val());
         var deacuento = parseFloat($(`.descuento_${element.id_cont}`).val());
@@ -627,7 +643,7 @@ function modificarSubtotales() {
         $(`.precio_igv_${element.id_cont}`).val(igv);
 
         // Calculamos: Subtotal de cada producto
-        subtotal_producto = peso_neto * parseFloat(precio_con_igv) - deacuento;
+        subtotal_producto = quintal_neto * parseFloat(precio_con_igv) - deacuento;
         $(`.subtotal_producto_${element.id_cont}`).html(formato_miles(subtotal_producto));
         $(`.input_subtotal_producto_${element.id_cont}`).val( redondearExp(subtotal_producto, 2) );
       });
@@ -821,7 +837,7 @@ function ver_compra_editar(idcompra_grano) {
   detalles = 0;
   show_hide_form(3);
 
-  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
+  $.post("../ajax/compra_cafe.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);
 
@@ -881,8 +897,8 @@ function ver_compra_editar(idcompra_grano) {
             </td>
             <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="${key.peso_bruto}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="${key.dcto_humedad}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="${key.porcentaje_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="${key.dcto_embase}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_cascara_${cont}" name="dcto_cascara[]" value="${key.dcto_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_tara_${cont}" name="dcto_tara[]" value="${key.dcto_tara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
         
             <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="${key.peso_neto}" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="${key.precio_sin_igv}" readonly min="0" ></td>
@@ -931,7 +947,7 @@ function copiar_venta(idcompra_grano) {
   detalles = 0;
   show_hide_form(3);
 
-  $.post("../ajax/compra_grano.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
+  $.post("../ajax/compra_cafe.php?op=ver_compra_editar", { 'idcompra_grano': idcompra_grano }, function (e, status) {
     
     e = JSON.parse(e); console.log(e);
 
@@ -981,7 +997,7 @@ function copiar_venta(idcompra_grano) {
               <button type="button" class="btn btn-danger btn-sm" onclick="eliminarDetalle(${cont})"><i class="fas fa-times"></i></button>
             </td>
             <td class="">       
-              <select class="form-control w-140px" name="tipo_grano[]">
+              <select class="form-control w-140px tipo_grano_${cont}" name="tipo_grano[]" onchange="modificarSubtotales()">
                 <option ${pergamino_select} >PERGAMINO</option>
                 <option ${coco_select} >COCO</option>
               </select>   
@@ -990,14 +1006,22 @@ function copiar_venta(idcompra_grano) {
               <input type="text" class="input-no-border w-70px unidad_medida_${cont}"  name="unidad_medida[]" id="unidad_medida[]" value="KILO">    
             </td>
             <td class="form-group"><input type="number" class="w-140px form-control peso_bruto_${cont}" name="peso_bruto[]" value="${key.peso_bruto}" min="0.01" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            
+            <td class="form-group"><input type="number" class="w-140px form-control sacos_${cont}" name="sacos[]" value="${key.sacos}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="form-group"><input type="number" class="w-140px form-control dcto_humedad_${cont}" name="dcto_humedad[]" value="${key.dcto_humedad}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control porcentaje_cascara_${cont}" name="porcentaje_cascara[]" value="${key.porcentaje_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
-            <td class="form-group"><input type="number" class="w-140px form-control dcto_embase_${cont}" name="dcto_embase[]" value="${key.dcto_embase}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_rendimiento_${cont}" name="dcto_rendimiento[]" value="${key.dcto_rendimiento}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_segunda_${cont}" name="dcto_segunda[]" value="${key.dcto_segunda}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_cascara_${cont}" name="dcto_cascara[]" value="${key.dcto_cascara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_taza_${cont}" name="dcto_taza[]" value="${key.dcto_taza}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control dcto_tara_${cont}" name="dcto_tara[]" value="${key.dcto_tara}" min="0.00" required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
         
             <td class="form-group"><input type="number" class="w-140px form-control input-no-border peso_neto_${cont}" name="peso_neto[]" value="${key.peso_neto}" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control input-no-border quintal_neto_${cont}" name="quintal_neto[]" value="${key.quintal_neto}" min="0.01" readonly required onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
+
             <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_sin_igv_${cont}" name="precio_sin_igv[]" value="${key.precio_sin_igv}" readonly min="0" ></td>
             <td class="form-group hidden"><input type="number" class="w-140px input-no-border precio_igv_${cont}" name="precio_igv[]" value="${key.precio_igv}" readonly ></td>
-            <td class="form-group"><input type="number" class="w-140px form-control  precio_con_igv_${cont}" name="precio_con_igv[]" value="${key.precio_con_igv}" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            <td class="form-group"><input type="number" class="w-140px form-control precio_con_igv_${cont}" name="precio_con_igv[]" value="${key.precio_con_igv}" min="0.01"  required onkeyup="modificarSubtotales();" onchange="modificarSubtotales();"></td>
+            
             <td class="form-group"><input type="number" class="w-140px form-control descuento_${cont}" name="descuento[]" value="${key.descuento_adicional}" min="0" onkeyup="modificarSubtotales()" onchange="modificarSubtotales()"></td>
             <td class="text-right"><span class="text-right subtotal_producto_${cont}">${key.subtotal}</span> <input type="hidden" value="${key.subtotal}" class="input_subtotal_producto_${cont}" name="subtotal_producto[]" id="subtotal_compra[]"></td>
             <td class=""><button type="button" onclick="modificarSubtotales()" class="btn btn-info btn-sm"><i class="fas fa-sync"></i></button></td>
@@ -1039,13 +1063,13 @@ function ver_detalle_compras(idcompra_grano) {
 
   $("#modal-ver-detalle-compras-grano").modal("show");
 
-  $.post("../ajax/compra_grano.php?op=ver_detalle_compras_grano&idcompra_grano=" + idcompra_grano, function (e) {
+  $.post("../ajax/ajax_general.php?op=ver_detalle_compras_grano&idcompra_grano=" + idcompra_grano, function (e) {
     e = JSON.parse(e);
     if (e.status == true) {
       $(".detalle_de_compra_grano").html(e.data);       
 
       $("#print_pdf_compra").removeClass('disabled');
-      $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_grano.php?id=${idcompra_grano}` );
+      $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_cafe_v2.php?id=${idcompra_grano}` );
       $("#excel_compra").removeClass('disabled');
 
       $("#cargando-5-fomulario").show();
@@ -1113,7 +1137,7 @@ function tbla_pago_compra( idcompra_grano, total_compra, total_pago, cliente) {
       { extend: 'pdfHtml5', footer: false, orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: [0,2,3,4,5], } } ,        
     ],
     ajax: {
-      url: `../ajax/compra_grano.php?op=tabla_pago_compras&idcompra_grano=${idcompra_grano}`,
+      url: `../ajax/compra_cafe.php?op=tabla_pago_compras&idcompra_grano=${idcompra_grano}`,
       type: "get",
       dataType: "json",
       error: function (e) {
@@ -1153,8 +1177,8 @@ function eliminar_pago_compra(idpago_compra_grano, nombre) {
   $(".tooltip").removeClass("show").addClass("hidde");
 
   crud_eliminar_papelera(
-    "../ajax/compra_grano.php?op=papelera_pago_compra",
-    "../ajax/compra_grano.php?op=eliminar_pago_compra", 
+    "../ajax/compra_cafe.php?op=papelera_pago_compra",
+    "../ajax/compra_cafe.php?op=eliminar_pago_compra", 
     idpago_compra_grano, 
     "!Elija una opción¡", 
     `<b class="text-danger"><del>${nombre}</del></b> <br> En <b>papelera</b> encontrará este registro! <br> Al <b>eliminar</b> no tendrá acceso a recuperar este registro!`, 
@@ -1197,7 +1221,7 @@ function guardar_y_editar_pago_compra(e) {
   var formData = new FormData($("#form-pago-compras")[0]);
 
   $.ajax({
-    url: "../ajax/compra_grano.php?op=guardar_y_editar_pago_compra",
+    url: "../ajax/compra_cafe.php?op=guardar_y_editar_pago_compra",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1252,7 +1276,7 @@ function mostrar_editar_pago(idpago_compra_grano) {
 
   $("#modal-agregar-pago-compra").modal("show")
 
-  $.post("../ajax/compra_grano.php?op=mostrar_editar_pago", { 'idpago_compra_grano': idpago_compra_grano }, function (e, status) {
+  $.post("../ajax/compra_cafe.php?op=mostrar_editar_pago", { 'idpago_compra_grano': idpago_compra_grano }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);  
 
@@ -1383,7 +1407,7 @@ function guardar_proveedor(e) {
   var formData = new FormData($("#form-proveedor")[0]);
 
   $.ajax({
-    url: "../ajax/compra_grano.php?op=guardar_y_editar_cliente",
+    url: "../ajax/compra_cafe.php?op=guardar_y_editar_cliente",
     type: "POST",
     data: formData,
     contentType: false,
@@ -1440,7 +1464,7 @@ function mostrar_para_editar_cliente() {
   $('#modal-agregar-cliente').modal('show');
   $(".tooltip").remove();
 
-  $.post("../ajax/compra_grano.php?op=mostrar_editar_cliente", { 'idcliente': $('#idcliente').select2("val") }, function (e, status) {
+  $.post("../ajax/compra_cafe.php?op=mostrar_editar_cliente", { 'idcliente': $('#idcliente').select2("val") }, function (e, status) {
 
     e = JSON.parse(e);  console.log(e);
 
@@ -1592,9 +1616,10 @@ $(function () {
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       'peso_bruto[]':     { min: "Mínimo 0.01", required: "Campo requerido"},
       'dcto_humedad[]':   { min: "Mínimo 0.00", required: "Campo requerido"},
-      'porcentaje_cascara[]':{ min: "Mínimo 0.00", required: "Campo requerido"},
-      'dcto_embase[]':    { min: "Mínimo 0.00", required: "Campo requerido"},
-      'peso_neto[]':       { min: "Mínimo 0.01", required: "Campo requerido"},
+      'dcto_cascara[]':   { min: "Mínimo 0.00", required: "Campo requerido"},
+      'dcto_tara[]':      { min: "Mínimo 0.00", required: "Campo requerido"},
+      'peso_neto[]':      { min: "Mínimo 0.01", required: "Campo requerido"},
+      'quintal_neto[]':   { min: "Mínimo 0.01", required: "Campo requerido"},
       'precio_con_igv[]': { min: "Mínimo 0.01", required: "Campo requerido"},
       'descuento[]':      { min: "Mínimo 0.00", required: "Campo requerido"}
     },
@@ -1824,7 +1849,7 @@ function guardar_y_editar_compras____________plantilla_cargando_POST(e) {
   }).then((result) => {
     if (result.isConfirmed) {
       $.ajax({
-        url: "../ajax/compra_grano.php?op=guardaryeditarcompra",
+        url: "../ajax/compra_cafe.php?op=guardaryeditarcompra",
         type: "POST",
         data: formData,
         contentType: false,
