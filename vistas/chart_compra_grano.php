@@ -79,7 +79,8 @@
 
                           <div class="info-box-content">
                             <span class="info-box-text">COCO</span>
-                            <span class="info-box-number cant_producto_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-number cant_total_coco_kg_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-number cant_total_coco_sol_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -96,7 +97,8 @@
 
                           <div class="info-box-content">
                             <span class="info-box-text">PERGAMINO</span>
-                            <span class="info-box-number cant_insumos_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-number cant_total_pergamino_kg_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
+                            <span class="info-box-number cant_total_pergamino_sol_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->
                         </div>
@@ -108,7 +110,7 @@
                           <span class="info-box-icon bg-black elevation-1"><i class="nav-icon fa-solid fa-sack-dollar "></i></span>
 
                           <div class="info-box-content">
-                            <span class="info-box-text">Total Compra/Pago S/.</span>
+                            <span class="info-box-text">Total Compra/Pago</span>
                             <span class="info-box-number cant_compra_pago_box"> <i class="fas fa-spinner fa-pulse fa-lg"></i></span>
                           </div>
                           <!-- /.info-box-content -->

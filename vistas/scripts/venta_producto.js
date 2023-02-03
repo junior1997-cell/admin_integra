@@ -1747,7 +1747,7 @@ function listarmateriales() {
       sLoadingRecords: '<i class="fas fa-spinner fa-pulse fa-lg"></i> Cargando datos...'
     },
     bDestroy: true,
-    iDisplayLength: 10, //Paginación
+    iDisplayLength: 100, //Paginación
     // order: [[0, "desc"]], //Ordenar (columna,orden)
   }).DataTable();
 }

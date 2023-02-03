@@ -39,8 +39,10 @@ function init() {
 function box_content_reporte() {
 
   $(".cant_proveedores_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
-  $(".cant_producto_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
-  $(".cant_insumos_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_total_coco_kg_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_total_coco_sol_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_total_pergamino_kg_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
+  $(".cant_total_pergamino_sol_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
   $(".cant_compra_pago_box").html('<i class="fas fa-spinner fa-pulse fa-lg"></i>');
 
   $.post("../ajax/chart_compra_grano.php?op=box_content_reporte", function (e, status) {
@@ -49,8 +51,10 @@ function box_content_reporte() {
 
     if (e.status == true) {
       $(".cant_proveedores_box").html( formato_miles(e.data.cant_clientes) );
-      $(".cant_producto_box").html( 'Kg. ' + formato_miles(e.data.kilo_coco) );
-      $(".cant_insumos_box").html( 'Kg. ' + formato_miles(e.data.kilo_pergamino) );
+      $(".cant_total_coco_kg_box").html( 'Kg. ' + formato_miles(e.data.kilo_coco) );
+      $(".cant_total_coco_sol_box").html( 'S/. ' + formato_miles(e.data.soles_coco) );
+      $(".cant_total_pergamino_kg_box").html( 'Kg. ' + formato_miles(e.data.kilo_pergamino) );
+      $(".cant_total_pergamino_sol_box").html( 'S/. ' + formato_miles(e.data.soles_pergamino) );
       $(".cant_compra_pago_box").html(`${formato_miles(e.data.total_compra)} / ${formato_miles(e.data.total_pago)}` );
     } else {
       ver_errores(e);
