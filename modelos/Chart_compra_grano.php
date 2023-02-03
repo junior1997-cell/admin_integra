@@ -111,7 +111,7 @@ class ChartCompraGrano
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9);  if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
-      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
+      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.dcto_rendimiento) AS dcto_rendimiento, SUM(dcg.dcto_cascara) AS dcto_cascara, SUM(dcg.dcto_tara) AS dcto_tara, SUM(dcg.peso_neto) AS peso_neto
       FROM compra_grano as cg, detalle_compra_grano as dcg
       WHERE cg.idcompra_grano = dcg.idcompra_grano AND  YEAR(cg.fecha_compra) = '$year_filtro'
       GROUP BY dcg.tipo_grano ;";
@@ -183,7 +183,7 @@ class ChartCompraGrano
       $factura_total_pago = ejecutarConsultaSimpleFila($sql_9);  if ($factura_total_pago['status'] == false) { return $factura_total_pago; }
 
       // -----------------------
-      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.porcentaje_cascara) AS porcentaje_cascara, SUM(dcg.dcto_embase) AS dcto_embase, SUM(dcg.peso_neto) AS peso_neto
+      $sql_10 = "SELECT dcg.tipo_grano, SUM(dcg.peso_bruto) as peso_bruto, SUM(dcg.dcto_humedad) AS dcto_humedad, SUM(dcg.dcto_rendimiento) AS dcto_rendimiento, SUM(dcg.dcto_cascara) AS dcto_cascara, SUM(dcg.dcto_tara) AS dcto_tara, SUM(dcg.peso_neto) AS peso_neto
       FROM compra_grano as cg, detalle_compra_grano as dcg
       WHERE cg.idcompra_grano = dcg.idcompra_grano AND MONTH(cg.fecha_compra)='$mes_filtro' AND  YEAR(cg.fecha_compra) = '$year_filtro'
       GROUP BY dcg.tipo_grano;";

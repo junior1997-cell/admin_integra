@@ -125,11 +125,14 @@ class Compra_cafe_v2
 
       $det_compra_new = "";       
 
-      $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, dcto_humedad, dcto_cascara, dcto_tara, 
-      peso_neto, precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
-      VALUES ('$idcompra_grano','$tipo_grano','$unidad_medida','$peso_bruto','$dcto_humedad','$dcto_cascara',
-      '$dcto_tara','$peso_neto','$precio_sin_igv','$precio_igv','$precio_con_igv','$descuento',
-      '$subtotal_producto')";
+      $sql_detalle = "INSERT INTO detalle_compra_grano( idcompra_grano, tipo_grano, unidad_medida, peso_bruto, 
+        sacos, dcto_humedad, dcto_rendimiento, dcto_segunda, dcto_cascara, dcto_taza, dcto_tara, 
+        peso_neto, quintal_neto,
+        precio_sin_igv,	precio_igv,	precio_con_igv, descuento_adicional, subtotal) 
+        VALUES ('$idcompra_grano','$tipo_grano','$unidad_medida','$peso_bruto',
+        '$sacos','$dcto_humedad','$dcto_rendimiento','$dcto_segunda','$dcto_cascara','$dcto_taza','$dcto_tara',
+        '$peso_neto', '$quintal_neto',
+        '$precio_sin_igv','$precio_igv','$precio_con_igv','$descuento', '$subtotal_producto')";
       
       $det_compra_new =  ejecutarConsulta_retornarID($sql_detalle); if ($det_compra_new['status'] == false) { return  $det_compra_new;}
 

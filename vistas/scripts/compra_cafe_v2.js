@@ -126,6 +126,21 @@ function limpiar_form_compra() {
   $("#val_igv").val(0);
   $("#descripcion").val("");
   $("#fecha_compra").val(moment().format('YYYY-MM-DD'));
+
+  $(".tipo_grano").val(''); 
+  $(".unidad_medida").val('KILO'); 
+  $(".peso_bruto").val('0.00'); 
+  $(".sacos").val('0.00'); 
+  $(".dcto_humedad").val('0.00'); 
+  $(".dcto_rendimiento").val('0.00'); 
+  $(".dcto_segunda").val('0.00'); 
+  $(".dcto_cascara").val('0.00'); 
+  $(".dcto_taza").val('0.00'); 
+  $(".dcto_tara").val('0.00'); 
+  $(".peso_neto").val('0.00'); 
+  $(".quintal_neto").val('0.00'); 
+  $(".precio_con_igv").val('0.00'); 
+  $(".descuento").val('0.00').trigger("change");
   
   $("#total_compra").val("");  
   $(".total_compra").html("0");
@@ -693,7 +708,7 @@ function ver_compra_editar(idcompra_grano) {
       }
 
       $("#idcompra_grano").val(e.data.idcompra_grano);
-      $("#fecha_compra").val(e.data.fecha_compra);
+      $("#fecha_compra").val(e.data.fecha_compra).trigger("change");
       $("#numero_comprobante").val(e.data.numero_comprobante);
       $("#val_igv").val(e.data.val_igv);
       $("#descripcion").val(e.data.descripcion);
@@ -1285,6 +1300,7 @@ $(function () {
       fecha_compra:       { required: true },
       metodo_pago:        { required: true },
       val_igv:            { required: true, number: true, min:0, max:1 },
+      tipo_grano:         { required: true, },
     },
     messages: {
       idcliente:          { required: "Campo requerido", },
@@ -1293,6 +1309,7 @@ $(function () {
       descripcion:        { minlength: "Minimo 4 caracteres", },
       fecha_compra:       { required: "Campo requerido", },
       metodo_pago:        { required: "Campo requerido", },
+      tipo_grano:         { required: "Campo requerido", },
       val_igv:            { required: "Campo requerido", number: 'Ingrese un número', min:'Mínimo 0', max:'Maximo 1' },
       peso_bruto:         { min: "Mínimo 0.01", step:'Mínimo 2 decimales', required: "Campo requerido"},
       sacos:              { min: "Mínimo 0.00", step:'Mínimo 2 decimales', required: "Campo requerido"},

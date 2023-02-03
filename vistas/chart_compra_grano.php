@@ -319,9 +319,10 @@
                               <thead>
                               <tr>
                                 <th>Tipo</th>
-                                <th>Dcto. Humedad</th>
-                                <th>Dcto. Cascara</th>
-                                <th>Dcto. Embase</th>
+                                <th>Humedad %</th>
+                                <th>Rendimiento %</th>
+                                <th>Cascara %</th>
+                                <th>Tara</th>
                                 <th>Peso Neto</th>
                                 <th>Mas</th>
                               </tr>

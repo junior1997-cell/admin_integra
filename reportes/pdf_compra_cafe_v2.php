@@ -63,27 +63,27 @@ if (!isset($_SESSION["nombre"])) {
 
   // Table with 20 rows and 4 columns
   $pdf->SetWidths_mc(array(80, 110));  
-  $pdf->Row_mc($y, array('KILOS BRUTOS', number_format($rspta['data']['detalle_compra'][0]['peso_neto'] ,2, '.', ',')  ));
+  $pdf->Row_mc($y, array('KILOS BRUTOS', number_format($rspta['data']['detalle_compra']['peso_neto'] ,2, '.', ',')  ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('SACOS',number_format($rspta['data']['detalle_compra'][0]['sacos'], 2, '.', ',') ));
+  $pdf->Row_mc($y, array('SACOS',number_format($rspta['data']['detalle_compra']['sacos'], 2, '.', ',') ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('HUMEDAD(%)', number_format($rspta['data']['detalle_compra'][0]['dcto_humedad'], 2, '.', ',')  ));
+  $pdf->Row_mc($y, array('HUMEDAD(%)', number_format($rspta['data']['detalle_compra']['dcto_humedad'], 2, '.', ',')  ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('RENDIMINETO(%)', $rspta['data']['detalle_compra'][0]['dcto_rendimiento'] ));
+  $pdf->Row_mc($y, array('RENDIMINETO(%)', $rspta['data']['detalle_compra']['dcto_rendimiento'] ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('SEGUNDA(%)',number_format($rspta['data']['detalle_compra'][0]['dcto_segunda'], 2, '.', ',') ));
+  $pdf->Row_mc($y, array('SEGUNDA(%)',number_format($rspta['data']['detalle_compra']['dcto_segunda'], 2, '.', ',') ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('CASCARA(%)', $rspta['data']['detalle_compra'][0]['dcto_cascara'] ));
+  $pdf->Row_mc($y, array('CASCARA(%)', $rspta['data']['detalle_compra']['dcto_cascara'] ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('TAZA(%)',number_format($rspta['data']['detalle_compra'][0]['dcto_taza'], 2, '.', ',') ));
+  $pdf->Row_mc($y, array('TAZA(%)',number_format($rspta['data']['detalle_compra']['dcto_taza'], 2, '.', ',') ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('TARA(SACOS + HUMEDAD)',number_format($rspta['data']['detalle_compra'][0]['dcto_tara'], 2, '.', ',') ));
+  $pdf->Row_mc($y, array('TARA(SACOS + HUMEDAD)',number_format($rspta['data']['detalle_compra']['dcto_tara'], 2, '.', ',') ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('KILOS NETOS', number_format($rspta['data']['detalle_compra'][0]['peso_neto'] ,2, '.', ',')  ));
+  $pdf->Row_mc($y, array('KILOS NETOS', number_format($rspta['data']['detalle_compra']['peso_neto'] ,2, '.', ',')  ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('QUINTALES NETOS', number_format( ($rspta['data']['detalle_compra'][0]['quintal_neto']) ,2, '.', ',')  ));
+  $pdf->Row_mc($y, array('QUINTALES NETOS', number_format( ($rspta['data']['detalle_compra']['quintal_neto']) ,2, '.', ',')  ));
   $y += 7 ;
-  $pdf->Row_mc($y, array('PRECIO', number_format( $rspta['data']['detalle_compra'][0]['precio_con_igv'], 2, '.', ',')  ));
+  $pdf->Row_mc($y, array('PRECIO', number_format( $rspta['data']['detalle_compra']['precio_con_igv'], 2, '.', ',')  ));
   $y += 7 ;
 
   //Convertimos el total en letras

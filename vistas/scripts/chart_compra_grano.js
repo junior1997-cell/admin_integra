@@ -224,10 +224,11 @@ function chart_linea_barra(idnubeproyecto) {
         productos_mas_vendidos = productos_mas_vendidos.concat(`
           <tr>
             <td> ${key.tipo_grano} </td>
-            <td> ${formato_miles(key.dcto_humedad)} </td>
-            <td> ${formato_miles(key.porcentaje_cascara)} </td>
-            <td> ${formato_miles(key.dcto_embase)} </td>
-            <td> ${formato_miles(key.peso_neto)} </td>
+            <td class="text-center"> ${formato_miles(key.dcto_humedad)} </td>
+            <td class="text-center"> ${formato_miles(key.dcto_rendimiento)} </td>
+            <td class="text-center"> ${formato_miles(key.dcto_cascara)} </td>
+            <td class="text-center"> ${formato_miles(key.dcto_tara)} </td>
+            <td class="text-center"> ${formato_miles(key.peso_neto)} </td>
             <td class="text-right">
               <a href="compra_grano.php" class="text-muted"> <i class="fas fa-search"></i> </a>
             </td>
