@@ -219,16 +219,16 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <!-- Compras del proyecto -->
-                  <li class="nav-item ">
+                  <!-- <li class="nav-item ">
                     <a href="compra_cafe.php" class="nav-link" id="lComprasGrano">
                       <i class="nav-icon fas fa-cart-plus"></i> 
                       <p>Compras</p>
                     </a>
-                  </li>       
+                  </li>        -->
                   <li class="nav-item ">
                     <a href="compra_cafe_v2.php" class="nav-link" id="lComprasGranoV2">
                       <i class="nav-icon fas fa-cart-plus"></i> 
-                      <p>Compras v2 <span class="right badge badge-danger">Nuevo</span></p>
+                      <p>Compras <span class="right badge badge-danger">Nuevo</span></p>
                     </a>
                   </li>                  
                   

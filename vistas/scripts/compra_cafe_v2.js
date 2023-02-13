@@ -761,11 +761,10 @@ function ver_detalle_compras(idcompra_grano) {
   $.post("../ajax/ajax_general.php?op=ver_detalle_compras_grano_v2&idcompra_grano=" + idcompra_grano, function (e) {
     e = JSON.parse(e);
     if (e.status == true) {
-      $(".detalle_de_compra_grano").html(e.data);       
+      $(".detalle_de_compra_grano").html(e.data);      
 
-      $("#print_pdf_compra").removeClass('disabled');
-      $("#print_pdf_compra").attr('href', `../reportes/pdf_compra_cafe_v2.php?id=${idcompra_grano}` );
-      $("#excel_compra").removeClass('disabled');
+      $("#excel_compra").removeClass('disabled').attr('href', `../reportes/export_xlsx_compra_cafe.php?id=${idcompra_grano}`);
+      $("#print_pdf_compra").removeClass('disabled').attr('href', `../reportes/pdf_compra_cafe_v2.php?id=${idcompra_grano}`);      
 
       $("#cargando-5-fomulario").show();
       $("#cargando-6-fomulario").hide();

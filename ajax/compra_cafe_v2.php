@@ -343,14 +343,15 @@ if (!isset($_SESSION["nombre"])) {
         $rspta = $compra_cafe->tabla_pago_compras($_GET["idcompra_grano"]);
         //Vamos a declarar un array
         $data = []; $cont = 1;
+
+        // '<--<button class="btn btn-info btn-sm" onclick="ver_detalle_compras_activo_fijo(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>-->' .
         
         if ($rspta['status'] == true) {
           while ($reg = $rspta['data']->fetch_object()) {
             $doc = (empty($reg->comprobante) ? '<a href="#" class="btn btn-sm btn-outline-info" data-toggle="tooltip" data-original-title="Vacio" ><i class="fa-regular fa-file-pdf fa-2x"></i></a>' : '<a href="#" class="btn btn-sm btn-info" data-toggle="tooltip" data-original-title="Ver documento" onclick="ver_documento_pago(\''.$reg->comprobante. '\', \'' . removeSpecialChar($reg->cliente) . ' - ' .date("d/m/Y", strtotime($reg->fecha_pago)).'\')"><i class="fa-regular fa-file-pdf fa-2x"></i></a>');
             $data[] = [
               "0" => $cont++,
-              "1" => '<button class="btn btn-info btn-sm" onclick="ver_detalle_compras_activo_fijo(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Ver detalle compra"><i class="fa fa-eye"></i></button>' .
-              ' <button class="btn btn-sm btn-warning" id="btn_monto_pagado_' . $reg->idpago_compra_grano . '" monto_pagado="'.$reg->monto.'" onclick="mostrar_editar_pago(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .
+              "1" => ' <button class="btn btn-sm btn-warning" id="btn_monto_pagado_' . $reg->idpago_compra_grano . '" monto_pagado="'.$reg->monto.'" onclick="mostrar_editar_pago(' . $reg->idpago_compra_grano . ')" data-toggle="tooltip" data-original-title="Editar compra"><i class="fas fa-pencil-alt"></i></button>' .
               ' <button class="btn btn-sm btn-danger" onclick="eliminar_pago_compra(' . $reg->idpago_compra_grano .', \''.encodeCadenaHtml( number_format($reg->monto, 2, '.',',')).' - '.date("d/m/Y", strtotime($reg->fecha_pago)).'\')" data-toggle="tooltip" data-original-title="Eliminar o papelera"><i class="fas fa-skull-crossbones"></i> </button>',
               "2" => $reg->fecha_pago,
               "3" => $reg->forma_pago,
